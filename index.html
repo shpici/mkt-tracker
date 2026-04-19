@@ -396,14 +396,53 @@ body.emp-mode #empView{display:block!important}
 </div>
 
 <!-- EMPLOYEE VIEW -->
-<div id="empView" style="display:none;padding:0 20px 20px">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:12px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-      <div style="font-size:15px;font-weight:700" id="empWel"></div>
-      <div id="empPB" style="margin-left:auto"></div>
-    </div>
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-      <span class="nl">Ден:</span><div id="empDyBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
+<div id="empView" style="display:none">
+
+<!-- Employee header -->
+<div class="hdr" style="position:relative">
+  <div style="font-size:14px;font-weight:700" id="empWel"></div>
+  <div id="empPB" style="margin-left:auto"></div>
+</div>
+
+<!-- Employee nav: year / month / week -->
+<div class="nav" id="empNav">
+  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+    <span class="nl">Год.</span>
+    <button class="na" onclick="empChgYr(-1)">&#8249;</button>
+    <button class="nb act" id="empYrDisp" style="font-weight:700;font-size:12px;min-width:50px">2026</button>
+    <button class="na" onclick="empChgYr(1)">&#8250;</button>
+  </div>
+  <div class="nsep"></div>
+  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+    <span class="nl">Месец</span>
+    <button class="na" onclick="empChgMo(-1)">&#8249;</button>
+    <div id="empMoBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
+    <button class="na" onclick="empChgMo(1)">&#8250;</button>
+  </div>
+  <div class="nsep"></div>
+  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+    <span class="nl">Недела</span>
+    <div id="empWkBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:4px">
+    <button class="btn" onclick="empPrint()" title="Печати / PDF">🖨 Печати</button>
+  </div>
+</div>
+
+<!-- Employee tabs -->
+<div class="tabs" style="margin:0 20px">
+  <div class="tab act" onclick="empTab('daily',this)">📅 Дневен</div>
+  <div class="tab" onclick="empTab('weekly',this)">📆 Неделен</div>
+  <div class="tab" onclick="empTab('monthly',this)">📊 Месечен</div>
+  <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
+</div>
+
+<!-- EMPLOYEE DAILY -->
+<div id="etp-daily" class="tp act" style="padding:0 20px 20px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
+    <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <span class="nl">Ден:</span>
+      <div id="empDyBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
     </div>
     <div style="display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
       <span class="nl">Статус:</span><div id="empStBtns" style="display:flex;gap:5px;flex-wrap:wrap"></div>
@@ -414,14 +453,40 @@ body.emp-mode #empView{display:block!important}
       <span style="font-size:10px;color:var(--t3)">💡 Автоматски се зачувува</span>
     </div>
   </div>
-  <div id="empCmtBox" style="background:var(--bll);border:1px solid #90caf9;border-radius:var(--r);padding:14px;margin-bottom:12px;display:none">
+  <div id="empCmtBox" style="background:var(--bll);border:1px solid #90caf9;border-radius:var(--r);padding:14px;margin-top:12px;display:none">
     <div style="font-size:12px;font-weight:700;color:var(--bl);margin-bottom:6px">💬 Коментар од менаџерот:</div>
     <div id="empCmtTxt" style="font-size:13px"></div>
   </div>
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:16px">
-    <div style="font-size:13px;font-weight:700;margin-bottom:12px" id="empMoTit"></div>
-    <div class="scg" id="empScG"></div>
+</div>
+
+<!-- EMPLOYEE WEEKLY -->
+<div id="etp-weekly" class="tp" style="padding:0 20px 20px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:14px" id="empWkTitle"></div>
+    <div class="scg" id="empWkScG"></div>
+    <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px;margin-top:12px">По KPI — оваа недела</div>
+    <div id="empWkKpiGrid" class="ekg"></div>
   </div>
+</div>
+
+<!-- EMPLOYEE MONTHLY -->
+<div id="etp-monthly" class="tp" style="padding:0 20px 20px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:14px" id="empMoTit"></div>
+    <div class="scg" id="empScG"></div>
+    <div style="margin-top:12px" id="empPersonalBest"></div>
+  </div>
+</div>
+
+<!-- EMPLOYEE YEARLY -->
+<div id="etp-yearly" class="tp" style="padding:0 20px 20px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:14px" id="empYrTit"></div>
+    <div class="scg" id="empYrScG"></div>
+    <div id="empYrMonths" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px"></div>
+  </div>
+</div>
+
 </div>
 
 </div>
@@ -541,7 +606,7 @@ onAuthStateChanged(auth,async user=>{
     ['daily','monthly','ranking','alerts','inventory','comments','targets'].forEach(t=>{
       const el=document.getElementById('tp-'+t);if(el){el.style.removeProperty('display');}
     });
-    rndNav();rndDailyView();calcAlerts();
+    rndNav();rndDailyView();subMgrMonth();calcAlerts();
   }else if(mID){
     // EMPLOYEE — скриј сè менаџерско
     document.getElementById('mgrNav').style.display='none';
@@ -573,8 +638,8 @@ function rndNav(){
   const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('wkBtns');wb.innerHTML='';
   wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndDailyView();};wb.appendChild(b);});
 }
-window.chgYr=d=>{cY+=d;cW=0;cD=0;rndNav();rndDailyView();};
-window.chgMo=d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;rndNav();rndDailyView();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();};
+window.chgYr=d=>{cY+=d;cW=0;cD=0;rndNav();rndDailyView();subMgrMonth();};
+window.chgMo=d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;rndNav();rndDailyView();subMgrMonth();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();};
 
 // DAILY
 function rndDailyView(){
@@ -747,13 +812,57 @@ window.gotoTab=(name,el)=>{
 function initEmp(){
   const mb=MEMBERS.find(x=>x.id===mID);if(!mb)return;
   document.getElementById('empWel').textContent='👋 Добредојде, '+mb.name+'!';
-  document.getElementById('empMoTit').textContent='Твој напредок — '+MKM[cM-1]+' '+cY;
-  buildEmpDys();rndEmpSt();rndEmpKpi();rndEmpMo();
+  // Set current week to the one containing TODAY
+  const today=new Date();
+  if(today.getFullYear()===cY&&today.getMonth()+1===cM){
+    const allWds=getWDs(cY,cM);const wks2=gWks(allWds);
+    const todayDate=today.getDate();
+    wks2.forEach((wk,wi)=>{wk.forEach((d,di)=>{if(d.date===todayDate){cW=wi;cD=di;}});});
+  }
+  empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();
   const cmt=CS[mID];if(cmt){document.getElementById('empCmtBox').style.display='block';document.getElementById('empCmtTxt').textContent=cmt;}
+  // Realtime subscribe to today
+  const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];
+  if(dO){subEmpDay(dK(cY,cM,dO));}
 }
-function buildEmpDys(){
+
+function empBuildNav(){
+  document.getElementById('empYrDisp').textContent=cY;
+  const mb2=document.getElementById('empMoBtns');mb2.innerHTML='';
+  MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{cM=i+1;cW=0;cD=0;empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();rndEmpWeekly();};mb2.appendChild(b);});
+  const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('empWkBtns');wb.innerHTML='';
+  wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#empWkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpWeekly();};wb.appendChild(b);});
+}
+
+window.empChgYr=d=>{cY+=d;cW=0;cD=0;empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();};
+window.empChgMo=d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();};
+
+window.empTab=(name,el)=>{
+  document.querySelectorAll('#empView .tab').forEach(t=>t.classList.remove('act'));
+  document.querySelectorAll('[id^="etp-"]').forEach(t=>t.classList.remove('act'));
+  if(el)el.classList.add('act');
+  document.getElementById('etp-'+name).classList.add('act');
+  if(name==='weekly')rndEmpWeekly();
+  else if(name==='monthly')rndEmpMo();
+  else if(name==='yearly')rndEmpYr();
+};
+
+window.empPrint=()=>{window.print();};
+
+// Realtime subscribe for employee
+let empUnsubs=[];
+function subEmpDay(dk){
+  empUnsubs.forEach(u=>u());empUnsubs=[];
+  const u=onSnapshot(doc(db,'days',dk),snap=>{
+    if(!snap.exists())return;const data=snap.data();const{year:y,month:m}=data;
+    if(!y||!m)return;if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};
+    if(data[mID]){if(!AS[y][m][dk])AS[y][m][dk]={};AS[y][m][dk][mID]=data[mID];rndEmpKpi();rndEmpMo();}
+  });empUnsubs.push(u);
+}
+
+function rndEmpDyBtns(){
   const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];const c=document.getElementById('empDyBtns');c.innerHTML='';
-  wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#empDyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpSt();rndEmpKpi();};c.appendChild(b);});
+  wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#empDyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpSt();rndEmpKpi();const dO2=wk[i];if(dO2)subEmpDay(dK(cY,cM,dO2));};c.appendChild(b);});
 }
 function rndEmpSt(){
   const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];if(!dO)return;
@@ -784,9 +893,75 @@ async function empSv(){
   try{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);const md=AS[cY]?.[cM]?.[dk]?.[mID];await setDoc(doc(db,'days',dk),{year:cY,month:cM,dayKey:dk,updAt:new Date().toISOString(),[mID]:md},{merge:true});showSS('empSS','✓ Зачувано','ok');rndEmpMo();}catch(e){showSS('empSS','⚠ Грешка','er');}
 }
 function rndEmpMo(){
-  const mt=getMT(cY,cM);const sc=document.getElementById('empScG');sc.innerHTML='';let aP=0;
+  const mt=getMT(cY,cM);const sc=document.getElementById('empScG');if(!sc)return;
+  const moTit=document.getElementById('empMoTit');if(moTit)moTit.textContent='Твој напредок — '+MKM[cM-1]+' '+cY;
+  sc.innerHTML='';let aP=0;
   KKEYS.forEach((k,i)=>{const s=mMoSum(mID,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);aP+=p;sc.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="color:${pc(p)};font-size:14px">${s}/${t}</div><div class="scs" style="color:${pc(p)}">${p}% ${pem(p)}</div></div>`;});
   aP=Math.round(aP/KKEYS.length);sc.innerHTML=`<div class="sc" style="border-color:${pc(aP)}"><div class="scl">Мој Score</div><div class="scv" style="color:${pc(aP)}">${aP}% ${pem(aP)}</div></div>`+sc.innerHTML;
+}
+
+// EMPLOYEE WEEKLY
+function rndEmpWeekly(){
+  const mt=getMT(cY,cM);const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];
+  const tit=document.getElementById('empWkTitle');if(tit)tit.textContent='Неделен преглед — Недела '+(cW+1)+', '+MKM[cM-1]+' '+cY;
+  // Weekly totals
+  const wkTots={};KKEYS.forEach(k=>wkTots[k]=0);let wkDays=0;
+  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];if(ms&&ms.status!==3&&ms.status!==1){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
+  // Weekly target = monthly / workdays * week days
+  const totalWd=getWDs(cY,cM).length;
+  const sc2=document.getElementById('empWkScG');if(!sc2)return;sc2.innerHTML='';
+  let avgP=0;
+  KKEYS.forEach((k,i)=>{const wt=Math.round((mt[k]||0)/totalWd*wk.length);const p=pct(wkTots[k],wt||1);avgP+=p;sc2.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="color:${pc(p)};font-size:14px">${wkTots[k]}/${wt}</div><div class="scs" style="color:${pc(p)}">${p}% ${pem(p)}</div></div>`;});
+  avgP=Math.round(avgP/KKEYS.length);
+  sc2.innerHTML=`<div class="sc" style="border-color:${pc(avgP)}"><div class="scl">Неделен Score</div><div class="scv" style="color:${pc(avgP)}">${avgP}% ${pem(avgP)}</div><div class="scs">${wkDays} работни дни</div></div>`+sc2.innerHTML;
+  // Per-day breakdown
+  const kg=document.getElementById('empWkKpiGrid');if(!kg)return;kg.innerHTML='';
+  wk.forEach(d=>{
+    const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];const isAbs=!ms||ms.status===3||ms.status===1;
+    let dayTotal=0;if(!isAbs)KKEYS.forEach(k=>{dayTotal+=(ms?.[k]||0);});
+    kg.innerHTML+=`<div class="ekc" style="opacity:${isAbs?'.4':'1'}"><div class="ekl">${d.label}</div><div style="font-size:20px;font-weight:700;margin:4px 0;color:${isAbs?'var(--t3)':'var(--txt)'}">${isAbs?'—':dayTotal}</div><div style="font-size:10px;color:${isAbs?'var(--t3)':'var(--t2)'}">вкупно KPI ${isAbs?'(отсутен)':''}</div></div>`;
+  });
+}
+
+// EMPLOYEE YEARLY
+function rndEmpYr(){
+  const tit=document.getElementById('empYrTit');if(tit)tit.textContent='Годишен преглед — '+cY;
+  const yrScG=document.getElementById('empYrScG');if(!yrScG)return;yrScG.innerHTML='';
+  const yrTots={};KKEYS.forEach(k=>yrTots[k]=0);
+  let totalScore=0;let activeMonths=0;
+  // Per month cards
+  const yrMos=document.getElementById('empYrMonths');if(yrMos)yrMos.innerHTML='';
+  for(let m=1;m<=12;m++){
+    const mt=getMT(cY,m);let moScore=0;let hasData=false;
+    KKEYS.forEach(k=>{const s=mMoSum(mID,k,cY,m);yrTots[k]+=s;if(s>0)hasData=true;const p=pct(s,mt[k]||1);moScore+=p;});
+    moScore=Math.round(moScore/KKEYS.length);if(hasData){totalScore+=moScore;activeMonths++;}
+    if(yrMos&&(hasData||m<=new Date().getMonth()+1)){
+      yrMos.innerHTML+=`<div class="sc" style="border-color:${hasData?pc(moScore):'var(--brd)'}"><div class="scl">${MKM[m-1]}</div><div class="scv" style="color:${hasData?pc(moScore):'var(--t3)'};">${hasData?moScore+'% '+pem(moScore):'—'}</div></div>`;
+    }
+  }
+  const avgYr=activeMonths>0?Math.round(totalScore/activeMonths):0;
+  yrScG.innerHTML=`<div class="sc" style="border-color:${pc(avgYr)}"><div class="scl">Годишен Score</div><div class="scv" style="color:${pc(avgYr)}">${avgYr}% ${pem(avgYr)}</div><div class="scs">${activeMonths} активни месеци</div></div>`;
+  KKEYS.forEach((k,i)=>{const t=getMT(cY,cM)[k]||1;const p=pct(yrTots[k],t*12);yrScG.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="font-size:14px;color:${pc(p)}">${yrTots[k]}</div><div class="scs" style="color:${pc(p)}">вкупно ${cY}</div></div>`;});
+}
+
+// MANAGER REALTIME for ALL days in current month
+function subMgrMonth(){
+  unsubs.forEach(u=>u());unsubs=[];
+  const wds=getWDs(cY,cM);
+  wds.forEach(d=>{
+    const dk=dK(cY,cM,d);
+    const u=onSnapshot(doc(db,'days',dk),snap=>{
+      if(!snap.exists())return;const data=snap.data();const{year:y,month:m}=data;
+      if(!y||!m)return;if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};
+      const dd={};MEMBERS.forEach(mb=>{if(data[mb.id])dd[mb.id]=data[mb.id];});
+      if(Object.keys(dd).length){AS[y][m][dk]={...AS[y][m][dk],...dd};}
+      // Refresh visible tab
+      if(document.getElementById('tp-daily').classList.contains('act'))rndTbl();
+      else if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();
+      else if(document.getElementById('tp-ranking').classList.contains('act'))rndRanking();
+      calcAlerts();
+    });unsubs.push(u);
+  });
 }
 
 // EXPORT
