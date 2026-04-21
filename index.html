@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html lang="mk" data-theme="light">
+<html lang="mk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MKT Sales Pro — Кичево</title>
 <style>
-:root{--mg:#C8006E;--mgd:#8a004c;--mgl:#fbe8f2;--gr:#2e7d32;--grl:#e8f5e9;--bl:#1565c0;--bll:#e3f2fd;--am:#e65100;--aml:#fff3e0;--rd:#c62828;--rdl:#ffebee;--bg:#f4f4f6;--sur:#fff;--s2:#f0f0f3;--s3:#e8e8ec;--brd:#dddde5;--txt:#16162a;--t2:#55556a;--t3:#9898b0;--r:10px;--rs:6px;--rx:4px;--sh:0 2px 8px rgba(0,0,0,.07)}
-[data-theme=dark]{--bg:#0f0f14;--sur:#1a1a24;--s2:#22222e;--s3:#2a2a38;--brd:#333348;--txt:#e8e8f0;--t2:#9898b8;--t3:#5a5a7a;--mgl:#2a0018;--grl:#0a1f0a;--bll:#0a1830;--aml:#1f1000;--rdl:#1f0808}
+:root{--mg:#C8006E;--mgd:#8a004c;--mgl:#fbe8f2;--gr:#2e7d32;--grl:#e8f5e9;--bl:#1565c0;--bll:#e3f2fd;--am:#e65100;--aml:#fff3e0;--rd:#c62828;--rdl:#ffebee;--bg:#f4f4f6;--sur:#fff;--s2:#f0f0f3;--s3:#e8e8ec;--brd:#dddde5;--txt:#16162a;--t2:#55556a;--t3:#9898b0;--r:10px;--rs:6px;--rx:4px;--sh:0 2px 8px rgba(0,0,0,.08)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:13px;transition:background .2s,color .2s}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:13px}
+/* LOADING */
 #sLoad{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
 .spin{width:36px;height:36px;border:3px solid var(--brd);border-top-color:var(--mg);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+/* LOGIN */
 .lwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.lcard{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:36px;width:100%;max-width:420px;box-shadow:var(--sh)}
-.llogo{width:52px;height:52px;background:var(--mg);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.lcard{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:36px;width:100%;max-width:400px;box-shadow:var(--sh)}
+.llogo{width:52px;height:52px;background:var(--mg);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 .llogo svg{width:28px;height:28px;fill:#fff}
 .lt{text-align:center;font-size:20px;font-weight:700;margin-bottom:4px}
-.ls{text-align:center;font-size:12px;color:var(--t2);margin-bottom:20px}
+.ls{text-align:center;font-size:12px;color:var(--t2);margin-bottom:24px}
 .fg{margin-bottom:14px}
 .fg label{font-size:11px;font-weight:700;color:var(--t2);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.3px}
 .fi{width:100%;padding:11px 13px;border:1px solid var(--brd);border-radius:var(--rs);font-size:13px;background:var(--sur);color:var(--txt);transition:border .15s}
@@ -25,146 +26,169 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .lbtn{width:100%;padding:12px;background:var(--mg);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .15s}
 .lbtn:hover{background:var(--mgd)}
 .lbtn:disabled{opacity:.6;cursor:not-allowed}
-.lerr{background:var(--rdl);color:var(--rd);border-radius:var(--rs);padding:9px 12px;font-size:12px;margin-top:10px;display:none;border:1px solid}
-.hdr{background:var(--sur);border-bottom:1px solid var(--brd);padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
-.hlogo{width:32px;height:32px;background:var(--mg);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hlogo svg{width:18px;height:18px;fill:#fff}
-.ht{font-size:14px;font-weight:700}.hs{font-size:10px;color:var(--t2)}
-.hr{margin-left:auto;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.abadge{background:var(--rd);color:#fff;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;animation:pulse 2s ease-in-out infinite}
+.lerr{background:var(--rdl);color:var(--rd);border-radius:var(--rs);padding:9px 12px;font-size:12px;margin-top:10px;display:none;border:1px solid #ef9a9a}
+/* HEADER */
+.hdr{background:var(--sur);border-bottom:1px solid var(--brd);padding:9px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
+.hlogo{width:30px;height:30px;background:var(--mg);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hlogo svg{width:17px;height:17px;fill:#fff}
+.ht{font-size:13px;font-weight:700}.hs{font-size:10px;color:var(--t2)}
+.hr{margin-left:auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.abadge{background:var(--rd);color:#fff;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px;animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
-.nav{background:var(--sur);border-bottom:1px solid var(--brd);padding:8px 20px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hbtn{width:30px;height:30px;border:1px solid var(--brd);border-radius:7px;background:var(--sur);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.hbtn:hover{background:var(--mgl);border-color:var(--mg)}
+/* NAV */
+.nav{background:var(--sur);border-bottom:1px solid var(--brd);padding:7px 16px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .nb{padding:4px 10px;border:1px solid var(--brd);border-radius:20px;background:var(--sur);color:var(--t2);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
 .nb:hover{background:var(--s2);border-color:var(--mg)}
 .nb.act{background:var(--mg);color:#fff;border-color:var(--mg)}
-.na{width:24px;height:24px;border:1px solid var(--brd);border-radius:50%;background:var(--sur);color:var(--t2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.na{width:22px;height:22px;border:1px solid var(--brd);border-radius:50%;background:var(--sur);color:var(--t2);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .na:hover{background:var(--mg);color:#fff;border-color:var(--mg)}
-.nsep{width:1px;height:24px;background:var(--brd);margin:0 3px}
+.nsep{width:1px;height:20px;background:var(--brd);margin:0 2px}
 .nl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
-.tabs{display:flex;gap:2px;padding:12px 20px 0;background:var(--bg);flex-wrap:wrap}
-.tab{padding:7px 14px;font-size:11px;font-weight:600;border-radius:var(--rs) var(--rs) 0 0;border:1px solid transparent;cursor:pointer;color:var(--t2);background:var(--s3);border-bottom:none;transition:all .15s;white-space:nowrap}
+/* TABS */
+.tabs{display:flex;gap:2px;padding:10px 16px 0;background:var(--bg);flex-wrap:wrap}
+.tab{padding:6px 12px;font-size:11px;font-weight:600;border-radius:var(--rs) var(--rs) 0 0;border:1px solid transparent;cursor:pointer;color:var(--t2);background:var(--s3);border-bottom:none;transition:all .15s;white-space:nowrap}
 .tab.act{background:var(--sur);border-color:var(--brd);color:var(--mg);border-bottom:1px solid var(--sur);margin-bottom:-1px}
 .tp{display:none}.tp.act{display:block}
-.card{background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);margin:0 20px 20px;padding:16px}
-.btn{padding:6px 12px;border-radius:var(--rs);border:1px solid var(--brd);background:var(--sur);color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);margin:0 16px 16px;padding:14px}
+/* BUTTONS */
+.btn{padding:5px 11px;border-radius:var(--rs);border:1px solid var(--brd);background:var(--sur);color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s}
 .btn:hover{background:var(--s2)}
 .bmg{background:var(--mg);color:#fff;border-color:var(--mg)}.bmg:hover{background:var(--mgd)}
 .bgr{background:var(--gr);color:#fff;border-color:var(--gr)}
 .bbl{background:var(--bl);color:#fff;border-color:var(--bl)}
+/* TABLE */
 .tw{overflow-x:auto}
-table{width:100%;border-collapse:separate;border-spacing:0;min-width:1400px}
-thead th{background:var(--s2);padding:7px 4px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--brd);white-space:nowrap}
-thead th:first-child{text-align:left;padding-left:10px;min-width:145px;border-radius:var(--rs) 0 0 0}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:1200px}
+thead th{background:var(--s2);padding:6px 4px;text-align:center;font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--brd);white-space:nowrap}
+thead th:first-child{text-align:left;padding-left:10px;min-width:140px;border-radius:var(--rs) 0 0 0}
 thead th:last-child{border-radius:0 var(--rs) 0 0}
 tbody tr:hover{background:var(--s2)}
 tbody tr.abs td{opacity:.35}
-tbody td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--brd);vertical-align:middle}
+tbody td{padding:5px 4px;text-align:center;border-bottom:1px solid var(--brd);vertical-align:middle}
 tbody td:first-child{text-align:left;padding-left:10px}
-tfoot td{background:var(--mgl);padding:7px 4px;text-align:center;font-weight:700;font-size:11px;color:var(--mgd);border-top:2px solid var(--mg)}
+tfoot td{background:var(--mgl);padding:6px 4px;text-align:center;font-weight:700;font-size:11px;color:var(--mgd);border-top:2px solid var(--mg)}
 tfoot td:first-child{text-align:left;padding-left:10px;border-radius:0 0 0 var(--rs)}
 tfoot td:last-child{border-radius:0 0 var(--rs) 0}
-.nc{display:flex;align-items:center;gap:7px}
-.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;width:28px;height:28px}
+/* KPI CELL */
+.nc{display:flex;align-items:center;gap:6px}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;width:26px;height:26px}
 .nm{font-size:11px;font-weight:600}
-.kc{display:flex;flex-direction:column;align-items:center;gap:2px}
-.ki{width:44px;font-size:12px;font-weight:600;text-align:center;padding:3px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt);transition:border .15s}
+.kc{display:flex;flex-direction:column;align-items:center;gap:1px}
+.ki{width:46px;font-size:12px;font-weight:600;text-align:center;padding:3px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt);transition:border .15s}
 .ki:focus{outline:none;border-color:var(--mg)}
 .ki:disabled{background:var(--s2);color:var(--t3);cursor:not-allowed}
 .kp{font-size:8px;font-weight:700}.kt{font-size:8px;color:var(--t3)}
-.bar{width:32px;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
+.bar{width:34px;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
 .bf{height:100%;border-radius:2px;transition:width .3s}
-.sbtn{width:28px;height:28px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
+/* STATUS POP */
+.sbtn{width:26px;height:26px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
 .sbtn:hover{border-color:var(--mg)}
-.pop{display:none;position:absolute;top:32px;left:50%;transform:translateX(-50%);background:var(--sur);border:1px solid var(--brd);border-radius:var(--rs);padding:5px;z-index:200;gap:3px;flex-direction:row;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.pop{display:none;position:absolute;top:30px;left:50%;transform:translateX(-50%);background:var(--sur);border:1px solid var(--brd);border-radius:var(--rs);padding:4px;z-index:200;gap:3px;flex-direction:row;box-shadow:0 4px 16px rgba(0,0,0,.15)}
 .pop.open{display:flex}
-.pbtn{width:26px;height:26px;border:none;background:none;cursor:pointer;font-size:15px;border-radius:3px;display:flex;align-items:center;justify-content:center}
+.pbtn{width:24px;height:24px;border:none;background:none;cursor:pointer;font-size:14px;border-radius:3px;display:flex;align-items:center;justify-content:center}
 .pbtn:hover{background:var(--s2)}
 .abbg{font-size:9px;color:var(--rd);background:var(--rdl);padding:1px 5px;border-radius:10px;font-weight:600}
+/* STATUS */
 .ss{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;transition:all .3s}
 .ok{background:var(--grl);color:var(--gr)}.sv{background:var(--aml);color:var(--am)}.er{background:var(--rdl);color:var(--rd)}
-.scg{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-bottom:16px}
-.sc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:10px;text-align:center;transition:border .2s}
+/* SCORE CARDS */
+.scg{display:grid;grid-template-columns:repeat(auto-fit,minmax(85px,1fr));gap:5px;margin-bottom:14px}
+.sc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:9px;text-align:center;transition:border .2s}
 .sc:hover{border-color:var(--mg)}
-.scl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
-.scv{font-size:17px;font-weight:700}.scs{font-size:9px;color:var(--t2);margin-top:2px}
-.mcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:12px;margin-bottom:16px}
-.mc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:13px;transition:box-shadow .2s}
+.scl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.scv{font-size:16px;font-weight:700}.scs{font-size:9px;color:var(--t2);margin-top:1px}
+/* MEMBER CARDS */
+.mcg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:14px}
+.mc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px;transition:box-shadow .2s}
 .mc:hover{box-shadow:var(--sh)}
-.mch{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.mch{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .mcn{font-size:12px;font-weight:700}.mci{font-size:10px;color:var(--t2);margin-top:1px}
-.mck{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.mkc{background:var(--s2);border-radius:var(--rx);padding:5px 3px;text-align:center}
-.mkl{font-size:7px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.mck{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mkc{background:var(--s2);border-radius:var(--rx);padding:4px 2px;text-align:center}
+.mkl{font-size:7px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:1px}
 .mkv{font-size:10px;font-weight:700}.mkp{font-size:8px;margin-top:1px}
-.mkb{height:3px;background:var(--brd);border-radius:2px;overflow:hidden;margin-top:3px}
+.mkb{height:3px;background:var(--brd);border-radius:2px;overflow:hidden;margin-top:2px}
 .mkbf{height:100%;border-radius:2px}
-.rg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.rr{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all .2s}
+/* RANKING */
+.rg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.rr{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px 13px;display:flex;align-items:center;gap:10px;transition:all .2s}
 .rr:hover{border-color:var(--mg);box-shadow:var(--sh)}
-.rpos{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.rpos{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
 .r1{background:#FFF8DC;color:#B8860B}.r2{background:#F0F0F0;color:#696969}.r3{background:#FFF0E8;color:#CD7F32}.rn{background:var(--s2);color:var(--t3)}
-.rname{font-size:13px;font-weight:600;flex:1}.rscore{font-size:20px;font-weight:700}
-.rbadge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700}
-.rbar{flex:1;max-width:120px;height:6px;background:var(--brd);border-radius:3px;overflow:hidden}
+.rname{font-size:12px;font-weight:600;flex:1}.rscore{font-size:18px;font-weight:700}
+.rbadge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700}
+.rbar{flex:1;max-width:100px;height:5px;background:var(--brd);border-radius:3px;overflow:hidden}
 .rbf{height:100%;border-radius:3px;transition:width .5s}
-.ap{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.ai{border-radius:var(--rs);padding:10px 13px;display:flex;align-items:flex-start;gap:10px;border:1px solid}
+/* ALERTS */
+.ap{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.ai{border-radius:var(--rs);padding:9px 12px;display:flex;align-items:flex-start;gap:9px;border:1px solid}
 .acr{background:var(--rdl);border-color:#ef9a9a;color:var(--rd)}
 .aw{background:var(--aml);border-color:#ffcc80;color:var(--am)}
-.aico{font-size:16px;flex-shrink:0;margin-top:1px}
-.atxt{font-size:12px;font-weight:600}.asub{font-size:11px;opacity:.8;margin-top:2px}
-.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:16px}
-.ic{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:13px}
+.aico{font-size:15px;flex-shrink:0;margin-top:1px}
+.atxt{font-size:12px;font-weight:600}.asub{font-size:11px;opacity:.8;margin-top:1px}
+/* INVENTORY */
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+.ic{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px}
 .ic.warn{border-color:var(--am);background:var(--aml)}
-.it{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.in{font-size:24px;font-weight:700;margin:4px 0 2px}.isub{font-size:10px;color:var(--t2)}
-.iinp{width:60px;font-size:13px;font-weight:700;text-align:center;padding:4px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)}
+.it{font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.in{font-size:22px;font-weight:700;margin:3px 0 2px}.isub{font-size:10px;color:var(--t2)}
+.iinp{font-size:12px;font-weight:700;text-align:center;padding:4px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)}
 .iinp:focus{outline:none;border-color:var(--mg)}
-.cmg{display:flex;flex-direction:column;gap:8px}
-.crow{background:var(--s2);border-radius:var(--rs);padding:10px;display:flex;align-items:flex-start;gap:10px}
-.cav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
-.cbody{flex:1}.cname{font-size:11px;font-weight:700;margin-bottom:4px}
-.cta{width:100%;padding:8px;border:1px solid var(--brd);border-radius:var(--rx);font-size:12px;background:var(--sur);color:var(--txt);resize:vertical;min-height:56px;font-family:inherit}
+/* COMMENTS */
+.cmg{display:flex;flex-direction:column;gap:7px}
+.crow{background:var(--s2);border-radius:var(--rs);padding:9px;display:flex;align-items:flex-start;gap:9px}
+.cav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.cbody{flex:1}.cname{font-size:11px;font-weight:700;margin-bottom:3px}
+.cta{width:100%;padding:7px;border:1px solid var(--brd);border-radius:var(--rx);font-size:12px;background:var(--sur);color:var(--txt);resize:vertical;min-height:52px;font-family:inherit}
 .cta:focus{outline:none;border-color:var(--mg)}
-.tti{position:relative;display:inline-flex;align-items:center;gap:3px}
-.ttic{width:14px;height:14px;border-radius:50%;background:var(--brd);color:var(--t3);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;flex-shrink:0}
-.ttb{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);background:var(--txt);color:var(--sur);font-size:10px;padding:5px 8px;border-radius:5px;z-index:100;white-space:nowrap;margin-top:4px;pointer-events:none;min-width:160px}
+/* TOOLTIPS */
+.tti{position:relative;display:inline-flex;align-items:center;gap:2px}
+.ttic{width:13px;height:13px;border-radius:50%;background:var(--brd);color:var(--t3);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:help;flex-shrink:0}
+.ttb{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);background:var(--txt);color:var(--sur);font-size:10px;padding:4px 7px;border-radius:5px;z-index:100;white-space:nowrap;margin-top:3px;pointer-events:none;min-width:140px}
 .tti:hover .ttb{display:block}
-.dmt{width:36px;height:20px;background:var(--brd);border-radius:10px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
-.dmt.on{background:var(--mg)}
-.dmt::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
-.dmt.on::after{transform:translateX(16px)}
-.ekg{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:16px}
-.ekc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:13px;text-align:center;transition:all .2s}
+/* KPI TOGGLES */
+.kpi-toggle{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:all .2s;user-select:none}
+.kpi-toggle.on{background:var(--grl);color:var(--gr);border-color:#a5d6a7}
+.kpi-toggle.off{background:var(--s2);color:var(--t3);border-color:var(--brd);opacity:.7}
+.toggle-sw{width:26px;height:15px;background:var(--brd);border-radius:8px;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-sw.on{background:var(--gr)}
+.toggle-sw::after{content:'';position:absolute;width:11px;height:11px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .2s}
+.toggle-sw.on::after{transform:translateX(11px)}
+/* EMPLOYEE KPI CARDS */
+.ekg{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:7px;margin-bottom:14px}
+.ekc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px;text-align:center;transition:all .2s}
 .ekc:hover{border-color:var(--mg);box-shadow:var(--sh)}
-.ekl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
-.eki{width:68px;font-size:22px;font-weight:700;text-align:center;padding:5px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--sur);color:var(--txt);display:block;margin:0 auto 5px}
+.ekc.off-kpi{opacity:.5}
+.ekl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px}
+.eki{width:64px;font-size:20px;font-weight:700;text-align:center;padding:4px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--sur);color:var(--txt);display:block;margin:0 auto 4px}
 .eki:focus{outline:none;border-color:var(--mg)}
 .eki:disabled{background:var(--s2);color:var(--t3);cursor:not-allowed}
-.ebar{height:4px;background:var(--brd);border-radius:3px;overflow:hidden;margin-top:5px}
+.ebar{height:4px;background:var(--brd);border-radius:3px;overflow:hidden;margin-top:4px}
 .ebf{height:100%;border-radius:3px;transition:width .4s}
-.pbb{background:#FFF8DC;color:#B8860B;border:1px solid #FFD700;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700}
-.kpi-toggle{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:all .2s;user-select:none}
-.kpi-toggle.on{background:var(--grl);color:var(--gr);border-color:#a5d6a7}
-.kpi-toggle.off{background:var(--rdl);color:var(--rd);border-color:#ef9a9a;opacity:.75}
-.kpi-toggle.on::before{content:'✅ '}.kpi-toggle.off::before{content:'❌ '}
-.toggle-sw{width:28px;height:16px;background:var(--brd);border-radius:8px;position:relative;transition:background .2s;flex-shrink:0}
-.toggle-sw.on{background:var(--gr)}
-.toggle-sw::after{content:'';position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .2s}
-.toggle-sw.on::after{transform:translateX(12px)}
-.sticker{width:52px;height:52px;border-radius:10px;background:var(--s2);border:1px solid var(--brd);cursor:pointer;font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-.sticker:hover{transform:scale(1.15);border-color:var(--mg);background:var(--mgl)}
-.sticker.selected{border:2px solid var(--mg);background:var(--mgl);transform:scale(1.1)}
-.ti{width:68px;font-size:13px;font-weight:700;text-align:center;padding:5px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)}
+.pbb{background:#FFF8DC;color:#B8860B;border:1px solid #FFD700;padding:2px 6px;border-radius:20px;font-size:9px;font-weight:700}
+/* TARGETS */
+.ti{width:64px;font-size:12px;font-weight:700;text-align:center;padding:4px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)}
 .ti:focus{outline:none;border-color:var(--mg)}
 .bdgr{background:var(--grl);color:var(--gr);border:1px solid #a5d6a7}
 .bdbl{background:var(--bll);color:var(--bl);border:1px solid #90caf9}
 .bdrd{background:var(--rdl);color:var(--rd);border:1px solid #ef9a9a}
-@media print{.hdr,.nav,.tabs,.btn,.na,.nb,#mgrNav,#mgrTabs{display:none!important}.card{margin:0;border:none;box-shadow:none}body{background:#fff;color:#000}}
-@media(max-width:600px){.hdr{padding:8px 12px}.card{margin:0 8px 12px;padding:12px}.tabs{padding:8px 8px 0}.nav{padding:6px 8px}}
+/* ORDERS */
+.ord-status{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+/* STICKERS */
+.sticker{width:38px;height:38px;border-radius:8px;background:var(--s2);border:1px solid var(--brd);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.sticker:hover{transform:scale(1.12);border-color:var(--mg)}
+.sticker.selected{border:2px solid var(--mg);background:var(--mgl);transform:scale(1.08)}
+/* OFI INVENTORY TABLE */
+.ofi-table table{min-width:700px}
+/* PRINT */
+@media print{.hdr,.nav,.tabs,.btn,.hbtn,#mgrNav,#mgrTabs,.no-print{display:none!important}.card{margin:0;border:none;box-shadow:none}body{background:#fff;color:#000}}
+@media(max-width:600px){.hdr{padding:7px 10px}.card{margin:0 6px 10px;padding:10px}.tabs{padding:7px 6px 0}.nav{padding:5px 6px}}
 </style>
 </head>
 <body>
+
 <style>
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
 body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
@@ -174,7 +198,10 @@ body.emp-mode #empView{display:block!important}
 </style>
 
 <!-- LOADING -->
-<div id="sLoad" style="display:none"><div class="spin"></div><div style="font-size:12px;color:var(--t3);margin-top:6px">Вчитување...</div></div>
+<div id="sLoad" style="display:none">
+  <div class="spin"></div>
+  <div style="font-size:12px;color:var(--t3);margin-top:6px">Поврзување...</div>
+</div>
 
 <!-- LOGIN -->
 <div id="sLogin" class="lwrap" style="display:none">
@@ -182,12 +209,8 @@ body.emp-mode #empView{display:block!important}
   <div class="llogo"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
   <div class="lt">MKT Sales Pro</div>
   <div class="ls">Македонски Телеком · Продажен Салон Кичево</div>
-  <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:8px;padding:10px;margin-bottom:16px;font-size:11px;color:#1b5e20;line-height:1.6">
-    <b>🔥 Firebase Live</b> — MKT Кичево<br>
-    <span style="color:var(--t2)">Најави се со твојот вистински email и лозинка.</span>
-  </div>
-  <div class="fg"><label>Email адреса</label><input class="fi" type="email" id="lEm" placeholder="name@telekom.mk" autocomplete="email"></div>
-  <div class="fg"><label>Лозинка</label><input class="fi" type="password" id="lPs" placeholder="••••••••" autocomplete="current-password"></div>
+  <div class="fg"><label>Email</label><input class="fi" type="email" id="lEm" placeholder="name@telekom.mk" autocomplete="email"></div>
+  <div class="fg"><label>Лозинка</label><input class="fi" type="password" id="lPs" placeholder="••••••••"></div>
   <button class="lbtn" id="lBtn" onclick="doLogin()">Најави се</button>
   <div class="lerr" id="lErr"></div>
 </div>
@@ -196,41 +219,44 @@ body.emp-mode #empView{display:block!important}
 <!-- APP -->
 <div id="sApp" style="display:none">
 
+<!-- HEADER -->
 <div class="hdr">
   <div class="hlogo"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
-  <div><div class="ht">MKT Sales Pro — Тим Кичево</div><div class="hs">МТ · <span id="todStr"></span> </div></div>
+  <div><div class="ht">MKT Sales Pro — Кичево</div><div class="hs">МТ · <span id="todStr"></span></div></div>
   <div class="hr">
     <div id="alBadge" class="abadge" style="display:none" onclick="gotoTab('alerts')">🚨 <span id="alCnt">0</span></div>
     <span id="sStat" class="ss" style="display:none"></span>
-    <span id="uBadge" style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--mgl);color:var(--mgd)"></span>
-    <button class="dmt" id="dmt" onclick="toggleDark()" title="Dark mode"></button>
-    <button class="btn" onclick="window.print()" title="Печати">🖨</button>
-    <button class="btn" onclick="doLogout()">Одјави се</button>
+    <span id="uBadge" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--mgl);color:var(--mgd)"></span>
+    <!-- Save HTML backup -->
+    <button class="hbtn" onclick="saveBackup()" title="💾 Зачувај HTML backup">💾</button>
+    <!-- Load HTML backup -->
+    <button class="hbtn" onclick="document.getElementById('loadFile').click()" title="📂 Вчитај HTML backup">📂</button>
+    <input type="file" id="loadFile" accept=".html,.json" style="display:none" onchange="loadBackup(this)">
+    <!-- Save PDF -->
+    <button class="hbtn" onclick="window.print()" title="🖨 Зачувај PDF">🖨</button>
+    <button class="btn" onclick="doLogout()" style="font-size:11px">Одјави</button>
   </div>
 </div>
 
 <!-- MANAGER NAV -->
 <div class="nav" id="mgrNav" style="display:none">
-  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Год.</span>
-    <button class="na" onclick="chgYr(-1)">&#8249;</button>
-    <button class="nb act" id="yrDisp" style="font-weight:700;font-size:12px;min-width:50px">2026</button>
-    <button class="na" onclick="chgYr(1)">&#8250;</button>
+    <button class="na" onclick="chgYr(-1)">‹</button>
+    <button class="nb act" id="yrDisp" style="font-weight:700;min-width:44px">2026</button>
+    <button class="na" onclick="chgYr(1)">›</button>
   </div>
   <div class="nsep"></div>
-  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Месец</span>
-    <button class="na" onclick="chgMo(-1)">&#8249;</button>
-    <div id="moBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
-    <button class="na" onclick="chgMo(1)">&#8250;</button>
+    <button class="na" onclick="chgMo(-1)">‹</button>
+    <div id="moBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <button class="na" onclick="chgMo(1)">›</button>
   </div>
   <div class="nsep"></div>
-  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Недела</span>
-    <div id="wkBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap">
-    <button class="btn bbl" onclick="window.print()">🖨 PDF</button>
+    <div id="wkBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
   </div>
 </div>
 
@@ -241,200 +267,193 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
   <div class="tab" onclick="gotoTab('alerts',this)">🚨 Alerts</div>
   <div class="tab" onclick="gotoTab('inventory',this)">📦 Инвентар</div>
-  <div class="tab" onclick="gotoTab('comments',this)">💬 Коментари</div>
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
-  <div class="tab" onclick="gotoTab('orders',this)">📱 Phone &amp; Equipment</div>
+  <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
+  <div class="tab" onclick="gotoTab('boost',this)">🏅 Boost</div>
 </div>
 
-<!-- ── DAILY ── -->
+<!-- ═══ DAILY ═══ -->
 <div id="tp-daily" class="tp act">
-<!-- BOOST BOARD — само за менаџер -->
-<div id="boostBoardWrap" style="margin:12px 20px 0;display:none">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:14px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-      <div style="font-size:13px;font-weight:700">🏅 Boost Board — Испрати на вработена</div>
-      <span style="font-size:10px;color:var(--t2)">Кликни стикер → избери вработена → прати!</span>
-    </div>
-    <div id="stickerBoard"></div>
-  </div>
-</div>
 <div class="card">
-  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
-    <div id="dyBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
-    <span id="dyLbl" style="font-size:11px;color:var(--t2);font-weight:600;margin-left:6px"></span>
-    <div style="margin-left:auto;display:flex;gap:5px">
-      <button class="btn" onclick="cpyYesterday()" title="Копирај вчера">📋 Копирај вчера</button>
-      <button class="btn" onclick="rstDay()">↺ Ресетирај</button>
+  <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:9px">
+    <div id="dyBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <span id="dyLbl" style="font-size:11px;color:var(--t2);font-weight:600;margin-left:5px"></span>
+    <div style="margin-left:auto;display:flex;gap:4px">
+      <button class="btn" onclick="cpyYesterday()">📋 Копирај вчера</button>
+      <button class="btn" onclick="rstDay()">↺ Ресет</button>
     </div>
   </div>
-  <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;font-size:10px;color:var(--t2);align-items:center">
-    <span><span style="display:inline-block;width:8px;height:8px;background:#c62828;border-radius:50%;margin-right:2px"></span>под 70%</span>
-    <span><span style="display:inline-block;width:8px;height:8px;background:#1565c0;border-radius:50%;margin-right:2px"></span>70–99%</span>
-    <span><span style="display:inline-block;width:8px;height:8px;background:#2e7d32;border-radius:50%;margin-right:2px"></span>100%+</span>
-    <span>🏢 На работа</span><span>🏠 Дома</span><span>📋 Теренска</span><span>❌ Отсутен</span>
+  <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;font-size:10px;color:var(--t2);align-items:center">
+    <span><span style="display:inline-block;width:7px;height:7px;background:#c62828;border-radius:50%;margin-right:2px"></span>&lt;70%</span>
+    <span><span style="display:inline-block;width:7px;height:7px;background:#1565c0;border-radius:50%;margin-right:2px"></span>70-99%</span>
+    <span><span style="display:inline-block;width:7px;height:7px;background:#2e7d32;border-radius:50%;margin-right:2px"></span>≥100%</span>
+    <span>🏢 Работа</span><span>🏠 Дома</span><span>📋 Теренска</span><span>❌ Отсутен</span>
   </div>
   <div class="tw">
     <table>
-      <thead><tr>
-        <th>Вработен</th><th>Статус</th>
-        <th><div class="tti">FMC<span class="ttic">?</span><div class="ttb">FMC Consumer — фиксна+мобилна</div></div></th>
-        <th><div class="tti">Post.<span class="ttic">?</span><div class="ttb">Постпејд претплатнички договор</div></div></th>
-        <th><div class="tti">BB<span class="ttic">?</span><div class="ttb">Broadband — интернет</div></div></th>
-        <th><div class="tti">IPTV<span class="ttic">?</span><div class="ttb">Интерактивна телевизија</div></div></th>
-        <th><div class="tti">Prep.<span class="ttic">?</span><div class="ttb">Предплатени SIM картички</div></div></th>
-        <th><div class="tti">Loyal.<span class="ttic">?</span><div class="ttb">Обновување на договори</div></div></th>
-        <th><div class="tti">C&amp;C<span class="ttic">?</span><div class="ttb">Click &amp; Collect нарачки</div></div></th>
-        <th><div class="tti">Опрема<span class="ttic">?</span><div class="ttb">Дополнителна опрема</div></div></th>
-        <th><div class="tti">Add.Ser.<span class="ttic">?</span><div class="ttb">Additional Services</div></div></th>
-        <th><div class="tti">Loy.Bus.<span class="ttic">?</span><div class="ttb">Loyalty Business</div></div></th>
-        <th><div class="tti">ICT<span class="ttic">?</span><div class="ttb">ICT решенија за бизнис</div></div></th>
-        <th><div class="tti">FMC Bus.<span class="ttic">?</span><div class="ttb">FMC Business</div></div></th>
-        <th><div class="tti">Post.Bus.<span class="ttic">?</span><div class="ttb">Postpaid Business</div></div></th>
-        <th><div class="tti">BB Bus.<span class="ttic">?</span><div class="ttb">BB Business</div></div></th>
-        <th>Score<br><span style="font-size:8px;font-weight:400;color:var(--t3)">(активни KPI)</span></th>
-      </tr></thead>
+      <thead><tr id="dHead"></tr></thead>
       <tbody id="dTb"></tbody>
       <tfoot><tr id="dFt"></tr></tfoot>
     </table>
   </div>
 </div>
 <!-- KPI Score Toggles -->
-<div style="background:var(--s2);border-radius:var(--rs);padding:12px 14px;margin:0 20px 20px">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
-    <span style="font-size:11px;font-weight:700;color:var(--txt)">⚙️ KPI во Score:</span>
-    <span style="font-size:10px;color:var(--t2)">ON = влегува во Score · OFF = само се брои, не влегува</span>
+<div style="background:var(--s2);border-radius:var(--rs);padding:10px 13px;margin:0 16px 16px">
+  <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700">⚙️ KPI во Score:</span>
+    <span style="font-size:10px;color:var(--t2)">ON = влегува во Score · OFF = само се брои</span>
   </div>
-  <div id="kpiToggles" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+  <div id="kpiToggles" style="display:flex;flex-wrap:wrap;gap:5px"></div>
 </div>
 </div>
 
-<!-- ── MONTHLY ── -->
+<!-- ═══ MONTHLY ═══ -->
 <div id="tp-monthly" class="tp">
 <div class="card">
-  <div style="font-size:15px;font-weight:700;margin-bottom:4px" id="mTit"></div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Реал-тајм · Автоматски се ажурира</div>
+  <div style="font-size:14px;font-weight:700;margin-bottom:3px" id="mTit"></div>
+  <div style="font-size:11px;color:var(--t2);margin-bottom:12px">Реал-тајм</div>
   <div class="scg" id="scGrid"></div>
   <div class="mcg" id="mcGrid"></div>
-  <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px">Детална табела</div>
-  <div class="tw"><table><thead><tr><th>Вработен</th><th>FMC</th><th>Post.</th><th>BB</th><th>IPTV</th><th>Prep.</th><th>Loy.</th><th>C&amp;C</th><th>Опрема</th><th>Add.S.</th><th>L.Bus.</th><th>ICT</th><th>FMC B.</th><th>Post.B.</th><th>BB B.</th><th>Р.дни</th><th>Score</th></tr></thead><tbody id="mTb"></tbody><tfoot><tr id="mFt"></tr></tfoot></table></div>
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px">Детална табела</div>
+  <div class="tw"><table id="moTable"><thead><tr id="moHead"></tr></thead><tbody id="mTb"></tbody><tfoot><tr id="mFt"></tr></tfoot></table></div>
 </div>
 </div>
 
-<!-- ── RANKING ── -->
+<!-- ═══ RANKING ═══ -->
 <div id="tp-ranking" class="tp">
 <div class="card">
-  <div style="font-size:15px;font-weight:700;margin-bottom:4px">🏆 Ранкинг — <span id="rkTit"></span></div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:16px">Performance Score = просек % по активни KPI</div>
+  <div style="font-size:14px;font-weight:700;margin-bottom:3px">🏆 Ранкинг — <span id="rkTit"></span></div>
+  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Performance Score = просек % по активни KPI</div>
   <div class="rg" id="rkGrid"></div>
-  <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
-    <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:14px;text-align:center">
-      <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:4px">🥇 TOP PERFORMER</div>
-      <div style="font-size:15px;font-weight:700;color:var(--gr)" id="topP">—</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+    <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px">🥇 TOP</div>
+      <div style="font-size:14px;font-weight:700;color:var(--gr)" id="topP">—</div>
     </div>
-    <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:14px;text-align:center">
-      <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:4px">📈 NEEDS BOOST</div>
-      <div style="font-size:15px;font-weight:700;color:var(--rd)" id="lowP">—</div>
+    <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">📈 NEEDS BOOST</div>
+      <div style="font-size:14px;font-weight:700;color:var(--rd)" id="lowP">—</div>
     </div>
   </div>
 </div>
 </div>
 
-<!-- ── ALERTS ── -->
+<!-- ═══ ALERTS ═══ -->
 <div id="tp-alerts" class="tp">
 <div class="card">
-  <div style="font-size:15px;font-weight:700;margin-bottom:4px">🚨 Alerts — Рано предупредување</div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:16px">Автоматски генерирани врз основа на перформансите</div>
+  <div style="font-size:14px;font-weight:700;margin-bottom:3px">🚨 Alerts</div>
+  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Автоматски врз основа на перформансите</div>
   <div class="ap" id="alPanel"></div>
 </div>
 </div>
 
-<!-- ── INVENTORY ── -->
+<!-- ═══ INVENTORY (OFI) ═══ -->
 <div id="tp-inventory" class="tp">
 <div class="card">
-  <div style="font-size:15px;font-weight:700;margin-bottom:4px">📦 Инвентар на опрема</div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Само менаџерот внесува залиха.</div>
-  <div style="background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-    <span style="font-size:12px;font-weight:700">Додај залиха:</span>
-    <input class="iinp" type="number" min="0" id="invIn" placeholder="0" style="width:80px">
-    <button class="btn bmg" onclick="addInv()">+ Додај</button>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div><div style="font-size:14px;font-weight:700">📦 Инвентар OFI</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
+    <button class="btn bmg" style="margin-left:auto" onclick="showAddProduct()">+ Додај производ</button>
   </div>
-  <div class="ig" id="invGrid"></div>
-  <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px;margin-top:12px">По вработен</div>
-  <div class="tw"><table style="min-width:400px"><thead><tr><th style="text-align:left;padding-left:10px">Вработен</th><th>Денес</th><th>Овој месец</th><th>Просек/ден</th></tr></thead><tbody id="invTb"></tbody></table></div>
-</div>
-</div>
-
-<!-- ── COMMENTS ── -->
-<div id="tp-comments" class="tp">
-<div class="card">
-  <div style="font-size:15px;font-weight:700;margin-bottom:4px">💬 Коментари по вработен</div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:16px">Само менаџерот пишува. Вработените ги гледаат своите.</div>
-  <div class="cmg" id="cmtGrid"></div>
-  <div style="margin-top:12px;text-align:right"><button class="btn bmg" onclick="saveCmts()">💾 Зачувај коментари</button></div>
-</div>
-</div>
-
-<!-- ── TARGETS ── -->
-<div id="tp-targets" class="tp">
-<div class="card">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
-    <div><div style="font-size:15px;font-weight:700">⚙️ Месечни таргети</div><div style="font-size:11px;color:var(--t2)">Различни цели за секој месец</div></div>
-    <div style="margin-left:auto;display:flex;gap:5px;flex-wrap:wrap">
-      <button class="btn bmg" onclick="saveTgt()">💾 Зачувај</button>
-      <button class="btn" onclick="cpyPrev()">📋 Копирај претходен</button>
+  <!-- Add product form -->
+  <div id="addProdForm" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;margin-bottom:9px">Додај / Надополни производ</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;margin-bottom:9px">
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">OFI Шифра</div><input class="fi" type="text" id="p_ofi" placeholder="42513654"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Назив</div><input class="fi" type="text" id="p_name" placeholder="Samsung полнач бел"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Цена (ден.)</div><input class="fi" type="number" id="p_price" placeholder="0" min="0"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Количина</div><input class="fi" type="number" id="p_qty" placeholder="0" min="0"></div>
+    </div>
+    <div style="display:flex;gap:5px">
+      <button class="btn bmg" onclick="saveProduct()">💾 Зачувај</button>
+      <button class="btn" onclick="document.getElementById('addProdForm').style.display='none'">✕</button>
     </div>
   </div>
-  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
-    <span class="nl">Месец:</span><div id="tgMoBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
-    <span class="nl" style="margin-left:8px">Год.:</span>
-    <button class="na" onclick="chgTgYr(-1)">&#8249;</button>
-    <span id="tgYrLbl" style="font-size:13px;font-weight:700;min-width:40px;text-align:center"></span>
-    <button class="na" onclick="chgTgYr(1)">&#8250;</button>
+  <!-- Summary cards -->
+  <div class="ig" id="invSumGrid"></div>
+  <!-- OFI product table -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:4px">Лагер листа</div>
+  <div class="tw ofi-table">
+    <table style="min-width:650px">
+      <thead><tr>
+        <th style="text-align:left;padding-left:10px">OFI Шифра</th>
+        <th style="text-align:left">Назив</th>
+        <th>Цена</th>
+        <th>Лагер</th>
+        <th>Продадено (месец)</th>
+        <th>Приходи (месец)</th>
+        <th>Статус</th>
+        <th>Акција</th>
+      </tr></thead>
+      <tbody id="ofiTb"></tbody>
+      <tfoot><tr id="ofiTf"></tr></tfoot>
+    </table>
   </div>
-  <div id="tgBadge" style="margin-bottom:10px"></div>
-  <div class="tw"><table style="min-width:500px">
-    <thead><tr><th style="text-align:left;padding-left:10px;min-width:140px">KPI</th><th>Месечен<br><span style="font-weight:400;font-size:9px">(по вработен)</span></th><th>Дневен<br><span style="font-weight:400;font-size:9px">(авто)</span></th><th>Неделен<br><span style="font-weight:400;font-size:9px">(авто)</span></th><th>Default</th></tr></thead>
+  <!-- Sales by employee -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:14px">Продажба по вработен (месец)</div>
+  <div class="tw"><table style="min-width:400px"><thead><tr><th style="text-align:left;padding-left:10px">Вработен</th><th>Денес</th><th>Месец</th><th>Приход</th><th>Просек/ден</th></tr></thead><tbody id="invTb"></tbody></table></div>
+</div>
+</div>
+
+<!-- ═══ TARGETS ═══ -->
+<div id="tp-targets" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+    <div><div style="font-size:14px;font-weight:700">⚙️ Месечни таргети</div></div>
+    <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap">
+      <button class="btn bmg" onclick="saveTgt()">💾 Зачувај</button>
+      <button class="btn" onclick="cpyPrev()">📋 Копирај претх.</button>
+    </div>
+  </div>
+  <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:9px">
+    <span class="nl">Месец:</span><div id="tgMoBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <span class="nl" style="margin-left:7px">Год.:</span>
+    <button class="na" onclick="chgTgYr(-1)">‹</button>
+    <span id="tgYrLbl" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
+    <button class="na" onclick="chgTgYr(1)">›</button>
+  </div>
+  <div id="tgBadge" style="margin-bottom:8px"></div>
+  <div class="tw"><table style="min-width:460px">
+    <thead><tr><th style="text-align:left;padding-left:10px;min-width:130px">KPI</th><th>Месечен<br><span style="font-weight:400;font-size:9px">(по вработен)</span></th><th>Дневен</th><th>Неделен</th><th>Default</th></tr></thead>
     <tbody id="tgTb"></tbody>
   </table></div>
-  <div style="margin-top:16px;border-top:1px solid var(--brd);padding-top:14px">
-    <div style="font-size:12px;font-weight:700;margin-bottom:10px">Сите зачувани таргети</div>
+  <div style="margin-top:14px;border-top:1px solid var(--brd);padding-top:12px">
+    <div style="font-size:11px;font-weight:700;margin-bottom:8px">Зачувани таргети</div>
     <div id="tgAll"></div>
   </div>
 </div>
 </div>
 
-<!-- ── PHONE & EQUIPMENT ORDERS ── -->
+<!-- ═══ ORDERS ═══ -->
 <div id="tp-orders" class="tp">
 <div class="card">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
-    <div><div style="font-size:15px;font-weight:700">📱 Phone &amp; Equipment — Нарачки</div><div style="font-size:11px;color:var(--t2)">Вработените внесуваат · Менаџерот ги гледа сите</div></div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+    <div><div style="font-size:14px;font-weight:700">📱 Phone & Equipment — Нарачки</div><div style="font-size:11px;color:var(--t2)">Вработените внесуваат · Менаџерот ги гледа сите</div></div>
     <div style="margin-left:auto"><button class="btn bmg" onclick="addOrder()">+ Нова нарачка</button></div>
   </div>
-  <div id="orderFormWrap" style="background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:16px;display:none">
-    <div style="font-size:12px;font-weight:700;margin-bottom:10px">📋 Внеси нова нарачка</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:10px">
-      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Модел</div><input class="fi" type="text" id="ord_model" placeholder="iPhone 16, Samsung S25..."></div>
-      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Кон Тел (Корисник)</div><input class="fi" type="text" id="ord_tel" placeholder="070 123 456"></div>
-      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Датум нарачка</div><input class="fi" type="date" id="ord_odate"></div>
-      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Датум реализација</div><input class="fi" type="date" id="ord_rdate"></div>
+  <div id="orderFormWrap" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:12px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px;margin-bottom:8px">
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Модел</div><input class="fi" type="text" id="ord_model" placeholder="iPhone 16..."></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Кон Тел</div><input class="fi" type="text" id="ord_tel" placeholder="070 123 456"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Датум нарачка</div><input class="fi" type="date" id="ord_odate"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Датум реализација</div><input class="fi" type="date" id="ord_rdate"></div>
     </div>
-    <div style="margin-bottom:10px"><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Белешки</div><textarea class="cta" id="ord_notes" placeholder="Боја, капацитет, посебни барања..." style="min-height:48px"></textarea></div>
-    <div style="display:flex;gap:6px">
-      <button class="btn bmg" onclick="saveOrder()">💾 Зачувај нарачка</button>
-      <button class="btn" onclick="document.getElementById('orderFormWrap').style.display='none'">✕ Откажи</button>
+    <div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Белешки</div><textarea class="cta" id="ord_notes" style="min-height:42px" placeholder="Боја, капацитет..."></textarea></div>
+    <div style="display:flex;gap:5px">
+      <button class="btn bmg" onclick="saveOrder()">💾 Зачувај</button>
+      <button class="btn" onclick="document.getElementById('orderFormWrap').style.display='none'">✕</button>
     </div>
   </div>
-  <div id="mgrOrderNotesWrap" style="display:none;background:var(--mgl);border:1px solid var(--mg);border-radius:var(--rs);padding:12px;margin-bottom:14px">
-    <div style="font-size:12px;font-weight:700;color:var(--mgd);margin-bottom:6px">🔐 Мои белешки (само јас ги гледам)</div>
-    <textarea class="cta" id="mgrOrderNotes" placeholder="Интерни белешки за нарачки..." style="min-height:56px"></textarea>
-    <button class="btn bmg" style="margin-top:6px" onclick="saveMgrOrderNotes()">💾 Зачувај белешки</button>
+  <div id="mgrOrderNotesWrap" style="display:none;background:var(--mgl);border:1px solid var(--mg);border-radius:var(--rs);padding:11px;margin-bottom:12px">
+    <div style="font-size:11px;font-weight:700;color:var(--mgd);margin-bottom:5px">🔐 Мои приватни белешки</div>
+    <textarea class="cta" id="mgrOrderNotes" style="min-height:50px" placeholder="Интерни белешки..."></textarea>
+    <button class="btn bmg" style="margin-top:5px" onclick="saveMgrNotes()">💾 Зачувај</button>
   </div>
   <div class="tw">
-    <table style="min-width:700px">
+    <table style="min-width:680px">
       <thead><tr>
         <th style="text-align:left;padding-left:10px">Вработен</th>
-        <th>Модел</th><th>Кон Тел</th><th>Датум нарачка</th><th>Датум реализација</th>
-        <th>Статус</th><th>Белешки</th><th>Акција</th>
+        <th>Модел</th><th>Кон Тел</th><th>Нарачано</th><th>Реализација</th>
+        <th>Статус</th><th>Белешки</th><th>Del</th>
       </tr></thead>
       <tbody id="ordersTb"></tbody>
     </table>
@@ -442,105 +461,117 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
-<!-- ═══════════════ EMPLOYEE VIEW ═══════════════ -->
+<!-- ═══ BOOST BOARD ═══ -->
+<div id="tp-boost" class="tp">
+<div class="card">
+  <div style="font-size:14px;font-weight:700;margin-bottom:12px">🏅 Boost Board — Испрати на вработена</div>
+  <div id="stickerBoard"></div>
+</div>
+</div>
+
+<!-- ═══════ EMPLOYEE VIEW ═══════ -->
 <div id="empView" style="display:none">
 <div class="hdr" style="position:relative">
-  <div style="font-size:14px;font-weight:700" id="empWel"></div>
+  <div style="font-size:13px;font-weight:700" id="empWel"></div>
   <div id="empPB" style="margin-left:auto"></div>
 </div>
 <div class="nav" id="empNav">
-  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Год.</span>
-    <button class="na" onclick="empChgYr(-1)">&#8249;</button>
-    <button class="nb act" id="empYrDisp" style="font-weight:700;font-size:12px;min-width:50px">2026</button>
-    <button class="na" onclick="empChgYr(1)">&#8250;</button>
+    <button class="na" onclick="empChgYr(-1)">‹</button>
+    <button class="nb act" id="empYrDisp" style="font-weight:700;min-width:44px">2026</button>
+    <button class="na" onclick="empChgYr(1)">›</button>
   </div>
   <div class="nsep"></div>
-  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Месец</span>
-    <button class="na" onclick="empChgMo(-1)">&#8249;</button>
-    <div id="empMoBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
-    <button class="na" onclick="empChgMo(1)">&#8250;</button>
+    <button class="na" onclick="empChgMo(-1)">‹</button>
+    <div id="empMoBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <button class="na" onclick="empChgMo(1)">›</button>
   </div>
   <div class="nsep"></div>
-  <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Недела</span>
-    <div id="empWkBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
+    <div id="empWkBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
   </div>
-  <div style="margin-left:auto;display:flex;gap:4px">
-    <button class="btn" onclick="empPrint()">🖨 Печати</button>
+  <div style="margin-left:auto;display:flex;gap:3px">
+    <button class="btn" onclick="window.print()">🖨 PDF</button>
   </div>
 </div>
-<div class="tabs" style="margin:0 20px">
+<div class="tabs" style="margin:0 16px">
   <div class="tab act" onclick="empTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="empTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="empTab('monthly',this)">📊 Месечен</div>
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
-  <div class="tab" onclick="empTab('emporders',this)">📱 Мои Нарачки</div>
+  <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
 </div>
-<div id="etp-daily" class="tp act" style="padding:0 20px 20px;margin-top:0">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
-    <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
-      <span class="nl">Ден:</span><div id="empDyBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
+<!-- EMP DAILY -->
+<div id="etp-daily" class="tp act" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <span class="nl">Ден:</span><div id="empDyBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
     </div>
-    <div style="display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
-      <span class="nl">Статус:</span><div id="empStBtns" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+    <div style="display:flex;gap:5px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+      <span class="nl">Статус:</span><div id="empStBtns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
     </div>
     <div class="ekg" id="empKpiG"></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
       <span id="empSS" class="ss" style="display:none"></span>
       <span style="font-size:10px;color:var(--t3)">💡 Автоматски се зачувува</span>
     </div>
   </div>
-  <div id="empCmtBox" style="background:var(--bll);border:1px solid #90caf9;border-radius:var(--r);padding:14px;margin-top:12px;display:none">
-    <div style="font-size:12px;font-weight:700;color:var(--bl);margin-bottom:6px">💬 Коментар од менаџерот:</div>
-    <div id="empCmtTxt" style="font-size:13px"></div>
+  <div id="empCmtBox" style="background:var(--bll);border:1px solid #90caf9;border-radius:var(--r);padding:12px;margin-top:10px;display:none">
+    <div style="font-size:11px;font-weight:700;color:var(--bl);margin-bottom:5px">💬 Порака од менаџерот:</div>
+    <div id="empCmtTxt" style="font-size:12px"></div>
   </div>
 </div>
-<div id="etp-weekly" class="tp" style="padding:0 20px 20px;margin-top:0">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
-    <div style="font-size:14px;font-weight:700;margin-bottom:14px" id="empWkTitle"></div>
+<!-- EMP WEEKLY -->
+<div id="etp-weekly" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px" id="empWkTitle"></div>
     <div class="scg" id="empWkScG"></div>
-    <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px;margin-top:12px">По KPI — оваа недела</div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:10px">По KPI — оваа недела</div>
     <div id="empWkKpiGrid" class="ekg"></div>
   </div>
 </div>
-<div id="etp-monthly" class="tp" style="padding:0 20px 20px;margin-top:0">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
-    <div style="font-size:14px;font-weight:700;margin-bottom:14px" id="empMoTit"></div>
+<!-- EMP MONTHLY -->
+<div id="etp-monthly" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px" id="empMoTit"></div>
     <div class="scg" id="empScG"></div>
   </div>
 </div>
-<div id="etp-yearly" class="tp" style="padding:0 20px 20px;margin-top:0">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
-    <div style="font-size:14px;font-weight:700;margin-bottom:14px" id="empYrTit"></div>
+<!-- EMP YEARLY -->
+<div id="etp-yearly" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px" id="empYrTit"></div>
     <div class="scg" id="empYrScG"></div>
-    <div id="empYrMonths" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px"></div>
+    <div id="empYrMonths" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px"></div>
   </div>
 </div>
-<div id="etp-emporders" class="tp" style="padding:0 20px 20px;margin-top:0">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:16px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="font-size:14px;font-weight:700">📱 Мои Нарачки</div>
-      <button class="btn bmg" style="margin-left:auto" onclick="addEmpOrder()">+ Нова нарачка</button>
+<!-- EMP ORDERS -->
+<div id="etp-emporders" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:700">📱 Мои Нарачки</div>
+      <button class="btn bmg" style="margin-left:auto" onclick="addEmpOrder()">+ Нова</button>
     </div>
-    <div id="orderFormWrap2" style="background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:16px;display:none">
-      <div style="font-size:12px;font-weight:700;margin-bottom:10px">📋 Внеси нова нарачка</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:8px">
-        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Модел</div><input class="fi" type="text" id="emp_ord_model" placeholder="iPhone 16..."></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Кон Тел</div><input class="fi" type="text" id="emp_ord_tel" placeholder="070 123 456"></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Датум нарачка</div><input class="fi" type="date" id="emp_ord_odate"></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Датум реализација</div><input class="fi" type="date" id="emp_ord_rdate"></div>
+    <div id="orderFormWrap2" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;margin-bottom:8px">
+        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Модел</div><input class="fi" type="text" id="e_ord_model" placeholder="iPhone..."></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Кон Тел</div><input class="fi" type="text" id="e_ord_tel" placeholder="070..."></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Датум нарачка</div><input class="fi" type="date" id="e_ord_odate"></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Датум реализација</div><input class="fi" type="date" id="e_ord_rdate"></div>
       </div>
-      <div style="margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:3px;text-transform:uppercase">Белешки</div><textarea class="cta" id="emp_ord_notes" placeholder="Боја, капацитет..." style="min-height:44px"></textarea></div>
-      <div style="display:flex;gap:6px">
+      <div style="margin-bottom:7px"><textarea class="cta" id="e_ord_notes" style="min-height:40px" placeholder="Белешки..."></textarea></div>
+      <div style="display:flex;gap:5px">
         <button class="btn bmg" onclick="saveEmpOrder()">💾 Зачувај</button>
-        <button class="btn" onclick="document.getElementById('orderFormWrap2').style.display='none'">✕ Откажи</button>
+        <button class="btn" onclick="document.getElementById('orderFormWrap2').style.display='none'">✕</button>
       </div>
     </div>
     <div class="tw">
-      <table style="min-width:600px">
-        <thead><tr><th>Модел</th><th>Кон Тел</th><th>Датум нарачка</th><th>Датум реализација</th><th>Статус</th><th>Белешки</th><th>Акција</th></tr></thead>
+      <table style="min-width:580px">
+        <thead><tr><th>Модел</th><th>Кон Тел</th><th>Нарачано</th><th>Реализација</th><th>Статус</th><th>Белешки</th><th>Del</th></tr></thead>
         <tbody id="empOrdersTb"></tbody>
       </table>
     </div>
@@ -551,13 +582,13 @@ body.emp-mode #empView{display:block!important}
 </div><!-- end sApp -->
 
 <script type="module">
-// ═══════════════════════════════════════════════════════
-// 🔥 FIREBASE PRODUCTION — mkt-kicevo-tracker
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// 🔥 FIREBASE — mkt-kicevo-tracker
+// ═══════════════════════════════════════════════════
 if(window.location.protocol==='file:'){
   document.getElementById('sLoad').style.display='none';
-  document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px"><div style="background:#fff;border:1px solid #ddd;border-radius:16px;padding:32px;max-width:420px;text-align:center"><div style="font-size:36px;margin-bottom:12px">⚠️</div><div style="font-size:17px;font-weight:700;color:#c62828;margin-bottom:8px">Не може локално!</div><div style="font-size:13px;color:#555;line-height:1.6">Апликацијата мора да биде на GitHub Pages или веб сервер.<br><br>Качи го фајлот на GitHub и вклучи GitHub Pages.</div></div></div>';
-  throw new Error('file:// - stopped');
+  document.body.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;font-family:sans-serif"><div style="background:#fff;border:1px solid #ddd;border-radius:16px;padding:32px;max-width:400px;text-align:center"><div style="font-size:32px;margin-bottom:12px">⚠️</div><b style="color:#c62828">Не може локално!</b><p style="margin-top:8px;color:#555;font-size:13px">Качи го на GitHub Pages.</p></div></div>';
+  throw new Error('file://');
 }
 
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -567,6 +598,7 @@ import{getFirestore,doc,setDoc,getDoc,updateDoc,deleteDoc,collection,onSnapshot,
 const FB={apiKey:"AIzaSyD2lqOi4rm_7L-C9yO1HTGipaKGPl5UBs8",authDomain:"mkt-kicevo-tracker.firebaseapp.com",projectId:"mkt-kicevo-tracker",storageBucket:"mkt-kicevo-tracker.firebasestorage.app",messagingSenderId:"850383341068",appId:"1:850383341068:web:bf5e71d3a10cb301e9d029"};
 const fbApp=initializeApp(FB);const auth=getAuth(fbApp);const db=getFirestore(fbApp);
 
+// ── CONSTANTS ──
 const MGR_EMAIL='ilir.murati@telekom.mk';
 const EMAIL_MAP={'ivona@mkt-kicevo.com':'IN','katerina@mkt-kicevo.com':'KM','hane@mkt-kicevo.com':'HS','flutrime@mkt-kicevo.com':'FM','melihan@mkt-kicevo.com':'MS'};
 const MEMBERS=[
@@ -577,26 +609,20 @@ const MEMBERS=[
   {id:'MS',name:'Мелихан Сулковска',        ini:'МС',bg:'#ede9fe',tc:'#5b21b6'},
 ];
 const KKEYS=['fmc','post','bb','iptv','prep','loy','cc','equip','addser','loybus','ict','fmcbus','postbus','bbbus'];
-const KLBLS=['FMC Cons.','Postpaid','BB Cons.','IPTV','Prepaid','Loyalty','C&C','Доп. Опрема','Add. Ser.','Loyalty Bus.','ICT','FMC Bus.','Postpaid Bus.','BB Bus.'];
+const KLBLS=['FMC Cons.','Postpaid','BB Cons.','IPTV','Prepaid','Loyalty','C&C','Доп. Опрема','Add. Ser.','Loyalty Bus.','ICT','FMC Bus.','Post. Bus.','BB Bus.'];
 const DTGT={fmc:9,post:26,bb:15,iptv:12,prep:16,loy:104,cc:42,equip:66,addser:5,loybus:5,ict:5,fmcbus:5,postbus:5,bbbus:5};
 const SIC=['🏢','🏠','📋','❌'];const SLBL=['На работа','Дома','Теренска','Отсутен'];
 const MKM=['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 const MKD=['Нед','Пон','Вт','Сре','Чет','Пет','Саб'];
+// Default: FMC,Post,BB,IPTV,Loyalty,C&C ON — rest OFF
+const DEFAULT_EXCLUDED=new Set(['prep','equip','addser','loybus','ict','fmcbus','postbus','bbbus']);
 
-// Вистински резултати Април 2026 — преоптоварување само за тој месец
-const PRE={4:{
-  IN:{fmc:8, post:22,bb:12,iptv:5, prep:6, loy:68, cc:26,equip:24,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0},
-  KM:{fmc:6, post:12,bb:9, iptv:2, prep:5, loy:68, cc:21,equip:22,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0},
-  HS:{fmc:1, post:17,bb:9, iptv:1, prep:8, loy:43, cc:26,equip:22,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0},
-  FM:{fmc:10,post:23,bb:18,iptv:9, prep:5, loy:93, cc:46,equip:23,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0},
-  MS:{fmc:10,post:33,bb:17,iptv:8, prep:10,loy:121,cc:53,equip:25,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0},
-}};
-
+// ── STATE ──
 let curUsr=null,isMgr=false,mID=null;
 let cY=new Date().getFullYear(),cM=new Date().getMonth()+1,cW=0,cD=0;
-let AS={},TS={},CS={},INV={stock:0,hist:[]};
+let AS={},TS={},CS={},OFI_PRODUCTS={};
 let ORDERS=[],MGR_ORDER_NOTES='';
-let SCORE_EXCLUDED=new Set(['prep','addser','loybus','ict','fmcbus','postbus','bbbus']);
+let SCORE_EXCLUDED=new Set(DEFAULT_EXCLUDED);
 let svTmr=null,tgY=cY,tgM=cM;
 let _unsubDay=null,_unsubOrders=null;
 
@@ -613,72 +639,127 @@ const showSS=(id,msg,cls)=>{const el=document.getElementById(id);if(!el)return;e
 function getMT(y,m){return(TS[y]&&TS[y][m])?TS[y][m]:{...DTGT};}
 function getWDs(y,m){const d=[];const dt=new Date(y,m-1,1);while(dt.getMonth()===m-1){const dw=dt.getDay();if(dw!==0)d.push({date:dt.getDate(),dow:dw,label:MKD[dw]+' '+dt.getDate()+'/'+m});dt.setDate(dt.getDate()+1);}return d;}
 function gWks(wd){const w=[];let wk=[];wd.forEach((d,i)=>{wk.push(d);if(d.dow===6||i===wd.length-1){w.push(wk);wk=[];}});return w;}
-function ensD(y,m,dk){if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};if(!AS[y][m][dk]){AS[y][m][dk]={};MEMBERS.forEach(mb=>{AS[y][m][dk][mb.id]={status:mb.da?3:0,fmc:0,post:0,bb:0,iptv:0,prep:0,loy:0,cc:0,equip:0,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0};});}}
+function ensD(y,m,dk){
+  if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};
+  if(!AS[y][m][dk]){AS[y][m][dk]={};MEMBERS.forEach(mb=>{AS[y][m][dk][mb.id]={status:mb.da?3:0,fmc:0,post:0,bb:0,iptv:0,prep:0,loy:0,cc:0,equip:0,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0};});}
+}
 function gDay(y,m,dk){ensD(y,m,dk);return AS[y][m][dk];}
-function mMoSum(mid,k,y,m){let s=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms&&ms.status!==3&&ms.status!==1){const v=ms[k];s+=(v!==undefined&&v!==null?v:0);}});const pre=(PRE[m]||{})[mid];if(pre)s+=(pre[k]||0);return s;}
+function mMoSum(mid,k,y,m){
+  let s=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms&&ms.status!==3&&ms.status!==1){const v=ms[k];s+=(v!==undefined&&v!==null?v:0);}});
+  return s;
+}
 function mWDs(mid,y,m){let c=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms&&(ms.status===0||ms.status===2))c++;});return c;}
-function perfScore(mid,y,m){const t=getMT(y,m);let s=0;let cnt=0;KKEYS.forEach(k=>{if(isInScore(k)){s+=pct(mMoSum(mid,k,y,m),t[k]||1);cnt++;}});return cnt>0?Math.round(s/cnt):0;}
+// CORRECT perfScore — only ON KPIs, no excluded
+function perfScore(mid,y,m){
+  const t=getMT(y,m);let s=0;let cnt=0;
+  KKEYS.forEach(k=>{if(isInScore(k)){const v=mMoSum(mid,k,y,m);const tgt=t[k]||1;s+=pct(v,tgt);cnt++;}});
+  return cnt>0?Math.round(s/cnt):0;
+}
 
-// ── DARK MODE ──
-function initDM(){const dm=localStorage.getItem('dm')==='1';document.documentElement.setAttribute('data-theme',dm?'dark':'light');const btn=document.getElementById('dmt');if(btn)btn.classList.toggle('on',dm);}
-window.toggleDark=()=>{const d=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',d?'light':'dark');localStorage.setItem('dm',d?'0':'1');document.getElementById('dmt').classList.toggle('on',!d);};
-initDM();
+// ── KPI TOGGLE PERSISTENCE ──
+function loadScoreExcl(){const s=localStorage.getItem('kpi_excl_v2');if(s)SCORE_EXCLUDED=new Set(JSON.parse(s));else SCORE_EXCLUDED=new Set(DEFAULT_EXCLUDED);}
+function saveScoreExcl(){localStorage.setItem('kpi_excl_v2',JSON.stringify([...SCORE_EXCLUDED]));}
+function toggleKpiScore(k){
+  if(SCORE_EXCLUDED.has(k))SCORE_EXCLUDED.delete(k);else SCORE_EXCLUDED.add(k);
+  saveScoreExcl();rndKpiToggles();rndTbl();
+  if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
+  if(document.getElementById('tp-ranking')?.classList.contains('act'))rndRanking();
+  calcAlerts();
+}
+function rndKpiToggles(){
+  const c=document.getElementById('kpiToggles');if(!c)return;c.innerHTML='';
+  KKEYS.forEach((k,i)=>{
+    const on=isInScore(k);
+    const sw=`<span class="toggle-sw ${on?'on':''}"></span>`;
+    const btn=document.createElement('span');
+    btn.className='kpi-toggle '+(on?'on':'off');
+    btn.innerHTML=`${sw} ${KLBLS[i]}`;
+    btn.title=on?'ON — влегува во Score':'OFF — само се брои';
+    btn.onclick=()=>toggleKpiScore(k);
+    c.appendChild(btn);
+  });
+}
 
-// ── KPI SCORE TOGGLES ──
-function loadScoreExcl(){const s=localStorage.getItem('score_excl');if(s)SCORE_EXCLUDED=new Set(JSON.parse(s));}
-function toggleKpiScore(k){if(SCORE_EXCLUDED.has(k))SCORE_EXCLUDED.delete(k);else SCORE_EXCLUDED.add(k);localStorage.setItem('score_excl',JSON.stringify([...SCORE_EXCLUDED]));rndKpiToggles();rndTbl();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();if(document.getElementById('tp-ranking').classList.contains('act'))rndRanking();calcAlerts();}
-function rndKpiToggles(){const c=document.getElementById('kpiToggles');if(!c)return;c.innerHTML='';KKEYS.forEach((k,i)=>{const on=isInScore(k);const sw=`<span class="toggle-sw ${on?'on':''}"></span>`;const btn=document.createElement('span');btn.className='kpi-toggle '+(on?'on':'off');btn.innerHTML=`${sw} ${KLBLS[i]}`;btn.title=on?'Кликни за да го исклучиш од Score':'Кликни за да го вклучиш во Score';btn.onclick=()=>toggleKpiScore(k);c.appendChild(btn);});}
-
-// ════════════════════════════════════════════════
-// FIREBASE SAVE / LOAD / REALTIME
-// ════════════════════════════════════════════════
+// ══════════════════════════════════════════
+// FIREBASE SAVE / LOAD
+// ══════════════════════════════════════════
 async function svDay(y,m,dk){
   showSS('sStat','💾...','sv');
-  try{await setDoc(doc(db,'days',dk),AS[y]?.[m]?.[dk]||{});showSS('sStat','✓ Зачувано','ok');}
-  catch(e){showSS('sStat','⚠ Грешка','er');console.error(e);}
+  try{
+    const data={...AS[y]?.[m]?.[dk]||{}};
+    await setDoc(doc(db,'days',dk),data);
+    showSS('sStat','✓ Зачувано','ok');
+  }catch(e){showSS('sStat','⚠ '+e.message,'er');console.error('svDay',e);}
 }
-async function svCfg(key,data){try{await setDoc(doc(db,'config',key),{data});}catch(e){console.error(e);}}
-async function ldCfg(key){try{const s=await getDoc(doc(db,'config',key));return s.exists()?s.data().data:null;}catch(e){return null;}}
+async function svCfg(key,data){
+  try{await setDoc(doc(db,'config',key),{data:JSON.parse(JSON.stringify(data))});}
+  catch(e){console.error('svCfg',key,e);}
+}
+async function ldCfg(key){
+  try{const s=await getDoc(doc(db,'config',key));return s.exists()?s.data().data:null;}
+  catch(e){console.error('ldCfg',key,e);return null;}
+}
 
+// Real-time day listener for current month
 function subToMonth(y,m){
   if(_unsubDay){_unsubDay();_unsubDay=null;}
   const keys=getWDs(y,m).map(d=>dK(y,m,d));
   const unsubs=[];
   keys.forEach(dk=>{
     const u=onSnapshot(doc(db,'days',dk),snap=>{
-      const parts=dk.split('-');const dy=parseInt(parts[0]),dm2=parseInt(parts[1]);
-      if(!AS[dy])AS[dy]={};if(!AS[dy][dm2])AS[dy][dm2]={};
-      if(snap.exists())AS[dy][dm2][dk]=snap.data();else ensD(dy,dm2,dk);
-      if(cY===dy&&cM===dm2){rndTbl();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();if(document.getElementById('tp-ranking').classList.contains('act'))rndRanking();calcAlerts();}
-    });
+      const parts=dk.split('-');const dy=parseInt(parts[0]),dm=parseInt(parts[1]);
+      if(!AS[dy])AS[dy]={};if(!AS[dy][dm])AS[dy][dm]={};
+      if(snap.exists())AS[dy][dm][dk]={...snap.data()};
+      else ensD(dy,dm,dk);
+      if(cY===dy&&cM===dm){
+        rndTbl();
+        if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
+        if(document.getElementById('tp-ranking')?.classList.contains('act'))rndRanking();
+        calcAlerts();
+        // Update employee view if active
+        if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
+        if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
+      }
+    },err=>console.error('onSnapshot day',dk,err));
     unsubs.push(u);
   });
   _unsubDay=()=>unsubs.forEach(u=>u());
 }
 
+// Real-time orders listener
 function subToOrders(){
   if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
   const q=query(collection(db,'orders'),orderBy('createdAt','desc'));
   _unsubOrders=onSnapshot(q,snap=>{
-    ORDERS=[];snap.forEach(d=>{ORDERS.push({id:d.id,...d.data()});});
+    ORDERS=[];snap.forEach(d=>ORDERS.push({id:d.id,...d.data()}));
     if(document.getElementById('tp-orders')?.classList.contains('act'))rndOrders();
     if(document.getElementById('etp-emporders')?.classList.contains('act'))rndEmpOrders();
-  });
+  },err=>console.error('onSnapshot orders',err));
 }
 
 async function ldMonth(y,m){
   const fetches=getWDs(y,m).map(async d=>{
-    const dk=dK(y,m,d);if(AS[y]?.[m]?.[dk])return;
-    try{const s=await getDoc(doc(db,'days',dk));if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};if(s.exists())AS[y][m][dk]=s.data();else ensD(y,m,dk);}catch(e){ensD(y,m,dk);}
+    const dk=dK(y,m,d);
+    if(AS[y]?.[m]?.[dk])return;
+    try{const s=await getDoc(doc(db,'days',dk));if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};if(s.exists())AS[y][m][dk]={...s.data()};else ensD(y,m,dk);}
+    catch(e){ensD(y,m,dk);}
   });
   await Promise.all(fetches);
 }
 
 async function ldAllCfg(){
-  const [t,c,i,se,mn]=await Promise.all([ldCfg('targets'),ldCfg('comments'),ldCfg('inventory'),ldCfg('scoreExcl'),ldCfg('mgrOrderNotes')]);
-  if(t)TS=t;if(c)CS=c;if(i)INV=i;else INV={stock:0,hist:[]};
-  if(se)SCORE_EXCLUDED=new Set(se);else loadScoreExcl();
+  const [t,c,se,mn,ofi]=await Promise.all([
+    ldCfg('targets'),ldCfg('comments'),ldCfg('scoreExcl'),
+    isMgr?ldCfg('mgrOrderNotes'):Promise.resolve(null),
+    ldCfg('ofi_products')
+  ]);
+  if(t)TS=t;
+  if(c)CS=c;
+  // Score excl: use localStorage first (manager sets it), fall back to Firebase
+  loadScoreExcl();
+  if(se&&!localStorage.getItem('kpi_excl_v2'))SCORE_EXCLUDED=new Set(se);
   if(mn&&isMgr)MGR_ORDER_NOTES=mn;
+  if(ofi)OFI_PRODUCTS=ofi;
 }
 
 // ── AUTH ──
@@ -696,7 +777,7 @@ window.doLogin=async()=>{
   const em=document.getElementById('lEm').value.trim().toLowerCase();
   const ps=document.getElementById('lPs').value;
   const err=document.getElementById('lErr');err.style.display='none';
-  const btn=document.getElementById('lBtn');btn.disabled=true;btn.textContent='Најавување...';
+  const btn=document.getElementById('lBtn');btn.disabled=true;btn.textContent='...';
   try{await signInWithEmailAndPassword(auth,em,ps);}
   catch(e){err.style.display='block';err.textContent=e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'Погрешен email или лозинка.':'Грешка: '+e.message;}
   finally{btn.disabled=false;btn.textContent='Најави се';}
@@ -704,9 +785,10 @@ window.doLogin=async()=>{
 document.getElementById('lPs').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
 
 window.doLogout=async()=>{
-  if(_unsubDay){_unsubDay();_unsubDay=null;}if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
+  if(_unsubDay){_unsubDay();_unsubDay=null;}
+  if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
   await signOut(auth);
-  curUsr=null;isMgr=false;mID=null;AS={};TS={};CS={};ORDERS=[];
+  curUsr=null;isMgr=false;mID=null;AS={};TS={};CS={};ORDERS=[];OFI_PRODUCTS={};
   document.body.classList.remove('emp-mode');
   document.getElementById('sApp').style.display='none';
   document.getElementById('sLogin').style.display='flex';
@@ -716,41 +798,96 @@ window.doLogout=async()=>{
 async function postLogin(){
   document.getElementById('sLogin').style.display='none';
   document.getElementById('sApp').style.display='block';
-  document.getElementById('uBadge').textContent=isMgr?'👔 Менаџер: Илир':(MEMBERS.find(m=>m.id===mID)?.name||curUsr.email);
+  document.getElementById('uBadge').textContent=isMgr?'👔 Илир':(MEMBERS.find(m=>m.id===mID)?.name.split(' ')[0]||curUsr.email);
   document.getElementById('todStr').textContent=new Date().toLocaleDateString('mk-MK',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  await ldAllCfg();await ldMonth(cY,cM);subToMonth(cY,cM);subToOrders();
+  await ldAllCfg();
+  await ldMonth(cY,cM);
+  subToMonth(cY,cM);
+  subToOrders();
   if(isMgr){
-    document.getElementById('mgrNav').style.display='flex';document.getElementById('mgrTabs').style.display='flex';
-    document.getElementById('empView').style.display='none';document.body.classList.remove('emp-mode');
-    rndNav();rndDailyView();calcAlerts();rndKpiToggles();rndMotivation();
+    document.getElementById('mgrNav').style.display='flex';
+    document.getElementById('mgrTabs').style.display='flex';
+    document.getElementById('empView').style.display='none';
+    document.body.classList.remove('emp-mode');
+    rndNav();rndDailyView();calcAlerts();rndKpiToggles();rndBoostBoard();
   }else if(mID){
-    document.getElementById('mgrNav').style.display='none';document.getElementById('mgrTabs').style.display='none';
-    ['daily','monthly','ranking','alerts','inventory','comments','targets','orders'].forEach(t=>{const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}});
-    document.getElementById('empView').style.display='block';document.body.classList.add('emp-mode');
+    document.getElementById('mgrNav').style.display='none';
+    document.getElementById('mgrTabs').style.display='none';
+    ['daily','monthly','ranking','alerts','inventory','targets','orders','boost'].forEach(t=>{
+      const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}
+    });
+    document.getElementById('empView').style.display='block';
+    document.body.classList.add('emp-mode');
     initEmp();
   }
 }
 document.getElementById('sLoad').style.display='flex';
 
+// ══ BACKUP SAVE / LOAD ══
+window.saveBackup=()=>{
+  const data={AS,TS,CS,ORDERS,OFI_PRODUCTS,MGR_ORDER_NOTES,SCORE_EXCLUDED:[...SCORE_EXCLUDED],savedAt:new Date().toISOString(),version:2};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`mkt-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();
+  showSS('sStat','✓ Backup зачуван','ok');
+};
+window.loadBackup=async(input)=>{
+  const file=input.files[0];if(!file)return;
+  try{
+    const text=await file.text();const data=JSON.parse(text);
+    if(data.AS)AS=data.AS;if(data.TS)TS=data.TS;if(data.CS)CS=data.CS;
+    if(data.ORDERS)ORDERS=data.ORDERS;if(data.OFI_PRODUCTS)OFI_PRODUCTS=data.OFI_PRODUCTS;
+    if(data.MGR_ORDER_NOTES)MGR_ORDER_NOTES=data.MGR_ORDER_NOTES;
+    if(data.SCORE_EXCLUDED){SCORE_EXCLUDED=new Set(data.SCORE_EXCLUDED);saveScoreExcl();}
+    rndTbl();rndKpiToggles();calcAlerts();
+    showSS('sStat','✓ Backup вчитан','ok');
+    alert('✅ Backup вчитан успешно!');
+  }catch(e){alert('⚠ Грешка при вчитување: '+e.message);}
+  input.value='';
+};
+
 // ── NAV ──
 function rndNav(){
   document.getElementById('yrDisp').textContent=cY;
   const mb=document.getElementById('moBtns');mb.innerHTML='';
-  MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();};mb.appendChild(b);});
+  MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();};mb.appendChild(b);});
   const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('wkBtns');wb.innerHTML='';
   wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndDailyView();};wb.appendChild(b);});
 }
 window.chgYr=async d=>{cY+=d;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();};
-window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();};
+window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();};
+
+// ── BUILD TABLE HEADER ──
+function buildTableHeaders(){
+  const h=document.getElementById('dHead');if(!h)return;
+  let t='<th>Вработен</th><th>Статус</th>';
+  KKEYS.forEach((k,i)=>{
+    const on=isInScore(k);
+    t+=`<th style="opacity:${on?1:.4};background:${on?'var(--s2)':'var(--rdl)'}"><div class="tti">${KLBLS[i]}<span class="ttic">?</span><div class="ttb">${KLBLS[i]}</div></div></th>`;
+  });
+  t+='<th>Score<br><span style="font-size:8px;font-weight:400;color:var(--t3)">(активни)</span></th>';
+  h.innerHTML=t;
+}
 
 // ── DAILY TABLE ──
-function rndDailyView(){const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];const db2=document.getElementById('dyBtns');db2.innerHTML='';wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#dyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));document.getElementById('dyLbl').textContent=MKM[cM-1]+' '+d.date+', '+cY;rndTbl();};db2.appendChild(b);});if(wk[cD])document.getElementById('dyLbl').textContent=MKM[cM-1]+' '+wk[cD].date+', '+cY;rndTbl();}
+function rndDailyView(){
+  const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];
+  const db2=document.getElementById('dyBtns');db2.innerHTML='';
+  wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#dyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));document.getElementById('dyLbl').textContent=MKM[cM-1]+' '+d.date+', '+cY;rndTbl();};db2.appendChild(b);});
+  if(wk[cD])document.getElementById('dyLbl').textContent=MKM[cM-1]+' '+wk[cD].date+', '+cY;
+  buildTableHeaders();rndTbl();
+}
+
 function rndTbl(){
-  const allThs=document.querySelectorAll('#tp-daily thead th');if(allThs.length>2){KKEYS.forEach((k,i)=>{const th=allThs[i+2];if(th){const off=!isInScore(k);th.style.opacity=off?'0.45':'1';th.style.background=off?'var(--rdl)':'var(--s2)';}});}
+  // Update header colors based on ON/OFF
+  const allThs=document.querySelectorAll('#tp-daily thead th');
+  if(allThs.length>2)KKEYS.forEach((k,i)=>{const th=allThs[i+2];if(th){const on=isInScore(k);th.style.opacity=on?'1':'0.4';th.style.background=on?'var(--s2)':'var(--rdl)';}});
+
   const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dayObj=wk[cD];
   const tb=document.getElementById('dTb');const ft=document.getElementById('dFt');
-  if(!dayObj){tb.innerHTML='<tr><td colspan="17" style="text-align:center;padding:20px;color:var(--t3)">Нема работни денови</td></tr>';ft.innerHTML='';return;}
-  const dk=dK(cY,cM,dayObj);const dd=gDay(cY,cM,dk);const wd=getWDs(cY,cM).length;const mt=getMT(cY,cM);
+  if(!dayObj){tb.innerHTML='<tr><td colspan="17" style="text-align:center;padding:18px;color:var(--t3)">Нема работни денови</td></tr>';ft.innerHTML='';return;}
+  const dk=dK(cY,cM,dayObj);const dd=gDay(cY,cM,dk);
+  const wd=getWDs(cY,cM).length;const mt=getMT(cY,cM);
   const dtg={};KKEYS.forEach(k=>{dtg[k]=Math.round((mt[k]||0)/wd*10)/10;});
   const tots={};const ttgs={};KKEYS.forEach(k=>{tots[k]=0;ttgs[k]=0;});
   tb.innerHTML='';
@@ -759,85 +896,450 @@ function rndTbl(){
     const tr=document.createElement('tr');if(isAbs)tr.className='abs';
     let h=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div><div class="nm">${mb.name}</div>${isAbs?`<span class="abbg">${SLBL[ms.status]}</span>`:''}</div></div></td>`;
     h+=`<td><div style="position:relative;display:inline-block"><button class="sbtn" onclick="tgPop('p_${mb.id}')">${SIC[ms.status||0]}</button><div class="pop" id="p_${mb.id}">${SIC.map((ic,i)=>`<button class="pbtn" onclick="mSt('${dk}','${mb.id}',${i})">${ic}</button>`).join('')}</div></div></td>`;
-    KKEYS.forEach(k=>{const v=ms[k]||0;const t=dtg[k];const p=pct(v,t);const w=Math.min(100,p);if(!isAbs){tots[k]+=v;ttgs[k]+=t;}h+=`<td><div class="kc"><input class="ki" type="number" value="${v}" onchange="mVal('${dk}','${mb.id}','${k}',this.value)" ${isAbs?'disabled':''}><div class="bar"><div class="bf" style="width:${isAbs?0:w}%;${barcl(p)}"></div></div><div class="kp" style="color:${isAbs?'var(--t3)':pc(p)}">${isAbs?'—':p+'%'}</div><div class="kt">цел:${Number.isInteger(t)?t:t.toFixed(1)}</div></div></td>`;});
-    const sc=perfScore(mb.id,cY,cM);h+=`<td><div style="text-align:center"><span style="font-size:13px;font-weight:700;color:${pc(sc)}">${sc}%</span> <span>${pem(sc)}</span><div class="kt">месец</div></div></td>`;
+    KKEYS.forEach(k=>{
+      const v=ms[k]||0;const t=dtg[k];const p=pct(v,t);const w=Math.min(100,p);
+      if(!isAbs){tots[k]+=v;ttgs[k]+=t;}
+      const on=isInScore(k);
+      h+=`<td style="opacity:${on?1:.55}"><div class="kc"><input class="ki" type="number" value="${v}" onchange="mVal('${dk}','${mb.id}','${k}',this.value)" ${isAbs?'disabled':''}><div class="bar"><div class="bf" style="width:${isAbs?0:w}%;${barcl(p)}"></div></div><div class="kp" style="color:${isAbs?'var(--t3)':pc(p)}">${isAbs?'—':p+'%'}</div><div class="kt">/${Number.isInteger(t)?t:t.toFixed(1)}</div></div></td>`;
+    });
+    const sc=perfScore(mb.id,cY,cM);
+    h+=`<td><div style="text-align:center"><span style="font-size:12px;font-weight:700;color:${pc(sc)}">${sc}%</span> ${pem(sc)}<div class="kt">месец</div></div></td>`;
     tr.innerHTML=h;tb.appendChild(tr);
   });
-  let fh=`<td>Тим вкупно</td><td></td>`;KKEYS.forEach(k=>{const p=pct(tots[k],ttgs[k]);fh+=`<td><div class="kc"><span style="font-size:11px;font-weight:700;color:${pc(p)}">${tots[k]}/${Number.isInteger(ttgs[k])?ttgs[k]:ttgs[k].toFixed(1)}</span><div class="bar" style="width:36px"><div class="bf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div><span style="font-size:8px">${p}%</span></div></td>`;});fh+=`<td></td>`;ft.innerHTML=fh;
+  let fh='<td>Тим вкупно</td><td></td>';
+  KKEYS.forEach(k=>{const p=pct(tots[k],ttgs[k]);const on=isInScore(k);fh+=`<td style="opacity:${on?1:.55}"><div class="kc"><span style="font-size:10px;font-weight:700;color:${pc(p)}">${tots[k]}/${Number.isInteger(ttgs[k])?ttgs[k]:ttgs[k].toFixed(1)}</span><div class="bar" style="width:36px"><div class="bf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div><span style="font-size:8px">${p}%</span></div></td>`;});
+  fh+='<td></td>';ft.innerHTML=fh;
 }
+
 window.tgPop=id=>{const el=document.getElementById(id);const was=el.classList.contains('open');document.querySelectorAll('.pop.open').forEach(p=>p.classList.remove('open'));if(!was)el.classList.add('open');};
 document.addEventListener('click',e=>{if(!e.target.closest('.sbtn')&&!e.target.closest('.pop'))document.querySelectorAll('.pop.open').forEach(p=>p.classList.remove('open'));});
 window.mSt=async(dk,mid,idx)=>{ensD(cY,cM,dk);AS[cY][cM][dk][mid].status=idx;document.getElementById('p_'+mid)?.classList.remove('open');rndTbl();await svDay(cY,cM,dk);};
-window.mVal=async(dk,mid,key,val)=>{ensD(cY,cM,dk);const p=parseInt(val);AS[cY][cM][dk][mid][key]=isNaN(p)?0:p;rndTbl();clearTimeout(svTmr);svTmr=setTimeout(()=>svDay(cY,cM,dk),1200);};
+window.mVal=async(dk,mid,key,val)=>{
+  ensD(cY,cM,dk);const p=parseInt(val);AS[cY][cM][dk][mid][key]=isNaN(p)?0:p;
+  rndTbl();clearTimeout(svTmr);svTmr=setTimeout(()=>svDay(cY,cM,dk),800);
+};
 window.rstDay=async()=>{if(!confirm('Ресетирај?'))return;const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);ensD(cY,cM,dk);MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{AS[cY][cM][dk][mb.id][k]=0;});});rndTbl();await svDay(cY,cM,dk);};
-window.cpyYesterday=async()=>{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const all=getWDs(cY,cM);const idx=all.findIndex(d=>d.date===dO.date);if(idx<1){alert('Нема претходен ден!');return;}const pdk=dK(cY,cM,all[idx-1]);const dk=dK(cY,cM,dO);ensD(cY,cM,dk);ensD(cY,cM,pdk);MEMBERS.forEach(mb=>{const pv=AS[cY]?.[cM]?.[pdk]?.[mb.id];if(pv){KKEYS.forEach(k=>{AS[cY][cM][dk][mb.id][k]=pv[k]||0;});}});rndTbl();await svDay(cY,cM,dk);};
+window.cpyYesterday=async()=>{
+  const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;
+  const all=getWDs(cY,cM);const idx=all.findIndex(d=>d.date===dO.date);if(idx<1){alert('Нема претходен ден!');return;}
+  const pdk=dK(cY,cM,all[idx-1]);const dk=dK(cY,cM,dO);
+  ensD(cY,cM,dk);ensD(cY,cM,pdk);
+  MEMBERS.forEach(mb=>{const pv=AS[cY]?.[cM]?.[pdk]?.[mb.id];if(pv){KKEYS.forEach(k=>{AS[cY][cM][dk][mb.id][k]=pv[k]||0;});}});
+  rndTbl();await svDay(cY,cM,dk);
+};
 
 // ── MONTHLY ──
-function rndMonthly(){document.getElementById('mTit').textContent='Месечен преглед — '+MKM[cM-1]+' '+cY;const mt=getMT(cY,cM);const tT={};KKEYS.forEach(k=>tT[k]=0);MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{tT[k]+=mMoSum(mb.id,k,cY,cM);});});const ttgt={};KKEYS.forEach(k=>{ttgt[k]=(mt[k]||0)*MEMBERS.length;});let oP=0;KKEYS.forEach(k=>{oP+=pct(tT[k],ttgt[k]||1);});oP=Math.round(oP/KKEYS.length);const sc=document.getElementById('scGrid');sc.innerHTML=`<div class="sc"><div class="scl">Тим вкупно</div><div class="scv" style="color:${pc(oP)}">${oP}% ${pem(oP)}</div><div class="scs">${MKM[cM-1]}</div></div>`;KKEYS.forEach((k,i)=>{const p=pct(tT[k],ttgt[k]||1);sc.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="font-size:14px;color:${pc(p)}">${tT[k]}/${ttgt[k]}</div><div class="scs" style="color:${pc(p)}">${p}%</div></div>`;});const mg=document.getElementById('mcGrid');mg.innerHTML='';MEMBERS.forEach(mb=>{let aP=0;const kh=KKEYS.map((k,i)=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);aP+=p;return `<div class="mkc"><div class="mkl">${KLBLS[i]}</div><div class="mkv" style="color:${pc(p)}">${s}/${t}</div><div class="mkp" style="color:${pc(p)}">${p}%</div><div class="mkb"><div class="mkbf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div></div>`;}).join('');aP=Math.round(aP/KKEYS.length);const bdg=`<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700" class="${pbc(aP)}">${aP}% ${pem(aP)}</span>`;mg.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:32px;height:32px;font-size:10px">${mb.ini}</div><div><div class="mcn">${mb.name}</div><div class="mci">Раб. денови: ${mWDs(mb.id,cY,cM)}</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;});const mtb=document.getElementById('mTb');const mft=document.getElementById('mFt');mtb.innerHTML='';const tS={};KKEYS.forEach(k=>tS[k]=0);MEMBERS.forEach(mb=>{let aP=0;let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:24px;height:24px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}</span></div></td>`;KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);tS[k]+=s;aP+=p;row+=`<td><div style="font-size:11px;font-weight:700;color:${pc(p)}">${s}/${t}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});aP=Math.round(aP/KKEYS.length);row+=`<td>${mWDs(mb.id,cY,cM)}</td><td><div style="font-size:14px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;const tr=document.createElement('tr');tr.innerHTML=row;mtb.appendChild(tr);});let fh='<td>Тим вкупно</td>';KKEYS.forEach(k=>{const t=(mt[k]||1)*MEMBERS.length;const p=pct(tS[k],t);fh+=`<td>${tS[k]}/${t}<br><span style="font-size:8px">${p}%</span></td>`;});let tA=0;KKEYS.forEach(k=>{tA+=pct(tS[k],(mt[k]||1)*MEMBERS.length);});tA=Math.round(tA/KKEYS.length);fh+=`<td></td><td style="font-size:14px;font-weight:700;color:${pc(tA)}">${tA}% ${pem(tA)}</td>`;mft.innerHTML=fh;}
+function rndMonthly(){
+  document.getElementById('mTit').textContent='Месечен преглед — '+MKM[cM-1]+' '+cY;
+  const mt=getMT(cY,cM);const tT={};KKEYS.forEach(k=>tT[k]=0);
+  MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{tT[k]+=mMoSum(mb.id,k,cY,cM);});});
+  const ttgt={};KKEYS.forEach(k=>{ttgt[k]=(mt[k]||0)*MEMBERS.length;});
+  // Overall score = average of active KPI percentages across all members
+  let oP=0;let oCnt=0;
+  MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{if(isInScore(k)){oP+=pct(mMoSum(mb.id,k,cY,cM),mt[k]||1);oCnt++;}});});
+  oP=oCnt>0?Math.round(oP/oCnt):0;
+  const sc=document.getElementById('scGrid');
+  sc.innerHTML=`<div class="sc" style="border-color:${pc(oP)}"><div class="scl">Тим Score</div><div class="scv" style="color:${pc(oP)}">${oP}% ${pem(oP)}</div></div>`;
+  KKEYS.forEach((k,i)=>{const p=pct(tT[k],ttgt[k]||1);const on=isInScore(k);sc.innerHTML+=`<div class="sc" style="opacity:${on?1:.55}"><div class="scl">${KLBLS[i]}${on?'':' ⊘'}</div><div class="scv" style="font-size:13px;color:${pc(p)}">${tT[k]}/${ttgt[k]}</div><div class="scs" style="color:${pc(p)}">${p}%</div></div>`;});
+  // Member cards
+  const mg=document.getElementById('mcGrid');mg.innerHTML='';
+  MEMBERS.forEach(mb=>{
+    let aP=0;let aCnt=0;
+    const kh=KKEYS.map((k,i)=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);const on=isInScore(k);if(on){aP+=p;aCnt++;}return `<div class="mkc" style="opacity:${on?1:.45}"><div class="mkl">${KLBLS[i]}</div><div class="mkv" style="color:${pc(p)}">${s}/${t}</div><div class="mkp" style="color:${pc(p)}">${p}%</div><div class="mkb"><div class="mkbf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div></div>`;}).join('');
+    aP=aCnt>0?Math.round(aP/aCnt):0;
+    const bdg=`<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700" class="${pbc(aP)}">${aP}% ${pem(aP)}</span>`;
+    mg.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px">${mb.ini}</div><div><div class="mcn">${mb.name}</div><div class="mci">Раб. денови: ${mWDs(mb.id,cY,cM)}</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;
+  });
+  // Detail table
+  const moH=document.getElementById('moHead');const mtb=document.getElementById('mTb');const mft=document.getElementById('mFt');
+  if(moH){let h='<th>Вработен</th>';KKEYS.forEach((k,i)=>{h+=`<th style="opacity:${isInScore(k)?1:.4}">${KLBLS[i]}</th>`;});h+='<th>Р.дни</th><th>Score</th>';moH.innerHTML=h;}
+  mtb.innerHTML='';const tS={};KKEYS.forEach(k=>tS[k]=0);
+  MEMBERS.forEach(mb=>{
+    let aP=0;let aCnt=0;
+    let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}</span></div></td>`;
+    KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);tS[k]+=s;if(isInScore(k)){aP+=p;aCnt++;}row+=`<td style="opacity:${isInScore(k)?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${s}/${t}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});
+    aP=aCnt>0?Math.round(aP/aCnt):0;
+    row+=`<td>${mWDs(mb.id,cY,cM)}</td><td><div style="font-size:13px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;
+    const tr=document.createElement('tr');tr.innerHTML=row;mtb.appendChild(tr);
+  });
+  let fh='<td>Тим вкупно</td>';KKEYS.forEach(k=>{const t=(mt[k]||1)*MEMBERS.length;const p=pct(tS[k],t);fh+=`<td style="opacity:${isInScore(k)?1:.45}">${tS[k]}/${t}<br><span style="font-size:8px">${p}%</span></td>`;});
+  let tA=0;let tAC=0;KKEYS.forEach(k=>{if(isInScore(k)){tA+=pct(tS[k],(mt[k]||1)*MEMBERS.length);tAC++;}});tA=tAC>0?Math.round(tA/tAC):0;
+  fh+=`<td></td><td style="font-size:13px;font-weight:700;color:${pc(tA)}">${tA}% ${pem(tA)}</td>`;mft.innerHTML=fh;
+}
 
 // ── RANKING ──
-function rndRanking(){document.getElementById('rkTit').textContent=MKM[cM-1]+' '+cY;const scores=MEMBERS.map(mb=>({...mb,score:perfScore(mb.id,cY,cM)})).sort((a,b)=>b.score-a.score);const g=document.getElementById('rkGrid');g.innerHTML='';scores.forEach((mb,i)=>{const pm=i===0?'r1':i===1?'r2':i===2?'r3':'rn';const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);const bdg=`<span class="rbadge ${pbc(mb.score)}">${pem(mb.score)} ${mb.score<70?'Needs boost':mb.score<100?'On track':'🎯 Target hit!'}</span>`;g.innerHTML+=`<div class="rr"><div class="rpos ${pm}">${md}</div><div class="av" style="background:${mb.bg};color:${mb.tc};width:32px;height:32px;font-size:10px;flex-shrink:0">${mb.ini}</div><div class="rname">${mb.name}</div>${bdg}<div class="rbar"><div class="rbf" style="width:${Math.min(100,mb.score)}%;${barcl(mb.score)}"></div></div><div class="rscore" style="color:${pc(mb.score)}">${mb.score}%</div></div>`;});document.getElementById('topP').textContent=scores[0]?.name+' — '+scores[0]?.score+'%';document.getElementById('lowP').textContent=scores[scores.length-1]?.name+' — '+scores[scores.length-1]?.score+'%';}
+function rndRanking(){
+  document.getElementById('rkTit').textContent=MKM[cM-1]+' '+cY;
+  const scores=MEMBERS.map(mb=>({...mb,score:perfScore(mb.id,cY,cM)})).sort((a,b)=>b.score-a.score);
+  const g=document.getElementById('rkGrid');g.innerHTML='';
+  scores.forEach((mb,i)=>{
+    const pm=i===0?'r1':i===1?'r2':i===2?'r3':'rn';const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    const bdg=`<span class="rbadge ${pbc(mb.score)}">${pem(mb.score)} ${mb.score<70?'Needs boost':mb.score<100?'On track':'🎯 Target!'}</span>`;
+    g.innerHTML+=`<div class="rr"><div class="rpos ${pm}">${md}</div><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px;flex-shrink:0">${mb.ini}</div><div class="rname">${mb.name}</div>${bdg}<div class="rbar"><div class="rbf" style="width:${Math.min(100,mb.score)}%;${barcl(mb.score)}"></div></div><div class="rscore" style="color:${pc(mb.score)}">${mb.score}%</div></div>`;
+  });
+  document.getElementById('topP').textContent=scores[0]?.name+' — '+scores[0]?.score+'%';
+  document.getElementById('lowP').textContent=scores[scores.length-1]?.name+' — '+scores[scores.length-1]?.score+'%';
+}
 
 // ── ALERTS ──
-function calcAlerts(){const als=[];const mt=getMT(cY,cM);MEMBERS.forEach(mb=>{const sc=perfScore(mb.id,cY,cM);if(sc<60)als.push({type:'acr',ico:'🚨',txt:mb.name+' — месечен score под 60%',sub:`Score: ${sc}% · Потребна интервенција`});KKEYS.forEach((k,i)=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);if(p<50&&isInScore(k))als.push({type:'aw',ico:'❗',txt:`${mb.name} — ${KLBLS[i]} под 50%`,sub:`${s}/${t} (${p}%) · Потребно засилување`});});});if(INV.stock<10)als.push({type:'aw',ico:'📦',txt:'Залихата на опрема е ниска',sub:`Тековна залиха: ${INV.stock} парчиња`});const badge=document.getElementById('alBadge');const cnt=document.getElementById('alCnt');if(als.length>0){badge.style.display='flex';cnt.textContent=als.length;}else{badge.style.display='none';}const panel=document.getElementById('alPanel');if(!panel)return;if(als.length===0){panel.innerHTML='<div style="text-align:center;padding:20px;color:var(--t3)">✅ Нема активни alerts!</div>';return;}panel.innerHTML=als.map(a=>`<div class="ai ${a.type}"><span class="aico">${a.ico}</span><div><div class="atxt">${a.txt}</div><div class="asub">${a.sub}</div></div></div>`).join('');}
+function calcAlerts(){
+  const als=[];const mt=getMT(cY,cM);
+  MEMBERS.forEach(mb=>{
+    const sc=perfScore(mb.id,cY,cM);
+    if(sc<60)als.push({type:'acr',ico:'🚨',txt:mb.name+' — score под 60%',sub:`Score: ${sc}%`});
+    KKEYS.forEach((k,i)=>{if(!isInScore(k))return;const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);if(p<50)als.push({type:'aw',ico:'❗',txt:`${mb.name} — ${KLBLS[i]} под 50%`,sub:`${s}/${t} (${p}%)`});});
+  });
+  // OFI low stock
+  Object.values(OFI_PRODUCTS).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'📦',txt:`${p.name} — лагер критичен`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
+  const badge=document.getElementById('alBadge');const cnt=document.getElementById('alCnt');
+  badge.style.display=als.length>0?'flex':'none';if(cnt)cnt.textContent=als.length;
+  const panel=document.getElementById('alPanel');if(!panel)return;
+  panel.innerHTML=als.length===0?'<div style="text-align:center;padding:18px;color:var(--t3)">✅ Нема активни alerts!</div>':als.map(a=>`<div class="ai ${a.type}"><span class="aico">${a.ico}</span><div><div class="atxt">${a.txt}</div><div class="asub">${a.sub}</div></div></div>`).join('');
+}
 
-// ── INVENTORY ──
-function rndInv(){const g=document.getElementById('invGrid');const tSold=MEMBERS.reduce((s,mb)=>s+mMoSum(mb.id,'equip',cY,cM),0);const warn=INV.stock<10;g.innerHTML=`<div class="ic ${warn?'warn':''}"><div class="it">📦 Тековна залиха ${warn?'⚠️':''}</div><div class="in" style="color:${warn?'var(--am)':'var(--txt)'}">${INV.stock}</div><div class="isub">парчиња</div></div><div class="ic"><div class="it">📤 Продадено — месец</div><div class="in">${tSold}</div><div class="isub">вкупно</div></div><div class="ic"><div class="it">📊 Проект. остаток</div><div class="in" style="color:${INV.stock-tSold<5?'var(--rd)':'var(--gr)'}">${Math.max(0,INV.stock-tSold)}</div><div class="isub">по продажба</div></div>`;const tb=document.getElementById('invTb');tb.innerHTML='';MEMBERS.forEach(mb=>{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];const td2=dO?gDay(cY,cM,dK(cY,cM,dO))[mb.id]?.equip||0:0;const ms=mMoSum(mb.id,'equip',cY,cM);const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(ms/wd).toFixed(1):0;tb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:24px;height:24px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:13px;font-weight:700">${td2}</td><td>${ms}</td><td>${avg}</td></tr>`;});}
-window.addInv=async()=>{const v=parseInt(document.getElementById('invIn').value)||0;if(v<=0)return;INV.stock+=v;INV.hist=INV.hist||[];INV.hist.push({date:new Date().toISOString().slice(0,10),added:v});await svCfg('inventory',INV);rndInv();document.getElementById('invIn').value='';};
+// ── OFI INVENTORY ──
+window.showAddProduct=()=>{
+  const f=document.getElementById('addProdForm');f.style.display=f.style.display==='none'?'block':'none';
+};
+window.saveProduct=async()=>{
+  const ofi=document.getElementById('p_ofi').value.trim();
+  const name=document.getElementById('p_name').value.trim();
+  const price=parseFloat(document.getElementById('p_price').value)||0;
+  const qty=parseInt(document.getElementById('p_qty').value)||0;
+  if(!ofi||!name){alert('OFI шифра и назив се задолжителни!');return;}
+  if(OFI_PRODUCTS[ofi]){
+    // Update existing — add quantity
+    OFI_PRODUCTS[ofi].qty=(OFI_PRODUCTS[ofi].qty||0)+qty;
+    OFI_PRODUCTS[ofi].price=price||OFI_PRODUCTS[ofi].price;
+    OFI_PRODUCTS[ofi].name=name;
+  }else{
+    OFI_PRODUCTS[ofi]={ofi,name,price,qty,sold:0};
+  }
+  await svCfg('ofi_products',OFI_PRODUCTS);
+  rndInv();calcAlerts();
+  document.getElementById('addProdForm').style.display='none';
+  ['p_ofi','p_name','p_price','p_qty'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+};
+window.deleteProduct=async(ofi)=>{
+  if(!confirm(`Избриши "${OFI_PRODUCTS[ofi]?.name}"?`))return;
+  delete OFI_PRODUCTS[ofi];await svCfg('ofi_products',OFI_PRODUCTS);rndInv();
+};
+window.adjustProductQty=async(ofi,delta)=>{
+  if(!OFI_PRODUCTS[ofi])return;
+  OFI_PRODUCTS[ofi].qty=Math.max(0,(OFI_PRODUCTS[ofi].qty||0)+delta);
+  await svCfg('ofi_products',OFI_PRODUCTS);rndInv();calcAlerts();
+};
 
-// ── COMMENTS ──
-function rndCmts(){const g=document.getElementById('cmtGrid');g.innerHTML='';MEMBERS.forEach(mb=>{const t=CS[mb.id]||'';g.innerHTML+=`<div class="crow"><div class="cav" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div class="cbody"><div class="cname">${mb.name}</div><textarea class="cta" id="cm_${mb.id}" placeholder="Коментар за ${mb.name}...">${t}</textarea></div></div>`;});}
-window.saveCmts=async()=>{MEMBERS.forEach(mb=>{const el=document.getElementById('cm_'+mb.id);if(el)CS[mb.id]=el.value;});await svCfg('comments',CS);alert('✅ Коментарите се зачувани!');};
+function getOfiSoldToday(ofi){
+  const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return 0;
+  const dk=dK(cY,cM,dO);
+  return MEMBERS.reduce((s,mb)=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];return s+(ms?.[ofi]||0);},0);
+}
+function getOfiSoldMonth(ofi){
+  let s=0;
+  getWDs(cY,cM).forEach(d=>{const dk=dK(cY,cM,d);MEMBERS.forEach(mb=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)s+=(ms[ofi]||0);});});
+  return s;
+}
+
+function rndInv(){
+  // Summary
+  const prods=Object.values(OFI_PRODUCTS);
+  const totalRevMonth=prods.reduce((s,p)=>{const sold=getOfiSoldMonth(p.ofi);return s+sold*(p.price||0);},0);
+  const totalQty=prods.reduce((s,p)=>s+(p.qty||0),0);
+  const g=document.getElementById('invSumGrid');if(!g)return;
+  g.innerHTML=`
+    <div class="ic"><div class="it">📦 Вкупно во лагер</div><div class="in">${totalQty}</div><div class="isub">парчиња</div></div>
+    <div class="ic"><div class="it">💰 Приход месец</div><div class="in" style="color:var(--gr)">${totalRevMonth.toLocaleString()} ден.</div><div class="isub">вкупно</div></div>
+    <div class="ic"><div class="it">📋 Производи</div><div class="in">${prods.length}</div><div class="isub">во листата</div></div>`;
+
+  // OFI table
+  const tb=document.getElementById('ofiTb');const tf=document.getElementById('ofiTf');if(!tb)return;
+  if(!prods.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:16px;color:var(--t3)">Нема додадени производи. Кликни "+ Додај производ"</td></tr>';tf.innerHTML='';return;}
+  let totSold=0,totRev=0;
+  tb.innerHTML=prods.map(p=>{
+    const soldM=getOfiSoldMonth(p.ofi);const rev=soldM*(p.price||0);
+    totSold+=soldM;totRev+=rev;
+    const warn=(p.qty||0)<=2;
+    const statusBadge=warn?'<span style="background:var(--rdl);color:var(--rd);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">⚠ Критично</span>':(p.qty||0)<=5?'<span style="background:var(--aml);color:var(--am);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">Мало</span>':'<span style="background:var(--grl);color:var(--gr);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">OK</span>';
+    return `<tr ${warn?'style="background:var(--rdl)"':''}>
+      <td style="text-align:left;padding-left:10px;font-family:monospace;font-size:11px">${p.ofi}</td>
+      <td style="text-align:left;font-weight:600;font-size:12px">${p.name}</td>
+      <td style="font-size:11px">${(p.price||0).toLocaleString()} ден.</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:4px;justify-content:center">
+          <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty('${p.ofi}',-1)">−</button>
+          <span style="font-size:13px;font-weight:700;min-width:28px;text-align:center;color:${warn?'var(--rd)':'var(--txt)'}">${p.qty||0}</span>
+          <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty('${p.ofi}',1)">+</button>
+        </div>
+      </td>
+      <td style="font-size:12px;font-weight:700">${soldM}</td>
+      <td style="font-size:12px;font-weight:700;color:var(--gr)">${rev.toLocaleString()} ден.</td>
+      <td>${statusBadge}</td>
+      <td><button class="btn" style="font-size:10px;color:var(--rd);padding:2px 6px" onclick="deleteProduct('${p.ofi}')">🗑</button></td>
+    </tr>`;
+  }).join('');
+  tf.innerHTML=`<td colspan="4" style="text-align:left;padding-left:10px">Вкупно месец</td><td style="font-weight:700">${totSold}</td><td style="font-weight:700;color:var(--gr)">${totRev.toLocaleString()} ден.</td><td colspan="2"></td>`;
+
+  // Sales by employee
+  const etb=document.getElementById('invTb');if(!etb)return;
+  etb.innerHTML='';
+  MEMBERS.forEach(mb=>{
+    const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];
+    // Today: sum all OFI products sold by this employee today
+    const todaySold=prods.reduce((s,p)=>{const ms=dO?AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mb.id]:null;return s+(ms?.[p.ofi]||0);},0);
+    // Month: sum all OFI
+    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms[p.ofi]||0);});return s+tot;},0);
+    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms[p.ofi]||0);});return s+tot*(p.price||0);},0);
+    const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(moSold/wd).toFixed(1):0;
+    etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700">${todaySold}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
+  });
+}
 
 // ── TARGETS ──
 function rndTgts(){tgY=cY;tgM=cM;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();rndAllTgs();}
 function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();};c.appendChild(b);});}
 window.chgTgYr=d=>{tgY+=d;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();};
-function rndTgTbl(){const tb=document.getElementById('tgTb');const wd=getWDs(tgY,tgM).length;const ex=TS[tgY]&&TS[tgY][tgM];const cur=ex?{...ex}:{...DTGT};const bdg=document.getElementById('tgBadge');bdg.innerHTML=ex?`<span class="bdgr" style="padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span class="bdrd" style="padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">⚠️ Стандарден за ${MKM[tgM-1]} ${tgY}</span>`;tb.innerHTML='';KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);tb.innerHTML+=`<tr><td style="text-align:left;padding-left:10px;font-weight:600;font-size:12px">${KLBLS[i]}</td><td><input type="number" min="0" id="tg_${k}" value="${mv}" class="ti" oninput="updTgPv('${k}',${wd})"></td><td style="font-size:12px;color:var(--t2)" id="dt_${k}">${dv}/ден</td><td style="font-size:12px;color:var(--t2)" id="wt_${k}">${wv}/нед</td><td style="font-size:11px;color:var(--t3)">${DTGT[k]}</td></tr>`;});}
+function rndTgTbl(){
+  const tb=document.getElementById('tgTb');const wd=getWDs(tgY,tgM).length;const ex=TS[tgY]&&TS[tgY][tgM];const cur=ex?{...ex}:{...DTGT};
+  const bdg=document.getElementById('tgBadge');
+  bdg.innerHTML=ex?`<span class="bdgr" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span class="bdrd" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">⚠️ Default за ${MKM[tgM-1]} ${tgY}</span>`;
+  tb.innerHTML='';
+  KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);const on=isInScore(k);tb.innerHTML+=`<tr style="opacity:${on?1:.55}"><td style="text-align:left;padding-left:10px;font-weight:600;font-size:11px">${KLBLS[i]}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td><td><input type="number" min="0" id="tg_${k}" value="${mv}" class="ti" oninput="updTgPv('${k}',${wd})"></td><td style="font-size:11px;color:var(--t2)" id="dt_${k}">${dv}/ден</td><td style="font-size:11px;color:var(--t2)" id="wt_${k}">${wv}/нед</td><td style="font-size:10px;color:var(--t3)">${DTGT[k]}</td></tr>`;});
+}
 window.updTgPv=(k,wd)=>{const v=parseInt(document.getElementById('tg_'+k).value)||0;document.getElementById('dt_'+k).textContent=(wd>0?(v/wd).toFixed(2):0)+'/ден';document.getElementById('wt_'+k).textContent=(wd>0?(v/wd*5).toFixed(1):0)+'/нед';};
-window.saveTgt=async()=>{if(!TS[tgY])TS[tgY]={};const nt={};KKEYS.forEach(k=>{nt[k]=parseInt(document.getElementById('tg_'+k).value)||0;});TS[tgY][tgM]=nt;await svCfg('targets',TS);rndTgTbl();rndAllTgs();if(tgY===cY&&tgM===cM){rndTbl();if(document.getElementById('tp-monthly').classList.contains('act'))rndMonthly();}};
+window.saveTgt=async()=>{if(!TS[tgY])TS[tgY]={};const nt={};KKEYS.forEach(k=>{nt[k]=parseInt(document.getElementById('tg_'+k).value)||0;});TS[tgY][tgM]=nt;await svCfg('targets',TS);rndTgTbl();rndAllTgs();if(tgY===cY&&tgM===cM){rndTbl();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();}};
 window.cpyPrev=()=>{let pm=tgM-1,py=tgY;if(pm<1){pm=12;py--;}const pv=TS[py]&&TS[py][pm];const src=pv?pv:DTGT;KKEYS.forEach(k=>{const el=document.getElementById('tg_'+k);if(el)el.value=src[k]||0;});const wd=getWDs(tgY,tgM).length;KKEYS.forEach(k=>window.updTgPv(k,wd));};
-function rndAllTgs(){const el=document.getElementById('tgAll');const yrs=Object.keys(TS).sort();if(!yrs.length){el.innerHTML='<div style="font-size:12px;color:var(--t3)">Нема зачувани таргети.</div>';return;}let h='<div style="display:flex;flex-direction:column;gap:10px">';yrs.forEach(yr=>{h+=`<div><div style="font-size:12px;font-weight:700;color:var(--mg);margin-bottom:6px">${yr}</div><div style="display:flex;gap:6px;flex-wrap:wrap">`;Object.keys(TS[yr]).sort((a,b)=>a-b).forEach(mn=>{const t=TS[yr][mn];h+=`<div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:8px 12px;font-size:11px;min-width:130px"><div style="font-weight:700;color:var(--mg);margin-bottom:4px">${MKM[mn-1]}</div>${KKEYS.map((k,i)=>`<div style="color:var(--t2)">${KLBLS[i]}: <b style="color:var(--txt)">${t[k]||0}</b></div>`).join('')}<button onclick="delTg(${yr},${mn})" style="margin-top:5px;font-size:10px;color:var(--rd);background:none;border:none;cursor:pointer;padding:0">🗑 Избриши</button></div>`;});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
+function rndAllTgs(){const el=document.getElementById('tgAll');const yrs=Object.keys(TS).sort();if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:var(--t3)">Нема зачувани таргети.</div>';return;}let h='<div style="display:flex;flex-direction:column;gap:8px">';yrs.forEach(yr=>{h+=`<div><div style="font-size:11px;font-weight:700;color:var(--mg);margin-bottom:5px">${yr}</div><div style="display:flex;gap:5px;flex-wrap:wrap">`;Object.keys(TS[yr]).sort((a,b)=>a-b).forEach(mn=>{const t=TS[yr][mn];h+=`<div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:7px 10px;font-size:10px;min-width:120px"><div style="font-weight:700;color:var(--mg);margin-bottom:3px">${MKM[mn-1]}</div>${KKEYS.map((k,i)=>`<div style="color:var(--t2)">${KLBLS[i]}: <b style="color:var(--txt)">${t[k]||0}</b></div>`).join('')}<button onclick="delTg(${yr},${mn})" style="margin-top:4px;font-size:9px;color:var(--rd);background:none;border:none;cursor:pointer;padding:0">🗑 Избриши</button></div>`;});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
 window.delTg=async(yr,mn)=>{if(!confirm(`Избриши за ${MKM[mn-1]} ${yr}?`))return;if(TS[yr])delete TS[yr][mn];if(TS[yr]&&!Object.keys(TS[yr]).length)delete TS[yr];await svCfg('targets',TS);rndTgTbl();rndAllTgs();};
 
 // ── ORDERS ──
-function ordStatusStyle(s){if(s==='Реализирано')return 'background:var(--grl);color:var(--gr);border:1px solid #a5d6a7';if(s==='Откажано')return 'background:var(--rdl);color:var(--rd);border:1px solid #ef9a9a';if(s==='Пристигнато')return 'background:var(--bll);color:var(--bl);border:1px solid #90caf9';return 'background:var(--aml);color:var(--am);border:1px solid #ffcc80';}
+function ordStyle(s){if(s==='Реализирано')return 'background:var(--grl);color:var(--gr)';if(s==='Откажано')return 'background:var(--rdl);color:var(--rd)';if(s==='Пристигнато')return 'background:var(--bll);color:var(--bl)';return 'background:var(--aml);color:var(--am)';}
 window.addOrder=()=>{const w=document.getElementById('orderFormWrap');w.style.display=w.style.display==='none'?'block':'none';if(w.style.display==='block'){const od=document.getElementById('ord_odate');if(od&&!od.value)od.value=new Date().toISOString().slice(0,10);}};
-window.addEmpOrder=()=>{const w=document.getElementById('orderFormWrap2');w.style.display=w.style.display==='none'?'block':'none';if(w.style.display==='block'){const od=document.getElementById('emp_ord_odate');if(od&&!od.value)od.value=new Date().toISOString().slice(0,10);}};
-window.saveOrder=async()=>{const model=document.getElementById('ord_model').value.trim();if(!model){alert('Внеси модел!');return;}const whoName=isMgr?'Илир (Менаџер)':(MEMBERS.find(m=>m.id===mID)?.name||'?');const id='ord_'+Date.now();await setDoc(doc(db,'orders',id),{by:isMgr?'MGR':(mID||'?'),byName:whoName,model,tel:document.getElementById('ord_tel').value.trim(),odate:document.getElementById('ord_odate').value,rdate:document.getElementById('ord_rdate').value,notes:document.getElementById('ord_notes').value.trim(),status:'Нарачано',createdAt:serverTimestamp()});['ord_model','ord_tel','ord_notes'].forEach(id2=>{const el=document.getElementById(id2);if(el)el.value='';});['ord_odate','ord_rdate'].forEach(id2=>{const el=document.getElementById(id2);if(el)el.value='';});document.getElementById('orderFormWrap').style.display='none';};
-window.saveEmpOrder=async()=>{const model=document.getElementById('emp_ord_model').value.trim();if(!model){alert('Внеси модел!');return;}const whoName=MEMBERS.find(m=>m.id===mID)?.name||'?';const id='ord_'+Date.now();await setDoc(doc(db,'orders',id),{by:mID,byName:whoName,model,tel:document.getElementById('emp_ord_tel').value.trim(),odate:document.getElementById('emp_ord_odate').value,rdate:document.getElementById('emp_ord_rdate').value,notes:document.getElementById('emp_ord_notes').value.trim(),status:'Нарачано',createdAt:serverTimestamp()});['emp_ord_model','emp_ord_tel','emp_ord_notes'].forEach(id2=>{const el=document.getElementById(id2);if(el)el.value='';});['emp_ord_odate','emp_ord_rdate'].forEach(id2=>{const el=document.getElementById(id2);if(el)el.value='';});document.getElementById('orderFormWrap2').style.display='none';};
-window.deleteOrder=async(id)=>{if(!confirm('Избриши нарачка?'))return;await deleteDoc(doc(db,'orders',id));};
-window.toggleOrderStatus=async(id)=>{const statuses=['Нарачано','Пристигнато','Реализирано','Откажано'];const o=ORDERS.find(x=>x.id===id);if(!o)return;const ci=statuses.indexOf(o.status);await updateDoc(doc(db,'orders',id),{status:statuses[(ci+1)%statuses.length]});};
-window.toggleEmpOrderStatus=async(id)=>{const statuses=['Нарачано','Пристигнато','Реализирано','Откажано'];const o=ORDERS.find(x=>x.id===id);if(!o)return;const ci=statuses.indexOf(o.status);await updateDoc(doc(db,'orders',id),{status:statuses[(ci+1)%statuses.length]});};
-window.saveMgrOrderNotes=async()=>{MGR_ORDER_NOTES=document.getElementById('mgrOrderNotes').value;await svCfg('mgrOrderNotes',MGR_ORDER_NOTES);showSS('sStat','✅ Белешки зачувани','ok');};
-function rndOrders(){const mnw=document.getElementById('mgrOrderNotesWrap');if(mnw)mnw.style.display=isMgr?'block':'none';if(isMgr){const mne=document.getElementById('mgrOrderNotes');if(mne)mne.value=MGR_ORDER_NOTES;}const tb=document.getElementById('ordersTb');if(!tb)return;const visible=isMgr?ORDERS:ORDERS.filter(o=>o.by===mID);if(!visible.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--t3)">Нема внесени нарачки</td></tr>`;return;}tb.innerHTML=visible.map(o=>{const mb=MEMBERS.find(m=>m.id===o.by);const avEl=mb?`<div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:8px;flex-shrink:0">${mb.ini}</div>`:'<div class="av" style="background:var(--mgl);color:var(--mgd);width:22px;height:22px;font-size:8px;flex-shrink:0">МГР</div>';const canDelete=isMgr||(o.by===mID);return `<tr><td><div class="nc">${avEl}<span style="font-size:11px;font-weight:600">${o.byName||o.by}</span></div></td><td style="font-size:12px;font-weight:700">${o.model||'—'}</td><td style="font-size:11px">${o.tel||'—'}</td><td style="font-size:11px">${o.odate||'—'}</td><td style="font-size:11px">${o.rdate||'—'}</td><td><button onclick="toggleOrderStatus('${o.id}')" style="padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;${ordStatusStyle(o.status)}">${o.status}</button></td><td style="font-size:11px;max-width:160px;white-space:pre-wrap">${o.notes||'—'}</td><td>${canDelete?`<button class="btn" style="font-size:10px;color:var(--rd)" onclick="deleteOrder('${o.id}')">🗑</button>`:''}</td></tr>`;}).join('');}
-function rndEmpOrders(){const tb=document.getElementById('empOrdersTb');if(!tb)return;const myOrders=ORDERS.filter(o=>o.by===mID).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));if(!myOrders.length){tb.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--t3)">Нема внесени нарачки</td></tr>`;return;}tb.innerHTML=myOrders.map(o=>`<tr><td style="font-size:12px;font-weight:700">${o.model||'—'}</td><td style="font-size:11px">${o.tel||'—'}</td><td style="font-size:11px">${o.odate||'—'}</td><td style="font-size:11px">${o.rdate||'—'}</td><td><button onclick="toggleEmpOrderStatus('${o.id}')" style="padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;${ordStatusStyle(o.status)}">${o.status}</button></td><td style="font-size:11px;max-width:140px;white-space:pre-wrap">${o.notes||'—'}</td><td><button class="btn" style="font-size:10px;color:var(--rd)" onclick="deleteOrder('${o.id}')">🗑</button></td></tr>`).join('');}
+window.addEmpOrder=()=>{const w=document.getElementById('orderFormWrap2');w.style.display=w.style.display==='none'?'block':'none';if(w.style.display==='block'){const od=document.getElementById('e_ord_odate');if(od&&!od.value)od.value=new Date().toISOString().slice(0,10);}};
+async function createOrder(model,tel,odate,rdate,notes,by,byName){
+  if(!model){alert('Внеси модел!');return false;}
+  const id='ord_'+Date.now();
+  await setDoc(doc(db,'orders',id),{by,byName,model,tel,odate,rdate,notes,status:'Нарачано',createdAt:serverTimestamp()});
+  return true;
+}
+window.saveOrder=async()=>{
+  const whoName=isMgr?'Илир (Менаџер)':(MEMBERS.find(m=>m.id===mID)?.name||'?');
+  const ok=await createOrder(document.getElementById('ord_model').value.trim(),document.getElementById('ord_tel').value.trim(),document.getElementById('ord_odate').value,document.getElementById('ord_rdate').value,document.getElementById('ord_notes').value.trim(),isMgr?'MGR':(mID||'?'),whoName);
+  if(!ok)return;
+  ['ord_model','ord_tel','ord_notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['ord_odate','ord_rdate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('orderFormWrap').style.display='none';
+};
+window.saveEmpOrder=async()=>{
+  const whoName=MEMBERS.find(m=>m.id===mID)?.name||'?';
+  const ok=await createOrder(document.getElementById('e_ord_model').value.trim(),document.getElementById('e_ord_tel').value.trim(),document.getElementById('e_ord_odate').value,document.getElementById('e_ord_rdate').value,document.getElementById('e_ord_notes').value.trim(),mID,whoName);
+  if(!ok)return;
+  ['e_ord_model','e_ord_tel','e_ord_notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['e_ord_odate','e_ord_rdate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('orderFormWrap2').style.display='none';
+};
+window.deleteOrder=async(id)=>{if(!confirm('Избриши?'))return;await deleteDoc(doc(db,'orders',id));};
+window.cycleOrderStatus=async(id)=>{
+  const statuses=['Нарачано','Пристигнато','Реализирано','Откажано'];
+  const o=ORDERS.find(x=>x.id===id);if(!o)return;
+  const ci=statuses.indexOf(o.status);
+  await updateDoc(doc(db,'orders',id),{status:statuses[(ci+1)%statuses.length]});
+};
+window.saveMgrNotes=async()=>{MGR_ORDER_NOTES=document.getElementById('mgrOrderNotes').value;await svCfg('mgrOrderNotes',MGR_ORDER_NOTES);showSS('sStat','✓ Зачувано','ok');};
+
+function rndOrders(){
+  const mnw=document.getElementById('mgrOrderNotesWrap');if(mnw)mnw.style.display=isMgr?'block':'none';
+  if(isMgr){const mne=document.getElementById('mgrOrderNotes');if(mne)mne.value=MGR_ORDER_NOTES;}
+  const tb=document.getElementById('ordersTb');if(!tb)return;
+  const visible=isMgr?ORDERS:ORDERS.filter(o=>o.by===mID);
+  if(!visible.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:16px;color:var(--t3)">Нема нарачки</td></tr>';return;}
+  tb.innerHTML=visible.map(o=>{
+    const mb=MEMBERS.find(m=>m.id===o.by);
+    const av=mb?`<div class="av" style="background:${mb.bg};color:${mb.tc};width:20px;height:20px;font-size:8px;flex-shrink:0">${mb.ini}</div>`:'<div class="av" style="background:var(--mgl);color:var(--mgd);width:20px;height:20px;font-size:8px;flex-shrink:0">М</div>';
+    return `<tr><td><div class="nc">${av}<span style="font-size:10px;font-weight:600">${o.byName||o.by}</span></div></td><td style="font-size:11px;font-weight:700">${o.model||'—'}</td><td style="font-size:10px">${o.tel||'—'}</td><td style="font-size:10px">${o.odate||'—'}</td><td style="font-size:10px">${o.rdate||'—'}</td><td><button class="ord-status" onclick="cycleOrderStatus('${o.id}')" style="${ordStyle(o.status)}">${o.status}</button></td><td style="font-size:10px;max-width:140px;white-space:pre-wrap">${o.notes||'—'}</td><td>${(isMgr||o.by===mID)?`<button class="btn" style="padding:2px 5px;font-size:10px;color:var(--rd)" onclick="deleteOrder('${o.id}')">🗑</button>`:''}</td></tr>`;
+  }).join('');
+}
+function rndEmpOrders(){
+  const tb=document.getElementById('empOrdersTb');if(!tb)return;
+  const mine=ORDERS.filter(o=>o.by===mID);
+  if(!mine.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:16px;color:var(--t3)">Нема нарачки</td></tr>';return;}
+  tb.innerHTML=mine.map(o=>`<tr><td style="font-size:11px;font-weight:700">${o.model||'—'}</td><td style="font-size:10px">${o.tel||'—'}</td><td style="font-size:10px">${o.odate||'—'}</td><td style="font-size:10px">${o.rdate||'—'}</td><td><button class="ord-status" onclick="cycleOrderStatus('${o.id}')" style="${ordStyle(o.status)}">${o.status}</button></td><td style="font-size:10px;max-width:130px;white-space:pre-wrap">${o.notes||'—'}</td><td><button class="btn" style="padding:2px 5px;font-size:10px;color:var(--rd)" onclick="deleteOrder('${o.id}')">🗑</button></td></tr>`).join('');
+}
 
 // ── TAB ──
-window.gotoTab=(name,el)=>{document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));if(el)el.classList.add('act');else{const tabs=document.querySelectorAll('.tab');const names=['daily','monthly','ranking','alerts','inventory','comments','targets','orders'];const idx=names.indexOf(name);if(idx>=0&&tabs[idx])tabs[idx].classList.add('act');}document.getElementById('tp-'+name).classList.add('act');if(name==='monthly')rndMonthly();else if(name==='ranking')rndRanking();else if(name==='alerts')calcAlerts();else if(name==='inventory')rndInv();else if(name==='comments')rndCmts();else if(name==='targets')rndTgts();else if(name==='orders')rndOrders();};
+window.gotoTab=(name,el)=>{
+  document.querySelectorAll('#mgrTabs .tab').forEach(t=>t.classList.remove('act'));
+  document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));
+  if(el)el.classList.add('act');
+  const tpEl=document.getElementById('tp-'+name);if(tpEl)tpEl.classList.add('act');
+  if(name==='monthly')rndMonthly();
+  else if(name==='ranking')rndRanking();
+  else if(name==='alerts')calcAlerts();
+  else if(name==='inventory')rndInv();
+  else if(name==='targets')rndTgts();
+  else if(name==='orders')rndOrders();
+  else if(name==='boost')rndBoostBoard();
+};
 
 // ── BOOST BOARD ──
-const STICKERS=[{e:'🌟',lbl:'Ѕвезда'},{e:'🔥',lbl:'Оган'},{e:'💪',lbl:'Сила'},{e:'🏆',lbl:'Шампион'},{e:'🎯',lbl:'Точно'},{e:'💎',lbl:'Дијамант'},{e:'🚀',lbl:'Ракета'},{e:'⚡',lbl:'Молња'},{e:'🥇',lbl:'Злато'},{e:'👑',lbl:'Крал'},{e:'💯',lbl:'100%'},{e:'🎉',lbl:'Браво!'},{e:'😎',lbl:'Кул'},{e:'❤️',lbl:'Срце'},{e:'🦁',lbl:'Лав'},{e:'🎪',lbl:'Шоу'}];
-let selectedSticker=null;
-function rndMotivation(){if(!isMgr)return;const bb=document.getElementById('boostBoardWrap');if(bb)bb.style.display='block';const sc=document.getElementById('stickerBoard');if(!sc)return;let h=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">`;STICKERS.forEach((s,i)=>{h+=`<div class="sticker" id="stk_${i}" onclick="selectSticker(${i})" title="${s.lbl}">${s.e}</div>`;});h+=`</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">`;h+=`<span style="font-size:11px;font-weight:700;color:var(--t2)">Испрати на:</span>`;MEMBERS.forEach(mb=>{h+=`<button onclick="sendSticker('${mb.id}','${mb.name}')" style="padding:5px 12px;background:var(--s2);border:1px solid var(--brd);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;color:var(--txt);transition:all .15s" onmouseover="this.style.background='var(--mgl)';this.style.color='var(--mgd)'" onmouseout="this.style.background='var(--s2)';this.style.color='var(--txt)'">${mb.ini} ${mb.name.split(' ')[0]}</button>`;});h+=`<span id="stickerStatus" style="font-size:11px;color:var(--gr);font-weight:600;display:none">✅ Испратено!</span></div>`;sc.innerHTML=h;}
-window.selectSticker=idx=>{document.querySelectorAll('.sticker').forEach(s=>s.classList.remove('selected'));document.getElementById('stk_'+idx)?.classList.add('selected');selectedSticker={emoji:STICKERS[idx].e,lbl:STICKERS[idx].lbl};};
-window.sendSticker=async(mid,name)=>{if(!selectedSticker){alert('Прво избери стикер! 👆');return;}const msg=`${selectedSticker.emoji} ${selectedSticker.lbl}! Браво ${name.split(' ')[0]}!`;if(!CS[mid])CS[mid]='';CS[mid]=(CS[mid]?CS[mid]+'\n':'')+`[${new Date().toLocaleDateString('mk-MK')}] ${msg}`;await svCfg('comments',CS);const st=document.getElementById('stickerStatus');if(st){st.style.display='inline';st.textContent=`✅ ${selectedSticker.emoji} испратено!`;setTimeout(()=>st.style.display='none',3000);}document.querySelectorAll('.sticker').forEach(s=>s.classList.remove('selected'));selectedSticker=null;};
+const STICKERS=[
+  {e:'⭐',lbl:'Ѕвезда'},{e:'🔥',lbl:'Оган'},{e:'💪',lbl:'Сила'},{e:'🏆',lbl:'Шампион'},
+  {e:'🎯',lbl:'Точно'},{e:'💎',lbl:'Дијамант'},{e:'🚀',lbl:'Ракета'},{e:'⚡',lbl:'Молња'},
+  {e:'🥇',lbl:'Злато'},{e:'👑',lbl:'Крал'},{e:'💯',lbl:'100%'},{e:'🎉',lbl:'Браво!'},
+  {e:'😎',lbl:'Кул'},{e:'❤️',lbl:'Срце'},{e:'🦁',lbl:'Лав'},{e:'🎪',lbl:'Шоу'},
+  // New additions
+  {e:'📈',lbl:'Нагоре'},{e:'📉',lbl:'Надолу'},{e:'😊',lbl:'Smile'},
+  {e:'🔴',lbl:'Стоп'},{e:'🔵',lbl:'Инфо'},{e:'🟢',lbl:'ОК'},
+  {e:'⬆️',lbl:'Горе'},{e:'⬇️',lbl:'Долу'},{e:'✅',lbl:'Потврди'},
+  {e:'❌',lbl:'Одбиено'},{e:'⚠️',lbl:'Внимание'},{e:'🆙',lbl:'Подобри'},
+  {e:'🎖️',lbl:'Медал'},{e:'🌟',lbl:'Ѕвезда2'},{e:'🤝',lbl:'Соработка'},{e:'💬',lbl:'Порака'},
+];
+let selSticker=null;
+function rndBoostBoard(){
+  if(!isMgr)return;
+  const sc=document.getElementById('stickerBoard');if(!sc)return;
+  let h=`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">`;
+  STICKERS.forEach((s,i)=>{h+=`<div class="sticker" id="stk_${i}" onclick="selSt(${i})" title="${s.lbl}">${s.e}</div>`;});
+  h+=`</div>
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px">Испрати на:</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">`;
+  MEMBERS.forEach(mb=>{h+=`<button onclick="sendSt('${mb.id}','${mb.name}')" style="padding:6px 13px;background:var(--s2);border:1px solid var(--brd);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;color:var(--txt);display:flex;align-items:center;gap:5px"><div class="av" style="background:${mb.bg};color:${mb.tc};width:18px;height:18px;font-size:8px;flex-shrink:0">${mb.ini}</div>${mb.name.split(' ')[0]}</button>`;});
+  h+=`<span id="stStat" style="font-size:11px;color:var(--gr);font-weight:600;display:none">✅ Испратено!</span></div>
+  <div style="margin-top:14px;border-top:1px solid var(--brd);padding-top:12px">
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px">📬 Испрати порака:</div>
+    <div style="display:flex;gap:5px;align-items:flex-end">
+      <div style="flex:1"><select id="msgTarget" class="fi" style="margin-bottom:5px"><option value="">— Избери вработена —</option>${MEMBERS.map(mb=>`<option value="${mb.id}">${mb.name}</option>`).join('')}</select><textarea id="msgText" class="cta" style="min-height:50px" placeholder="Напиши порака..."></textarea></div>
+      <button class="btn bmg" onclick="sendMsg()" style="align-self:flex-end">Прати 📨</button>
+    </div>
+  </div>`;
+  sc.innerHTML=h;
+}
+window.selSt=idx=>{document.querySelectorAll('.sticker').forEach(s=>s.classList.remove('selected'));document.getElementById('stk_'+idx)?.classList.add('selected');selSticker={emoji:STICKERS[idx].e,lbl:STICKERS[idx].lbl};};
+window.sendSt=async(mid,name)=>{
+  if(!selSticker){alert('Прво избери стикер!');return;}
+  const msg=`${selSticker.emoji} ${selSticker.lbl}! Браво ${name.split(' ')[0]}!`;
+  if(!CS[mid])CS[mid]='';CS[mid]=(CS[mid]?CS[mid]+'\n':'')+`[${new Date().toLocaleDateString('mk-MK')}] ${msg}`;
+  await svCfg('comments',CS);
+  const st=document.getElementById('stStat');if(st){st.style.display='inline';st.textContent=`✅ ${selSticker.emoji} испратено на ${name.split(' ')[0]}!`;setTimeout(()=>st.style.display='none',3000);}
+  document.querySelectorAll('.sticker').forEach(s=>s.classList.remove('selected'));selSticker=null;
+};
+window.sendMsg=async()=>{
+  const mid=document.getElementById('msgTarget').value;const txt=document.getElementById('msgText').value.trim();
+  if(!mid||!txt){alert('Избери вработена и напиши порака!');return;}
+  if(!CS[mid])CS[mid]='';CS[mid]=(CS[mid]?CS[mid]+'\n':'')+`[${new Date().toLocaleDateString('mk-MK')}] 📨 ${txt}`;
+  await svCfg('comments',CS);document.getElementById('msgText').value='';
+  alert('✅ Пораката е испратена!');
+};
 
 // ── EMPLOYEE ──
-function initEmp(){const mb=MEMBERS.find(x=>x.id===mID);if(!mb)return;document.getElementById('empWel').textContent='👋 Добредојде, '+mb.name+'!';const today=new Date();if(today.getFullYear()===cY&&today.getMonth()+1===cM){const wks2=gWks(getWDs(cY,cM));const td=today.getDate();wks2.forEach((wk,wi)=>{wk.forEach((d,di)=>{if(d.date===td){cW=wi;cD=di;}});});}empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();const cmt=CS[mID];if(cmt){document.getElementById('empCmtBox').style.display='block';document.getElementById('empCmtTxt').textContent=cmt;}}
-function empBuildNav(){document.getElementById('empYrDisp').textContent=cY;const mb2=document.getElementById('empMoBtns');mb2.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();rndEmpWeekly();};mb2.appendChild(b);});const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('empWkBtns');wb.innerHTML='';wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#empWkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpWeekly();};wb.appendChild(b);});}
+function initEmp(){
+  const mb=MEMBERS.find(x=>x.id===mID);if(!mb)return;
+  document.getElementById('empWel').textContent='👋 '+mb.name;
+  const today=new Date();
+  if(today.getFullYear()===cY&&today.getMonth()+1===cM){const wks2=gWks(getWDs(cY,cM));const td=today.getDate();wks2.forEach((wk,wi)=>{wk.forEach((d,di)=>{if(d.date===td){cW=wi;cD=di;}});});}
+  empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();
+  const cmt=CS[mID];
+  if(cmt){const box=document.getElementById('empCmtBox');const txt=document.getElementById('empCmtTxt');if(box&&txt){box.style.display='block';txt.textContent=cmt;}}
+}
+function empBuildNav(){
+  document.getElementById('empYrDisp').textContent=cY;
+  const mb2=document.getElementById('empMoBtns');mb2.innerHTML='';
+  MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();rndEmpWeekly();};mb2.appendChild(b);});
+  const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('empWkBtns');wb.innerHTML='';
+  wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#empWkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpWeekly();};wb.appendChild(b);});
+}
 window.empChgYr=async d=>{cY+=d;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();};
 window.empChgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();};
-window.empTab=(name,el)=>{document.querySelectorAll('#empView .tab').forEach(t=>t.classList.remove('act'));document.querySelectorAll('[id^="etp-"]').forEach(t=>t.classList.remove('act'));if(el)el.classList.add('act');document.getElementById('etp-'+name).classList.add('act');if(name==='weekly')rndEmpWeekly();else if(name==='monthly')rndEmpMo();else if(name==='yearly')rndEmpYr();else if(name==='emporders')rndEmpOrders();};
-window.empPrint=()=>window.print();
-function rndEmpDyBtns(){const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];const c=document.getElementById('empDyBtns');c.innerHTML='';wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#empDyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpSt();rndEmpKpi();};c.appendChild(b);});}
-function rndEmpSt(){const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];if(!dO)return;const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const cst=AS[cY][cM][dk][mID]?.status||0;const c=document.getElementById('empStBtns');c.innerHTML='';SIC.forEach((ic,i)=>{const b=document.createElement('button');b.style.cssText=`padding:6px 12px;border-radius:var(--rs);border:1px solid var(--brd);background:${i===cst?'var(--mg)':'var(--sur)'};color:${i===cst?'#fff':'var(--t2)'};font-size:13px;cursor:pointer;transition:all .15s`;b.textContent=ic+' '+SLBL[i];b.onclick=async()=>{ensD(cY,cM,dk);AS[cY][cM][dk][mID].status=i;rndEmpSt();rndEmpKpi();await empSv();};c.appendChild(b);});}
-function rndEmpKpi(){const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];const g=document.getElementById('empKpiG');g.innerHTML='';if(!dO){g.innerHTML='<div style="color:var(--t3)">Нема работни денови</div>';return;}const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];const isAbs=ms.status===3||ms.status===1;const wd=getWDs(cY,cM).length;const mt=getMT(cY,cM);let pbVal=0;let pbDy='';getWDs(cY,cM).forEach(d=>{const dkx=dK(cY,cM,d);const msx=AS[cY]?.[cM]?.[dkx]?.[mID];if(msx){let tot=0;KKEYS.forEach(k=>{tot+=msx[k]||0;});if(tot>pbVal){pbVal=tot;pbDy=d.label;}}});KKEYS.forEach((k,i)=>{const v=ms[k]||0;const dt=Math.round((mt[k]||0)/wd*10)/10;const p=pct(v,dt);const ms2=mMoSum(mID,k,cY,cM);const mp=pct(ms2,mt[k]||1);const isPB=v>0&&v>=pbVal&&pbDy===dO.label;g.innerHTML+=`<div class="ekc">${isPB?'<span class="pbb">🌟 Личен рекорд!</span>':''}<div class="ekl">${KLBLS[i]}</div><input class="eki" type="number" value="${v}" ${isAbs?'disabled':''} style="color:${isAbs?'var(--t3)':pc(p)}" oninput="eVal('${dk}','${k}',this.value)"><div style="font-size:10px;color:var(--t3)">Цел: ${Number.isInteger(dt)?dt:dt.toFixed(1)}</div><div style="font-size:11px;font-weight:700;color:${isAbs?'var(--t3)':pc(p)};margin-top:3px">${isAbs?'—':p+'%'} ${isAbs?'':pem(p)}</div><div class="ebar"><div class="ebf" style="width:${isAbs?0:Math.min(100,p)}%;${barcl(p)}"></div></div><div style="font-size:10px;color:${pc(mp)};margin-top:4px">Месец: ${ms2}/${mt[k]||0} (${mp}%)</div></div>`;});const sc=perfScore(mID,cY,cM);const pb=document.getElementById('empPB');if(pb)pb.innerHTML=`<span style="font-size:13px;padding:4px 12px;border-radius:20px;font-weight:700" class="${pbc(sc)}">Score: ${sc}% ${pem(sc)}</span>`;}
-window.eVal=async(dk,key,val)=>{ensD(cY,cM,dk);const p=parseInt(val);AS[cY][cM][dk][mID][key]=isNaN(p)?0:p;clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();rndEmpMo();},1000);};
-async function empSv(){showSS('empSS','💾...','sv');try{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);await svDay(cY,cM,dk);showSS('empSS','✓ Зачувано','ok');rndEmpMo();}catch(e){showSS('empSS','⚠ Грешка','er');}}
-function rndEmpMo(){const mt=getMT(cY,cM);const sc=document.getElementById('empScG');if(!sc)return;const moTit=document.getElementById('empMoTit');if(moTit)moTit.textContent='Твој напредок — '+MKM[cM-1]+' '+cY;sc.innerHTML='';let aP=0;KKEYS.forEach((k,i)=>{const s=mMoSum(mID,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);aP+=p;sc.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="color:${pc(p)};font-size:13px">${s}/${t}</div><div class="scs" style="color:${pc(p)}">${p}% ${pem(p)}</div></div>`;});aP=Math.round(aP/KKEYS.length);sc.innerHTML=`<div class="sc" style="border-color:${pc(aP)}"><div class="scl">Мој Score</div><div class="scv" style="color:${pc(aP)}">${aP}% ${pem(aP)}</div></div>`+sc.innerHTML;}
-function rndEmpWeekly(){const mt=getMT(cY,cM);const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const tit=document.getElementById('empWkTitle');if(tit)tit.textContent='Неделен преглед — Недела '+(cW+1)+', '+MKM[cM-1]+' '+cY;const wkTots={};KKEYS.forEach(k=>wkTots[k]=0);let wkDays=0;wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];if(ms&&ms.status!==3&&ms.status!==1){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});const totalWd=getWDs(cY,cM).length;const sc2=document.getElementById('empWkScG');if(!sc2)return;sc2.innerHTML='';let avgP=0;KKEYS.forEach((k,i)=>{const wt=Math.round((mt[k]||0)/totalWd*wk.length);const p=pct(wkTots[k],wt||1);avgP+=p;sc2.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="color:${pc(p)};font-size:13px">${wkTots[k]}/${wt}</div><div class="scs" style="color:${pc(p)}">${p}% ${pem(p)}</div></div>`;});avgP=Math.round(avgP/KKEYS.length);sc2.innerHTML=`<div class="sc" style="border-color:${pc(avgP)}"><div class="scl">Неделен Score</div><div class="scv" style="color:${pc(avgP)}">${avgP}% ${pem(avgP)}</div><div class="scs">${wkDays} раб. дни</div></div>`+sc2.innerHTML;const kg=document.getElementById('empWkKpiGrid');if(!kg)return;kg.innerHTML='';wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];const isAbs=!ms||ms.status===3||ms.status===1;let tot=0;if(!isAbs)KKEYS.forEach(k=>{tot+=(ms?.[k]||0);});kg.innerHTML+=`<div class="ekc" style="opacity:${isAbs?'.4':'1'}"><div class="ekl">${d.label}</div><div style="font-size:20px;font-weight:700;margin:4px 0;color:${isAbs?'var(--t3)':'var(--txt)'}">${isAbs?'—':tot}</div><div style="font-size:10px;color:var(--t2)">${isAbs?'отсутен':'вкупно KPI'}</div></div>`;});}
-function rndEmpYr(){const tit=document.getElementById('empYrTit');if(tit)tit.textContent='Годишен преглед — '+cY;const yrScG=document.getElementById('empYrScG');if(!yrScG)return;yrScG.innerHTML='';const yrTots={};KKEYS.forEach(k=>yrTots[k]=0);let totalScore=0;let activeMonths=0;const yrMos=document.getElementById('empYrMonths');if(yrMos)yrMos.innerHTML='';for(let m=1;m<=12;m++){const mt=getMT(cY,m);let moScore=0;let hasData=false;KKEYS.forEach(k=>{const s=mMoSum(mID,k,cY,m);yrTots[k]+=s;if(s>0)hasData=true;const p=pct(s,mt[k]||1);moScore+=p;});moScore=Math.round(moScore/KKEYS.length);if(hasData){totalScore+=moScore;activeMonths++;}if(yrMos&&(hasData||m<=new Date().getMonth()+1))yrMos.innerHTML+=`<div class="sc" style="border-color:${hasData?pc(moScore):'var(--brd)'}"><div class="scl">${MKM[m-1]}</div><div class="scv" style="color:${hasData?pc(moScore):'var(--t3)'};">${hasData?moScore+'% '+pem(moScore):'—'}</div></div>`;}const avgYr=activeMonths>0?Math.round(totalScore/activeMonths):0;yrScG.innerHTML=`<div class="sc" style="border-color:${pc(avgYr)}"><div class="scl">Годишен Score</div><div class="scv" style="color:${pc(avgYr)}">${avgYr}% ${pem(avgYr)}</div><div class="scs">${activeMonths} активни месеци</div></div>`;KKEYS.forEach((k,i)=>{yrScG.innerHTML+=`<div class="sc"><div class="scl">${KLBLS[i]}</div><div class="scv" style="font-size:13px;color:${pc(pct(yrTots[k],getMT(cY,cM)[k]*12||1))}">${yrTots[k]}</div><div class="scs">вкупно ${cY}</div></div>`;});}
+window.empTab=(name,el)=>{
+  document.querySelectorAll('#empView .tab').forEach(t=>t.classList.remove('act'));
+  document.querySelectorAll('[id^="etp-"]').forEach(t=>t.classList.remove('act'));
+  if(el)el.classList.add('act');
+  const ep=document.getElementById('etp-'+name);if(ep)ep.classList.add('act');
+  if(name==='weekly')rndEmpWeekly();else if(name==='monthly')rndEmpMo();else if(name==='yearly')rndEmpYr();else if(name==='emporders')rndEmpOrders();
+};
+function rndEmpDyBtns(){
+  const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];
+  const c=document.getElementById('empDyBtns');c.innerHTML='';
+  wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#empDyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpSt();rndEmpKpi();};c.appendChild(b);});
+}
+function rndEmpSt(){
+  const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];if(!dO)return;
+  const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const cst=AS[cY][cM][dk][mID]?.status||0;
+  const c=document.getElementById('empStBtns');c.innerHTML='';
+  SIC.forEach((ic,i)=>{const b=document.createElement('button');b.style.cssText=`padding:5px 11px;border-radius:var(--rs);border:1px solid var(--brd);background:${i===cst?'var(--mg)':'var(--sur)'};color:${i===cst?'#fff':'var(--t2)'};font-size:12px;cursor:pointer;transition:all .15s`;b.textContent=ic+' '+SLBL[i];b.onclick=async()=>{ensD(cY,cM,dk);AS[cY][cM][dk][mID].status=i;rndEmpSt();rndEmpKpi();await empSv();};c.appendChild(b);});
+}
+function rndEmpKpi(){
+  const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];
+  const g=document.getElementById('empKpiG');if(!g)return;g.innerHTML='';
+  if(!dO){g.innerHTML='<div style="color:var(--t3)">Нема работни денови</div>';return;}
+  const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
+  const isAbs=ms.status===3||ms.status===1;
+  const wd=getWDs(cY,cM).length;const mt=getMT(cY,cM);
+  KKEYS.forEach((k,i)=>{
+    const v=ms[k]||0;const dt=Math.round((mt[k]||0)/wd*10)/10;const p=pct(v,dt);
+    const ms2=mMoSum(mID,k,cY,cM);const mp=pct(ms2,mt[k]||1);
+    const on=isInScore(k);
+    g.innerHTML+=`<div class="ekc${on?'':' off-kpi'}">
+      ${!on?'<div style="font-size:9px;color:var(--t3);margin-bottom:3px">⊘ OFF</div>':''}
+      <div class="ekl">${KLBLS[i]}</div>
+      <input class="eki" type="number" value="${v}" ${isAbs?'disabled':''} style="color:${isAbs?'var(--t3)':pc(p)}" oninput="eVal('${dk}','${k}',this.value)">
+      <div style="font-size:9px;color:var(--t3)">/ ${Number.isInteger(dt)?dt:dt.toFixed(1)}</div>
+      <div style="font-size:10px;font-weight:700;color:${isAbs?'var(--t3)':pc(p)};margin-top:2px">${isAbs?'—':p+'%'} ${isAbs?'':pem(p)}</div>
+      <div class="ebar"><div class="ebf" style="width:${isAbs?0:Math.min(100,p)}%;${barcl(p)}"></div></div>
+      <div style="font-size:9px;color:${pc(mp)};margin-top:3px">Месец: ${ms2}/${mt[k]||0} (${mp}%)</div>
+    </div>`;
+  });
+  // Update score badge
+  const sc=perfScore(mID,cY,cM);const pb=document.getElementById('empPB');
+  if(pb)pb.innerHTML=`<span style="font-size:12px;padding:3px 10px;border-radius:20px;font-weight:700" class="${pbc(sc)}">Score: ${sc}% ${pem(sc)}</span>`;
+}
+window.eVal=async(dk,key,val)=>{
+  ensD(cY,cM,dk);const p=parseInt(val);AS[cY][cM][dk][mID][key]=isNaN(p)?0:p;
+  clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();rndEmpMo();},800);
+};
+async function empSv(){
+  showSS('empSS','💾...','sv');
+  try{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);await svDay(cY,cM,dk);showSS('empSS','✓ Зачувано','ok');rndEmpMo();}
+  catch(e){showSS('empSS','⚠ Грешка','er');}
+}
+function rndEmpMo(){
+  const mt=getMT(cY,cM);const sc=document.getElementById('empScG');if(!sc)return;
+  const moTit=document.getElementById('empMoTit');if(moTit)moTit.textContent='Твој напредок — '+MKM[cM-1]+' '+cY;
+  sc.innerHTML='';let aP=0;let aCnt=0;
+  KKEYS.forEach((k,i)=>{const s=mMoSum(mID,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);const on=isInScore(k);if(on){aP+=p;aCnt++;}sc.innerHTML+=`<div class="sc" style="opacity:${on?1:.5}"><div class="scl">${KLBLS[i]}${on?'':' ⊘'}</div><div class="scv" style="color:${pc(p)};font-size:13px">${s}/${t}</div><div class="scs" style="color:${pc(p)}">${p}% ${pem(p)}</div></div>`;});
+  aP=aCnt>0?Math.round(aP/aCnt):0;
+  sc.innerHTML=`<div class="sc" style="border-color:${pc(aP)}"><div class="scl">Мој Score</div><div class="scv" style="color:${pc(aP)}">${aP}% ${pem(aP)}</div></div>`+sc.innerHTML;
+  // Refresh score badge
+  const pb=document.getElementById('empPB');if(pb)pb.innerHTML=`<span style="font-size:12px;padding:3px 10px;border-radius:20px;font-weight:700" class="${pbc(aP)}">Score: ${aP}% ${pem(aP)}</span>`;
+}
+function rndEmpWeekly(){
+  const mt=getMT(cY,cM);const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];
+  const tit=document.getElementById('empWkTitle');if(tit)tit.textContent='Недела '+(cW+1)+' — '+MKM[cM-1]+' '+cY;
+  const wkTots={};KKEYS.forEach(k=>wkTots[k]=0);let wkDays=0;
+  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];if(ms&&ms.status!==3&&ms.status!==1){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
+  const totalWd=getWDs(cY,cM).length;const sc2=document.getElementById('empWkScG');if(!sc2)return;sc2.innerHTML='';
+  let avgP=0;let avgC=0;
+  KKEYS.forEach((k,i)=>{const wt=Math.round((mt[k]||0)/totalWd*wk.length);const p=pct(wkTots[k],wt||1);const on=isInScore(k);if(on){avgP+=p;avgC++;}sc2.innerHTML+=`<div class="sc" style="opacity:${on?1:.5}"><div class="scl">${KLBLS[i]}</div><div class="scv" style="color:${pc(p)};font-size:13px">${wkTots[k]}/${wt}</div><div class="scs" style="color:${pc(p)}">${p}%</div></div>`;});
+  avgP=avgC>0?Math.round(avgP/avgC):0;
+  sc2.innerHTML=`<div class="sc" style="border-color:${pc(avgP)}"><div class="scl">Неделен Score</div><div class="scv" style="color:${pc(avgP)}">${avgP}% ${pem(avgP)}</div><div class="scs">${wkDays} раб. дни</div></div>`+sc2.innerHTML;
+  const kg=document.getElementById('empWkKpiGrid');if(!kg)return;kg.innerHTML='';
+  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];const isAbs=!ms||ms.status===3||ms.status===1;let tot=0;if(!isAbs)KKEYS.forEach(k=>{tot+=(ms?.[k]||0);});kg.innerHTML+=`<div class="ekc" style="opacity:${isAbs?.4:1}"><div class="ekl">${d.label}</div><div style="font-size:18px;font-weight:700;margin:3px 0;color:${isAbs?'var(--t3)':'var(--txt)'}">${isAbs?'—':tot}</div><div style="font-size:9px;color:var(--t2)">${isAbs?'отсутен':'вкупно'}</div></div>`;});
+}
+function rndEmpYr(){
+  const tit=document.getElementById('empYrTit');if(tit)tit.textContent='Годишен преглед — '+cY;
+  const yrScG=document.getElementById('empYrScG');if(!yrScG)return;yrScG.innerHTML='';
+  const yrTots={};KKEYS.forEach(k=>yrTots[k]=0);let totalScore=0;let activeMonths=0;
+  const yrMos=document.getElementById('empYrMonths');if(yrMos)yrMos.innerHTML='';
+  for(let m=1;m<=12;m++){
+    const mt=getMT(cY,m);let moScore=0;let moC=0;let hasData=false;
+    KKEYS.forEach(k=>{const s=mMoSum(mID,k,cY,m);yrTots[k]+=s;if(s>0)hasData=true;if(isInScore(k)){moScore+=pct(s,mt[k]||1);moC++;}});
+    moScore=moC>0?Math.round(moScore/moC):0;if(hasData){totalScore+=moScore;activeMonths++;}
+    if(yrMos&&(hasData||m<=new Date().getMonth()+1))yrMos.innerHTML+=`<div class="sc" style="border-color:${hasData?pc(moScore):'var(--brd)'}"><div class="scl">${MKM[m-1]}</div><div class="scv" style="color:${hasData?pc(moScore):'var(--t3)'};">${hasData?moScore+'% '+pem(moScore):'—'}</div></div>`;
+  }
+  const avgYr=activeMonths>0?Math.round(totalScore/activeMonths):0;
+  yrScG.innerHTML=`<div class="sc" style="border-color:${pc(avgYr)}"><div class="scl">Годишен Score</div><div class="scv" style="color:${pc(avgYr)}">${avgYr}% ${pem(avgYr)}</div><div class="scs">${activeMonths} активни месеци</div></div>`;
+  KKEYS.forEach((k,i)=>{const on=isInScore(k);yrScG.innerHTML+=`<div class="sc" style="opacity:${on?1:.5}"><div class="scl">${KLBLS[i]}</div><div class="scv" style="font-size:12px;color:var(--txt)">${yrTots[k]}</div><div class="scs">вкупно</div></div>`;});
+}
 
 </script>
 </body>
