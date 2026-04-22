@@ -201,8 +201,8 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 <style>
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
 body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
-body.emp-mode #tp-alerts,body.emp-mode #tp-inventory,body.emp-mode #tp-comments,
-body.emp-mode #tp-targets,body.emp-mode #tp-orders{display:none!important;visibility:hidden!important}
+body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,
+body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
 </style>
 
@@ -233,7 +233,6 @@ body.emp-mode #empView{display:block!important}
   <div class="hlogo"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
   <div><div class="ht">MKT Sales Pro — Кичево</div><div class="hs">МТ · <span id="todStr"></span></div></div>
   <div class="hr">
-    <div id="alBadge" class="abadge" style="display:none" onclick="gotoTab('alerts')">🚨 <span id="alCnt">0</span></div>
     <span id="sStat" class="ss" style="display:none"></span>
     <span id="uBadge" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--mgl);color:var(--mgd)"></span>
     <!-- Save HTML backup -->
@@ -275,11 +274,10 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
   <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
-  <div class="tab" onclick="gotoTab('alerts',this)">🚨 Alerts</div>
-  <div class="tab" onclick="gotoTab('inventory',this)">📦 Инвентар</div>
+  <div class="tab" onclick="gotoTab('inventory',this)">📦 Доп.Опрема</div>
+  <div class="tab" onclick="gotoTab('inventory2',this)">📱 Моб.&amp;Друго</div>
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
-  <div class="tab" onclick="gotoTab('boost',this)">🏅 Boost</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -373,15 +371,6 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
-<!-- ═══ ALERTS ═══ -->
-<div id="tp-alerts" class="tp">
-<div class="card">
-  <div style="font-size:14px;font-weight:700;margin-bottom:3px">🚨 Alerts</div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Автоматски врз основа на перформансите</div>
-  <div class="ap" id="alPanel"></div>
-</div>
-</div>
-
 <!-- ═══ INVENTORY (OFI) ═══ -->
 <div id="tp-inventory" class="tp">
 <div class="card">
@@ -426,6 +415,54 @@ body.emp-mode #empView{display:block!important}
   <!-- Sales by employee -->
   <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:14px">Продажба по вработен (месец)</div>
   <div class="tw"><table style="min-width:400px"><thead><tr><th style="text-align:left;padding-left:10px">Вработен</th><th>Денес</th><th>Месец</th><th>Приход</th><th>Просек/ден</th></tr></thead><tbody id="invTb"></tbody></table></div>
+</div>
+</div>
+
+
+<!-- ═══ INVENTORY 2 (MOB & DRUGO) ═══ -->
+<div id="tp-inventory2" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div><div style="font-size:14px;font-weight:700">📱 Моб.&amp;Друго — Лагер</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
+    <button class="btn bmg" style="margin-left:auto" onclick="showAddProduct2()">+ Додај производ</button>
+  </div>
+  <!-- Add product form -->
+  <div id="addProdForm2" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;margin-bottom:9px">Додај / Надополни Моб.&amp;Друго производ</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;margin-bottom:9px">
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">OFI Шифра</div><input class="fi" type="text" id="p2_ofi" placeholder="42513654"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Назив</div><input class="fi" type="text" id="p2_name" placeholder="Samsung Galaxy A55..."></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Цена (ден.)</div><input class="fi" type="number" id="p2_price" placeholder="0" min="0"></div>
+      <div><div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:2px;text-transform:uppercase">Количина</div><input class="fi" type="number" id="p2_qty" placeholder="0" min="0"></div>
+    </div>
+    <div style="display:flex;gap:5px">
+      <button class="btn bmg" onclick="saveProduct2()">💾 Зачувај</button>
+      <button class="btn" onclick="document.getElementById('addProdForm2').style.display='none'">✕</button>
+    </div>
+  </div>
+  <!-- Summary cards -->
+  <div class="ig" id="invSumGrid2"></div>
+  <!-- Product table -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:4px">Лагер листа — Мобилни &amp; Друго</div>
+  <div class="tw ofi-table">
+    <table style="min-width:650px">
+      <thead><tr>
+        <th style="text-align:left;padding-left:10px">OFI Шифра</th>
+        <th style="text-align:left">Назив</th>
+        <th>Цена</th>
+        <th>Лагер</th>
+        <th>Продадено (месец)</th>
+        <th>Приходи (месец)</th>
+        <th>Статус</th>
+        <th>Акција</th>
+      </tr></thead>
+      <tbody id="ofiTb2"></tbody>
+      <tfoot><tr id="ofiTf2"></tr></tfoot>
+    </table>
+  </div>
+  <!-- Sales by employee -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:14px">Продажба по вработен (месец)</div>
+  <div class="tw"><table style="min-width:400px"><thead><tr><th style="text-align:left;padding-left:10px">Вработен</th><th>Денес</th><th>Месец</th><th>Приход</th><th>Просек/ден</th></tr></thead><tbody id="invTb2"></tbody></table></div>
 </div>
 </div>
 
@@ -496,14 +533,6 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
-<!-- ═══ BOOST BOARD ═══ -->
-<div id="tp-boost" class="tp">
-<div class="card">
-  <div style="font-size:14px;font-weight:700;margin-bottom:12px">🏅 Boost Board — Испрати на вработена</div>
-  <div id="stickerBoard"></div>
-</div>
-</div>
-
 <!-- ═══════ EMPLOYEE VIEW ═══════ -->
 <div id="empView" style="display:none">
 <div class="hdr" style="position:relative">
@@ -548,6 +577,20 @@ body.emp-mode #empView{display:block!important}
     </div>
     <div style="display:flex;gap:5px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
       <span class="nl">Статус:</span><div id="empStBtns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+    </div>
+    <!-- Quick sell buttons for employee -->
+    <div id="empQuickSell" style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="font-size:10px;font-weight:700;color:var(--t2);align-self:center;white-space:nowrap">Продај:</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;flex:1">
+        <div style="display:flex;align-items:center;gap:3px">
+          <span style="font-size:10px;font-weight:700;color:var(--am);white-space:nowrap">📦 Доп.Опрема</span>
+          <input id="quickSellOfi1" class="fi" type="text" placeholder="OFI шифра" style="width:130px;padding:4px 7px;font-size:11px;font-family:monospace" onkeydown="quickSellKeydown(event,'equip','ofi1')">
+        </div>
+        <div style="display:flex;align-items:center;gap:3px">
+          <span style="font-size:10px;font-weight:700;color:var(--bl);white-space:nowrap">📱 Моб.Друго</span>
+          <input id="quickSellOfi2" class="fi" type="text" placeholder="OFI шифра" style="width:130px;padding:4px 7px;font-size:11px;font-family:monospace" onkeydown="quickSellKeydown(event,'mob','ofi2')">
+        </div>
+      </div>
     </div>
     <div class="ekg" id="empKpiG"></div>
     <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
@@ -649,13 +692,16 @@ const DTGT={fmc:9,post:26,bb:15,iptv:12,prep:16,loy:104,cc:42,equip:66,addser:5,
 const SIC=['🏢','🏠','📋','❌'];const SLBL=['На работа','Дома','Теренска','Отсутен'];
 const MKM=['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 const MKD=['Нед','Пон','Вт','Сре','Чет','Пет','Саб'];
+// Вградени резултати Април 2026 (merged од сите вработени)
+const PRE_DATA={"2026":{"4":{"2026-04-01":{"IN":{"status":0,"fmc":4,"post":4,"bb":3,"iptv":2,"prep":0,"loy":1,"cc":1,"equip":20,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":2,"post":3,"bb":3,"iptv":1,"prep":2,"loy":33,"cc":21,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":1,"post":10,"bb":3,"iptv":4,"prep":1,"loy":24,"cc":39,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":2,"post":6,"bb":4,"iptv":3,"prep":1,"loy":39,"cc":52,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-02":{"FM":{"status":0,"fmc":0,"post":1,"bb":0,"iptv":0,"prep":0,"loy":7,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-03":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-04":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-06":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-07":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-08":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-09":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-10":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-11":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-13":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":10,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"loy_log":["1","2","3","4","5","6","7","8","9","10"]},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-14":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-15":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-16":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-17":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":1,"post":6,"bb":4,"iptv":0,"prep":0,"loy":13,"cc":12,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-18":{"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-20":{"IN":{"status":0,"fmc":1,"post":3,"bb":1,"iptv":0,"prep":0,"loy":2,"cc":7,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":2,"post":0,"bb":1,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":4,"bb":1,"iptv":0,"prep":0,"loy":2,"cc":14,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":2,"post":2,"bb":4,"iptv":2,"prep":0,"loy":9,"cc":7,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":1,"bb":1,"iptv":0,"prep":0,"loy":3,"cc":1,"equip":2,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-21":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":12,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"loy_log":["1","2","3","4","5","6","7","8","9","10","11","12"]},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-22":{"IN":{"status":0,"fmc":4,"post":8,"bb":6,"iptv":4,"prep":3,"loy":29,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1"],"iptv_log":["1","1","1","1"],"prep_log":["1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]},"KM":{"status":0,"fmc":2,"post":9,"bb":6,"iptv":1,"prep":3,"loy":37,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","2"],"post_log":["1","2","3","4","5","7","8","9","10"],"bb_log":["1","2","3","4","1","1"],"iptv_log":["1"],"prep_log":["1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","2","1","1","1","1","1","1","1","1","1","1"]},"HS":{"status":0,"fmc":0,"post":5,"bb":4,"iptv":1,"prep":8,"loy":10,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":[],"post_log":["1","2","3","4","5"],"bb_log":["1","2","3","46119126"],"iptv_log":["1"],"prep_log":["1","1","1","1","1","1","1","1"],"loy_log":["1","2","3","4","5","6","7","8","9","10"]},"FM":{"status":0,"fmc":9,"post":12,"bb":13,"iptv":5,"prep":5,"loy":53,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1","1","1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1","1","1","1","1","1","1","1"],"iptv_log":["1","1","1","1","1"],"prep_log":["1","1","1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]},"MS":{"status":0,"fmc":8,"post":26,"bb":12,"iptv":6,"prep":9,"loy":81,"cc":1,"equip":2,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1","1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1","1","1","1","1","1","1"],"iptv_log":["1","1","1","1","1","1"],"prep_log":["1","1","1","1","1","1","1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"cc_log":["4"],"equip_log":[{"num":"47353468","name":"3mk Smoke MagCase Samsung Galaxy A37"},{"num":"47247431","name":"SAMSUNG 45W PowerAdapter(w/o cable)-Wht."}]}},"2026-04-23":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-24":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-25":{"IN":{"status":0,"fmc":0,"post":8,"bb":2,"iptv":1,"prep":3,"loy":37,"cc":18,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-27":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-28":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-29":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-30":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}}}}};
+
 // Default: FMC,Post,BB,IPTV,Loyalty,C&C ON — rest OFF
 const DEFAULT_EXCLUDED=new Set(['prep','equip','addser','loybus','ict','fmcbus','postbus','bbbus']);
 
 // ── STATE ──
 let curUsr=null,isMgr=false,mID=null;
 let cY=new Date().getFullYear(),cM=new Date().getMonth()+1,cW=0,cD=0;
-let AS={},TS={},CS={},OFI_PRODUCTS={};
+let AS={},TS={},CS={},OFI_PRODUCTS={},OFI_PRODUCTS2={};
 let ORDERS=[],MGR_ORDER_NOTES='';
 let SCORE_EXCLUDED=new Set(DEFAULT_EXCLUDED);
 let svTmr=null,tgY=cY,tgM=cM;
@@ -679,6 +725,21 @@ function ensD(y,m,dk){
   if(!AS[y][m][dk]){AS[y][m][dk]={};MEMBERS.forEach(mb=>{AS[y][m][dk][mb.id]={status:mb.da?3:0,fmc:0,post:0,bb:0,iptv:0,prep:0,loy:0,cc:0,equip:0,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0};});}
 }
 function gDay(y,m,dk){ensD(y,m,dk);return AS[y][m][dk];}
+// Pre-load PRE_DATA into AS so historical data is available immediately
+function initPreData(){
+  const pd=PRE_DATA;
+  for(const yr in pd){
+    if(!AS[yr])AS[yr]={};
+    for(const mo in pd[yr]){
+      if(!AS[yr][mo])AS[yr][mo]={};
+      for(const dk in pd[yr][mo]){
+        // Only set if not already loaded from Firebase
+        if(!AS[yr][mo][dk])AS[yr][mo][dk]=pd[yr][mo][dk];
+      }
+    }
+  }
+}
+
 function mMoSum(mid,k,y,m){
   let s=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms&&ms.status!==3&&ms.status!==1){const v=ms[k];s+=(v!==undefined&&v!==null?v:0);}});
   return s;
@@ -783,18 +844,19 @@ async function ldMonth(y,m){
 }
 
 async function ldAllCfg(){
-  const [t,c,se,mn,ofi]=await Promise.all([
+  const [t,c,se,mn,ofi,ofi2]=await Promise.all([
     ldCfg('targets'),ldCfg('comments'),ldCfg('scoreExcl'),
     isMgr?ldCfg('mgrOrderNotes'):Promise.resolve(null),
-    ldCfg('ofi_products')
+    ldCfg('ofi_products'),
+    ldCfg('ofi_products2')
   ]);
   if(t)TS=t;
   if(c)CS=c;
-  // Score excl: use localStorage first (manager sets it), fall back to Firebase
   loadScoreExcl();
   if(se&&!localStorage.getItem('kpi_excl_v2'))SCORE_EXCLUDED=new Set(se);
   if(mn&&isMgr)MGR_ORDER_NOTES=mn;
   if(ofi)OFI_PRODUCTS=ofi;
+  if(ofi2)OFI_PRODUCTS2=ofi2;
 }
 
 // ── AUTH ──
@@ -823,7 +885,7 @@ window.doLogout=async()=>{
   if(_unsubDay){_unsubDay();_unsubDay=null;}
   if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
   await signOut(auth);
-  curUsr=null;isMgr=false;mID=null;AS={};TS={};CS={};ORDERS=[];OFI_PRODUCTS={};
+  curUsr=null;isMgr=false;mID=null;AS={};TS={};CS={};ORDERS=[];OFI_PRODUCTS={};OFI_PRODUCTS2={};
   document.body.classList.remove('emp-mode');
   document.getElementById('sApp').style.display='none';
   document.getElementById('sLogin').style.display='flex';
@@ -836,6 +898,7 @@ async function postLogin(){
   document.getElementById('uBadge').textContent=isMgr?'👔 Илир':(MEMBERS.find(m=>m.id===mID)?.name.split(' ')[0]||curUsr.email);
   document.getElementById('todStr').textContent=new Date().toLocaleDateString('mk-MK',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   await ldAllCfg();
+  initPreData();  // Load historical data immediately
   await ldMonth(cY,cM);
   subToMonth(cY,cM);
   subToOrders();
@@ -844,11 +907,11 @@ async function postLogin(){
     document.getElementById('mgrTabs').style.display='flex';
     document.getElementById('empView').style.display='none';
     document.body.classList.remove('emp-mode');
-    rndNav();rndDailyView();calcAlerts();rndKpiToggles();rndBoostBoard();
+    rndNav();rndDailyView();calcAlerts();rndKpiToggles();
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
-    ['daily','monthly','ranking','alerts','inventory','targets','orders','boost'].forEach(t=>{
+    ['daily','monthly','ranking','inventory','inventory2','targets','orders'].forEach(t=>{
       const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}
     });
     document.getElementById('empView').style.display='block';
@@ -860,7 +923,7 @@ document.getElementById('sLoad').style.display='flex';
 
 // ══ BACKUP SAVE / LOAD ══
 window.saveBackup=()=>{
-  const data={AS,TS,CS,ORDERS,OFI_PRODUCTS,MGR_ORDER_NOTES,SCORE_EXCLUDED:[...SCORE_EXCLUDED],savedAt:new Date().toISOString(),version:2};
+  const data={AS,TS,CS,ORDERS,OFI_PRODUCTS,OFI_PRODUCTS2,MGR_ORDER_NOTES,SCORE_EXCLUDED:[...SCORE_EXCLUDED],savedAt:new Date().toISOString(),version:3};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download=`mkt-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();
@@ -872,9 +935,10 @@ window.loadBackup=async(input)=>{
     const text=await file.text();const data=JSON.parse(text);
     if(data.AS)AS=data.AS;if(data.TS)TS=data.TS;if(data.CS)CS=data.CS;
     if(data.ORDERS)ORDERS=data.ORDERS;if(data.OFI_PRODUCTS)OFI_PRODUCTS=data.OFI_PRODUCTS;
+    if(data.OFI_PRODUCTS2)OFI_PRODUCTS2=data.OFI_PRODUCTS2;
     if(data.MGR_ORDER_NOTES)MGR_ORDER_NOTES=data.MGR_ORDER_NOTES;
     if(data.SCORE_EXCLUDED){SCORE_EXCLUDED=new Set(data.SCORE_EXCLUDED);saveScoreExcl();}
-    rndTbl();rndKpiToggles();calcAlerts();
+    rndTbl();rndKpiToggles();calcAlerts();initPreData();
     showSS('sStat','✓ Backup вчитан','ok');
     alert('✅ Backup вчитан успешно!');
   }catch(e){alert('⚠ Грешка при вчитување: '+e.message);}
@@ -1024,12 +1088,9 @@ function calcAlerts(){
     if(sc<60)als.push({type:'acr',ico:'🚨',txt:mb.name+' — score под 60%',sub:`Score: ${sc}%`});
     KKEYS.forEach((k,i)=>{if(!isInScore(k))return;const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);if(p<50)als.push({type:'aw',ico:'❗',txt:`${mb.name} — ${KLBLS[i]} под 50%`,sub:`${s}/${t} (${p}%)`});});
   });
-  // OFI low stock
-  Object.values(OFI_PRODUCTS).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'📦',txt:`${p.name} — лагер критичен`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
-  const badge=document.getElementById('alBadge');const cnt=document.getElementById('alCnt');
-  badge.style.display=als.length>0?'flex':'none';if(cnt)cnt.textContent=als.length;
-  const panel=document.getElementById('alPanel');if(!panel)return;
-  panel.innerHTML=als.length===0?'<div style="text-align:center;padding:18px;color:var(--t3)">✅ Нема активни alerts!</div>':als.map(a=>`<div class="ai ${a.type}"><span class="aico">${a.ico}</span><div><div class="atxt">${a.txt}</div><div class="asub">${a.sub}</div></div></div>`).join('');
+  Object.values(OFI_PRODUCTS).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'📦',txt:`Доп.Опрема: ${p.name} — критично`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
+  Object.values(OFI_PRODUCTS2).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'📱',txt:`Моб.Друго: ${p.name} — критично`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
+  // No badge in DOM anymore — silently ignore
 }
 
 // ── OFI INVENTORY ──
@@ -1144,6 +1205,153 @@ function rndInv(){
   });
 }
 
+// ── INVENTORY 2 (MOБ.&ДРУГО) ──
+window.showAddProduct2=()=>{const f=document.getElementById('addProdForm2');f.style.display=f.style.display==='none'?'block':'none';};
+
+window.saveProduct2=async()=>{
+  const ofi=document.getElementById('p2_ofi').value.trim();
+  const name=document.getElementById('p2_name').value.trim();
+  const price=parseFloat(document.getElementById('p2_price').value)||0;
+  const qty=parseInt(document.getElementById('p2_qty').value)||0;
+  if(!ofi||!name){alert('OFI шифра и назив се задолжителни!');return;}
+  if(OFI_PRODUCTS2[ofi]){
+    OFI_PRODUCTS2[ofi].qty=(OFI_PRODUCTS2[ofi].qty||0)+qty;
+    OFI_PRODUCTS2[ofi].price=price||OFI_PRODUCTS2[ofi].price;
+    OFI_PRODUCTS2[ofi].name=name;
+  }else{
+    OFI_PRODUCTS2[ofi]={ofi,name,price,qty};
+  }
+  await svCfg('ofi_products2',OFI_PRODUCTS2);
+  rndInv2();
+  document.getElementById('addProdForm2').style.display='none';
+  ['p2_ofi','p2_name','p2_price','p2_qty'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+};
+
+window.updateOfiPrice2=async(ofi,newPrice)=>{
+  if(!OFI_PRODUCTS2[ofi])return;
+  OFI_PRODUCTS2[ofi].price=parseFloat(newPrice)||0;
+  await svCfg('ofi_products2',OFI_PRODUCTS2);
+  rndInv2();
+};
+
+window.deleteProduct2=async(ofi)=>{
+  if(!confirm(`Избриши "${OFI_PRODUCTS2[ofi]?.name}"?`))return;
+  delete OFI_PRODUCTS2[ofi];await svCfg('ofi_products2',OFI_PRODUCTS2);rndInv2();
+};
+
+window.adjustProductQty2=async(ofi,delta)=>{
+  if(!OFI_PRODUCTS2[ofi])return;
+  OFI_PRODUCTS2[ofi].qty=Math.max(0,(OFI_PRODUCTS2[ofi].qty||0)+delta);
+  await svCfg('ofi_products2',OFI_PRODUCTS2);rndInv2();
+};
+
+function getOfi2SoldMonth(ofi){
+  let s=0;
+  getWDs(cY,cM).forEach(d=>{const dk=dK(cY,cM,d);MEMBERS.forEach(mb=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)s+=(ms['mob_'+ofi]||0);});});
+  return s;
+}
+
+function rndInv2(){
+  const prods=Object.values(OFI_PRODUCTS2);
+  const totalRevMonth=prods.reduce((s,p)=>{const sold=getOfi2SoldMonth(p.ofi);return s+sold*(p.price||0);},0);
+  const totalQty=prods.reduce((s,p)=>s+(p.qty||0),0);
+  const g=document.getElementById('invSumGrid2');if(!g)return;
+  g.innerHTML=`
+    <div class="ic"><div class="it">📱 Вкупно во лагер</div><div class="in">${totalQty}</div><div class="isub">парчиња</div></div>
+    <div class="ic"><div class="it">💰 Приход месец</div><div class="in" style="color:var(--gr)">${totalRevMonth.toLocaleString()} ден.</div><div class="isub">вкупно</div></div>
+    <div class="ic"><div class="it">📋 Производи</div><div class="in">${prods.length}</div><div class="isub">во листата</div></div>`;
+
+  const tb=document.getElementById('ofiTb2');const tf=document.getElementById('ofiTf2');if(!tb)return;
+  if(!prods.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:16px;color:var(--t3)">Нема додадени производи. Кликни "+ Додај производ"</td></tr>';tf.innerHTML='';return;}
+  let totSold=0,totRev=0;
+  tb.innerHTML=prods.map(p=>{
+    const soldM=getOfi2SoldMonth(p.ofi);const rev=soldM*(p.price||0);
+    totSold+=soldM;totRev+=rev;
+    const warn=(p.qty||0)<=2;
+    const statusBadge=warn?'<span style="background:var(--rdl);color:var(--rd);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">⚠ Критично</span>':(p.qty||0)<=5?'<span style="background:var(--aml);color:var(--am);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">Мало</span>':'<span style="background:var(--grl);color:var(--gr);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">OK</span>';
+    return `<tr ${warn?'style="background:var(--rdl)"':''}>
+      <td style="text-align:left;padding-left:10px;font-family:monospace;font-size:11px">${p.ofi}</td>
+      <td style="text-align:left;font-weight:600;font-size:12px">${p.name}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:3px;justify-content:center">
+          <input type="number" value="${p.price||0}" min="0" step="1"
+            style="width:72px;font-size:11px;text-align:center;padding:3px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)"
+            onchange="updateOfiPrice2('${p.ofi}',this.value)" title="Промени цена">
+          <span style="font-size:10px;color:var(--t2)">ден.</span>
+        </div>
+      </td>
+      <td>
+        <div style="display:flex;align-items:center;gap:4px;justify-content:center">
+          <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty2('${p.ofi}',-1)">−</button>
+          <span style="font-size:13px;font-weight:700;min-width:28px;text-align:center;color:${warn?'var(--rd)':'var(--txt)'}">${p.qty||0}</span>
+          <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty2('${p.ofi}',1)">+</button>
+        </div>
+      </td>
+      <td style="font-size:12px;font-weight:700">${soldM}</td>
+      <td style="font-size:12px;font-weight:700;color:var(--gr)">${rev.toLocaleString()} ден.</td>
+      <td>${statusBadge}</td>
+      <td><button class="btn" style="font-size:10px;color:var(--rd);padding:2px 6px" onclick="deleteProduct2('${p.ofi}')">🗑</button></td>
+    </tr>`;
+  }).join('');
+  tf.innerHTML=`<td colspan="4" style="text-align:left;padding-left:10px">Вкупно месец</td><td style="font-weight:700">${totSold}</td><td style="font-weight:700;color:var(--gr)">${totRev.toLocaleString()} ден.</td><td colspan="2"></td>`;
+
+  // Sales by employee
+  const etb=document.getElementById('invTb2');if(!etb)return;
+  etb.innerHTML='';
+  MEMBERS.forEach(mb=>{
+    const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];
+    const todaySold=prods.reduce((s,p)=>{const ms=dO?AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mb.id]:null;return s+(ms?.['mob_'+p.ofi]||0);},0);
+    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms['mob_'+p.ofi]||0);});return s+tot;},0);
+    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms['mob_'+p.ofi]||0);});return s+tot*(p.price||0);},0);
+    const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(moSold/wd).toFixed(1):0;
+    etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700">${todaySold}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
+  });
+}
+
+// ── QUICK SELL (Employee OFI entry from daily view) ──
+// type: 'equip' = Доп.Опрема (OFI_PRODUCTS), 'mob' = Моб.Друго (OFI_PRODUCTS2)
+// Key stored in day data: equip uses p.ofi directly, mob uses 'mob_'+p.ofi
+window.quickSellKeydown=async(e,type,inputId)=>{
+  if(e.key!=='Enter')return;
+  const inp=e.target;const val=inp.value.trim();if(!val)return;
+  const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];
+  if(!dO){inp.style.borderColor='var(--rd)';setTimeout(()=>inp.style.borderColor='',1500);return;}
+  const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
+  if(ms.status===3||ms.status===1){alert('Не можеш да внесуваш — означен си како отсутен.');return;}
+
+  const prods=type==='equip'?OFI_PRODUCTS:OFI_PRODUCTS2;
+  if(!prods[val]){
+    inp.style.borderColor='var(--rd)';inp.placeholder='⚠ OFI не постои!';
+    setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра';},2000);return;
+  }
+  if((prods[val].qty||0)<1){
+    inp.style.borderColor='var(--am)';inp.placeholder='⚠ Нема на лагер!';
+    setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра';},2000);return;
+  }
+
+  // Key in day data
+  const dayKey=type==='equip'?val:'mob_'+val;
+  ms[dayKey]=(ms[dayKey]||0)+1;
+  // Also increment the KPI counter (equip KPI for equip, mob KPI for mob)
+  if(type==='equip'){ms.equip=(ms.equip||0)+1;}
+  else{ms.mob=(ms.mob||0)+1;}
+
+  // Deduct from inventory
+  prods[val].qty=Math.max(0,(prods[val].qty||0)-1);
+  const cfgKey=type==='equip'?'ofi_products':'ofi_products2';
+  await svCfg(cfgKey,prods);
+
+  inp.value='';
+  // Show flash confirmation
+  const flash=document.createElement('span');
+  flash.textContent=`✓ ${prods[val].name} — ${prods[val].qty} остатоци`;
+  flash.style.cssText='font-size:10px;color:var(--gr);font-weight:600;margin-left:5px';
+  inp.parentNode.appendChild(flash);setTimeout(()=>flash.remove(),2000);
+
+  clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();rndEmpMo();},600);
+  inp.focus();
+};
+
 // ── TARGETS ──
 function rndTgts(){tgY=cY;tgM=cM;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();rndAllTgs();}
 function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();};c.appendChild(b);});}
@@ -1234,6 +1442,7 @@ window.gotoTab=(name,el)=>{
   else if(name==='ranking')rndRanking();
   else if(name==='alerts')calcAlerts();
   else if(name==='inventory')rndInv();
+  else if(name==='inventory2')rndInv2();
   else if(name==='targets')rndTgts();
   else if(name==='orders')rndOrders();
   else if(name==='boost')rndBoostBoard();
