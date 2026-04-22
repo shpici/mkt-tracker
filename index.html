@@ -180,8 +180,17 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .sticker{width:38px;height:38px;border-radius:8px;background:var(--s2);border:1px solid var(--brd);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .sticker:hover{transform:scale(1.12);border-color:var(--mg)}
 .sticker.selected{border:2px solid var(--mg);background:var(--mgl);transform:scale(1.08)}
-/* OFI INVENTORY TABLE */
-.ofi-table table{min-width:700px}
+/* SUBSCRIBER LOG */
+.sub-log{margin-top:6px;max-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
+.sub-entry{display:flex;align-items:center;gap:5px;background:var(--s2);border-radius:var(--rx);padding:3px 6px;font-size:10px}
+.sub-num{font-family:monospace;font-weight:700;color:var(--bl);flex:1}
+.sub-del{width:16px;height:16px;border:none;background:none;color:var(--rd);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.sub-del:hover{background:var(--rdl)}
+.sub-inp{width:100%;padding:4px 6px;border:1px solid var(--brd);border-radius:var(--rx);font-size:11px;font-family:monospace;background:var(--sur);color:var(--txt);margin-top:4px}
+.sub-inp:focus{outline:none;border-color:var(--mg)}
+/* WEEKLY REPORT TABLE */
+.wk-report table{min-width:900px}
+
 /* PRINT */
 @media print{.hdr,.nav,.tabs,.btn,.hbtn,#mgrNav,#mgrTabs,.no-print{display:none!important}.card{margin:0;border:none;box-shadow:none}body{background:#fff;color:#000}}
 @media(max-width:600px){.hdr{padding:7px 10px}.card{margin:0 6px 10px;padding:10px}.tabs{padding:7px 6px 0}.nav{padding:5px 6px}}
@@ -263,6 +272,7 @@ body.emp-mode #empView{display:block!important}
 <!-- MANAGER TABS -->
 <div class="tabs" id="mgrTabs" style="display:none">
   <div class="tab act" onclick="gotoTab('daily',this)">📅 Дневен</div>
+  <div class="tab" onclick="gotoTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
   <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
   <div class="tab" onclick="gotoTab('alerts',this)">🚨 Alerts</div>
@@ -304,6 +314,31 @@ body.emp-mode #empView{display:block!important}
     <span style="font-size:10px;color:var(--t2)">ON = влегува во Score · OFF = само се брои</span>
   </div>
   <div id="kpiToggles" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+</div>
+</div>
+
+<!-- ═══ WEEKLY (MANAGER) ═══ -->
+<div id="tp-weekly" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div style="font-size:14px;font-weight:700" id="wkMgrTit">📆 Неделен извештај</div>
+    <div style="margin-left:auto;display:flex;gap:4px">
+      <button class="na" onclick="chgMgrWk(-1)">‹</button>
+      <span id="wkMgrLbl" style="font-size:11px;color:var(--t2);font-weight:600;min-width:80px;text-align:center"></span>
+      <button class="na" onclick="chgMgrWk(1)">›</button>
+    </div>
+  </div>
+  <!-- Per-employee weekly summary -->
+  <div id="wkMgrGrid" class="mcg" style="margin-bottom:14px"></div>
+  <!-- Detailed table by day -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px">Детално по ден</div>
+  <div class="tw wk-report">
+    <table>
+      <thead><tr id="wkDayHead"></tr></thead>
+      <tbody id="wkDayTb"></tbody>
+      <tfoot><tr id="wkDayFt"></tr></tfoot>
+    </table>
+  </div>
 </div>
 </div>
 
@@ -854,8 +889,8 @@ function rndNav(){
   const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('wkBtns');wb.innerHTML='';
   wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndDailyView();};wb.appendChild(b);});
 }
-window.chgYr=async d=>{cY+=d;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();};
-window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();};
+window.chgYr=async d=>{cY+=d;cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();};
+window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();if(document.getElementById('tp-weekly')?.classList.contains('act'))rndMgrWeekly();};
 
 // ── BUILD TABLE HEADER ──
 function buildTableHeaders(){
@@ -1020,6 +1055,13 @@ window.saveProduct=async()=>{
   document.getElementById('addProdForm').style.display='none';
   ['p_ofi','p_name','p_price','p_qty'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 };
+window.updateOfiPrice=async(ofi,newPrice)=>{
+  if(!OFI_PRODUCTS[ofi])return;
+  OFI_PRODUCTS[ofi].price=parseFloat(newPrice)||0;
+  await svCfg('ofi_products',OFI_PRODUCTS);
+  // Refresh revenue display without full re-render
+  rndInv();
+};
 window.deleteProduct=async(ofi)=>{
   if(!confirm(`Избриши "${OFI_PRODUCTS[ofi]?.name}"?`))return;
   delete OFI_PRODUCTS[ofi];await svCfg('ofi_products',OFI_PRODUCTS);rndInv();
@@ -1064,7 +1106,14 @@ function rndInv(){
     return `<tr ${warn?'style="background:var(--rdl)"':''}>
       <td style="text-align:left;padding-left:10px;font-family:monospace;font-size:11px">${p.ofi}</td>
       <td style="text-align:left;font-weight:600;font-size:12px">${p.name}</td>
-      <td style="font-size:11px">${(p.price||0).toLocaleString()} ден.</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:3px;justify-content:center">
+          <input type="number" value="${p.price||0}" min="0" step="1"
+            style="width:72px;font-size:11px;text-align:center;padding:3px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)"
+            onchange="updateOfiPrice('${p.ofi}',this.value)" title="Промени цена">
+          <span style="font-size:10px;color:var(--t2)">ден.</span>
+        </div>
+      </td>
       <td>
         <div style="display:flex;align-items:center;gap:4px;justify-content:center">
           <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty('${p.ofi}',-1)">−</button>
@@ -1172,7 +1221,16 @@ window.gotoTab=(name,el)=>{
   document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));
   if(el)el.classList.add('act');
   const tpEl=document.getElementById('tp-'+name);if(tpEl)tpEl.classList.add('act');
-  if(name==='monthly')rndMonthly();
+  if(name==='weekly'){
+    // Set to current week on first open
+    const today=new Date();
+    if(today.getFullYear()===cY&&today.getMonth()+1===cM){
+      const wks=gWks(getWDs(cY,cM));const td=today.getDate();
+      wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.date===td)mgrWkIdx=wi;});});
+    }
+    rndMgrWeekly();
+  }
+  else if(name==='monthly')rndMonthly();
   else if(name==='ranking')rndRanking();
   else if(name==='alerts')calcAlerts();
   else if(name==='inventory')rndInv();
@@ -1275,28 +1333,173 @@ function rndEmpKpi(){
   const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
   const isAbs=ms.status===3||ms.status===1;
   const wd=getWDs(cY,cM).length;const mt=getMT(cY,cM);
+
   KKEYS.forEach((k,i)=>{
     const v=ms[k]||0;const dt=Math.round((mt[k]||0)/wd*10)/10;const p=pct(v,dt);
     const ms2=mMoSum(mID,k,cY,cM);const mp=pct(ms2,mt[k]||1);
     const on=isInScore(k);
-    g.innerHTML+=`<div class="ekc${on?'':' off-kpi'}">
+    // Subscriber/OFI log for this KPI today
+    const logKey=k+'_log';
+    const logArr=ms[logKey]||[];
+    const isOfi=(k==='equip');
+    const placeholder=isOfi?'OFI шифра (пр. 42513654)':'Тел. број (пр. 070223)';
+    const inputId=`si_${dk}_${k}`;
+
+    let logHtml='';
+    if(!isAbs){
+      logArr.forEach((entry,idx)=>{
+        const disp=typeof entry==='object'?entry.num:entry;
+        const ofiName=isOfi?(OFI_PRODUCTS[disp]?.name?` — ${OFI_PRODUCTS[disp].name}`:''):'';
+        logHtml+=`<div class="sub-entry"><span class="sub-num">${disp}${ofiName}</span><button class="sub-del" onclick="delSubEntry('${dk}','${k}',${idx})" title="Избриши (−1)">✕</button></div>`;
+      });
+      logHtml+=`<input class="sub-inp" id="${inputId}" type="text" placeholder="${placeholder}" ${isAbs?'disabled':''} onkeydown="subKeydown(event,'${dk}','${k}')">`;
+    }
+
+    g.innerHTML+=`<div class="ekc${on?'':' off-kpi'}" id="ekc_${k}">
       ${!on?'<div style="font-size:9px;color:var(--t3);margin-bottom:3px">⊘ OFF</div>':''}
       <div class="ekl">${KLBLS[i]}</div>
-      <input class="eki" type="number" value="${v}" ${isAbs?'disabled':''} style="color:${isAbs?'var(--t3)':pc(p)}" oninput="eVal('${dk}','${k}',this.value)">
+      <div style="font-size:22px;font-weight:700;color:${isAbs?'var(--t3)':pc(p)};margin:2px 0">${v}</div>
       <div style="font-size:9px;color:var(--t3)">/ ${Number.isInteger(dt)?dt:dt.toFixed(1)}</div>
       <div style="font-size:10px;font-weight:700;color:${isAbs?'var(--t3)':pc(p)};margin-top:2px">${isAbs?'—':p+'%'} ${isAbs?'':pem(p)}</div>
       <div class="ebar"><div class="ebf" style="width:${isAbs?0:Math.min(100,p)}%;${barcl(p)}"></div></div>
       <div style="font-size:9px;color:${pc(mp)};margin-top:3px">Месец: ${ms2}/${mt[k]||0} (${mp}%)</div>
+      <div class="sub-log">${logHtml}</div>
     </div>`;
   });
-  // Update score badge
+
   const sc=perfScore(mID,cY,cM);const pb=document.getElementById('empPB');
   if(pb)pb.innerHTML=`<span style="font-size:12px;padding:3px 10px;border-radius:20px;font-weight:700" class="${pbc(sc)}">Score: ${sc}% ${pem(sc)}</span>`;
 }
+
+// Handle Enter on subscriber input
+window.subKeydown=async(e,dk,k)=>{
+  if(e.key!=='Enter')return;
+  const inp=e.target;const val=inp.value.trim();if(!val)return;
+
+  ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
+  const logKey=k+'_log';
+  if(!ms[logKey])ms[logKey]=[];
+
+  const isOfi=(k==='equip');
+
+  if(isOfi){
+    // Validate OFI exists in products
+    if(!OFI_PRODUCTS[val]){inp.style.borderColor='var(--rd)';inp.placeholder='⚠ OFI не постои!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра (пр. 42513654)';},2000);return;}
+    // Check stock
+    if((OFI_PRODUCTS[val].qty||0)<1){inp.style.borderColor='var(--am)';inp.placeholder='⚠ Нема на лагер!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра (пр. 42513654)';},2000);return;}
+    // Deduct from inventory
+    OFI_PRODUCTS[val].qty=Math.max(0,(OFI_PRODUCTS[val].qty||0)-1);
+    await svCfg('ofi_products',OFI_PRODUCTS);
+  }
+
+  // Add to log
+  ms[logKey].push(isOfi?{num:val,name:OFI_PRODUCTS[val]?.name||''}:val);
+  // Increment KPI count
+  ms[k]=(ms[k]||0)+1;
+
+  inp.value='';
+  clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();},600);
+  rndEmpKpi();
+  // Re-focus the input after re-render
+  setTimeout(()=>{const ni=document.getElementById(`si_${dk}_${k}`);if(ni)ni.focus();},50);
+};
+
+// Delete subscriber entry (and -1 from count)
+window.delSubEntry=async(dk,k,idx)=>{
+  ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
+  const logKey=k+'_log';
+  if(!ms[logKey]||!ms[logKey][idx])return;
+
+  const isOfi=(k==='equip');
+  if(isOfi){
+    const entry=ms[logKey][idx];const ofiCode=typeof entry==='object'?entry.num:entry;
+    if(OFI_PRODUCTS[ofiCode]){
+      OFI_PRODUCTS[ofiCode].qty=(OFI_PRODUCTS[ofiCode].qty||0)+1;
+      await svCfg('ofi_products',OFI_PRODUCTS);
+    }
+  }
+
+  ms[logKey].splice(idx,1);
+  ms[k]=Math.max(0,(ms[k]||0)-1);
+  clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();},600);
+  rndEmpKpi();
+};
+
 window.eVal=async(dk,key,val)=>{
   ensD(cY,cM,dk);const p=parseInt(val);AS[cY][cM][dk][mID][key]=isNaN(p)?0:p;
   clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();rndEmpMo();},800);
 };
+
+// ── MANAGER WEEKLY REPORT ──
+let mgrWkIdx=0; // which week index in current month
+
+window.chgMgrWk=d=>{
+  const wks=gWks(getWDs(cY,cM));
+  mgrWkIdx=Math.max(0,Math.min(wks.length-1,mgrWkIdx+d));
+  rndMgrWeekly();
+};
+
+function rndMgrWeekly(){
+  const wks=gWks(getWDs(cY,cM));
+  // Find current week if not set
+  if(mgrWkIdx>=wks.length)mgrWkIdx=wks.length-1;
+  const wk=wks[mgrWkIdx]||[];
+  const mt=getMT(cY,cM);const totalWd=getWDs(cY,cM).length;
+
+  document.getElementById('wkMgrTit').textContent='📆 Неделен извештај — '+MKM[cM-1]+' '+cY;
+  const lbl=document.getElementById('wkMgrLbl');
+  if(lbl&&wk.length)lbl.textContent='Нед '+(mgrWkIdx+1)+' ('+wk[0].date+'–'+wk[wk.length-1].date+'/'+cM+')';
+
+  // Per-member weekly summary cards
+  const grid=document.getElementById('wkMgrGrid');if(!grid)return;
+  grid.innerHTML='';
+  MEMBERS.forEach(mb=>{
+    const wkTots={};KKEYS.forEach(k=>wkTots[k]=0);let wkDays=0;
+    wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
+    let aP=0;let aCnt=0;
+    const kh=KKEYS.map((k,i)=>{const wt=Math.round((mt[k]||0)/totalWd*wk.length)||1;const p=pct(wkTots[k],wt);const on=isInScore(k);if(on){aP+=p;aCnt++;}return `<div class="mkc" style="opacity:${on?1:.4}"><div class="mkl">${KLBLS[i]}</div><div class="mkv" style="color:${pc(p)}">${wkTots[k]}/${wt}</div><div class="mkp" style="color:${pc(p)}">${p}%</div><div class="mkb"><div class="mkbf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div></div>`;}).join('');
+    aP=aCnt>0?Math.round(aP/aCnt):0;
+    const bdg=`<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700" class="${pbc(aP)}">${aP}% ${pem(aP)}</span>`;
+    grid.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:28px;height:28px;font-size:9px">${mb.ini}</div><div><div class="mcn">${mb.name}</div><div class="mci">${wkDays} раб. дни</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;
+  });
+
+  // Day-by-day table
+  const head=document.getElementById('wkDayHead');const tb=document.getElementById('wkDayTb');const ft=document.getElementById('wkDayFt');
+  if(!head||!tb)return;
+  // Header: Вработен | day1 | day2 | ... | Вкупно
+  let hh='<th>Вработен</th>';
+  wk.forEach(d=>{hh+=`<th>${MKD[d.dow]}<br><span style="font-weight:400;font-size:9px">${d.date}/${cM}</span></th>`;});
+  hh+='<th>Вкупно</th><th>Score</th>';
+  head.innerHTML=hh;
+
+  tb.innerHTML='';
+  const totByDay={};wk.forEach(d=>{totByDay[d.date]=0;});
+  const grandTot={};
+
+  MEMBERS.forEach(mb=>{
+    let rowTotal=0;
+    let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:10px;font-weight:600">${mb.name.split(' ')[0]}</span></div></td>`;
+    wk.forEach(d=>{
+      const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];
+      const isAbs=!ms||ms.status===3||ms.status===1;
+      let dayTotal=0;
+      if(!isAbs)KKEYS.forEach(k=>{if(isInScore(k))dayTotal+=(ms?.[k]||0);});
+      else dayTotal=0;
+      if(!isAbs){totByDay[d.date]=(totByDay[d.date]||0)+dayTotal;rowTotal+=dayTotal;}
+      row+=`<td style="font-size:12px;font-weight:700;color:${isAbs?'var(--t3)':dayTotal>0?'var(--txt)':'var(--t3)'}">${isAbs?SIC[ms?.status||3]:dayTotal}</td>`;
+    });
+    const sc=perfScore(mb.id,cY,cM);
+    row+=`<td style="font-size:12px;font-weight:700;color:var(--mg)">${rowTotal}</td><td style="font-size:11px;font-weight:700;color:${pc(sc)}">${sc}%</td>`;
+    const tr=document.createElement('tr');tr.innerHTML=row;tb.appendChild(tr);
+  });
+
+  // Footer totals
+  let fh='<td>Тим вкупно</td>';
+  wk.forEach(d=>{fh+=`<td style="font-size:12px;font-weight:700">${totByDay[d.date]||0}</td>`;});
+  const grandSum=Object.values(totByDay).reduce((a,b)=>a+b,0);
+  fh+=`<td style="font-size:13px;font-weight:700;color:var(--mg)">${grandSum}</td><td></td>`;
+  ft.innerHTML=fh;
+}
 async function empSv(){
   showSS('empSS','💾...','sv');
   try{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);await svDay(cY,cM,dk);showSS('empSS','✓ Зачувано','ok');rndEmpMo();}
