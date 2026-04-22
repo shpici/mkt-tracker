@@ -201,7 +201,7 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 <style>
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
 body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
-body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,
+body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,body.emp-mode #tp-weekly,
 body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
 </style>
@@ -295,7 +295,7 @@ body.emp-mode #empView{display:block!important}
     <span><span style="display:inline-block;width:7px;height:7px;background:#c62828;border-radius:50%;margin-right:2px"></span>&lt;70%</span>
     <span><span style="display:inline-block;width:7px;height:7px;background:#1565c0;border-radius:50%;margin-right:2px"></span>70-99%</span>
     <span><span style="display:inline-block;width:7px;height:7px;background:#2e7d32;border-radius:50%;margin-right:2px"></span>≥100%</span>
-    <span>🏢 На работа</span><span>❌ Отсутен</span>
+    <span>🏢 На работа</span>
   </div>
   <div class="tw">
     <table>
@@ -405,7 +405,7 @@ body.emp-mode #empView{display:block!important}
         <th>Лагер</th>
         <th>Продадено (месец)</th>
         <th>Приходи (месец)</th>
-        <th>Статус</th>
+        
         <th>Акција</th>
       </tr></thead>
       <tbody id="ofiTb"></tbody>
@@ -415,11 +415,22 @@ body.emp-mode #empView{display:block!important}
   <!-- Sales by employee -->
   <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:14px">Продажба по вработен (месец)</div>
   <div class="tw"><table style="min-width:400px"><thead><tr><th style="text-align:left;padding-left:10px">Вработен</th><th>Денес</th><th>Месец</th><th>Приход</th><th>Просек/ден</th></tr></thead><tbody id="invTb"></tbody></table></div>
+  <!-- OFI1 Analytics -->
+  <div style="margin-top:16px;border-top:1px solid var(--brd);padding-top:14px">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:700">📊 Аналитика — Доп.Опрема</div>
+      <div style="display:flex;gap:3px;margin-left:auto">
+        <button class="nb act" id="ofi1wk" onclick="setOfiPeriod(1,'week',this)">Недела</button>
+        <button class="nb" id="ofi1mo" onclick="setOfiPeriod(1,'month',this)">Месец</button>
+        <button class="nb" id="ofi1yr" onclick="setOfiPeriod(1,'year',this)">Година</button>
+      </div>
+    </div>
+    <div id="ofi1Stats" class="scg"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin:10px 0 6px">Топ производи</div>
+    <div id="ofi1Top"></div>
+  </div>
 </div>
 </div>
-
-
-<!-- ═══ INVENTORY 2 (MOB & DRUGO) ═══ -->
 <div id="tp-inventory2" class="tp">
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
@@ -453,7 +464,7 @@ body.emp-mode #empView{display:block!important}
         <th>Лагер</th>
         <th>Продадено (месец)</th>
         <th>Приходи (месец)</th>
-        <th>Статус</th>
+        
         <th>Акција</th>
       </tr></thead>
       <tbody id="ofiTb2"></tbody>
@@ -463,6 +474,20 @@ body.emp-mode #empView{display:block!important}
   <!-- Sales by employee -->
   <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:14px">Продажба по вработен (месец)</div>
   <div class="tw"><table style="min-width:400px"><thead><tr><th style="text-align:left;padding-left:10px">Вработен</th><th>Денес</th><th>Месец</th><th>Приход</th><th>Просек/ден</th></tr></thead><tbody id="invTb2"></tbody></table></div>
+  <!-- OFI2 Analytics -->
+  <div style="margin-top:16px;border-top:1px solid var(--brd);padding-top:14px">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:700">📊 Аналитика — Моб.&amp;Друго</div>
+      <div style="display:flex;gap:3px;margin-left:auto">
+        <button class="nb act" id="ofi2wk"  onclick="setOfiPeriod(2,'week',this)">Недела</button>
+        <button class="nb"     id="ofi2mo"  onclick="setOfiPeriod(2,'month',this)">Месец</button>
+        <button class="nb"     id="ofi2yr"  onclick="setOfiPeriod(2,'year',this)">Година</button>
+      </div>
+    </div>
+    <div id="ofi2Stats" class="scg"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin:10px 0 6px">Топ производи</div>
+    <div id="ofi2Top"></div>
+  </div>
 </div>
 </div>
 
@@ -525,7 +550,7 @@ body.emp-mode #empView{display:block!important}
       <thead><tr>
         <th style="text-align:left;padding-left:10px">Вработен</th>
         <th>Модел</th><th>Кон Тел</th><th>Нарачано</th><th>Реализација</th>
-        <th>Статус</th><th>Белешки</th><th>Del</th>
+        <th>Белешки</th><th>Del</th>
       </tr></thead>
       <tbody id="ordersTb"></tbody>
     </table>
@@ -566,6 +591,7 @@ body.emp-mode #empView{display:block!important}
   <div class="tab act" onclick="empTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="empTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="empTab('monthly',this)">📊 Месечен</div>
+  <div class="tab" onclick="empTab('history',this)">🗑 Историја</div>
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
   <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
 </div>
@@ -575,9 +601,7 @@ body.emp-mode #empView{display:block!important}
     <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
       <span class="nl">Ден:</span><div id="empDyBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
     </div>
-    <div style="display:flex;gap:5px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
-      <span class="nl">Статус:</span><div id="empStBtns" style="display:flex;gap:4px;flex-wrap:wrap"></div>
-    </div>
+    <div style="margin-bottom:6px"><div id="empStBtns"></div></div>
     <!-- OFI Sell boxes for employee -->
     <div id="empOfiBoxes" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
       <!-- DOП OPREMA BOX -->
@@ -634,6 +658,20 @@ body.emp-mode #empView{display:block!important}
     <div id="empYrMonths" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px"></div>
   </div>
 </div>
+<!-- EMP HISTORY — browse & delete past entries -->
+<div id="etp-history" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">🗑 Историја — бришење записи</div>
+    <div style="font-size:11px;color:var(--t2);margin-bottom:12px">Кликни ден за да видиш и бришеш записи. Бришењето автоматски −1 од бројот.</div>
+    <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <span class="nl">Месец:</span>
+      <div id="empHistMoBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    </div>
+    <div id="empHistDays" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"></div>
+    <div id="empHistContent"></div>
+  </div>
+</div>
+
 <!-- EMP ORDERS -->
 <div id="etp-emporders" class="tp" style="padding:0 16px 16px;margin-top:0">
   <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
@@ -656,7 +694,7 @@ body.emp-mode #empView{display:block!important}
     </div>
     <div class="tw">
       <table style="min-width:580px">
-        <thead><tr><th>Модел</th><th>Кон Тел</th><th>Нарачано</th><th>Реализација</th><th>Статус</th><th>Белешки</th><th>Del</th></tr></thead>
+        <thead><tr><th>Модел</th><th>Кон Тел</th><th>Нарачано</th><th>Реализација</th><th>Белешки</th><th>Del</th></tr></thead>
         <tbody id="empOrdersTb"></tbody>
       </table>
     </div>
@@ -696,7 +734,7 @@ const MEMBERS=[
 const KKEYS=['fmc','post','bb','iptv','prep','loy','cc','equip','addser','loybus','ict','fmcbus','postbus','bbbus'];
 const KLBLS=['FMC Cons.','Postpaid','BB Cons.','IPTV','Prepaid','Loyalty','C&C','Доп. Опрема','Add. Ser.','Loyalty Bus.','ICT','FMC Bus.','Post. Bus.','BB Bus.'];
 const DTGT={fmc:9,post:26,bb:15,iptv:12,prep:16,loy:104,cc:42,equip:66,addser:5,loybus:5,ict:5,fmcbus:5,postbus:5,bbbus:5};
-const SIC=['🏢','❌'];const SLBL=['На работа','Отсутен'];
+const SIC=['🏢'];const SLBL=['На работа'];
 const MKM=['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 const MKD=['Нед','Пон','Вт','Сре','Чет','Пет','Саб'];
 // Вградени резултати Април 2026 (merged од сите вработени)
@@ -724,12 +762,17 @@ const dK=(y,m,d)=>`${y}-${String(m).padStart(2,'0')}-${String(d.date).padStart(2
 const isInScore=k=>!SCORE_EXCLUDED.has(k);
 const showSS=(id,msg,cls)=>{const el=document.getElementById(id);if(!el)return;el.style.display='inline-block';el.className='ss '+cls;el.textContent=msg;if(cls==='ok')setTimeout(()=>{el.style.display='none';},2500);};
 
-function getMT(y,m){return(TS[y]&&TS[y][m])?TS[y][m]:{...DTGT};}
+function getMT(y,m){
+  // Check both number and string keys since Firebase may return strings
+  const yr=TS[y]||TS[String(y)];
+  if(yr){const mo=yr[m]||yr[String(m)];if(mo)return mo;}
+  return{...DTGT};
+}
 function getWDs(y,m){const d=[];const dt=new Date(y,m-1,1);while(dt.getMonth()===m-1){const dw=dt.getDay();if(dw!==0)d.push({date:dt.getDate(),dow:dw,label:MKD[dw]+' '+dt.getDate()+'/'+m});dt.setDate(dt.getDate()+1);}return d;}
 function gWks(wd){const w=[];let wk=[];wd.forEach((d,i)=>{wk.push(d);if(d.dow===6||i===wd.length-1){w.push(wk);wk=[];}});return w;}
 function ensD(y,m,dk){
   if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};
-  if(!AS[y][m][dk]){AS[y][m][dk]={};MEMBERS.forEach(mb=>{AS[y][m][dk][mb.id]={status:mb.da?1:0,fmc:0,post:0,bb:0,iptv:0,prep:0,loy:0,cc:0,equip:0,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0};});}
+  if(!AS[y][m][dk]){AS[y][m][dk]={};MEMBERS.forEach(mb=>{AS[y][m][dk][mb.id]={status:0,fmc:0,post:0,bb:0,iptv:0,prep:0,loy:0,cc:0,equip:0,addser:0,loybus:0,ict:0,fmcbus:0,postbus:0,bbbus:0};});}
 }
 function gDay(y,m,dk){ensD(y,m,dk);return AS[y][m][dk];}
 // Pre-load PRE_DATA into AS so historical data is available immediately
@@ -748,10 +791,10 @@ function initPreData(){
 }
 
 function mMoSum(mid,k,y,m){
-  let s=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms&&ms.status!==1){const v=ms[k];s+=(v!==undefined&&v!==null?v:0);}});
+  let s=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms){const v=ms[k];s+=(v!==undefined&&v!==null?v:0);}});
   return s;
 }
-function mWDs(mid,y,m){let c=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms&&ms.status===0)c++;});return c;}
+function mWDs(mid,y,m){let c=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms)c++;});return c;}
 // CORRECT perfScore — only ON KPIs, no excluded
 function perfScore(mid,y,m){
   const t=getMT(y,m);let s=0;let cnt=0;
@@ -918,7 +961,7 @@ async function postLogin(){
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
-    ['daily','monthly','ranking','inventory','inventory2','targets','orders'].forEach(t=>{
+    ['daily','monthly','ranking','inventory','inventory2','targets','orders','weekly'].forEach(t=>{
       const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}
     });
     document.getElementById('empView').style.display='block';
@@ -966,7 +1009,7 @@ window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0
 // ── BUILD TABLE HEADER ──
 function buildTableHeaders(){
   const h=document.getElementById('dHead');if(!h)return;
-  let t='<th>Вработен</th><th>Статус</th>';
+  let t='<th>Вработен</th>';
   KKEYS.forEach((k,i)=>{
     const on=isInScore(k);
     t+=`<th style="opacity:${on?1:.4};background:${on?'var(--s2)':'var(--rdl)'}"><div class="tti">${KLBLS[i]}<span class="ttic">?</span><div class="ttb">${KLBLS[i]}</div></div></th>`;
@@ -998,10 +1041,10 @@ function rndTbl(){
   const tots={};const ttgs={};KKEYS.forEach(k=>{tots[k]=0;ttgs[k]=0;});
   tb.innerHTML='';
   MEMBERS.forEach(mb=>{
-    const ms=dd[mb.id]||{status:mb.da?3:0};const isAbs=ms.status===1;
+    const ms=dd[mb.id]||{status:mb.da?3:0};const isAbs=false;
     const tr=document.createElement('tr');if(isAbs)tr.className='abs';
     let h=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div><div class="nm">${mb.name}</div>${isAbs?`<span class="abbg">${SLBL[ms.status]}</span>`:''}</div></div></td>`;
-    h+=`<td><div style="position:relative;display:inline-block"><button class="sbtn" onclick="tgPop('p_${mb.id}')">${SIC[ms.status||0]}</button><div class="pop" id="p_${mb.id}">${SIC.map((ic,i)=>`<button class="pbtn" onclick="mSt('${dk}','${mb.id}',${i})">${ic}</button>`).join('')}</div></div></td>`;
+    
     KKEYS.forEach(k=>{
       const v=ms[k]||0;const t=dtg[k];const p=pct(v,t);const w=Math.min(100,p);
       if(!isAbs){tots[k]+=v;ttgs[k]+=t;}
@@ -1023,6 +1066,8 @@ window.mSt=async(dk,mid,idx)=>{ensD(cY,cM,dk);AS[cY][cM][dk][mid].status=idx;doc
 window.mVal=async(dk,mid,key,val)=>{
   ensD(cY,cM,dk);const p=parseInt(val);AS[cY][cM][dk][mid][key]=isNaN(p)?0:p;
   rndTbl();clearTimeout(svTmr);svTmr=setTimeout(()=>svDay(cY,cM,dk),800);
+  // If employee view is open for this member, refresh it too
+  if(mID===mid&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
 };
 window.rstDay=async()=>{if(!confirm('Ресетирај?'))return;const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);ensD(cY,cM,dk);MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{AS[cY][cM][dk][mb.id][k]=0;});});rndTbl();await svDay(cY,cM,dk);};
 window.cpyYesterday=async()=>{
@@ -1147,7 +1192,7 @@ function getOfiSoldToday(ofi){
 }
 function getOfiSoldMonth(ofi){
   let s=0;
-  getWDs(cY,cM).forEach(d=>{const dk=dK(cY,cM,d);MEMBERS.forEach(mb=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)s+=(ms[ofi]||0);});});
+  getWDs(cY,cM).forEach(d=>{const dk=dK(cY,cM,d);MEMBERS.forEach(mb=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms)s+=(ms[ofi]||0);});});
   return s;
 }
 
@@ -1205,11 +1250,12 @@ function rndInv(){
     // Today: sum all OFI products sold by this employee today
     const todaySold=prods.reduce((s,p)=>{const ms=dO?AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mb.id]:null;return s+(ms?.[p.ofi]||0);},0);
     // Month: sum all OFI
-    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms[p.ofi]||0);});return s+tot;},0);
-    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms[p.ofi]||0);});return s+tot*(p.price||0);},0);
+    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms[p.ofi]||0);});return s+tot;},0);
+    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms[p.ofi]||0);});return s+tot*(p.price||0);},0);
     const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(moSold/wd).toFixed(1):0;
     etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700">${todaySold}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
   });
+  rndOfiAnalytics(1);
 }
 
 // ── INVENTORY 2 (MOБ.&ДРУГО) ──
@@ -1254,7 +1300,7 @@ window.adjustProductQty2=async(ofi,delta)=>{
 
 function getOfi2SoldMonth(ofi){
   let s=0;
-  getWDs(cY,cM).forEach(d=>{const dk=dK(cY,cM,d);MEMBERS.forEach(mb=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)s+=(ms['mob_'+ofi]||0);});});
+  getWDs(cY,cM).forEach(d=>{const dk=dK(cY,cM,d);MEMBERS.forEach(mb=>{const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms)s+=(ms['mob_'+ofi]||0);});});
   return s;
 }
 
@@ -1308,14 +1354,13 @@ function rndInv2(){
   MEMBERS.forEach(mb=>{
     const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];
     const todaySold=prods.reduce((s,p)=>{const ms=dO?AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mb.id]:null;return s+(ms?.['mob_'+p.ofi]||0);},0);
-    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms['mob_'+p.ofi]||0);});return s+tot;},0);
-    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms&&ms.status!==3&&ms.status!==1)tot+=(ms['mob_'+p.ofi]||0);});return s+tot*(p.price||0);},0);
+    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms['mob_'+p.ofi]||0);});return s+tot;},0);
+    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms['mob_'+p.ofi]||0);});return s+tot*(p.price||0);},0);
     const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(moSold/wd).toFixed(1):0;
     etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700">${todaySold}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
   });
+  rndOfiAnalytics(2);
 }
-
-// ── EMPLOYEE OFI SELL ──
 let equipBoxOn=true,mobBoxOn=true;
 function initOfiBoxState(){
   equipBoxOn=localStorage.getItem('ofi_equip_on')!=='0';
@@ -1350,7 +1395,7 @@ window.empOfiKeydown=async(e,type)=>{
   const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];
   if(!dO)return;
   const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
-  if(ms.status===1){alert('Означен си како Отсутен.');return;}
+  
   const prods=type==='equip'?OFI_PRODUCTS:OFI_PRODUCTS2;
   const wrongProds=type==='equip'?OFI_PRODUCTS2:OFI_PRODUCTS;
   if(wrongProds[val]){const wn=type==='equip'?'Моб.&Друго':'Доп.Опрема';inp.style.borderColor='var(--rd)';inp.placeholder='⚠ Оваа OFI е во '+wn+'!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра → Enter';},2500);return;}
@@ -1382,6 +1427,112 @@ window.delOfiEntry=async(dk,type,idx)=>{
   rndOfiLogs(dk);
 };
 
+// ── OFI ANALYTICS ──
+let ofi1Period='week', ofi2Period='week';
+
+window.setOfiPeriod=(inv,period,btn)=>{
+  if(inv===1)ofi1Period=period;else ofi2Period=period;
+  // Update button styles
+  const prefix='ofi'+inv;
+  ['wk','mo','yr'].forEach(s=>{
+    const b=document.getElementById(prefix+s);
+    if(b)b.classList.toggle('act',s===period.substring(0,2)||
+      (period==='week'&&s==='wk')||(period==='month'&&s==='mo')||(period==='year'&&s==='yr'));
+  });
+  if(inv===1)rndOfiAnalytics(1);else rndOfiAnalytics(2);
+};
+
+// Get all days in a period
+function getDaysInPeriod(period){
+  const today=new Date();
+  const days=[];
+  if(period==='week'){
+    // Current ISO week (Mon-Sun)
+    const dow=today.getDay()||7; // 1=Mon..7=Sun
+    for(let i=1;i<=7;i++){
+      const d=new Date(today);d.setDate(today.getDate()-(dow-i));
+      days.push(d.toISOString().slice(0,10));
+    }
+  }else if(period==='month'){
+    const y=today.getFullYear(),m=today.getMonth()+1;
+    getWDs(y,m).forEach(d=>days.push(dK(y,m,d)));
+  }else if(period==='year'){
+    const y=today.getFullYear();
+    for(let m=1;m<=12;m++)getWDs(y,m).forEach(d=>days.push(dK(y,m,d)));
+  }
+  return days;
+}
+
+// Sum OFI product sales across days and members
+function getOfiSalesInPeriod(prods,period,isMob){
+  const days=getDaysInPeriod(period);
+  const salesByOfi={};
+  prods.forEach(p=>salesByOfi[p.ofi]=0);
+  days.forEach(dk=>{
+    const parts=dk.split('-');const y=parseInt(parts[0]),m=parseInt(parts[1]);
+    MEMBERS.forEach(mb=>{
+      const ms=AS[y]?.[m]?.[dk]?.[mb.id];
+      if(!ms)return;
+      prods.forEach(p=>{
+        const key=isMob?'mob_'+p.ofi:p.ofi;
+        salesByOfi[p.ofi]=(salesByOfi[p.ofi]||0)+(ms[key]||0);
+      });
+    });
+  });
+  return salesByOfi;
+}
+
+function rndOfiAnalytics(inv){
+  const prods=Object.values(inv===1?OFI_PRODUCTS:OFI_PRODUCTS2);
+  const period=inv===1?ofi1Period:ofi2Period;
+  const isMob=inv===2;
+  const statsEl=document.getElementById('ofi'+inv+'Stats');
+  const topEl=document.getElementById('ofi'+inv+'Top');
+  if(!statsEl||!topEl)return;
+
+  if(!prods.length){
+    statsEl.innerHTML='<div style="font-size:11px;color:var(--t3)">Нема производи во лагерот.</div>';
+    topEl.innerHTML='';return;
+  }
+
+  const sales=getOfiSalesInPeriod(prods,period,isMob);
+  const totalQty=Object.values(sales).reduce((a,b)=>a+b,0);
+  const totalRev=prods.reduce((s,p)=>s+(sales[p.ofi]||0)*(p.price||0),0);
+  const stockVal=prods.reduce((s,p)=>s+(p.qty||0)*(p.price||0),0);
+
+  const periodLabel=period==='week'?'Недела':period==='month'?'Месец':'Година';
+  statsEl.innerHTML=
+    '<div class="sc"><div class="scl">Продадено '+periodLabel+'</div><div class="scv" style="font-size:16px">'+totalQty+'</div><div class="scs">парчиња</div></div>'+
+    '<div class="sc"><div class="scl">Приход '+periodLabel+'</div><div class="scv" style="font-size:14px;color:var(--gr)">'+totalRev.toLocaleString()+'</div><div class="scs">ден.</div></div>'+
+    '<div class="sc"><div class="scl">Вредност лагер</div><div class="scv" style="font-size:14px;color:var(--bl)">'+stockVal.toLocaleString()+'</div><div class="scs">ден.</div></div>'+
+    '<div class="sc"><div class="scl">Производи</div><div class="scv" style="font-size:16px">'+prods.length+'</div><div class="scs">во лагер</div></div>';
+
+  // Top products sorted by sales
+  const ranked=prods.map(p=>({...p,sold:sales[p.ofi]||0,rev:(sales[p.ofi]||0)*(p.price||0)}))
+    .sort((a,b)=>b.sold-a.sold);
+
+  topEl.innerHTML='<div style="display:flex;flex-direction:column;gap:5px">'+
+    ranked.map((p,i)=>{
+      const pct2=totalQty>0?Math.round(p.sold/totalQty*100):0;
+      const warn=(p.qty||0)<=2;
+      const badge=i===0?'<span style="background:#FFF8DC;color:#B8860B;padding:1px 6px;border-radius:20px;font-size:9px;font-weight:700">🥇 Топ</span>':'';
+      return '<div style="background:var(--s2);border-radius:var(--rs);padding:7px 10px;display:flex;align-items:center;gap:8px">'+
+        '<span style="font-size:11px;font-weight:700;color:var(--t3);min-width:16px">#'+(i+1)+'</span>'+
+        '<div style="flex:1;min-width:0">'+
+          '<div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+' '+badge+'</div>'+
+          '<div style="font-size:9px;color:var(--t3);font-family:monospace">'+p.ofi+'</div>'+
+          '<div style="height:4px;background:var(--brd);border-radius:3px;margin-top:4px"><div style="width:'+pct2+'%;height:100%;background:var(--mg);border-radius:3px"></div></div>'+
+        '</div>'+
+        '<div style="text-align:right;flex-shrink:0">'+
+          '<div style="font-size:12px;font-weight:700;color:var(--mg)">'+p.sold+'</div>'+
+          '<div style="font-size:9px;color:var(--t2)">'+p.rev.toLocaleString()+' ден.</div>'+
+          '<div style="font-size:9px;color:'+(warn?'var(--rd)':'var(--t3)')+'">Лагер: '+(p.qty||0)+'</div>'+
+        '</div>'+
+      '</div>';
+    }).join('')+
+  '</div>';
+}
+
 // ── TARGETS ──
 function rndTgts(){tgY=cY;tgM=cM;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();rndAllTgs();}
 function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();};c.appendChild(b);});}
@@ -1394,10 +1545,69 @@ function rndTgTbl(){
   KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);const on=isInScore(k);tb.innerHTML+=`<tr style="opacity:${on?1:.55}"><td style="text-align:left;padding-left:10px;font-weight:600;font-size:11px">${KLBLS[i]}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td><td><input type="number" min="0" id="tg_${k}" value="${mv}" class="ti" oninput="updTgPv('${k}',${wd})"></td><td style="font-size:11px;color:var(--t2)" id="dt_${k}">${dv}/ден</td><td style="font-size:11px;color:var(--t2)" id="wt_${k}">${wv}/нед</td><td style="font-size:10px;color:var(--t3)">${DTGT[k]}</td></tr>`;});
 }
 window.updTgPv=(k,wd)=>{const v=parseInt(document.getElementById('tg_'+k).value)||0;document.getElementById('dt_'+k).textContent=(wd>0?(v/wd).toFixed(2):0)+'/ден';document.getElementById('wt_'+k).textContent=(wd>0?(v/wd*5).toFixed(1):0)+'/нед';};
-window.saveTgt=async()=>{if(!TS[tgY])TS[tgY]={};const nt={};KKEYS.forEach(k=>{nt[k]=parseInt(document.getElementById('tg_'+k).value)||0;});TS[tgY][tgM]=nt;await svCfg('targets',TS);rndTgTbl();rndAllTgs();if(tgY===cY&&tgM===cM){rndTbl();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();}};
-window.cpyPrev=()=>{let pm=tgM-1,py=tgY;if(pm<1){pm=12;py--;}const pv=TS[py]&&TS[py][pm];const src=pv?pv:DTGT;KKEYS.forEach(k=>{const el=document.getElementById('tg_'+k);if(el)el.value=src[k]||0;});const wd=getWDs(tgY,tgM).length;KKEYS.forEach(k=>window.updTgPv(k,wd));};
-function rndAllTgs(){const el=document.getElementById('tgAll');const yrs=Object.keys(TS).sort();if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:var(--t3)">Нема зачувани таргети.</div>';return;}let h='<div style="display:flex;flex-direction:column;gap:8px">';yrs.forEach(yr=>{h+=`<div><div style="font-size:11px;font-weight:700;color:var(--mg);margin-bottom:5px">${yr}</div><div style="display:flex;gap:5px;flex-wrap:wrap">`;Object.keys(TS[yr]).sort((a,b)=>a-b).forEach(mn=>{const t=TS[yr][mn];h+=`<div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:7px 10px;font-size:10px;min-width:120px"><div style="font-weight:700;color:var(--mg);margin-bottom:3px">${MKM[mn-1]}</div>${KKEYS.map((k,i)=>`<div style="color:var(--t2)">${KLBLS[i]}: <b style="color:var(--txt)">${t[k]||0}</b></div>`).join('')}<button onclick="delTg(${yr},${mn})" style="margin-top:4px;font-size:9px;color:var(--rd);background:none;border:none;cursor:pointer;padding:0">🗑 Избриши</button></div>`;});h+='</div></div>';});h+='</div>';el.innerHTML=h;}
-window.delTg=async(yr,mn)=>{if(!confirm(`Избриши за ${MKM[mn-1]} ${yr}?`))return;if(TS[yr])delete TS[yr][mn];if(TS[yr]&&!Object.keys(TS[yr]).length)delete TS[yr];await svCfg('targets',TS);rndTgTbl();rndAllTgs();};
+window.saveTgt=async()=>{
+  if(!TS[tgY])TS[tgY]={};
+  const nt={};KKEYS.forEach(k=>{nt[k]=parseInt(document.getElementById('tg_'+k)?.value)||0;});
+  TS[tgY][tgM]=nt;  // tgM is always a number
+  await svCfg('targets',TS);rndTgTbl();rndAllTgs();
+  if(tgY===cY&&tgM===cM){rndTbl();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();}
+  showSS('sStat','✅ Таргет зачуван за '+MKM[tgM-1]+' '+tgY,'ok');
+};
+window.cpyPrev=()=>{
+  let pm=tgM-1,py=tgY;if(pm<1){pm=12;py--;}
+  const src=getMT(py,pm);
+  KKEYS.forEach(k=>{const el=document.getElementById('tg_'+k);if(el)el.value=src[k]||0;});
+  const wd=getWDs(tgY,tgM).length;KKEYS.forEach(k=>window.updTgPv(k,wd));
+};
+function rndAllTgs(){
+  const el=document.getElementById('tgAll');
+  // Normalize all keys to numbers to avoid string/"1" vs 1 mismatch
+  const normalized={};
+  Object.keys(TS).forEach(yr=>{
+    const yrN=parseInt(yr);if(isNaN(yrN))return;
+    if(!normalized[yrN])normalized[yrN]={};
+    Object.keys(TS[yr]).forEach(mn=>{
+      const mnN=parseInt(mn);if(isNaN(mnN)||mnN<1||mnN>12)return;
+      if(TS[yr][mn]&&typeof TS[yr][mn]==='object')normalized[yrN][mnN]=TS[yr][mn];
+    });
+  });
+  const yrs=Object.keys(normalized).map(Number).sort((a,b)=>a-b);
+  if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:var(--t3)">Нема зачувани таргети. Внеси таргет за месецот и зачувај.</div>';return;}
+  let h='<div style="display:flex;flex-direction:column;gap:10px">';
+  yrs.forEach(yr=>{
+    const months=Object.keys(normalized[yr]).map(Number).sort((a,b)=>a-b);
+    if(!months.length)return;
+    h+=`<div>
+      <div style="font-size:11px;font-weight:700;color:var(--mg);margin-bottom:6px">📅 ${yr}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">`;
+    months.forEach(mn=>{
+      const t=normalized[yr][mn];
+      if(!t||typeof t!=='object')return;
+      const mnName=MKM[mn-1]||'М'+mn;
+      const kpiRows=KKEYS.map((k,i)=>{
+        const v=t[k]??0;const on=isInScore(k);
+        return '<div style="color:'+(on?'var(--t2)':'var(--t3)')+';opacity:'+(on?1:0.6)+'">'+KLBLS[i]+': <b style="color:'+(on?'var(--txt)':'var(--t3)')+'">'+v+'</b></div>';
+      }).join('');
+      h+='<div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:8px 12px;font-size:10px;min-width:130px">'
+        +'<div style="font-weight:700;color:var(--mg);margin-bottom:4px;font-size:11px">'+mnName+' '+yr+'</div>'
+        +kpiRows
+        +'<button onclick="delTg('+yr+','+mn+')" style="margin-top:5px;font-size:9px;color:var(--rd);background:none;border:none;cursor:pointer;padding:0">🗑 Избриши</button>'
+        +'</div>';
+    });
+    h+='</div></div>';
+  });
+  h+='</div>';el.innerHTML=h;
+}
+window.delTg=async(yr,mn)=>{
+  const mnN=parseInt(mn);const yrN=parseInt(yr);
+  if(!confirm(`Избриши таргет за ${MKM[mnN-1]||'М'+mnN} ${yrN}?`))return;
+  // Delete with both string and number keys to be safe
+  if(TS[yrN]){delete TS[yrN][mnN];delete TS[yrN][String(mnN)];}
+  if(TS[String(yrN)]){delete TS[String(yrN)][mnN];delete TS[String(yrN)][String(mnN)];}
+  // Clean up empty year objects
+  [yrN,String(yrN)].forEach(y=>{if(TS[y]&&!Object.keys(TS[y]).length)delete TS[y];});
+  await svCfg('targets',TS);rndTgTbl();rndAllTgs();
+};
 
 // ── ORDERS ──
 function ordStyle(s){if(s==='Реализирано')return 'background:var(--grl);color:var(--gr)';if(s==='Откажано')return 'background:var(--rdl);color:var(--rd)';if(s==='Пристигнато')return 'background:var(--bll);color:var(--bl)';return 'background:var(--aml);color:var(--am)';}
@@ -1552,7 +1762,11 @@ window.empTab=(name,el)=>{
   document.querySelectorAll('[id^="etp-"]').forEach(t=>t.classList.remove('act'));
   if(el)el.classList.add('act');
   const ep=document.getElementById('etp-'+name);if(ep)ep.classList.add('act');
-  if(name==='weekly')rndEmpWeekly();else if(name==='monthly')rndEmpMo();else if(name==='yearly')rndEmpYr();else if(name==='emporders')rndEmpOrders();
+  if(name==='weekly')rndEmpWeekly();
+  else if(name==='monthly')rndEmpMo();
+  else if(name==='yearly')rndEmpYr();
+  else if(name==='emporders')rndEmpOrders();
+  else if(name==='history')rndEmpHistory();
 };
 function rndEmpDyBtns(){
   const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];
@@ -1560,17 +1774,15 @@ function rndEmpDyBtns(){
   wk.forEach((d,i)=>{const b=document.createElement('button');b.className='nb'+(i===cD?' act':'');b.textContent=d.label;b.onclick=()=>{cD=i;document.querySelectorAll('#empDyBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpSt();rndEmpKpi();};c.appendChild(b);});
 }
 function rndEmpSt(){
-  const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];if(!dO)return;
-  const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const cst=AS[cY][cM][dk][mID]?.status||0;
-  const c=document.getElementById('empStBtns');c.innerHTML='';
-  SIC.forEach((ic,i)=>{const b=document.createElement('button');b.style.cssText=`padding:5px 11px;border-radius:var(--rs);border:1px solid var(--brd);background:${i===cst?'var(--mg)':'var(--sur)'};color:${i===cst?'#fff':'var(--t2)'};font-size:12px;cursor:pointer;transition:all .15s`;b.textContent=ic+' '+SLBL[i];b.onclick=async()=>{ensD(cY,cM,dk);AS[cY][cM][dk][mID].status=i;rndEmpSt();rndEmpKpi();await empSv();};c.appendChild(b);});
+  const c=document.getElementById('empStBtns');if(c)c.innerHTML='<span style="font-size:11px;padding:4px 12px;background:var(--grl);color:var(--gr);border-radius:20px;font-weight:700">🏢 На работа</span>';}
+function _rndEmpSt_unused(){
 }
 function rndEmpKpi(){
   const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];
   const g=document.getElementById('empKpiG');if(!g)return;g.innerHTML='';
   if(!dO){g.innerHTML='<div style="color:var(--t3)">Нема работни денови</div>';return;}
   const dk=dK(cY,cM,dO);ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
-  const isAbs=ms.status===1;
+  const isAbs=false;
   const wd=getWDs(cY,cM).length;const mt=getMT(cY,cM);
 
   KKEYS.forEach((k,i)=>{
@@ -1613,45 +1825,35 @@ function rndEmpKpi(){
   rndOfiBoxes();
 }
 
-// Handle Enter on subscriber input
+// Handle Enter on subscriber input (KPI log)
 window.subKeydown=async(e,dk,k)=>{
   if(e.key!=='Enter')return;
   const inp=e.target;const val=inp.value.trim();if(!val)return;
-
   ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
   const logKey=k+'_log';
   if(!ms[logKey])ms[logKey]=[];
-
   const isOfi=(k==='equip');
-
   if(isOfi){
-    // Validate OFI exists in products
-    if(!OFI_PRODUCTS[val]){inp.style.borderColor='var(--rd)';inp.placeholder='⚠ OFI не постои!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра (пр. 42513654)';},2000);return;}
-    // Check stock
-    if((OFI_PRODUCTS[val].qty||0)<1){inp.style.borderColor='var(--am)';inp.placeholder='⚠ Нема на лагер!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра (пр. 42513654)';},2000);return;}
-    // Deduct from inventory
+    if(!OFI_PRODUCTS[val]){inp.style.borderColor='var(--rd)';inp.placeholder='⚠ OFI не постои!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра';},2000);return;}
+    if((OFI_PRODUCTS[val].qty||0)<1){inp.style.borderColor='var(--am)';inp.placeholder='⚠ Нема на лагер!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра';},2000);return;}
     OFI_PRODUCTS[val].qty=Math.max(0,(OFI_PRODUCTS[val].qty||0)-1);
     await svCfg('ofi_products',OFI_PRODUCTS);
   }
-
-  // Add to log
   ms[logKey].push(isOfi?{num:val,name:OFI_PRODUCTS[val]?.name||''}:val);
-  // Increment KPI count
   ms[k]=(ms[k]||0)+1;
-
   inp.value='';
   clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();},600);
   rndEmpKpi();
-  // Re-focus the input after re-render
-  setTimeout(()=>{const ni=document.getElementById(`si_${dk}_${k}`);if(ni)ni.focus();},50);
+  setTimeout(()=>{const ni=document.getElementById('si_'+dk+'_'+k);if(ni)ni.focus();},50);
 };
 
-// Delete subscriber entry (and -1 from count)
+// Delete subscriber entry from any day (employee) — restores OFI stock if needed
 window.delSubEntry=async(dk,k,idx)=>{
-  ensD(cY,cM,dk);const ms=AS[cY][cM][dk][mID];
+  // Parse year/month from dk (format: YYYY-MM-DD)
+  const parts=dk.split('-');const y=parseInt(parts[0]),m=parseInt(parts[1]);
+  ensD(y,m,dk);const ms=AS[y][m][dk][mID];
   const logKey=k+'_log';
-  if(!ms[logKey]||!ms[logKey][idx])return;
-
+  if(!ms[logKey]||ms[logKey][idx]===undefined)return;
   const isOfi=(k==='equip');
   if(isOfi){
     const entry=ms[logKey][idx];const ofiCode=typeof entry==='object'?entry.num:entry;
@@ -1660,11 +1862,15 @@ window.delSubEntry=async(dk,k,idx)=>{
       await svCfg('ofi_products',OFI_PRODUCTS);
     }
   }
-
   ms[logKey].splice(idx,1);
   ms[k]=Math.max(0,(ms[k]||0)-1);
-  clearTimeout(svTmr);svTmr=setTimeout(async()=>{await empSv();},600);
-  rndEmpKpi();
+  // Save that specific day
+  clearTimeout(svTmr);
+  await svDay(y,m,dk);
+  // Re-render if it's the currently viewed day
+  const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];
+  if(dO&&dK(cY,cM,dO)===dk)rndEmpKpi();
+  rndEmpMo();
 };
 
 window.eVal=async(dk,key,val)=>{
@@ -1697,7 +1903,7 @@ function rndMgrWeekly(){
   grid.innerHTML='';
   MEMBERS.forEach(mb=>{
     const wkTots={};KKEYS.forEach(k=>wkTots[k]=0);let wkDays=0;
-    wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms&&ms.status!==1){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
+    wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];if(ms){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
     let aP=0;let aCnt=0;
     const kh=KKEYS.map((k,i)=>{const wt=Math.round((mt[k]||0)/totalWd*wk.length)||1;const p=pct(wkTots[k],wt);const on=isInScore(k);if(on){aP+=p;aCnt++;}return `<div class="mkc" style="opacity:${on?1:.4}"><div class="mkl">${KLBLS[i]}</div><div class="mkv" style="color:${pc(p)}">${wkTots[k]}/${wt}</div><div class="mkp" style="color:${pc(p)}">${p}%</div><div class="mkb"><div class="mkbf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div></div>`;}).join('');
     aP=aCnt>0?Math.round(aP/aCnt):0;
@@ -1723,12 +1929,12 @@ function rndMgrWeekly(){
     let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:10px;font-weight:600">${mb.name.split(' ')[0]}</span></div></td>`;
     wk.forEach(d=>{
       const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mb.id];
-      const isAbs=!ms||ms.status===1;
+      const isAbs=false;
       let dayTotal=0;
       if(!isAbs)KKEYS.forEach(k=>{if(isInScore(k))dayTotal+=(ms?.[k]||0);});
       else dayTotal=0;
       if(!isAbs){totByDay[d.date]=(totByDay[d.date]||0)+dayTotal;rowTotal+=dayTotal;}
-      row+=`<td style="font-size:12px;font-weight:700;color:${isAbs?'var(--t3)':dayTotal>0?'var(--txt)':'var(--t3)'}">${isAbs?SIC[ms?.status||3]:dayTotal}</td>`;
+      row+=`<td style="font-size:12px;font-weight:700;color:${isAbs?'var(--t3)':dayTotal>0?'var(--txt)':'var(--t3)'}">${isAbs?"❌":dayTotal}</td>`;
     });
     const sc=perfScore(mb.id,cY,cM);
     row+=`<td style="font-size:12px;font-weight:700;color:var(--mg)">${rowTotal}</td><td style="font-size:11px;font-weight:700;color:${pc(sc)}">${sc}%</td>`;
@@ -1742,6 +1948,83 @@ function rndMgrWeekly(){
   fh+=`<td style="font-size:13px;font-weight:700;color:var(--mg)">${grandSum}</td><td></td>`;
   ft.innerHTML=fh;
 }
+// ── EMPLOYEE HISTORY ──
+let histSelMo=null; // month selected in history tab
+
+function rndEmpHistory(){
+  if(histSelMo===null)histSelMo=cM;
+  // Month buttons
+  const mb=document.getElementById('empHistMoBtns');if(!mb)return;
+  mb.innerHTML='';
+  MKM.forEach((mn,i)=>{
+    const b=document.createElement('button');
+    b.className='nb'+(i+1===histSelMo?' act':'');
+    b.textContent=mn.substring(0,3);b.title=mn;
+    b.onclick=()=>{histSelMo=i+1;document.querySelectorAll('#empHistMoBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndEmpHistDays();};
+    mb.appendChild(b);
+  });
+  rndEmpHistDays();
+}
+
+function rndEmpHistDays(){
+  const cont=document.getElementById('empHistDays');if(!cont)return;
+  const wds=getWDs(cY,histSelMo);
+  cont.innerHTML='';
+  wds.forEach(d=>{
+    const dk=dK(cY,histSelMo,d);
+    const ms=AS[cY]?.[histSelMo]?.[dk]?.[mID];
+    // Count total log entries for this day
+    let total=0;
+    if(ms)KKEYS.forEach(k=>{const lk=k+'_log';if(ms[lk])total+=ms[lk].length;});
+    const hasData=total>0||(ms&&KKEYS.some(k=>ms[k]>0));
+    const b=document.createElement('button');
+    b.className='nb';
+    b.style.cssText=hasData?'border-color:var(--mg);color:var(--mg);font-weight:700':'';
+    b.textContent=d.label+(total>0?' ('+total+')':'');
+    b.onclick=()=>{
+      document.querySelectorAll('#empHistDays .nb').forEach(x=>{x.style.background='';x.style.color=x.style.borderColor?x.style.borderColor==='var(--mg)'?'var(--mg)':'var(--t2)':'var(--t2)';});
+      b.style.background='var(--mg)';b.style.color='#fff';
+      rndEmpHistDay(dk);
+    };
+    cont.appendChild(b);
+  });
+  document.getElementById('empHistContent').innerHTML='<div style="font-size:11px;color:var(--t3)">Избери ден погоре.</div>';
+}
+
+function rndEmpHistDay(dk){
+  const cont=document.getElementById('empHistContent');if(!cont)return;
+  const parts=dk.split('-');const y=parseInt(parts[0]),m=parseInt(parts[1]);
+  ensD(y,m,dk);const ms=AS[y][m][dk][mID];
+  let html='<div style="display:flex;flex-direction:column;gap:10px">';
+  KKEYS.forEach((k,i)=>{
+    const logKey=k+'_log';const logArr=ms[logKey]||[];const count=ms[k]||0;
+    if(count===0&&logArr.length===0)return;
+    const on=isInScore(k);
+    html+='<div style="background:var(--s2);border-radius:var(--rs);padding:10px">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+        +'<span style="font-size:11px;font-weight:700;color:'+(on?'var(--mg)':'var(--t3)')+'">'+(on?'':'⊘ ')+KLBLS[i]+'</span>'
+        +'<span style="font-size:11px;font-weight:700;background:var(--sur);padding:1px 7px;border-radius:20px;border:1px solid var(--brd)">'+count+'</span>'
+      +'</div>';
+    if(logArr.length){
+      html+='<div style="display:flex;flex-direction:column;gap:3px">';
+      logArr.forEach((entry,idx)=>{
+        const disp=typeof entry==='object'?entry.num:entry;
+        const nm=typeof entry==='object'&&entry.name?' — '+entry.name:'';
+        html+='<div class="sub-entry">'
+          +'<span class="sub-num">'+disp+'<span style="color:var(--t2);font-weight:400;font-size:9px">'+nm+'</span></span>'
+          +'<button class="sub-del" onclick="delSubEntry(\''+dk+'\',\''+k+'\','+idx+')" title="Избриши (−1)">✕</button>'
+          +'</div>';
+      });
+      html+='</div>';
+    }else{
+      html+='<div style="font-size:10px;color:var(--t3)">Нема детален лог за овој KPI.</div>';
+    }
+    html+='</div>';
+  });
+  html+='</div>';
+  cont.innerHTML=html;
+}
+
 async function empSv(){
   showSS('empSS','💾...','sv');
   try{const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];if(!dO)return;const dk=dK(cY,cM,dO);await svDay(cY,cM,dk);showSS('empSS','✓ Зачувано','ok');rndEmpMo();}
@@ -1761,14 +2044,14 @@ function rndEmpWeekly(){
   const mt=getMT(cY,cM);const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];
   const tit=document.getElementById('empWkTitle');if(tit)tit.textContent='Недела '+(cW+1)+' — '+MKM[cM-1]+' '+cY;
   const wkTots={};KKEYS.forEach(k=>wkTots[k]=0);let wkDays=0;
-  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];if(ms&&ms.status!==1){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
+  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];if(ms){wkDays++;KKEYS.forEach(k=>{wkTots[k]+=(ms[k]||0);});}});
   const totalWd=getWDs(cY,cM).length;const sc2=document.getElementById('empWkScG');if(!sc2)return;sc2.innerHTML='';
   let avgP=0;let avgC=0;
   KKEYS.forEach((k,i)=>{const wt=Math.round((mt[k]||0)/totalWd*wk.length);const p=pct(wkTots[k],wt||1);const on=isInScore(k);if(on){avgP+=p;avgC++;}sc2.innerHTML+=`<div class="sc" style="opacity:${on?1:.5}"><div class="scl">${KLBLS[i]}</div><div class="scv" style="color:${pc(p)};font-size:13px">${wkTots[k]}/${wt}</div><div class="scs" style="color:${pc(p)}">${p}%</div></div>`;});
   avgP=avgC>0?Math.round(avgP/avgC):0;
   sc2.innerHTML=`<div class="sc" style="border-color:${pc(avgP)}"><div class="scl">Неделен Score</div><div class="scv" style="color:${pc(avgP)}">${avgP}% ${pem(avgP)}</div><div class="scs">${wkDays} раб. дни</div></div>`+sc2.innerHTML;
   const kg=document.getElementById('empWkKpiGrid');if(!kg)return;kg.innerHTML='';
-  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];const isAbs=!ms||ms.status===1;let tot=0;if(!isAbs)KKEYS.forEach(k=>{tot+=(ms?.[k]||0);});kg.innerHTML+=`<div class="ekc" style="opacity:${isAbs?.4:1}"><div class="ekl">${d.label}</div><div style="font-size:18px;font-weight:700;margin:3px 0;color:${isAbs?'var(--t3)':'var(--txt)'}">${isAbs?'—':tot}</div><div style="font-size:9px;color:var(--t2)">${isAbs?'отсутен':'вкупно'}</div></div>`;});
+  wk.forEach(d=>{const dk=dK(cY,cM,d);const ms=AS[cY]?.[cM]?.[dk]?.[mID];const isAbs=false;let tot=0;if(!isAbs)KKEYS.forEach(k=>{tot+=(ms?.[k]||0);});kg.innerHTML+=`<div class="ekc" style="opacity:${isAbs?.4:1}"><div class="ekl">${d.label}</div><div style="font-size:18px;font-weight:700;margin:3px 0;color:${isAbs?'var(--t3)':'var(--txt)'}">${isAbs?'—':tot}</div><div style="font-size:9px;color:var(--t2)">${isAbs?'отсутен':'вкупно'}</div></div>`;});
 }
 function rndEmpYr(){
   const tit=document.getElementById('empYrTit');if(tit)tit.textContent='Годишен преглед — '+cY;
