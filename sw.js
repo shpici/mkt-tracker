@@ -1,0 +1,34 @@
+// MKT Sales Pro — Service Worker v1.0
+const CACHE = 'mkt-kicevo-v1';
+
+// Cache only the app shell (HTML) — Firebase data stays real-time
+const SHELL = ['/index.html', '/manifest.json'];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', e => {
+  // Firebase requests — always network (real-time data)
+  if (e.request.url.includes('firestore') ||
+      e.request.url.includes('firebase') ||
+      e.request.url.includes('googleapis') ||
+      e.request.url.includes('gstatic')) {
+    return; // pass through to network
+  }
+
+  // App shell — cache first, fallback to network
+  e.respondWith(
+    caches.match(e.request).then(cached => cached || fetch(e.request))
+  );
+});
