@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orar Javor / Неделен распоред — Makedonski Telekom Kičevo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0f2f8;color:#111;padding:1.2rem}
+.wrap{max-width:1100px;margin:0 auto;padding:1rem 0}
+
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem;background:#fff;border-radius:16px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.ttl{font-size:17px;font-weight:700;color:#111}
+.sub{font-size:12px;color:#666;margin-top:3px}
+.lang-sw{display:flex;gap:5px}
+.lbtn{font-size:12px;padding:6px 15px;border-radius:999px;border:1.5px solid #ccc;background:#f5f5f5;color:#555;cursor:pointer;font-weight:600;transition:all .15s}
+.lbtn.act{background:#E8207D;color:#fff;border-color:#E8207D}
+.lbtn:hover:not(.act){background:#eee}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem;background:#fff;border-radius:14px;padding:12px 18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.leg{display:flex;align-items:center;gap:7px;font-size:12px;color:#333;font-weight:500}
+.ldot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;background:#fff;border-radius:14px;padding:10px 16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.ctrl{font-size:12px;padding:6px 13px;border-radius:999px;border:2px solid transparent;background:#f0f2f8;color:#555;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;transition:all .15s}
+.ctrl:hover{background:#e4e7f0}
+.ctrl.sel{color:#111;background:#fff}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.tbl-wrap{overflow-x:auto;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:4px}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead th{font-size:12px;font-weight:700;color:#444;text-align:center;padding:10px 4px;border-bottom:2px solid #e8eaf0;background:#f8f9fc}
+thead th:first-child{text-align:left;padding-left:12px;width:110px;border-radius:12px 0 0 0}
+thead th:last-child{border-radius:0 12px 0 0}
+tbody tr{border-bottom:1.5px solid #e8eaf0}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafbff}
+.emp-td{padding:10px 8px 10px 12px;vertical-align:middle;min-width:110px}
+.emp-row{display:flex;align-items:center;gap:8px}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.en{font-size:14px;font-weight:700;color:#111}
+.cell{padding:6px 4px;vertical-align:middle;text-align:center}
+
+/* MAIN PILL — bigger, bolder */
+.cpill{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;padding:8px 8px 6px;min-width:88px;min-height:72px;border:2px solid transparent;position:relative;transition:transform .1s}
+.cpill:hover{transform:scale(1.03)}
+.cp-top{font-size:13px;font-weight:700;line-height:1.2;cursor:pointer}
+.cp-mid{font-size:11px;margin-top:2px;font-weight:600;cursor:pointer;opacity:.9}
+
+/* BREAK ROWS inside pill */
+.cp-breaks{display:flex;flex-direction:column;gap:2px;margin-top:5px;width:100%}
+.cp-break{font-size:9.5px;font-weight:600;padding:2px 5px;border-radius:6px;text-align:center;opacity:.92}
+
+/* SHALTER badge */
+.cp-shal{display:inline-flex;align-items:center;gap:3px;margin-top:5px;padding:3px 7px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:none;transition:opacity .12s;white-space:nowrap}
+.cp-shal:hover{opacity:.7}
+.cp-shal-empty{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;color:#999;border:1.5px dashed #bbb;cursor:pointer;background:transparent;margin-top:5px;white-space:nowrap;font-weight:600}
+.cp-shal-empty:hover{border-color:#666;color:#555}
+
+.add-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:2px dashed #ccc;background:none;color:#bbb;cursor:pointer;font-size:18px;font-weight:300}
+.add-btn:hover{background:#f0f2f8;border-color:#aaa;color:#888}
+
+/* employee shalter badge colors */
+.sc-ivona{background:#C2DCF5;color:#0B3A6E}
+.sc-kate{background:#B5E3C8;color:#064D37}
+.sc-hane{background:#F2CEAA;color:#7A3F00}
+.sc-fuku{background:#D5D2FB;color:#2E2680}
+.sc-meli{background:#F5C8DD;color:#6B1535}
+
+/* SHIFT COLOR PALETTES */
+/* T1 — Magenta */
+.pill-T1{background:#E8207D;border-color:#C01566;color:#fff}
+.pill-T1 .cp-top{color:#fff}
+.pill-T1 .cp-mid{color:#ffd6eb}
+.pill-T1 .cp-break{background:rgba(255,255,255,.2);color:#fff}
+/* T2 — Dark Blue */
+.pill-T2{background:#0D2D6B;border-color:#081E4A;color:#fff}
+.pill-T2 .cp-top{color:#fff}
+.pill-T2 .cp-mid{color:#b8ccf0}
+.pill-T2 .cp-break{background:rgba(255,255,255,.15);color:#fff}
+/* TM — Oker/Amber */
+.pill-TM{background:#B8860B;border-color:#8B6508;color:#fff}
+.pill-TM .cp-top{color:#fff}
+.pill-TM .cp-mid{color:#ffe9a0}
+.pill-TM .cp-break{background:rgba(255,255,255,.18);color:#fff}
+/* SAT — Teal */
+.pill-SAT{background:#1279A5;border-color:#0A5A7E;color:#fff}
+.pill-SAT .cp-top{color:#fff}
+.pill-SAT .cp-mid{color:#c8e9f8}
+.pill-SAT .cp-break{background:rgba(255,255,255,.18);color:#fff}
+/* OFF — Grey */
+.pill-TM{background:#B8860B;border-color:#8B6508;color:#fff}
+.pill-TM .cp-top{color:#fff}
+.pill-TM .cp-mid{color:#ffe9a0}
+.pill-TM .cp-break{background:rgba(255,255,255,.18);color:#fff}
+.pill-OFF{background:#9A9890;border-color:#7E7C75;color:#fff}
+.pill-OFF .cp-top{color:#fff}
+.pill-OFF .cp-mid{color:#e8e8e4}
+.pill-OFF .cp-break{display:none}
+
+.vrap-section{margin-top:1.5rem;background:#fff;border-radius:16px;padding:16px 20px;box-shadow:0 1px 8px rgba(0,0,0,.07)}
+.vrap-title{font-size:13px;font-weight:700;color:#2E2680;margin-bottom:.75rem;display:flex;align-items:center;gap:7px}
+.vrap-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.vrap-item{display:flex;align-items:center;gap:6px;background:#EEEDFE;border:1.5px solid #AFA9EC;border-radius:10px;padding:6px 10px;font-size:12px;color:#2E2680}
+.vname{font-weight:700}
+.vrap-del{cursor:pointer;opacity:.5;font-size:11px;margin-left:3px}
+.vrap-del:hover{opacity:1}
+.add-vrap-btn{font-size:12px;padding:5px 12px;border-radius:999px;border:2px dashed #7F77DD;background:none;color:#534AB7;cursor:pointer;font-weight:600}
+.add-vrap-btn:hover{background:#EEEDFE}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-top:1.25rem}
+.stat{background:#f0f2f8;border-radius:10px;padding:10px 13px;border:1.5px solid #e2e5ef}
+.sl{font-size:11px;color:#555;margin-bottom:4px;font-weight:500}
+.sv{font-size:21px;font-weight:700;color:#111}
+
+.exp-btn{font-size:12px;padding:6px 14px;border-radius:10px;border:1.5px solid #ccc;background:#fff;color:#555;cursor:pointer;font-weight:600}
+.exp-btn:hover{background:#f0f2f8}
+
+select{font-size:12px;padding:5px 8px;border-radius:10px;border:1.5px solid #ccc;background:#fff;color:#111;cursor:pointer}
+input[type=text]{font-size:12px;padding:5px 10px;border-radius:10px;border:1.5px solid #ccc;background:#fff;color:#111;width:115px}
+.add-form{display:none;margin-top:1rem;padding:14px;border-radius:14px;border:1.5px solid #e5e5e5;background:#f9f9fb}
+
+/* MODAL */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+.moverlay.open{display:flex}
+.mbox{background:#fff;border-radius:16px;padding:20px;width:260px;max-width:92vw;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.mbox h3{font-size:14px;font-weight:700;margin:0 0 14px;color:#111}
+.mlist{display:flex;flex-direction:column;gap:8px}
+.mopt{padding:10px 14px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;border:none;text-align:left;transition:opacity .12s}
+.mopt:hover{opacity:.75}
+.mopt-rem{background:#f0f2f8;color:#555}
+.mcancel{margin-top:12px;width:100%;padding:9px;border-radius:10px;font-size:13px;cursor:pointer;background:#f0f2f8;color:#555;border:1.5px solid #ddd;font-weight:600}
+
+.ec-ivona{background:#D0E8F8;color:#0B3A6E}
+.ec-kate{background:#C4EEDB;color:#064D37}
+.ec-hane{background:#FADFBC;color:#7A3F00}
+.ec-fuku{background:#E4E2FD;color:#2E2680}
+.ec-meli{background:#FAD8EC;color:#6B1535}
+
+/* break info section below table */
+.breaks-panel{margin-top:1rem;background:#fff;border-radius:14px;padding:14px 18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.breaks-panel-title{font-size:13px;font-weight:700;color:#333;margin-bottom:10px}
+.breaks-grid{display:flex;flex-wrap:wrap;gap:8px}
+.break-card{border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;min-width:140px}
+.break-card .bc-label{font-size:10.5px;font-weight:600;opacity:.85;margin-bottom:2px}
+.break-card .bc-time{font-size:13px;font-weight:700}
+.bc-s1{background:#E8207D;color:#fff;border:2px solid #C01566}
+.bc-mid{background:#B8860B;color:#fff;border:2px solid #8B6508}
+.bc-s2{background:#0D2D6B;color:#fff;border:2px solid #081E4A}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- VIEW SWITCHER -->
+  <div id="viewSwitcher" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700;color:#666">Преглед:</span>
+    <button onclick="setView('week')"  id="vb-week"  style="padding:5px 14px;border-radius:20px;border:2px solid #E8207D;background:#fde8f2;color:#E8207D;font-weight:700;cursor:pointer;font-size:11px">📅 Недела</button>
+    <button onclick="setView('month')" id="vb-month" style="padding:5px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;color:#555;cursor:pointer;font-size:11px">📆 Месец</button>
+    <button onclick="setView('year')"  id="vb-year"  style="padding:5px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;color:#555;cursor:pointer;font-size:11px">📊 Година</button>
+    <span id="roBadge" style="display:none;margin-left:auto;background:#fde8f2;color:#E8207D;font-size:10px;padding:4px 12px;border-radius:20px;font-weight:700">👀 Само за читање</span>
+  </div>
+
+<div class="hdr">
+  <div>
+    <div class="ttl" id="main-title">Orar javor / Неделен распоред</div>
+    <div class="sub" id="week-range">Makedonski Telekom Kičevo</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <div class="lang-sw">
+      <button class="lbtn act" id="lb-both" onclick="setLang('both',this)">AL + МК</button>
+      <button class="lbtn" id="lb-al" onclick="setLang('al',this)">Shqip</button>
+      <button class="lbtn" id="lb-mk" onclick="setLang('mk',this)">Македонски</button>
+    </div>
+    <button class="exp-btn" onclick="exportCSV()">Eksporto ↓</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="ldot" style="background:#E8207D"></div><span id="lg1">Смена 1 · 08:00–15:00</span></div>
+  <div class="leg"><div class="ldot" style="background:#0D2D6B"></div><span id="lg2">Смена 2 · 10:00–17:00</span></div>
+  <div class="leg"><div class="ldot" style="background:#1279A5"></div><span id="lg3">Саб · 09:00–15:00</span></div>
+  <div class="leg"><div class="ldot" style="background:#B8860B"></div><span id="lg5">Меѓусмена · 10:00–17:00</span></div>
+  <div class="leg"><div class="ldot" style="background:#9A9890"></div><span id="lg4">Одмор</span></div>
+  <div class="leg"><div class="ldot" style="background:#7F77DD;border-radius:2px"></div><span id="lg5">Трчач · 13–15</span></div>
+  <div class="leg"><div class="ldot" style="background:#E8207D;border-radius:2px"></div><span id="lg6">Шалтер бр.</span></div>
+</div>
+
+<div class="controls">
+  <span style="font-size:12px;color:#666;font-weight:600" id="sel-lbl">Zgjedh / Избери:</span>
+  <button class="ctrl sel" id="btn-T1" onclick="setMode('T1',this)" style="border-color:#E8207D">
+    <span class="cdot" style="background:#E8207D"></span><span id="c1">Ndërrimi 1 / Смена 1 · 08–15</span>
+  </button>
+  <button class="ctrl" id="btn-T2" onclick="setMode('T2',this)" style="border-color:transparent">
+    <span class="cdot" style="background:#0D2D6B"></span><span id="c2">Ndërrimi 2 / Смена 2 · 10–17</span>
+  </button>
+  <button class="ctrl" id="btn-SAT" onclick="setMode('SAT',this)" style="border-color:transparent">
+    <span class="cdot" style="background:#1279A5"></span><span id="c3">E Shtunë / Саб · 09–15</span>
+  </button>
+  <button class="ctrl" id="btn-TM" onclick="setMode('TM',this)" style="border-color:transparent">
+    <span class="cdot" style="background:#B8860B"></span><span id="c5">Ndërrimi mes. / Меѓусмена · 10–17</span>
+  </button>
+  <button class="ctrl" id="btn-OFF" onclick="setMode('OFF',this)"  style="border-color:transparent">
+    <span class="cdot" style="background:#9A9890"></span><span id="c4">Pushim / Одмор</span>
+  </button>
+</div>
+
+<div class="tbl-wrap">
+  <table>
+    <thead id="thead"></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- BREAK TIMES PANEL -->
+<div class="breaks-panel">
+  <div class="breaks-panel-title" id="bp-title">Паузи / Pauzat</div>
+  <div class="breaks-grid">
+    <div class="break-card bc-s1">
+      <div class="bc-label" id="bp-s1a">Смена 1 — Паузa 1 / Ndërrimi 1 — Pauzë 1</div>
+      <div class="bc-time">10:00 – 10:30</div>
+    </div>
+    <div class="break-card bc-s1">
+      <div class="bc-label" id="bp-s1b">Смена 1 — Паузa 2 / Ndërrimi 1 — Pauzë 2</div>
+      <div class="bc-time">10:30 – 11:00</div>
+    </div>
+    <div class="break-card bc-mid">
+      <div class="bc-label" id="bp-mid">Меѓусмена Пауза / Pauzë ndërrimi</div>
+      <div class="bc-time">12:00 – 12:30</div>
+    </div>
+    <div class="break-card bc-s2">
+      <div class="bc-label" id="bp-s2a">Смена 2 — Паузa 1 / Ndërrimi 2 — Pauzë 1</div>
+      <div class="bc-time">16:00 – 16:30</div>
+    </div>
+    <div class="break-card bc-s2">
+      <div class="bc-label" id="bp-s2b">Смена 2 — Паузa 2 / Ndërrimi 2 — Pauzë 2</div>
+      <div class="bc-time">16:30 – 17:00</div>
+    </div>
+  </div>
+</div>
+
+<div class="vrap-section">
+  <div class="vrap-title">
+    <span style="width:11px;height:11px;background:#7F77DD;border-radius:3px;display:inline-block;flex-shrink:0"></span>
+    <span id="vt1">Vrapues 1 — 13:00–14:00 / Трчач 1</span>
+  </div>
+  <div id="vslot1"></div>
+  <button class="add-vrap-btn" onclick="openAdd(1)" id="abtn1">+ Shto / Додај</button>
+  <div class="vrap-title" style="margin-top:1.25rem">
+    <span style="width:11px;height:11px;background:#534AB7;border-radius:3px;display:inline-block;flex-shrink:0"></span>
+    <span id="vt2">Vrapues 2 — 14:00–15:00 / Трчач 2</span>
+  </div>
+  <div id="vslot2"></div>
+  <button class="add-vrap-btn" onclick="openAdd(2)" id="abtn2">+ Shto / Додај</button>
+</div>
+
+<div class="add-form" id="add-form">
+  <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:10px" id="form-title">Shto vrapues</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <input type="text" id="v-name" placeholder="Emri / Ime">
+    <select id="v-day"></select>
+    <button class="add-vrap-btn" style="border-style:solid;background:#EEEDFE" onclick="saveVrap()">Ruaj / Зачувај</button>
+    <button class="add-vrap-btn" onclick="closeAdd()">Anulo</button>
+  </div>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<!-- MODAL -->
+<div class="moverlay" id="shal-modal">
+  <div class="mbox">
+    <h3 id="shal-modal-title"></h3>
+    <div class="mlist" id="shal-modal-list"></div>
+    <button class="mcancel" onclick="closeShalModal()">Откажи / Anulo</button>
+  </div>
+</div>
+
+<script>
+const EMPS=[
+  {n:'Meli', av:'ME',bg:'#FAD8EC',tc:'#6B1535',ck:'meli'},
+  {n:'Fuku', av:'FU',bg:'#E4E2FD',tc:'#2E2680',ck:'fuku'},
+  {n:'Kate', av:'KA',bg:'#C4EEDB',tc:'#064D37',ck:'kate'},
+  {n:'Hane', av:'HA',bg:'#FADFBC',tc:'#7A3F00',ck:'hane'},
+  {n:'Ivona',av:'IV',bg:'#D0E8F8',tc:'#0B3A6E',ck:'ivona'},
+];
+
+// Shifts — TM (меѓусмена) е заменета со T2 = 10:00-17:00
+const S={
+  T1:{
+    al:'Ndërrimi 1', mk:'Смена 1',
+    bot:'08:00–15:00',
+    css:'pill-T1', dot:'#E8207D',
+    breaks_al:[],
+    breaks_mk:[],
+    h:7
+  },
+  T2:{
+    al:'Ndërrimi 2', mk:'Смена 2',
+    bot:'10:00–17:00',
+    css:'pill-T2', dot:'#0D2D6B',
+    breaks_al:[],
+    breaks_mk:[],
+    h:7
+  },
+  SAT:{
+    al:'E Shtunë', mk:'Сабота',
+    bot:'09:00–15:00',
+    css:'pill-SAT', dot:'#1279A5',
+    breaks_al:[], breaks_mk:[],
+    h:6
+  },
+  TM:{
+    al:'Ndërrimi mes.', mk:'Меѓусмена',
+    bot:'10:00–17:00',
+    css:'pill-TM', dot:'#B8860B',
+    breaks_al:[], breaks_mk:[],
+    h:7
+  },
+  OFF:{
+    al:'Pushim', mk:'Одмор',
+    bot:'',
+    css:'pill-OFF', dot:'#9A9890',
+    breaks_al:[], breaks_mk:[],
+    h:0
+  },
+};
+
+const DOTS={T1:'#E8207D',T2:'#0D2D6B',SAT:'#1279A5',OFF:'#9A9890'};
+const AL_DAYS=['Hën','Mar','Mër','Enj','Pre','Sht','Die'];
+const MK_DAYS=['Пон','Вто','Сре','Чет','Пет','Саб','Нед'];
+const AL_FULL=['E Hënë','E Martë','E Mërkurë','E Enjte','E Premte','E Shtunë','E Diel'];
+const MK_FULL=['Понеделник','Вторник','Среда','Четврток','Петок','Сабота','Недела'];
+
+function nextMon(){const d=new Date();const wd=d.getDay();d.setDate(d.getDate()+(wd===0?1:8-wd));d.setHours(0,0,0,0);return d;}
+const mon=nextMon();
+const days=Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
+const fmt=d=>`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
+document.getElementById('week-range').textContent=`${fmt(days[0])} – ${fmt(days[6])} ${days[6].getFullYear()} · Makedonski Telekom Kičevo`;
+
+const data={};
+EMPS.forEach(e=>{data[e.n]={};days.forEach((_,i)=>{data[e.n][i]=i===5?'SAT':i===6?'OFF':null;});});
+
+// Original prefill — TM entries become T2 (смена 2 = 10-17)
+const prefill={
+  'Ivona':{0:'T2',1:'T2',2:'T1',3:'T1'},
+  'Kate': {0:'T2',1:'T1',2:'T2',3:'T1'},
+  'Hane': {0:'T1',1:'T2',2:'T1',3:'T2',4:'T1'},
+  'Fuku': {0:'T1',1:'T2',2:'T2',3:'T2',4:'T1'},
+  'Meli': {0:'T2',1:'T1',2:'T2',3:'T2',4:'T1'},
+};
+Object.entries(prefill).forEach(([emp,obj])=>Object.entries(obj).forEach(([di,sh])=>{data[emp][parseInt(di)]=sh;}));
+
+const shalterData={
+  0:{Hane:1,Kate:2,Ivona:3,Fuku:4},
+  1:{Kate:1,Ivona:2,Hane:3,Meli:4},
+  2:{Fuku:1,Hane:2,Ivona:3,Meli:4},
+  3:{Meli:1,Ivona:2,Kate:3,Hane:4},
+  4:{Hane:1,Fuku:3,Meli:4},
+};
+
+function getShalter(empName,di){if(di>4)return null;return shalterData[di]?.[empName]||null;}
+function setShalter(empName,di,num){
+  if(di>4)return;
+  if(!shalterData[di])shalterData[di]={};
+  if(num===null){delete shalterData[di][empName];}
+  else{Object.keys(shalterData[di]).forEach(k=>{if(shalterData[di][k]===num&&k!==empName)delete shalterData[di][k];});shalterData[di][empName]=num;}
+}
+
+let mode='T1', lang='both', addingSlot=0;
+const vrapList={1:[
+  {name:'Ivona',day:0},{name:'Fuku',day:1},{name:'Kate',day:2},{name:'Hane',day:0}
+],2:[
+  {name:'Hane',day:0},{name:'Meli',day:1},{name:'Ivona',day:2},{name:'Kate',day:-1}
+]};
+let modalEmp=null,modalDay=null;
+
+const L={
+  both:{
+    title:'Orar javor / Неделен распоред',
+    selLbl:'Zgjedh / Избери:',
+    c1:'Ndërrimi 1 / Смена 1 · 08–15',
+    c2:'Ndërrimi 2 / Смена 2 · 10–17',
+    c3:'Sab / Саб · 09–15',
+    c4:'Pushim / Одмор',
+    vt1:'Vrapues 1 — 13:00–14:00 / Трчач 1',
+    vt2:'Vrapues 2 — 14:00–15:00 / Трчач 2',
+    abtn:'+ Shto / Додај',
+    lg1:'Ndërrimi 1 / Смена 1 · 08:00–15:00',
+    lg2:'Ndërrimi 2 / Смена 2 · 10:00–17:00',
+    lg3:'E Shtunë / Саб · 09:00–15:00',
+    lg4:'Pushim / Одмор',
+    lg5:'Vrapues / Трчач · 13–15',
+    lg6:'Banka / Шалтер nr.',
+    bp_title:'Паузи / Pauzat',
+    bp_s1a:'Смена 1 — Пауза 1 / Ndërrimi 1 — Pauzë 1',
+    bp_s1b:'Смена 1 — Пауза 2 / Ndërrimi 1 — Pauzë 2',
+    bp_mid:'Меѓусмена Пауза / Pauzë ndërrimi',
+    bp_s2a:'Смена 2 — Пауза 1 / Ndërrimi 2 — Pauzë 1',
+    bp_s2b:'Смена 2 — Пауза 2 / Ndërrimi 2 — Pauzë 2',
+  },
+  al:{
+    title:'Orar javor',
+    selLbl:'Zgjedh:',
+    c1:'Ndërrimi 1 · 08–15',
+    c2:'Ndërrimi 2 · 10–17',
+    c3:'E Shtunë · 09–15',
+    c4:'Pushim',
+    vt1:'Vrapues 1 — 13:00–14:00',
+    vt2:'Vrapues 2 — 14:00–15:00',
+    abtn:'+ Shto vrapues',
+    lg1:'Ndërrimi 1 · 08:00–15:00',
+    lg2:'Ndërrimi 2 · 10:00–17:00',
+    lg3:'E Shtunë · 09:00–15:00',
+    lg4:'Pushim',
+    lg5:'Vrapues · 13–15',
+    lg6:'Banka nr.',
+    bp_title:'Pauzat',
+    bp_s1a:'Ndërrimi 1 — Pauzë 1',
+    bp_s1b:'Ndërrimi 1 — Pauzë 2',
+    bp_mid:'Pauzë ndërrimi',
+    bp_s2a:'Ndërrimi 2 — Pauzë 1',
+    bp_s2b:'Ndërrimi 2 — Pauzë 2',
+  },
+  mk:{
+    title:'Неделен распоред',
+    selLbl:'Избери:',
+    c1:'Смена 1 · 08–15',
+    c2:'Смена 2 · 10–17',
+    c3:'Саб · 09–15',
+    c4:'Одмор',
+    vt1:'Трчач 1 — 13:00–14:00',
+    vt2:'Трчач 2 — 14:00–15:00',
+    abtn:'+ Додај трчач',
+    lg1:'Смена 1 · 08:00–15:00',
+    lg2:'Смена 2 · 10:00–17:00',
+    lg3:'Саб · 09:00–15:00',
+    lg4:'Одмор',
+    lg5:'Трчач · 13–15',
+    lg6:'Шалтер бр.',
+    bp_title:'Паузи',
+    bp_s1a:'Смена 1 — Пауза 1',
+    bp_s1b:'Смена 1 — Пауза 2',
+    bp_mid:'Меѓусмена Пауза',
+    bp_s2a:'Смена 2 — Пауза 1',
+    bp_s2b:'Смена 2 — Пауза 2',
+  },
+};
+
+function setLang(l,btn){lang=l;document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');applyLang();render();}
+
+function applyLang(){
+  const t=L[lang];
+  document.getElementById('main-title').textContent=t.title;
+  document.getElementById('sel-lbl').textContent=t.selLbl;
+  ['c1','c2','c3','c4','vt1','vt2','lg1','lg2','lg3','lg4','lg5','lg6'].forEach(k=>{const el=document.getElementById(k);if(el)el.textContent=t[k];});
+  document.getElementById('abtn1').textContent=t.abtn;
+  document.getElementById('abtn2').textContent=t.abtn;
+  // break panel
+  document.getElementById('bp-title').textContent=t.bp_title;
+  document.getElementById('bp-s1a').textContent=t.bp_s1a;
+  document.getElementById('bp-s1b').textContent=t.bp_s1b;
+  document.getElementById('bp-mid').textContent=t.bp_mid;
+  document.getElementById('bp-s2a').textContent=t.bp_s2a;
+  document.getElementById('bp-s2b').textContent=t.bp_s2b;
+}
+
+function setMode(code,btn){
+  mode=code;
+  document.querySelectorAll('.ctrl').forEach(b=>{b.classList.remove('sel');b.style.borderColor='transparent';});
+  btn.classList.add('sel');btn.style.borderColor=DOTS[code];
+}
+function toggle(emp,di){data[emp][di]=(data[emp][di]===mode)?null:mode;render();}
+
+function shalterLabel(){return lang==='mk'?'Шалт.':'Banka';}
+
+function render(){
+  const thead=document.getElementById('thead');
+  const tbody=document.getElementById('tbody');
+
+  const dayLabel=(d,i)=>{
+    const al=AL_DAYS[i],mk=MK_DAYS[i],dt=fmt(d);
+    if(lang==='al')return `<div style="font-size:11px;color:#888;font-weight:600">${al}</div><div style="font-size:13px;font-weight:700">${dt}</div>`;
+    if(lang==='mk')return `<div style="font-size:11px;color:#888;font-weight:600">${mk}</div><div style="font-size:13px;font-weight:700">${dt}</div>`;
+    return `<div style="font-size:11px;color:#888;font-weight:600">${al}/${mk}</div><div style="font-size:13px;font-weight:700">${dt}</div>`;
+  };
+
+  thead.innerHTML='<tr><th style="text-align:left;padding-left:12px"></th>'
+    +days.map((d,i)=>`<th style="opacity:${i===5?.65:i===6?.45:1}">${dayLabel(d,i)}</th>`).join('')
+    +'</tr>';
+
+  tbody.innerHTML=EMPS.map(emp=>{
+    const cells=days.map((_,di)=>{
+      const sh=data[emp.n][di];
+      const op=di===5?.65:di===6?.45:1;
+      const stOp=op<1?`opacity:${op};`:'';
+      const shalNum=getShalter(emp.n,di);
+      const shl=shalterLabel();
+
+      if(sh){
+        const s=S[sh];
+        const topLbl=lang==='mk'?s.mk:s.al;
+        const botLbl=s.bot||(lang==='mk'?'Одмор':'Pushim');
+        const breaks=lang==='mk'?s.breaks_mk:s.breaks_al;
+        const breaksHTML=breaks.length
+          ?`<div class="cp-breaks">${breaks.map(b=>`<div class="cp-break">${b}</div>`).join('')}</div>`:'';
+
+        const shalBadge = di<=4
+          ? (shalNum
+            ? `<button class="cp-shal sc-${emp.ck}" onclick="openShalModal('${emp.n}',${di},event)">${shl} ${shalNum} ✎</button>`
+            : `<button class="cp-shal-empty" onclick="openShalModal('${emp.n}',${di},event)">+ ${shl}</button>`)
+          : '';
+
+        return `<td class="cell" style="${stOp}">
+          <div class="cpill ${s.css}">
+            <span class="cp-top" onclick="toggle('${emp.n}',${di})">${topLbl}</span>
+            <span class="cp-mid" onclick="toggle('${emp.n}',${di})">${botLbl}</span>
+            ${breaksHTML}
+            ${shalBadge}
+          </div>
+        </td>`;
+      }
+
+      const shalBadge2 = di<=4
+        ? (shalNum ? `<button class="cp-shal sc-${emp.ck}" onclick="openShalModal('${emp.n}',${di},event)">${shl} ${shalNum} ✎</button>` : '')
+        : '';
+
+      return `<td class="cell" style="${stOp}">
+        <div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px">
+          <button class="add-btn" onclick="toggle('${emp.n}',${di})">+</button>
+          ${shalBadge2}
+        </div>
+      </td>`;
+    }).join('');
+
+    return `<tr>
+      <td class="emp-td">
+        <div class="emp-row">
+          <div class="av" style="background:${emp.bg};color:${emp.tc}">${emp.av}</div>
+          <span class="en">${emp.n}</span>
+        </div>
+      </td>${cells}
+    </tr>`;
+  }).join('');
+
+  renderVrap();
+  renderStats();
+}
+
+function openShalModal(empName,di,evt){
+  evt.stopPropagation();
+  modalEmp=empName;modalDay=di;
+  const current=getShalter(empName,di);
+  const shl=lang==='mk'?'Шалтер':'Banka';
+  const dayLbl=lang==='mk'?MK_FULL[di]:lang==='al'?AL_FULL[di]:`${AL_FULL[di]} / ${MK_FULL[di]}`;
+  document.getElementById('shal-modal-title').textContent=`${empName} · ${dayLbl}`;
+  const list=document.getElementById('shal-modal-list');
+  const emp=EMPS.find(e=>e.n===empName);
+  list.innerHTML=[1,2,3,4].map(num=>{
+    const occupied=Object.entries(shalterData[di]||{}).find(([k,v])=>v===num&&k!==empName);
+    const ocName=occupied?` (${occupied[0]})`:'';
+    const isCurrent=current===num;
+    return `<button class="mopt ec-${emp.ck}" style="${isCurrent?'outline:2px solid #2574C4;':''}" onclick="assignShal(${num})">${shl} ${num}${ocName}${isCurrent?' ✓':''}</button>`;
+  }).join('')+`<button class="mopt mopt-rem" onclick="assignShal(null)">— ${lang==='mk'?'Отстрани':lang==='al'?'Hiq':'Hiq / Отстрани'}</button>`;
+  document.getElementById('shal-modal').classList.add('open');
+}
+function assignShal(num){setShalter(modalEmp,modalDay,num);closeShalModal();render();}
+function closeShalModal(){document.getElementById('shal-modal').classList.remove('open');modalEmp=null;modalDay=null;}
+
+function renderVrap(){
+  [1,2].forEach(slot=>{
+    const sec=document.getElementById('vslot'+slot);
+    if(!sec)return;
+    if(!vrapList[slot].length){sec.innerHTML='';return;}
+    sec.innerHTML=vrapList[slot].map((v,idx)=>{
+      const dayLbl=v.day===-1
+        ?(lang==='mk'?'Секој ден':lang==='al'?'Çdo ditë':'Çdo ditë / Секој ден')
+        :(lang==='mk'?MK_FULL[v.day]:lang==='al'?AL_FULL[v.day]:`${AL_FULL[v.day]} / ${MK_FULL[v.day]}`);
+      return `<div class="vrap-row"><div class="vrap-item"><span class="vname">${v.name}</span><span style="font-size:11px;opacity:.7;margin-left:5px">${dayLbl}</span><span class="vrap-del" onclick="removeVrap(${slot},${idx})">✕</span></div></div>`;
+    }).join('');
+  });
+}
+
+function openAdd(slot){
+  addingSlot=slot;
+  document.getElementById('add-form').style.display='block';
+  const lbl=lang==='mk'?`Додај трчач ${slot}`:lang==='al'?`Shto vrapues ${slot}`:`Shto vrapues ${slot} / Додај трчач ${slot}`;
+  document.getElementById('form-title').textContent=lbl;
+  document.getElementById('v-name').value='';
+  const sel=document.getElementById('v-day');sel.innerHTML='';
+  const allOpt=document.createElement('option');allOpt.value=-1;
+  allOpt.textContent=lang==='mk'?'Секој ден':lang==='al'?'Çdo ditë':'Çdo ditë / Секој ден';
+  sel.appendChild(allOpt);
+  days.forEach((d,i)=>{
+    const o=document.createElement('option');o.value=i;
+    const lbl=lang==='mk'?`${MK_FULL[i]} ${fmt(d)}`:lang==='al'?`${AL_FULL[i]} ${fmt(d)}`:`${AL_FULL[i]} / ${MK_FULL[i]} ${fmt(d)}`;
+    o.textContent=lbl;sel.appendChild(o);
+  });
+}
+function closeAdd(){document.getElementById('add-form').style.display='none';}
+function saveVrap(){
+  const name=document.getElementById('v-name').value.trim();
+  if(!name)return;
+  const day=parseInt(document.getElementById('v-day').value);
+  vrapList[addingSlot].push({name,day});
+  closeAdd();renderVrap();renderStats();
+}
+function removeVrap(slot,idx){vrapList[slot].splice(idx,1);renderVrap();renderStats();}
+
+function renderStats(){
+  let tot=0,t1=0,t2=0;
+  EMPS.forEach(e=>days.forEach((_,di)=>{
+    const sh=data[e.n][di];
+    if(!sh)return;
+    tot+=S[sh].h;
+    if(sh==='T1')t1++;
+    if(sh==='T2')t2++;
+  }));
+  const v1=vrapList[1].length,v2=vrapList[2].length;
+  const lbl=(a,m)=>lang==='mk'?m:lang==='al'?a:`${a} / ${m}`;
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="sl">${lbl('Orë gjithsej','Вкупно часови')}</div><div class="sv">${tot}</div></div>
+    <div class="stat"><div class="sl">${lbl('Ndërrimi 1','Смена 1')}</div><div class="sv">${t1}</div></div>
+    <div class="stat"><div class="sl">${lbl('Ndërrimi 2','Смена 2')}</div><div class="sv">${t2}</div></div>
+    <div class="stat"><div class="sl">${lbl('Vrapues 1 (13–14)','Трчач 1 (13–14)')}</div><div class="sv" style="color:#534AB7">${v1}</div></div>
+    <div class="stat"><div class="sl">${lbl('Vrapues 2 (14–15)','Трчач 2 (14–15)')}</div><div class="sv" style="color:#2E2680">${v2}</div></div>
+  `;
+}
+
+function exportCSV(){
+  let csv='Вработен,'+days.map((_,i)=>lang==='mk'?MK_FULL[i]:AL_FULL[i]).join(',')+'\n';
+  EMPS.forEach(e=>{
+    const row=days.map((_,di)=>{
+      const sh=data[e.n][di];
+      const sn=getShalter(e.n,di);
+      const shLbl=sh?(lang==='mk'?S[sh].mk:S[sh].al):'';
+      return sn?`${shLbl} Шалт.${sn}`:shLbl;
+    });
+    csv+=e.n+','+row.join(',')+'\n';
+  });
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='raspored.csv';a.click();
+}
+
+applyLang();
+render();
+
+// ══════════════════════════════════════════
+// НЕДЕЛА / МЕСЕЦ / ГОДИНА + READ-ONLY
+// ══════════════════════════════════════════
+const MK_MONTHS_V = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
+const MK_DAYS_V   = ['Пон','Вт','Сре','Чет','Пет','Саб','Нед'];
+const IS_RO = new URLSearchParams(location.search).get('readonly')==='1';
+let viewMode = 'week';
+let viewMonthDate = new Date();
+let viewYearDate  = new Date();
+
+function setView(v) {
+  viewMode = v;
+  // Show/hide panels
+  const weekEls = document.querySelectorAll('.tbl-wrap,.controls,.legend-wrap,.breaks-panel,.vrap-section');
+  weekEls.forEach(el => el.style.display = v==='week' ? '' : 'none');
+  document.getElementById('monthView').style.display = v==='month' ? '' : 'none';
+  document.getElementById('yearView').style.display  = v==='year'  ? '' : 'none';
+  // Update buttons
+  ['week','month','year'].forEach(x => {
+    const b = document.getElementById('vb-'+x);
+    if(!b) return;
+    const active = x===v;
+    b.style.borderColor = active ? '#E8207D' : '#ddd';
+    b.style.background  = active ? '#fde8f2' : '#fff';
+    b.style.color       = active ? '#E8207D' : '#555';
+    b.style.fontWeight  = active ? '700' : '500';
+  });
+  if(v==='month') renderMonthView();
+  if(v==='year')  renderYearView();
+}
+
+function getMonday(d) {
+  const c2=new Date(d), wd=c2.getDay()||7;
+  c2.setDate(c2.getDate()-wd+1); c2.setHours(0,0,0,0); return c2;
+}
+function get7Days(monday) {
+  return Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(d.getDate()+i);return d;});
+}
+function fmtD(d) { return d.getDate()+'.'+(d.getMonth()+1)+'.'; }
+
+function buildMiniTable(days7) {
+  const isRO = IS_RO;
+  let h = `<div style="overflow-x:auto;margin-bottom:4px"><table style="width:100%;border-collapse:collapse;min-width:500px;font-size:11px">
+    <thead><tr style="background:#f8f9fc">
+      <th style="text-align:left;padding:5px 8px;border-bottom:2px solid #e8eaf0;min-width:75px;font-size:10px">Вработен</th>`;
+  days7.forEach((d,i) => {
+    const today = d.toDateString()===new Date().toDateString();
+    h += `<th style="text-align:center;padding:4px 2px;border-bottom:2px solid #e8eaf0;background:${today?'#fde8f2':'#f8f9fc'};font-size:9px">
+      <div style="font-weight:700;color:${today?'#E8207D':'#444'}">${MK_DAYS_V[i]}</div>
+      <div style="color:#999;font-size:8px">${fmtD(d)}</div></th>`;
+  });
+  h += '</tr></thead><tbody>';
+  EMPS.forEach(emp => {
+    h += `<tr style="border-bottom:1px solid #f0f0f0">
+      <td style="padding:4px 8px">
+        <div style="display:flex;align-items:center;gap:5px">
+          <div style="width:22px;height:22px;border-radius:50%;background:${emp.bg};color:${emp.tc};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">${emp.av}</div>
+          <span style="font-size:10px;font-weight:600">${emp.n}</span>
+        </div></td>`;
+    days7.forEach((_,di) => {
+      const sk = data[emp.n]?.[di];
+      const sh = (sk && S[sk]) ? S[sk] : S.OFF;
+      const shal = getShalter(emp.n, di);
+      h += `<td style="text-align:center;padding:3px 2px">
+        <div class="${sh.css}" style="border-radius:8px;padding:4px 3px;display:inline-flex;flex-direction:column;align-items:center;min-width:62px;border:2px solid transparent">
+          <div style="font-size:9px;font-weight:700">${lang==='mk'?sh.mk:lang==='al'?sh.al:sh.mk+'/'+sh.al}</div>
+          ${sh.bot?`<div style="font-size:7px;opacity:.85">${sh.bot}</div>`:''}
+          ${shal?`<div style="font-size:8px;background:rgba(255,255,255,.3);border-radius:20px;padding:1px 5px;margin-top:2px;font-weight:700">🏪${shal}</div>`:''}
+        </div></td>`;
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+
+function renderMonthView() {
+  const yr = viewMonthDate.getFullYear(), mo = viewMonthDate.getMonth();
+  document.getElementById('monthTitle').textContent = MK_MONTHS_V[mo] + ' ' + yr;
+  const first = new Date(yr, mo, 1);
+  const wd = first.getDay()||7;
+  let ws = new Date(first); ws.setDate(first.getDate()-wd+1);
+  let html = '';
+  let safety = 0;
+  while(safety++ < 7) {
+    const days7 = get7Days(ws);
+    if(days7[0].getMonth() > mo && days7[0].getFullYear() >= yr) break;
+    const hasMonth = days7.some(d => d.getMonth()===mo);
+    if(hasMonth) {
+      html += `<div style="margin-bottom:14px">
+        <div style="font-size:10px;font-weight:700;color:#888;margin-bottom:4px">${fmtD(days7[0])} — ${fmtD(days7[6])}</div>
+        ${buildMiniTable(days7)}
+      </div>`;
+    }
+    ws.setDate(ws.getDate()+7);
+    if(ws.getMonth()>mo && ws.getFullYear()>=yr) break;
+  }
+  document.getElementById('monthContent').innerHTML = html || '<div style="color:#888;text-align:center;padding:20px">Нема распоред за овој месец</div>';
+}
+
+function shiftMonth(d) {
+  viewMonthDate.setMonth(viewMonthDate.getMonth()+d);
+  renderMonthView();
+}
+
+function renderYearView() {
+  const yr = viewYearDate.getFullYear();
+  document.getElementById('yearTitle').textContent = yr + '. година';
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px">';
+  MK_MONTHS_V.forEach((mn, i) => {
+    html += `<div onclick="goToMonthView(${yr},${i})" style="background:#f8f9fc;border:1.5px solid #e8eaf0;border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .12s" onmouseover="this.style.borderColor='#E8207D';this.style.background='#fde8f2'" onmouseout="this.style.borderColor='#e8eaf0';this.style.background='#f8f9fc'">
+      <div style="font-size:12px;font-weight:700;color:#E8207D">${mn}</div>
+      <div style="font-size:10px;color:#888;margin-top:3px">${yr}</div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('yearContent').innerHTML = html;
+}
+
+function shiftYear(d) {
+  viewYearDate.setFullYear(viewYearDate.getFullYear()+d);
+  renderYearView();
+}
+
+function goToMonthView(yr, moIdx) {
+  viewMonthDate = new Date(yr, moIdx, 1);
+  setView('month');
+}
+
+// READ-ONLY setup
+window.addEventListener('DOMContentLoaded', () => {
+  if(IS_RO) {
+    document.getElementById('roBadge').style.display = 'inline-flex';
+    // Disable all edit elements after render
+    setTimeout(() => {
+      document.querySelectorAll(
+        '.ctrl,.cp-shal,.cp-shal-empty,.add-btn,.add-vrap-btn,.vrap-del,'+
+        '[onclick*="toggle("],[onclick*="openShal"],[onclick*="openAdd"],[onclick*="setMode("],[onclick*="assignShal"]'
+      ).forEach(el => {
+        el.style.pointerEvents = 'none';
+        el.style.cursor = 'default';
+        if(el.tagName==='BUTTON' && !el.id.startsWith('vb-') && !el.id.startsWith('lang') && el.className!=='lbtn') {
+          el.style.opacity = '.5';
+        }
+      });
+      // Remove edit onclic ks
+      document.querySelectorAll('[onclick]').forEach(el => {
+        const oc = el.getAttribute('onclick');
+        if(oc && (oc.includes('toggle(') || oc.includes('openShal') || oc.includes('openAdd') || oc.includes('setMode(') || oc.includes('assignShal'))) {
+          el.removeAttribute('onclick');
+        }
+      });
+    }, 400);
+  }
+});
+
+</script>
+</body>
+</html>
