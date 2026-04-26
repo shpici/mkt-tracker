@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<title>MKT Sales Pro — Кичево</title>
+<title>MKT Sales Pro — Кичево <span style="background:var(--aml);color:var(--am);border-radius:20px;padding:1px 7px;font-weight:700;font-size:10px;vertical-align:middle">🧪 DEMO</span></title>
 <style>
 :root{--mg:#C8006E;--mgd:#8a004c;--mgl:#fbe8f2;--gr:#2e7d32;--grl:#e8f5e9;--bl:#1565c0;--bll:#e3f2fd;--am:#e65100;--aml:#fff3e0;--rd:#c62828;--rdl:#ffebee;--bg:#f4f4f6;--sur:#fff;--s2:#f0f0f3;--s3:#e8e8ec;--brd:#dddde5;--txt:#16162a;--t2:#55556a;--t3:#9898b0;--r:10px;--rs:6px;--rx:4px;--sh:0 2px 8px rgba(0,0,0,.08)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -204,6 +204,147 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 /* PRINT */
 @media print{.hdr,.nav,.tabs,.btn,.hbtn,#mgrNav,#mgrTabs,.no-print{display:none!important}.card{margin:0;border:none;box-shadow:none}body{background:#fff;color:#000}}
 @media(max-width:600px){.hdr{padding:7px 10px}.card{margin:0 6px 10px;padding:10px}.tabs{padding:7px 6px 0}.nav{padding:5px 6px}}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0f2f8;color:#111;padding:1.2rem}
+.wrap{max-width:1100px;margin:0 auto;padding:1rem 0}
+
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1rem;background:#fff;border-radius:16px;padding:16px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.ttl{font-size:17px;font-weight:700;color:#111}
+.sub{font-size:12px;color:#666;margin-top:3px}
+.lang-sw{display:flex;gap:5px}
+.lbtn{font-size:12px;padding:6px 15px;border-radius:999px;border:1.5px solid #ccc;background:#f5f5f5;color:#555;cursor:pointer;font-weight:600;transition:all .15s}
+.lbtn.act{background:#E8207D;color:#fff;border-color:#E8207D}
+.lbtn:hover:not(.act){background:#eee}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem;background:#fff;border-radius:14px;padding:12px 18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.leg{display:flex;align-items:center;gap:7px;font-size:12px;color:#333;font-weight:500}
+.ldot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;background:#fff;border-radius:14px;padding:10px 16px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.ctrl{font-size:12px;padding:6px 13px;border-radius:999px;border:2px solid transparent;background:#f0f2f8;color:#555;cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:600;transition:all .15s}
+.ctrl:hover{background:#e4e7f0}
+.ctrl.sel{color:#111;background:#fff}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.tbl-wrap{overflow-x:auto;background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:4px}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead th{font-size:12px;font-weight:700;color:#444;text-align:center;padding:10px 4px;border-bottom:2px solid #e8eaf0;background:#f8f9fc}
+thead th:first-child{text-align:left;padding-left:12px;width:110px;border-radius:12px 0 0 0}
+thead th:last-child{border-radius:0 12px 0 0}
+tbody tr{border-bottom:1.5px solid #e8eaf0}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafbff}
+.emp-td{padding:10px 8px 10px 12px;vertical-align:middle;min-width:110px}
+.emp-row{display:flex;align-items:center;gap:8px}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.en{font-size:14px;font-weight:700;color:#111}
+.cell{padding:6px 4px;vertical-align:middle;text-align:center}
+
+/* MAIN PILL — bigger, bolder */
+.cpill{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;padding:8px 8px 6px;min-width:88px;min-height:72px;border:2px solid transparent;position:relative;transition:transform .1s}
+.cpill:hover{transform:scale(1.03)}
+.cp-top{font-size:13px;font-weight:700;line-height:1.2;cursor:pointer}
+.cp-mid{font-size:11px;margin-top:2px;font-weight:600;cursor:pointer;opacity:.9}
+
+/* BREAK ROWS inside pill */
+.cp-breaks{display:flex;flex-direction:column;gap:2px;margin-top:5px;width:100%}
+.cp-break{font-size:9.5px;font-weight:600;padding:2px 5px;border-radius:6px;text-align:center;opacity:.92}
+
+/* SHALTER badge */
+.cp-shal{display:inline-flex;align-items:center;gap:3px;margin-top:5px;padding:3px 7px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:none;transition:opacity .12s;white-space:nowrap}
+.cp-shal:hover{opacity:.7}
+.cp-shal-empty{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;color:#999;border:1.5px dashed #bbb;cursor:pointer;background:transparent;margin-top:5px;white-space:nowrap;font-weight:600}
+.cp-shal-empty:hover{border-color:#666;color:#555}
+
+.add-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:2px dashed #ccc;background:none;color:#bbb;cursor:pointer;font-size:18px;font-weight:300}
+.add-btn:hover{background:#f0f2f8;border-color:#aaa;color:#888}
+
+/* employee shalter badge colors */
+.sc-ivona{background:#C2DCF5;color:#0B3A6E}
+.sc-kate{background:#B5E3C8;color:#064D37}
+.sc-hane{background:#F2CEAA;color:#7A3F00}
+.sc-fuku{background:#D5D2FB;color:#2E2680}
+.sc-meli{background:#F5C8DD;color:#6B1535}
+
+/* SHIFT COLOR PALETTES */
+/* T1 — Magenta */
+.pill-T1{background:#E8207D;border-color:#C01566;color:#fff}
+.pill-T1 .cp-top{color:#fff}
+.pill-T1 .cp-mid{color:#ffd6eb}
+.pill-T1 .cp-break{background:rgba(255,255,255,.2);color:#fff}
+/* T2 — Dark Blue */
+.pill-T2{background:#0D2D6B;border-color:#081E4A;color:#fff}
+.pill-T2 .cp-top{color:#fff}
+.pill-T2 .cp-mid{color:#b8ccf0}
+.pill-T2 .cp-break{background:rgba(255,255,255,.15);color:#fff}
+/* TM — Oker/Amber */
+.pill-TM{background:#B8860B;border-color:#8B6508;color:#fff}
+.pill-TM .cp-top{color:#fff}
+.pill-TM .cp-mid{color:#ffe9a0}
+.pill-TM .cp-break{background:rgba(255,255,255,.18);color:#fff}
+/* SAT — Teal */
+.pill-SAT{background:#1279A5;border-color:#0A5A7E;color:#fff}
+.pill-SAT .cp-top{color:#fff}
+.pill-SAT .cp-mid{color:#c8e9f8}
+.pill-SAT .cp-break{background:rgba(255,255,255,.18);color:#fff}
+/* OFF — Grey */
+.pill-OFF{background:#9A9890;border-color:#7E7C75;color:#fff}
+.pill-OFF .cp-top{color:#fff}
+.pill-OFF .cp-mid{color:#e8e8e4}
+.pill-OFF .cp-break{display:none}
+
+.vrap-section{margin-top:1.5rem;background:#fff;border-radius:16px;padding:16px 20px;box-shadow:0 1px 8px rgba(0,0,0,.07)}
+.vrap-title{font-size:13px;font-weight:700;color:#2E2680;margin-bottom:.75rem;display:flex;align-items:center;gap:7px}
+.vrap-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.vrap-item{display:flex;align-items:center;gap:6px;background:#EEEDFE;border:1.5px solid #AFA9EC;border-radius:10px;padding:6px 10px;font-size:12px;color:#2E2680}
+.vname{font-weight:700}
+.vrap-del{cursor:pointer;opacity:.5;font-size:11px;margin-left:3px}
+.vrap-del:hover{opacity:1}
+.add-vrap-btn{font-size:12px;padding:5px 12px;border-radius:999px;border:2px dashed #7F77DD;background:none;color:#534AB7;cursor:pointer;font-weight:600}
+.add-vrap-btn:hover{background:#EEEDFE}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-top:1.25rem}
+.stat{background:#f0f2f8;border-radius:10px;padding:10px 13px;border:1.5px solid #e2e5ef}
+.sl{font-size:11px;color:#555;margin-bottom:4px;font-weight:500}
+.sv{font-size:21px;font-weight:700;color:#111}
+
+.exp-btn{font-size:12px;padding:6px 14px;border-radius:10px;border:1.5px solid #ccc;background:#fff;color:#555;cursor:pointer;font-weight:600}
+.exp-btn:hover{background:#f0f2f8}
+
+select{font-size:12px;padding:5px 8px;border-radius:10px;border:1.5px solid #ccc;background:#fff;color:#111;cursor:pointer}
+input[type=text]{font-size:12px;padding:5px 10px;border-radius:10px;border:1.5px solid #ccc;background:#fff;color:#111;width:115px}
+.add-form{display:none;margin-top:1rem;padding:14px;border-radius:14px;border:1.5px solid #e5e5e5;background:#f9f9fb}
+
+/* MODAL */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+.moverlay.open{display:flex}
+.mbox{background:#fff;border-radius:16px;padding:20px;width:260px;max-width:92vw;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.mbox h3{font-size:14px;font-weight:700;margin:0 0 14px;color:#111}
+.mlist{display:flex;flex-direction:column;gap:8px}
+.mopt{padding:10px 14px;border-radius:10px;font-size:13px;cursor:pointer;font-weight:600;border:none;text-align:left;transition:opacity .12s}
+.mopt:hover{opacity:.75}
+.mopt-rem{background:#f0f2f8;color:#555}
+.mcancel{margin-top:12px;width:100%;padding:9px;border-radius:10px;font-size:13px;cursor:pointer;background:#f0f2f8;color:#555;border:1.5px solid #ddd;font-weight:600}
+
+.ec-ivona{background:#D0E8F8;color:#0B3A6E}
+.ec-kate{background:#C4EEDB;color:#064D37}
+.ec-hane{background:#FADFBC;color:#7A3F00}
+.ec-fuku{background:#E4E2FD;color:#2E2680}
+.ec-meli{background:#FAD8EC;color:#6B1535}
+
+/* break info section below table */
+.breaks-panel{margin-top:1rem;background:#fff;border-radius:14px;padding:14px 18px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.breaks-panel-title{font-size:13px;font-weight:700;color:#333;margin-bottom:10px}
+.breaks-grid{display:flex;flex-wrap:wrap;gap:8px}
+.break-card{border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;min-width:140px}
+.break-card .bc-label{font-size:10.5px;font-weight:600;opacity:.85;margin-bottom:2px}
+.break-card .bc-time{font-size:13px;font-weight:700}
+.bc-s1{background:#E8207D;color:#fff;border:2px solid #C01566}
+.bc-mid{background:#B8860B;color:#fff;border:2px solid #8B6508}
+.bc-s2{background:#0D2D6B;color:#fff;border:2px solid #081E4A}
+
+/* end schedule css */
 </style>
 </head>
 <body>
@@ -232,6 +373,12 @@ body.emp-mode #empView{display:block!important}
   <div class="fg"><label>Лозинка</label><input class="fi" type="password" id="lPs" placeholder="••••••••"></div>
   <button class="lbtn" id="lBtn" onclick="doLogin()">Најави се</button>
   <div class="lerr" id="lErr"></div>
+  <div style="margin-top:12px;background:var(--bll);border:1px solid #90caf9;border-radius:8px;padding:10px;font-size:11px;color:#0d47a1;line-height:1.8">
+    <b>🧪 DEMO логини:</b><br>
+    👔 <code>ilir.murati@telekom.mk</code> / <code>demo1234</code><br>
+    👩 <code>ivona@mkt-kicevo.com</code> / <code>demo1234</code><br>
+    👩 <code>melihan@mkt-kicevo.com</code> / <code>demo1234</code>
+  </div>
 
 </div>
 </div>
@@ -289,6 +436,8 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('inventory2',this)">📱 Моб.&amp;Друго</div>
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
+  <div class="tab" onclick="gotoTab('schedule',this)">🕐 Раб.Време</div>
+  <div class="tab" onclick="gotoTab('schedule',this)">🕐 Раб.Време</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -504,6 +653,26 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
+<!-- ═══ SCHEDULE ═══ -->
+<div id="tp-schedule" class="tp">
+<div class="card" style="padding:0;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--brd)">
+    <div style="font-size:13px;font-weight:700">🕐 Работно Време</div>
+    <span style="font-size:10px;color:var(--t3)">Само менаџерот може да менува</span>
+  </div>
+  <iframe src="raspored.html" style="width:100%;height:720px;border:none;display:block"></iframe>
+</div>
+</div>
+<div id="tp-schedule" class="tp">
+<div class="card" style="padding:0;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--brd)">
+    <div style="font-size:13px;font-weight:700">🕐 Работно Време</div>
+    <span style="font-size:10px;color:var(--t3)">Само менаџерот може да менува</span>
+  </div>
+  <iframe src="raspored.html" style="width:100%;height:720px;border:none;display:block"></iframe>
+</div>
+</div>
+
 <!-- ═══ TARGETS ═══ -->
 <div id="tp-targets" class="tp">
 <div class="card">
@@ -607,6 +776,8 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="empTab('history',this)">🗑 Историја</div>
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
   <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
+  <div class="tab" onclick="empTab('empschedule',this)">🕐 Смени</div>
+  <div class="tab" onclick="empTab('empschedule',this)">🕐 Смени</div>
 </div>
 <!-- EMP DAILY -->
 <div id="etp-daily" class="tp act" style="padding:0 16px 16px;margin-top:0">
@@ -728,6 +899,24 @@ body.emp-mode #empView{display:block!important}
   </div>
 </div>
 
+<!-- EMP SCHEDULE (read-only) -->
+<div id="etp-empschedule" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">🕐 Мои Смени</div>
+    <div id="empSchedPanel"></div>
+  </div>
+</div>
+
+<!-- EMP SCHEDULE -->
+<div id="etp-empschedule" class="tp" style="padding:0 16px 16px;margin-top:0">
+<div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);overflow:hidden">
+  <div style="padding:8px 14px;font-size:11px;font-weight:700;color:var(--mg);border-bottom:1px solid var(--brd);background:var(--mgl)">
+    🕐 Работно Време — <span style="font-weight:400;color:var(--t2)">само за читање</span>
+  </div>
+  <iframe src="raspored.html?readonly=1" style="width:100%;height:700px;border:none;display:block"></iframe>
+</div>
+</div>
+
 <!-- EMP ORDERS -->
 <div id="etp-emporders" class="tp" style="padding:0 16px 16px;margin-top:0">
   <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
@@ -771,80 +960,10 @@ import{getFirestore,doc,setDoc,getDoc,updateDoc,deleteDoc,collection,onSnapshot,
 const FB={apiKey:"AIzaSyD2lqOi4rm_7L-C9yO1HTGipaKGPl5UBs8",authDomain:"mkt-kicevo-tracker.firebaseapp.com",projectId:"mkt-kicevo-tracker",storageBucket:"mkt-kicevo-tracker.firebasestorage.app",messagingSenderId:"850383341068",appId:"1:850383341068:web:bf5e71d3a10cb301e9d029"};
 const fbApp=initializeApp(FB);const auth=getAuth(fbApp);const db=getFirestore(fbApp);
 
-// ── FIREBASE SAVE / LOAD ──
-async function svDay(y,m,dk){
-  showSS('sStat','💾...','sv');
-  try{
-    const data={...AS[y]?.[m]?.[dk]||{}};
-    await setDoc(doc(db,'days',dk),data);
-    showSS('sStat','✓ Зачувано','ok');
-  }catch(e){showSS('sStat','⚠ '+e.message,'er');console.error('svDay',e);}
-}
-async function svCfg(key,data){
-  try{await setDoc(doc(db,'config',key),{data:JSON.parse(JSON.stringify(data))});}
-  catch(e){console.error('svCfg',key,e);}
-}
-async function ldCfg(key){
-  try{const s=await getDoc(doc(db,'config',key));return s.exists()?s.data().data:null;}
-  catch(e){console.error('ldCfg',key,e);return null;}
-}
-function subToMonth(y,m){
-  if(_unsubDay){_unsubDay();_unsubDay=null;}
-  const keys=getWDs(y,m).map(d=>dK(y,m,d));
-  const unsubs=[];
-  keys.forEach(dk=>{
-    const u=onSnapshot(doc(db,'days',dk),snap=>{
-      const parts=dk.split('-');const dy=parseInt(parts[0]),dm=parseInt(parts[1]);
-      if(!AS[dy])AS[dy]={};if(!AS[dy][dm])AS[dy][dm]={};
-      if(snap.exists())AS[dy][dm][dk]={...snap.data()};
-      else ensD(dy,dm,dk);
-      if(cY===dy&&cM===dm){
-        rndTbl();
-        if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
-        if(document.getElementById('tp-ranking')?.classList.contains('act'))rndRanking();
-        calcAlerts();
-        if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
-        if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
-      }
-    },err=>console.error('onSnapshot day',dk,err));
-    unsubs.push(u);
-  });
-  _unsubDay=()=>unsubs.forEach(u=>u());
-}
-function subToOrders(){
-  if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
-  const q=query(collection(db,'orders'),orderBy('createdAt','desc'));
-  _unsubOrders=onSnapshot(q,snap=>{
-    ORDERS=[];snap.forEach(d=>ORDERS.push({id:d.id,...d.data()}));
-    if(document.getElementById('tp-orders')?.classList.contains('act'))rndOrders();
-    if(document.getElementById('etp-emporders')?.classList.contains('act'))rndEmpOrders();
-  },err=>console.error('onSnapshot orders',err));
-}
-async function ldMonth(y,m){
-  const fetches=getWDs(y,m).map(async d=>{
-    const dk=dK(y,m,d);
-    if(AS[y]?.[m]?.[dk])return;
-    try{const s=await getDoc(doc(db,'days',dk));if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};if(s.exists())AS[y][m][dk]={...s.data()};else ensD(y,m,dk);}
-    catch(e){ensD(y,m,dk);}
-  });
-  await Promise.all(fetches);
-}
-async function ldAllCfg(){
-  const [t,co,se,mn,ofi,ofi2]=await Promise.all([
-    ldCfg('targets'),ldCfg('comments'),ldCfg('scoreExcl'),
-    isMgr?ldCfg('mgrOrderNotes'):Promise.resolve(null),
-    ldCfg('ofi_products'),ldCfg('ofi_products2')
-  ]);
-  if(t)TS=t;
-  if(co)CS=co;
-  if(mn&&isMgr)MGR_ORDER_NOTES=mn;
-  if(ofi)OFI_PRODUCTS=ofi;
-  if(ofi2)OFI_PRODUCTS2=ofi2;
-  loadScoreExcl();
-  if(se&&!localStorage.getItem('kpi_excl_v2'))SCORE_EXCLUDED=new Set(se);
-}
-
 // ── CONSTANTS ──
+
+
+// Default: FMC,Post,BB,IPTV,Loyalty,C&C ON — rest OFF
 const MGR_EMAIL='ilir.murati@telekom.mk';
 const EMAIL_MAP={'ivona@mkt-kicevo.com':'IN','katerina@mkt-kicevo.com':'KM','hane@mkt-kicevo.com':'HS','flutrime@mkt-kicevo.com':'FM','melihan@mkt-kicevo.com':'MS'};
 const MEMBERS=[
@@ -863,8 +982,6 @@ const MKD=['Нед','Пон','Вт','Сре','Чет','Пет','Саб'];
 // Вградени резултати Април 2026 (merged од сите вработени)
 const PRE_DATA={"2026":{"4":{"2026-04-01":{"IN":{"status":0,"fmc":4,"post":4,"bb":3,"iptv":2,"prep":0,"loy":1,"cc":1,"equip":20,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":2,"post":3,"bb":3,"iptv":1,"prep":2,"loy":33,"cc":21,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":1,"post":10,"bb":3,"iptv":4,"prep":1,"loy":24,"cc":39,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":2,"post":6,"bb":4,"iptv":3,"prep":1,"loy":39,"cc":52,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-02":{"FM":{"status":0,"fmc":0,"post":1,"bb":0,"iptv":0,"prep":0,"loy":7,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-03":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-04":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-06":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-07":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-08":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-09":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-10":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-11":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-13":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":10,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"loy_log":["1","2","3","4","5","6","7","8","9","10"]},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-14":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-15":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-16":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-17":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":1,"post":6,"bb":4,"iptv":0,"prep":0,"loy":13,"cc":12,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-18":{"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-20":{"IN":{"status":0,"fmc":1,"post":3,"bb":1,"iptv":0,"prep":0,"loy":2,"cc":7,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":2,"post":0,"bb":1,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":4,"bb":1,"iptv":0,"prep":0,"loy":2,"cc":14,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":2,"post":2,"bb":4,"iptv":2,"prep":0,"loy":9,"cc":7,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":1,"bb":1,"iptv":0,"prep":0,"loy":3,"cc":1,"equip":2,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-21":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":12,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"loy_log":["1","2","3","4","5","6","7","8","9","10","11","12"]},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-22":{"IN":{"status":0,"fmc":4,"post":8,"bb":6,"iptv":4,"prep":3,"loy":29,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1"],"iptv_log":["1","1","1","1"],"prep_log":["1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]},"KM":{"status":0,"fmc":2,"post":9,"bb":6,"iptv":1,"prep":3,"loy":37,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","2"],"post_log":["1","2","3","4","5","7","8","9","10"],"bb_log":["1","2","3","4","1","1"],"iptv_log":["1"],"prep_log":["1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","2","1","1","1","1","1","1","1","1","1","1"]},"HS":{"status":0,"fmc":0,"post":5,"bb":4,"iptv":1,"prep":8,"loy":10,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":[],"post_log":["1","2","3","4","5"],"bb_log":["1","2","3","46119126"],"iptv_log":["1"],"prep_log":["1","1","1","1","1","1","1","1"],"loy_log":["1","2","3","4","5","6","7","8","9","10"]},"FM":{"status":0,"fmc":9,"post":12,"bb":13,"iptv":5,"prep":5,"loy":53,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1","1","1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1","1","1","1","1","1","1","1"],"iptv_log":["1","1","1","1","1"],"prep_log":["1","1","1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]},"MS":{"status":0,"fmc":8,"post":26,"bb":12,"iptv":6,"prep":9,"loy":81,"cc":1,"equip":2,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1","1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1","1","1","1","1","1","1"],"iptv_log":["1","1","1","1","1","1"],"prep_log":["1","1","1","1","1","1","1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"cc_log":["4"],"equip_log":[{"num":"47353468","name":"3mk Smoke MagCase Samsung Galaxy A37"},{"num":"47247431","name":"SAMSUNG 45W PowerAdapter(w/o cable)-Wht."}]}},"2026-04-23":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-24":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-25":{"IN":{"status":0,"fmc":0,"post":8,"bb":2,"iptv":1,"prep":3,"loy":37,"cc":18,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-27":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-28":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-29":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-30":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}}},"5":{"2026-05-31":{"IN":{"status":0,"fmc":9,"post":23,"bb":12,"iptv":7,"prep":8,"loy":77,"cc":22,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":7,"post":12,"bb":11,"iptv":2,"prep":5,"loy":70,"cc":22,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":1,"post":16,"bb":8,"iptv":1,"prep":9,"loy":48,"cc":15,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":12,"post":25,"bb":20,"iptv":12,"prep":6,"loy":93,"cc":42,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":10,"post":33,"bb":17,"iptv":9,"prep":10,"loy":123,"cc":53,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}}}}};
 
-
-// Default: FMC,Post,BB,IPTV,Loyalty,C&C ON — rest OFF
 const DEFAULT_EXCLUDED=new Set(['prep','equip','loybus','ict','fmcbus','postbus','bbbus']);
 
 // ── STATE ──
@@ -968,16 +1085,20 @@ window.doLogin=async()=>{
   const ps=document.getElementById('lPs').value;
   const err=document.getElementById('lErr');err.style.display='none';
   const btn=document.getElementById('lBtn');btn.disabled=true;btn.textContent='...';
-  try{await signInWithEmailAndPassword(auth,em,ps);}
-  catch(e){err.style.display='block';err.textContent=e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'Погрешен email или лозинка.':'Грешка: '+e.message;}
-  finally{btn.disabled=false;btn.textContent='Најави се';}
+  const usr=DEMO_USERS[em];
+  if(usr&&usr.pass===ps){
+    const userObj={email:em,uid:em};
+    localStorage.setItem('mkt_demo_user',JSON.stringify(userObj));
+    curUsr=userObj;isMgr=!!usr.isMgr;mID=usr.id||null;
+    await postLogin();
+  }else{
+    err.style.display='block';err.textContent='Погрешен email или лозинка.';
+  }
 };
 document.getElementById('lPs').addEventListener('keydown',e=>{if(e.key==='Enter')window.doLogin();});
 
 window.doLogout=async()=>{
-  if(_unsubDay){_unsubDay();_unsubDay=null;}
-  if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
-  await signOut(auth);
+  localStorage.removeItem('mkt_demo_user');
   curUsr=null;isMgr=false;mID=null;AS={};TS={};CS={};ORDERS=[];OFI_PRODUCTS={};OFI_PRODUCTS2={};
   document.body.classList.remove('emp-mode');
   document.getElementById('sApp').style.display='none';
@@ -1801,7 +1922,9 @@ window.addEmpOrder=()=>{const w=document.getElementById('orderFormWrap2');w.styl
 async function createOrder(model,tel,odate,rdate,notes,by,byName){
   if(!model){alert('Внеси модел!');return false;}
   const id='ord_'+Date.now();
-  await setDoc(doc(db,'orders',id),{by,byName,model,tel,odate,rdate,notes,status:'Нарачано',createdAt:serverTimestamp()});
+  const order={id,by,byName,model,tel,odate,rdate,notes,status:'Нарачано',createdAt:new Date().toISOString()};
+  ORDERS.unshift(order);await svCfg('orders',ORDERS);
+  rndOrders();if(document.getElementById('etp-emporders')?.classList.contains('act'))rndEmpOrders();
   return true;
 }
 window.saveOrder=async()=>{
@@ -1820,12 +1943,12 @@ window.saveEmpOrder=async()=>{
   ['e_ord_odate','e_ord_rdate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('orderFormWrap2').style.display='none';
 };
-window.deleteOrder=async(id)=>{if(!confirm('Избриши?'))return;await deleteDoc(doc(db,'orders',id));};
+window.deleteOrder=async(id)=>{if(!confirm('Избриши?'))return;ORDERS=ORDERS.filter(o=>o.id!==id);await svCfg('orders',ORDERS);rndOrders();};
 window.cycleOrderStatus=async(id)=>{
   const statuses=['Нарачано','Пристигнато','Реализирано','Откажано'];
   const o=ORDERS.find(x=>x.id===id);if(!o)return;
   const ci=statuses.indexOf(o.status);
-  await updateDoc(doc(db,'orders',id),{status:statuses[(ci+1)%statuses.length]});
+  o.status=statuses[(ci+1)%statuses.length];await svCfg('orders',ORDERS);rndOrders();
 };
 window.saveMgrNotes=async()=>{MGR_ORDER_NOTES=document.getElementById('mgrOrderNotes').value;await svCfg('mgrOrderNotes',MGR_ORDER_NOTES);showSS('sStat','✓ Зачувано','ok');};
 
@@ -1951,6 +2074,8 @@ window.empTab=(name,el)=>{
   else if(name==='monthly')rndEmpMo();
   else if(name==='yearly')rndEmpYr();
   else if(name==='emporders')rndEmpOrders();
+  // empschedule loaded via iframe - no JS needed
+  else if(name==='empschedule')rndEmpSchedule();
   else if(name==='history')rndEmpHistory();
 };
 function rndEmpDyBtns(){
@@ -2419,7 +2544,98 @@ window.gotoTab=(name,el)=>{
   if(name==='daily')setTimeout(loadDayComment,100);
 };
 
-// ── PWA SERVICE WORKER ──
+// ═══════════════════════════════════════════
+// 🕐 РАБОТНО ВРЕМЕ — РАСПОРЕД
+// ═══════════════════════════════════════════
+const SCHED_EMPS=[
+  {n:'Мелихан', av:'МС',bg:'#FAD8EC',tc:'#6B1535',ck:'MS'},
+  {n:'Флутуриме',av:'ФМ',bg:'#E4E2FD',tc:'#2E2680',ck:'FM'},
+  {n:'Катерина', av:'КМ',bg:'#C4EEDB',tc:'#064D37',ck:'KM'},
+  {n:'Хане',     av:'ХС',bg:'#FADFBC',tc:'#7A3F00',ck:'HS'},
+  {n:'Ивона',    av:'ИН',bg:'#D0E8F8',tc:'#0B3A6E',ck:'IN'},
+];
+const SCHED_SHIFTS={
+  T1:{mk:'Смена 1', time:'08:00–15:00', color:'#E8207D', bg:'#fde8f2'},
+  T2:{mk:'Смена 2', time:'10:00–17:00', color:'#0D2D6B', bg:'#e8ecf7'},
+  SAT:{mk:'Сабота', time:'09:00–15:00', color:'#1279A5', bg:'#e3f3fb'},
+  OFF:{mk:'Одмор',  time:'',            color:'#9A9890', bg:'#f0f0ee'},
+};
+const MK_DAYS=['Пон','Вто','Сре','Чет','Пет','Саб','Нед'];
+const MK_FULL=['Понеделник','Вторник','Среда','Четврток','Петок','Сабота','Недела'];
+
+let SCHED_DATA={};       // {weekKey: {empCk: {0:'T1', 1:'T2', ...}}}
+let schedView='week';    // 'week' | 'month' | 'year'
+let schedWeekOffset=0;   // 0=current, -1=prev, +1=next
+
+function schedGetMonday(offset=0){
+  const d=new Date();
+  const wd=d.getDay()||7;
+  d.setDate(d.getDate()-wd+1+offset*7);
+  d.setHours(0,0,0,0);
+  return d;
+}
+function schedWeekKey(mon){return mon.toISOString().slice(0,10);}
+function schedDays(mon){
+  return Array.from({length:7},(_,i)=>{
+    const d=new Date(mon);d.setDate(d.getDate()+i);return d;
+  });
+}
+
+// Firebase save/load for schedule
+async function saveSchedWeek(wk,data){
+  await svCfg('sched_'+wk, data);
+  SCHED_DATA[wk]=data;
+}
+async function loadSchedWeek(wk){
+  if(SCHED_DATA[wk])return SCHED_DATA[wk];
+  const d=await ldCfg('sched_'+wk);
+  SCHED_DATA[wk]=d||{};
+  return SCHED_DATA[wk];
+}
+
+// Render schedule panel
+
+window.schedNav=async(offset)=>{
+  if(offset===0)schedWeekOffset=0;
+  else schedWeekOffset+=offset;
+  await rndSchedule();
+};
+
+const SHIFT_ORDER=['T1','T2','SAT','OFF'];
+window.schedCycleShift=async(wk,empCk,di)=>{
+  if(!isMgr)return;
+  if(!SCHED_DATA[wk])SCHED_DATA[wk]={};
+  if(!SCHED_DATA[wk][empCk])SCHED_DATA[wk][empCk]={};
+  const cur=SCHED_DATA[wk][empCk][di]||'OFF';
+  const next=SHIFT_ORDER[(SHIFT_ORDER.indexOf(cur)+1)%SHIFT_ORDER.length];
+  SCHED_DATA[wk][empCk][di]=next;
+  await saveSchedWeek(wk,SCHED_DATA[wk]);
+  rndSchedule();
+};
+
+window.schedSaveNote=async(wk,val)=>{
+  if(!SCHED_DATA[wk])SCHED_DATA[wk]={};
+  SCHED_DATA[wk]._note=val;
+  clearTimeout(window._schedNoteTmr);
+  window._schedNoteTmr=setTimeout(()=>saveSchedWeek(wk,SCHED_DATA[wk]),800);
+};
+
+window.schedClearWeek=async(wk)=>{
+  if(!confirm('Избриши го распоредот за оваа недела?'))return;
+  SCHED_DATA[wk]={};
+  await saveSchedWeek(wk,{});
+  rndSchedule();
+};
+
+// Also show schedule tab for employees (read-only)
+
+window.empSchedNav=async(offset)=>{
+  if(offset===0)schedWeekOffset=0;
+  else schedWeekOffset+=offset;
+  await rndEmpSchedule();
+};
+
+
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js')
