@@ -437,7 +437,6 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">🕐 Раб.Време</div>
-  <div class="tab" onclick="gotoTab('schedule',this)">🕐 Раб.Време</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -663,16 +662,6 @@ body.emp-mode #empView{display:block!important}
   <iframe src="raspored.html" style="width:100%;height:720px;border:none;display:block"></iframe>
 </div>
 </div>
-<div id="tp-schedule" class="tp">
-<div class="card" style="padding:0;overflow:hidden">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--brd)">
-    <div style="font-size:13px;font-weight:700">🕐 Работно Време</div>
-    <span style="font-size:10px;color:var(--t3)">Само менаџерот може да менува</span>
-  </div>
-  <iframe src="raspored.html" style="width:100%;height:720px;border:none;display:block"></iframe>
-</div>
-</div>
-
 <!-- ═══ TARGETS ═══ -->
 <div id="tp-targets" class="tp">
 <div class="card">
@@ -776,7 +765,6 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="empTab('history',this)">🗑 Историја</div>
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
   <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
-  <div class="tab" onclick="empTab('empschedule',this)">🕐 Смени</div>
   <div class="tab" onclick="empTab('empschedule',this)">🕐 Смени</div>
 </div>
 <!-- EMP DAILY -->
@@ -908,15 +896,6 @@ body.emp-mode #empView{display:block!important}
 </div>
 
 <!-- EMP SCHEDULE -->
-<div id="etp-empschedule" class="tp" style="padding:0 16px 16px;margin-top:0">
-<div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);overflow:hidden">
-  <div style="padding:8px 14px;font-size:11px;font-weight:700;color:var(--mg);border-bottom:1px solid var(--brd);background:var(--mgl)">
-    🕐 Работно Време — <span style="font-weight:400;color:var(--t2)">само за читање</span>
-  </div>
-  <iframe src="raspored.html?readonly=1" style="width:100%;height:700px;border:none;display:block"></iframe>
-</div>
-</div>
-
 <!-- EMP ORDERS -->
 <div id="etp-emporders" class="tp" style="padding:0 16px 16px;margin-top:0">
   <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
