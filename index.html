@@ -1204,9 +1204,16 @@ const isInScore=k=>!SCORE_EXCLUDED.has(k);
 const showSS=(id,msg,cls)=>{const el=document.getElementById(id);if(!el)return;el.style.display='inline-block';el.className='ss '+cls;el.textContent=msg;if(cls==='ok')setTimeout(()=>{el.style.display='none';},2500);};
 
 function getMT(y,m){
+  // Returns PER-EMPLOYEE targets (team total ÷ 5)
   const yr=TS[y]||TS[String(y)];
-  if(yr){const mo=yr[m]||yr[String(m)];if(mo)return mo;}
-  // Return zeros for unsaved months
+  if(yr){
+    const mo=yr[m]||yr[String(m)];
+    if(mo){
+      const perEmp={};
+      KKEYS.forEach(k=>{ perEmp[k]=Math.round((mo[k]||0)/MEMBERS.length*10)/10; });
+      return perEmp;
+    }
+  }
   const zero={}; KKEYS.forEach(k=>zero[k]=0); return zero;
 }
 function getWDs(y,m){const d=[];const dt=new Date(y,m-1,1);while(dt.getMonth()===m-1){const dw=dt.getDay();if(dw!==0)d.push({date:dt.getDate(),dow:dw,label:MKD[dw]+' '+dt.getDate()+'/'+m});dt.setDate(dt.getDate()+1);}return d;}
