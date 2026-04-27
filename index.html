@@ -659,9 +659,10 @@ body.emp-mode #empView{display:block!important}
     <div style="font-size:13px;font-weight:700">🕐 Работно Време</div>
     <span style="font-size:10px;color:var(--t3)">Само менаџерот може да менува</span>
   </div>
-  <iframe src="raspored.html" style="width:100%;height:720px;border:none;display:block"></iframe>
+  <iframe id="schedFrame" src="raspored.html" style="width:100%;height:700px;border:none;display:block"></iframe>
 </div>
 </div>
+
 <!-- ═══ TARGETS ═══ -->
 <div id="tp-targets" class="tp">
 <div class="card">
@@ -887,15 +888,16 @@ body.emp-mode #empView{display:block!important}
   </div>
 </div>
 
-<!-- EMP SCHEDULE (read-only) -->
+<!-- EMP SCHEDULE -->
 <div id="etp-empschedule" class="tp" style="padding:0 16px 16px;margin-top:0">
-  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
-    <div style="font-size:13px;font-weight:700;margin-bottom:10px">🕐 Мои Смени</div>
-    <div id="empSchedPanel"></div>
+<div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);overflow:hidden">
+  <div style="padding:8px 14px;font-size:11px;font-weight:700;color:var(--mg);border-bottom:1px solid var(--brd);background:var(--mgl)">
+    🕐 Работно Време — <span style="font-weight:400;color:var(--t2)">само за читање</span>
   </div>
+  <iframe id="empSchedFrame" src="raspored.html" style="width:100%;height:700px;border:none;display:block"></iframe>
+</div>
 </div>
 
-<!-- EMP SCHEDULE -->
 <!-- EMP ORDERS -->
 <div id="etp-emporders" class="tp" style="padding:0 16px 16px;margin-top:0">
   <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
@@ -1972,6 +1974,7 @@ window.gotoTab=(name,el)=>{
   else if(name==='inventory2')rndInv2();
   else if(name==='targets')rndTgts();
   else if(name==='orders')rndOrders();
+  else if(name==='schedule')rndSchedule();
   else if(name==='boost')rndBoostBoard();
 };
 
@@ -2053,7 +2056,6 @@ window.empTab=(name,el)=>{
   else if(name==='monthly')rndEmpMo();
   else if(name==='yearly')rndEmpYr();
   else if(name==='emporders')rndEmpOrders();
-  // empschedule loaded via iframe - no JS needed
   else if(name==='empschedule')rndEmpSchedule();
   else if(name==='history')rndEmpHistory();
 };
@@ -2554,66 +2556,15 @@ function schedGetMonday(offset=0){
   return d;
 }
 function schedWeekKey(mon){return mon.toISOString().slice(0,10);}
-function schedDays(mon){
-  return Array.from({length:7},(_,i)=>{
-    const d=new Date(mon);d.setDate(d.getDate()+i);return d;
-  });
+// ── SCHEDULE TAB ──
+async function rndSchedule(){
+  const f=document.getElementById('schedFrame');
+  if(f&&f.src.includes('raspored.html'))f.contentWindow.location.reload();
 }
-
-// Firebase save/load for schedule
-async function saveSchedWeek(wk,data){
-  await svCfg('sched_'+wk, data);
-  SCHED_DATA[wk]=data;
+async function rndEmpSchedule(){
+  const f=document.getElementById('empSchedFrame');
+  if(f&&f.src.includes('raspored.html'))f.contentWindow.location.reload();
 }
-async function loadSchedWeek(wk){
-  if(SCHED_DATA[wk])return SCHED_DATA[wk];
-  const d=await ldCfg('sched_'+wk);
-  SCHED_DATA[wk]=d||{};
-  return SCHED_DATA[wk];
-}
-
-// Render schedule panel
-
-window.schedNav=async(offset)=>{
-  if(offset===0)schedWeekOffset=0;
-  else schedWeekOffset+=offset;
-  await rndSchedule();
-};
-
-const SHIFT_ORDER=['T1','T2','SAT','OFF'];
-window.schedCycleShift=async(wk,empCk,di)=>{
-  if(!isMgr)return;
-  if(!SCHED_DATA[wk])SCHED_DATA[wk]={};
-  if(!SCHED_DATA[wk][empCk])SCHED_DATA[wk][empCk]={};
-  const cur=SCHED_DATA[wk][empCk][di]||'OFF';
-  const next=SHIFT_ORDER[(SHIFT_ORDER.indexOf(cur)+1)%SHIFT_ORDER.length];
-  SCHED_DATA[wk][empCk][di]=next;
-  await saveSchedWeek(wk,SCHED_DATA[wk]);
-  rndSchedule();
-};
-
-window.schedSaveNote=async(wk,val)=>{
-  if(!SCHED_DATA[wk])SCHED_DATA[wk]={};
-  SCHED_DATA[wk]._note=val;
-  clearTimeout(window._schedNoteTmr);
-  window._schedNoteTmr=setTimeout(()=>saveSchedWeek(wk,SCHED_DATA[wk]),800);
-};
-
-window.schedClearWeek=async(wk)=>{
-  if(!confirm('Избриши го распоредот за оваа недела?'))return;
-  SCHED_DATA[wk]={};
-  await saveSchedWeek(wk,{});
-  rndSchedule();
-};
-
-// Also show schedule tab for employees (read-only)
-
-window.empSchedNav=async(offset)=>{
-  if(offset===0)schedWeekOffset=0;
-  else schedWeekOffset+=offset;
-  await rndEmpSchedule();
-};
-
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
