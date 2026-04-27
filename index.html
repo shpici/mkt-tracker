@@ -99,7 +99,7 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .abbg{font-size:9px;color:var(--rd);background:var(--rdl);padding:1px 5px;border-radius:10px;font-weight:600}
 /* STATUS */
 .ss{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;transition:all .3s}
-.ok{background:var(--grl);color:var(--gr)}.sv{background:var(--aml);color:var(--am)}.er{background:var(--rdl);color:var(--rd)}
+.ok{background:var(--grl);color:var(--gr)}.sv{background:var(--aml);color:var(--am)}.er{background:var(--rdl);color:var(--rd)}.mg{background:var(--mgl);color:var(--mgd);font-weight:700}
 /* SCORE CARDS */
 .scg{display:grid;grid-template-columns:repeat(auto-fit,minmax(85px,1fr));gap:5px;margin-bottom:14px}
 .sc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:9px;text-align:center;transition:border .2s}
@@ -204,6 +204,39 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 /* PRINT */
 @media print{.hdr,.nav,.tabs,.btn,.hbtn,#mgrNav,#mgrTabs,.no-print{display:none!important}.card{margin:0;border:none;box-shadow:none}body{background:#fff;color:#000}}
 @media(max-width:600px){.hdr{padding:7px 10px}.card{margin:0 6px 10px;padding:10px}.tabs{padding:7px 6px 0}.nav{padding:5px 6px}}
+
+/* ── SCHEDULE / РАСПОРЕД ── */
+.pill-T1{background:#FCE4EF;color:#8a004c;border:1.5px solid #E8207D}
+.pill-T2{background:#E4E2FD;color:#2E2680;border:1.5px solid #0D2D6B}
+.pill-SAT{background:#D0EAF8;color:#0B3A6E;border:1.5px solid #1279A5}
+.pill-TM{background:#FDF3D7;color:#7A3F00;border:1.5px solid #B8860B}
+.pill-OFF{background:#EDEDEE;color:#5a5a5a;border:1.5px solid #9A9890}
+.sc-cell{padding:5px;text-align:center;vertical-align:middle;border-bottom:1px solid var(--brd)}
+.sc-cpill{border-radius:8px;padding:5px 7px;display:inline-flex;flex-direction:column;align-items:center;gap:2px;min-width:72px;cursor:pointer;font-size:10px}
+.sc-cp-top{font-weight:700;font-size:10px}
+.sc-cp-mid{font-size:9px;opacity:.75}
+.sc-add-btn{width:28px;height:28px;border-radius:50%;border:1.5px dashed var(--brd);background:var(--sur);color:var(--t3);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.sc-add-btn:hover{border-color:var(--mg);color:var(--mg);background:var(--mgl)}
+.sc-shal{font-size:9px;padding:1px 5px;border-radius:10px;border:1px solid var(--brd);background:var(--sur);cursor:pointer;margin-top:2px;font-weight:700}
+.sc-shal:hover{border-color:var(--mg);color:var(--mg)}
+.sc-shal-empty{font-size:9px;padding:1px 5px;border-radius:10px;border:1px dashed var(--brd);background:none;cursor:pointer;color:var(--t3);margin-top:2px}
+.sc-shal-empty:hover{border-color:var(--mg);color:var(--mg)}
+.sc-lbtn{padding:3px 9px;border:1px solid var(--brd);border-radius:20px;background:var(--sur);font-size:10px;font-weight:600;cursor:pointer;color:var(--t2)}
+.sc-lbtn.act{background:var(--mg);color:#fff;border-color:var(--mg)}
+.sc-ctrl{padding:5px 11px;border-radius:8px;border:2px solid transparent;background:var(--s2);font-size:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;color:var(--txt)}
+.sc-ctrl.sel{background:var(--mgl)}
+.sc-cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sc-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;align-items:center;justify-content:center}
+.sc-modal-overlay.open{display:flex}
+.sc-mbox{background:var(--sur);border-radius:12px;padding:20px;min-width:220px;max-width:320px}
+.sc-mopt{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--brd);background:var(--sur);cursor:pointer;font-size:12px;font-weight:600;margin-bottom:5px;text-align:left}
+.sc-mopt:hover{background:var(--mgl);border-color:var(--mg)}
+.sc-mopt-rem{color:var(--rd);border-color:var(--rdl);background:var(--rdl)}
+.sc-vrap-row{background:var(--s2);border-radius:6px;padding:5px 9px;font-size:11px;display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.sc-vrap-del{background:none;border:none;color:var(--rd);cursor:pointer;font-size:12px;margin-left:auto}
+.sc-stat{background:var(--s2);border-radius:8px;padding:7px 11px;text-align:center;font-size:10px}
+.sc-stat .sv{font-size:15px;font-weight:700;margin-top:2px}
+.sc-stat .sl{color:var(--t3);font-size:9px;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -232,7 +265,6 @@ body.emp-mode #empView{display:block!important}
   <div class="fg"><label>Лозинка</label><input class="fi" type="password" id="lPs" placeholder="••••••••"></div>
   <button class="lbtn" id="lBtn" onclick="doLogin()">Најави се</button>
   <div class="lerr" id="lErr"></div>
-
 </div>
 </div>
 
@@ -284,11 +316,15 @@ body.emp-mode #empView{display:block!important}
   <div class="tab act" onclick="gotoTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="gotoTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
+  <div class="tab" onclick="gotoTab('yearly',this)">📅 Годишен</div>
   <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
   <div class="tab" onclick="gotoTab('inventory',this)">📦 Доп.Опрема</div>
   <div class="tab" onclick="gotoTab('inventory2',this)">📱 Моб.&amp;Друго</div>
+  <div class="tab" onclick="gotoTab('ofireport',this)">📊 Доп. Извештај</div>
+  <div class="tab" onclick="gotoTab('mobreport',this)">📊 Моб. Извештај</div>
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
+  <div class="tab" onclick="gotoTab('schedule',this)">🕐 Распоред</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -408,7 +444,10 @@ body.emp-mode #empView{display:block!important}
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid"></div>
   <!-- OFI product table -->
-  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:4px">Лагер листа</div>
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px;margin-top:4px;flex-wrap:wrap">
+    <div style="font-size:11px;font-weight:700;color:var(--t2)">Лагер листа</div>
+    <input id="mgrOfiSearch1" class="fi" type="text" placeholder="🔍 Барај производ / OFI шифра..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(1,this.value)">
+  </div>
   <div class="tw ofi-table">
     <table style="min-width:650px">
       <thead><tr>
@@ -467,7 +506,10 @@ body.emp-mode #empView{display:block!important}
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid2"></div>
   <!-- Product table -->
-  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px;margin-top:4px">Лагер листа — Мобилни &amp; Друго</div>
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px;margin-top:4px;flex-wrap:wrap">
+    <div style="font-size:11px;font-weight:700;color:var(--t2)">Лагер листа — Мобилни &amp; Друго</div>
+    <input id="mgrOfiSearch2" class="fi" type="text" placeholder="🔍 Барај производ / OFI шифра..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(2,this.value)">
+  </div>
   <div class="tw ofi-table">
     <table style="min-width:650px">
       <thead><tr>
@@ -510,7 +552,14 @@ body.emp-mode #empView{display:block!important}
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
     <div><div style="font-size:14px;font-weight:700">⚙️ Месечни таргети</div></div>
     <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap">
-      <button class="btn bmg" onclick="saveTgt()">💾 Зачувај</button>
+      <button class="btn bmg" id="tgSaveBtn" onclick="
+  const b=this;
+  saveTgt().then(()=>{
+    b.textContent='✓ SAVED';
+    b.style.background='#16a34a';
+    setTimeout(()=>{b.textContent='💾 SAVE';b.style.background='';},2500);
+  });
+">💾 SAVE</button>
       <button class="btn" onclick="cpyPrev()">📋 Копирај претх.</button>
     </div>
   </div>
@@ -523,7 +572,7 @@ body.emp-mode #empView{display:block!important}
   </div>
   <div id="tgBadge" style="margin-bottom:8px"></div>
   <div class="tw"><table style="min-width:460px">
-    <thead><tr><th style="text-align:left;padding-left:10px;min-width:130px">KPI</th><th>Месечен<br><span style="font-weight:400;font-size:9px">(по вработен)</span></th><th>Дневен</th><th>Неделен</th><th>Default</th></tr></thead>
+    <thead><tr><th style="text-align:left;padding-left:10px;min-width:130px">KPI</th><th>Годишен<br><span style="font-weight:400;font-size:9px">(вкупно)</span></th><th>Месечен<br><span style="font-weight:400;font-size:9px">(вкупно)</span></th><th style="background:var(--mgl);color:var(--mgd)">По вработен<br><span style="font-weight:400;font-size:9px">÷ 5</span></th><th>Дневен</th><th>Неделен</th><th>Default</th></tr></thead>
     <tbody id="tgTb"></tbody>
   </table></div>
   <div style="margin-top:14px;border-top:1px solid var(--brd);padding-top:12px">
@@ -571,6 +620,197 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
+<!-- ═══ YEARLY (MANAGER) ═══ -->
+<div id="tp-yearly" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:14px;font-weight:700">📅 Годишен преглед — <span id="mgrYrTit"></span></div>
+      <div style="font-size:11px;color:var(--t2)">Сите вработени · Сите месеци · 1 клик</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:5px;align-items:center">
+      <button class="na" onclick="chgMgrYr(-1)">‹</button>
+      <span id="mgrYrLbl" style="font-size:13px;font-weight:700;color:var(--mg);min-width:44px;text-align:center"></span>
+      <button class="na" onclick="chgMgrYr(1)">›</button>
+    </div>
+  </div>
+  <!-- Team score cards by month -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px">📊 Тим Score по месец</div>
+  <div id="mgrYrMonthCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-bottom:16px"></div>
+  <!-- Per-employee yearly table -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px">📋 Реализација по вработен</div>
+  <div class="tw">
+    <table id="mgrYrTable" style="min-width:900px">
+      <thead><tr id="mgrYrHead"></tr></thead>
+      <tbody id="mgrYrBody"></tbody>
+      <tfoot><tr id="mgrYrFoot"></tr></tfoot>
+    </table>
+  </div>
+  <!-- Per-employee cards -->
+  <div style="font-size:11px;font-weight:700;color:var(--t2);margin-top:16px;margin-bottom:8px">👥 По вработен — година</div>
+  <div id="mgrYrEmpCards" class="mcg"></div>
+</div>
+</div>
+
+<!-- ═══ OFI REPORT ═══ -->
+<div id="tp-ofireport" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div><div style="font-size:14px;font-weight:700">📊 Доп.Опрема — Извештај</div>
+    <div style="font-size:11px;color:var(--t2)">Неделно · Месечно · Годишно · Топ продавач</div></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:var(--s2);padding:8px 12px;border-radius:var(--rs)">
+    <span class="nl">Год.:</span>
+    <button class="na" onclick="ofiRepChg(1,'yr',-1)">‹</button>
+    <span id="ofiRep1Yr" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
+    <button class="na" onclick="ofiRepChg(1,'yr',1)">›</button>
+    <span class="nl" style="margin-left:8px">Мес.:</span>
+    <div id="ofiRep1Mo" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <span class="nl" style="margin-left:8px">Нед.:</span>
+    <div id="ofiRep1Wk" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+  </div>
+  <div style="display:flex;gap:4px;margin-bottom:14px">
+    <button class="nb act" id="ofiRep1pw" onclick="ofiRepPer(1,'week',this)">📅 Недела</button>
+    <button class="nb" id="ofiRep1pm" onclick="ofiRepPer(1,'month',this)">📊 Месец</button>
+    <button class="nb" id="ofiRep1py" onclick="ofiRepPer(1,'year',this)">📅 Година</button>
+  </div>
+  <div id="ofiRep1Stats" class="scg"></div>
+  <div id="ofiRep1Top" style="margin-top:12px"></div>
+  <div id="ofiRep1Prods" style="margin-top:12px"></div>
+</div>
+</div>
+
+<!-- ═══ MOB REPORT ═══ -->
+<div id="tp-mobreport" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <div><div style="font-size:14px;font-weight:700">📊 Моб.&Друго — Извештај</div>
+    <div style="font-size:11px;color:var(--t2)">Неделно · Месечно · Годишно · Топ продавач</div></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:var(--s2);padding:8px 12px;border-radius:var(--rs)">
+    <span class="nl">Год.:</span>
+    <button class="na" onclick="ofiRepChg(2,'yr',-1)">‹</button>
+    <span id="ofiRep2Yr" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
+    <button class="na" onclick="ofiRepChg(2,'yr',1)">›</button>
+    <span class="nl" style="margin-left:8px">Мес.:</span>
+    <div id="ofiRep2Mo" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <span class="nl" style="margin-left:8px">Нед.:</span>
+    <div id="ofiRep2Wk" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+  </div>
+  <div style="display:flex;gap:4px;margin-bottom:14px">
+    <button class="nb act" id="ofiRep2pw" onclick="ofiRepPer(2,'week',this)">📅 Недела</button>
+    <button class="nb" id="ofiRep2pm" onclick="ofiRepPer(2,'month',this)">📊 Месец</button>
+    <button class="nb" id="ofiRep2py" onclick="ofiRepPer(2,'year',this)">📅 Година</button>
+  </div>
+  <div id="ofiRep2Stats" class="scg"></div>
+  <div id="ofiRep2Top" style="margin-top:12px"></div>
+  <div id="ofiRep2Prods" style="margin-top:12px"></div>
+</div>
+</div>
+
+<!-- ═══ SCHEDULE / РАСПОРЕД ═══ -->
+<div id="tp-schedule" class="tp">
+<div class="card">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:14px;font-weight:700" id="sc-main-title">🕐 Orar javor / Неделен распоред</div>
+      <div style="font-size:10px;color:var(--t2)" id="sc-week-range">Makedonski Telekom Kičevo</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+      <button class="sc-lbtn act" id="sc-lb-both" onclick="scSetLang('both',this)">AL + МК</button>
+      <button class="sc-lbtn" id="sc-lb-al" onclick="scSetLang('al',this)">Shqip</button>
+      <button class="sc-lbtn" id="sc-lb-mk" onclick="scSetLang('mk',this)">Македонски</button>
+      <button class="btn" onclick="scExportCSV()">↓ CSV</button>
+      <button class="btn bmg" id="sc-save-btn" onclick="scSave()">💾 Зачувај</button>
+    </div>
+  </div>
+  <!-- Nav -->
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;background:var(--s2);padding:7px 12px;border-radius:var(--rs)">
+    <span class="nl">Год.:</span>
+    <button class="na" onclick="scChgYr(-1)">‹</button>
+    <span id="sc-sel-yr" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
+    <button class="na" onclick="scChgYr(1)">›</button>
+    <span class="nl" style="margin-left:8px">Мес.:</span>
+    <div id="sc-mo-btns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    <span class="nl" style="margin-left:8px">Нед.:</span>
+    <div id="sc-wk-btns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+  </div>
+  <!-- Legend -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:10px">
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#E8207D;border-radius:50%;display:inline-block"></span><span id="sc-lg1">Смена 1 · 08–15ч</span></span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#0D2D6B;border-radius:50%;display:inline-block"></span><span id="sc-lg2">Смена 2 · 10–17ч</span></span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#1279A5;border-radius:50%;display:inline-block"></span><span id="sc-lg3">Саб · 09–15ч</span></span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#B8860B;border-radius:50%;display:inline-block"></span>Меѓусмена</span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#9A9890;border-radius:50%;display:inline-block"></span><span id="sc-lg4">Одмор</span></span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:#7F77DD;border-radius:2px;display:inline-block"></span><span id="sc-lg5">Трчач</span></span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;background:var(--mg);border-radius:2px;display:inline-block"></span><span id="sc-lg6">Шалтер</span></span>
+  </div>
+  <!-- Mode buttons -->
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px" id="sc-modes">
+    <button class="sc-ctrl sel" id="sc-btn-T1" onclick="scSetMode('T1',this)" style="border-color:#E8207D"><span class="sc-cdot" style="background:#E8207D"></span><span id="sc-c1">Sm. 1 · 08–15</span></button>
+    <button class="sc-ctrl" id="sc-btn-T2" onclick="scSetMode('T2',this)"><span class="sc-cdot" style="background:#0D2D6B"></span><span id="sc-c2">Sm. 2 · 10–17</span></button>
+    <button class="sc-ctrl" id="sc-btn-SAT" onclick="scSetMode('SAT',this)"><span class="sc-cdot" style="background:#1279A5"></span><span id="sc-c3">Sab · 09–15</span></button>
+    <button class="sc-ctrl" id="sc-btn-TM" onclick="scSetMode('TM',this)"><span class="sc-cdot" style="background:#B8860B"></span><span id="sc-c4">Meѓusmena</span></button>
+    <button class="sc-ctrl" id="sc-btn-OFF" onclick="scSetMode('OFF',this)"><span class="sc-cdot" style="background:#9A9890"></span><span id="sc-c5">Odmor/Одмор</span></button>
+  </div>
+  <!-- Table -->
+  <div class="tw">
+    <table style="min-width:700px;border-collapse:collapse">
+      <thead id="sc-thead"></thead>
+      <tbody id="sc-tbody"></tbody>
+    </table>
+  </div>
+  <!-- Трчач section -->
+  <div style="margin-top:14px;border-top:1px solid var(--brd);padding-top:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#7F77DD;margin-bottom:6px" id="sc-vt1">Трчач 1 — 13:00–14:00</div>
+        <div id="sc-vslot1"></div>
+        <button class="btn" style="font-size:10px;margin-top:4px" onclick="scOpenAdd(1)" id="sc-abtn1">+ Додај</button>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#534AB7;margin-bottom:6px" id="sc-vt2">Трчач 2 — 14:00–15:00</div>
+        <div id="sc-vslot2"></div>
+        <button class="btn" style="font-size:10px;margin-top:4px" onclick="scOpenAdd(2)" id="sc-abtn2">+ Додај</button>
+      </div>
+    </div>
+  </div>
+  <!-- Add vrap form -->
+  <div id="sc-add-form" style="display:none;background:var(--s2);border-radius:var(--rs);padding:10px;margin-top:10px">
+    <div style="font-size:12px;font-weight:700;margin-bottom:7px" id="sc-form-title">Додај трчач</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+      <input type="text" id="sc-v-name" class="fi" placeholder="Име" style="width:120px;padding:5px 8px;font-size:11px">
+      <select id="sc-v-day" class="fi" style="padding:5px 8px;font-size:11px"></select>
+      <button class="btn bmg" onclick="scSaveVrap()" style="font-size:10px">Зачувај</button>
+      <button class="btn" onclick="scCloseAdd()" style="font-size:10px">✕</button>
+    </div>
+  </div>
+  <!-- Stats -->
+  <div id="sc-stats" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;border-top:1px solid var(--brd);padding-top:10px"></div>
+  <!-- Паузи -->
+  <div style="margin-top:12px;border-top:1px solid var(--brd);padding-top:10px">
+    <div style="font-size:11px;font-weight:700;margin-bottom:8px" id="sc-bp-title">Паузи</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;font-size:10px">
+      <div style="background:#FCE4EF;border-radius:var(--rs);padding:7px"><div style="font-weight:700;color:#8a004c" id="sc-bp-s1a">Смена 1 — Пауза 1</div><div>10:00 – 10:30</div></div>
+      <div style="background:#FCE4EF;border-radius:var(--rs);padding:7px"><div style="font-weight:700;color:#8a004c" id="sc-bp-s1b">Смена 1 — Пауза 2</div><div>10:30 – 11:00</div></div>
+      <div style="background:#FDF3D7;border-radius:var(--rs);padding:7px"><div style="font-weight:700;color:#7A3F00" id="sc-bp-mid">Меѓусмена Пауза</div><div>12:00 – 12:30</div></div>
+      <div style="background:#E4E2FD;border-radius:var(--rs);padding:7px"><div style="font-weight:700;color:#2E2680" id="sc-bp-s2a">Смена 2 — Пауза 1</div><div>16:00 – 16:30</div></div>
+      <div style="background:#E4E2FD;border-radius:var(--rs);padding:7px"><div style="font-weight:700;color:#2E2680" id="sc-bp-s2b">Смена 2 — Пауза 2</div><div>16:30 – 17:00</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SC MODAL -->
+<div class="sc-modal-overlay" id="sc-shal-modal">
+  <div class="sc-mbox">
+    <h3 id="sc-shal-modal-title" style="font-size:13px;margin-bottom:12px"></h3>
+    <div id="sc-shal-modal-list"></div>
+    <button class="btn" style="margin-top:6px;width:100%" onclick="scCloseShalModal()">Откажи</button>
+  </div>
+</div>
+
 <!-- ═══════ EMPLOYEE VIEW ═══════ -->
 <div id="empView" style="display:none">
 <div class="hdr" style="position:relative">
@@ -607,6 +847,7 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="empTab('history',this)">🗑 Историја</div>
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
   <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
+  <div class="tab" onclick="empTab('empschedule',this)">🕐 Распоред</div>
 </div>
 <!-- EMP DAILY -->
 <div id="etp-daily" class="tp act" style="padding:0 16px 16px;margin-top:0">
@@ -756,6 +997,34 @@ body.emp-mode #empView{display:block!important}
     </div>
   </div>
 </div>
+
+<!-- EMP SCHEDULE - readonly -->
+<div id="etp-empschedule" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:3px">🕐 Распоред — Orari</div>
+    <div style="font-size:10px;color:var(--t2);margin-bottom:10px">Само за читање · Менаџерот го уредува</div>
+    <!-- Nav -->
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:10px;background:var(--s2);padding:7px 10px;border-radius:var(--rs)">
+      <span class="nl">Год.:</span>
+      <button class="na" onclick="empScChgYr(-1)">‹</button>
+      <span id="emp-sc-yr" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
+      <button class="na" onclick="empScChgYr(1)">›</button>
+      <span class="nl" style="margin-left:6px">Мес.:</span>
+      <div id="emp-sc-mo" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+      <span class="nl" style="margin-left:6px">Нед.:</span>
+      <div id="emp-sc-wk" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+    </div>
+    <!-- Readonly table -->
+    <div class="tw">
+      <table style="min-width:600px;border-collapse:collapse">
+        <thead id="emp-sc-thead"></thead>
+        <tbody id="emp-sc-tbody"></tbody>
+      </table>
+    </div>
+    <!-- Трчач readonly -->
+    <div id="emp-sc-vrap" style="margin-top:10px;border-top:1px solid var(--brd);padding-top:10px"></div>
+  </div>
+</div>
 </div><!-- end empView -->
 
 </div><!-- end sApp -->
@@ -813,6 +1082,9 @@ function subToMonth(y,m){
 }
 function subToOrders(){
   if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
+  if(_unsubOfi1){_unsubOfi1();_unsubOfi1=null;}
+  if(_unsubOfi2){_unsubOfi2();_unsubOfi2=null;}
+  if(_unsubSched){_unsubSched();_unsubSched=null;}
   const q=query(collection(db,'orders'),orderBy('createdAt','desc'));
   _unsubOrders=onSnapshot(q,snap=>{
     ORDERS=[];snap.forEach(d=>ORDERS.push({id:d.id,...d.data()}));
@@ -820,6 +1092,47 @@ function subToOrders(){
     if(document.getElementById('etp-emporders')?.classList.contains('act'))rndEmpOrders();
   },err=>console.error('onSnapshot orders',err));
 }
+// ── REAL-TIME OFI PRODUCTS LISTENERS ──
+let _unsubOfi1=null, _unsubOfi2=null;
+function subToOfi(){
+  // OFI Products 1 (Доп.Опрема)
+  if(_unsubOfi1){_unsubOfi1();_unsubOfi1=null;}
+  _unsubOfi1=onSnapshot(doc(db,'config','ofi_products'),snap=>{
+    if(snap.exists()){
+      OFI_PRODUCTS=snap.data().data||{};
+      if(document.getElementById('tp-inventory')?.classList.contains('act'))rndInv();
+    }
+  },err=>console.warn('ofi1 snap',err));
+  // OFI Products 2 (Моб.&Друго)
+  if(_unsubOfi2){_unsubOfi2();_unsubOfi2=null;}
+  if(_unsubSched){_unsubSched();_unsubSched=null;}
+  _unsubOfi2=onSnapshot(doc(db,'config','ofi_products2'),snap=>{
+    if(snap.exists()){
+      OFI_PRODUCTS2=snap.data().data||{};
+      if(document.getElementById('tp-inventory2')?.classList.contains('act'))rndInv2();
+    }
+  },err=>console.warn('ofi2 snap',err));
+}
+// ── REAL-TIME SCHEDULE LISTENER ──
+let _unsubSched=null;
+function subToSchedule(yr,mo,wk){
+  if(_unsubSched){_unsubSched();_unsubSched=null;}
+  const k='sched_'+scWkKey(yr,mo,wk);
+  _unsubSched=onSnapshot(doc(db,'config',k),snap=>{
+    if(snap.exists()&&snap.data().data){
+      scAllData[scWkKey(yr,mo,wk)]=snap.data().data;
+    }
+    // Refresh employee readonly view if active
+    if(!isMgr&&document.getElementById('etp-empschedule')?.classList.contains('act')){
+      empScRender();
+    }
+    // Refresh manager view if active
+    if(isMgr&&document.getElementById('tp-schedule')?.classList.contains('act')){
+      scRender();
+    }
+  },err=>console.warn('sched snap',err));
+}
+
 async function ldMonth(y,m){
   const fetches=getWDs(y,m).map(async d=>{
     const dk=dK(y,m,d);
@@ -835,7 +1148,11 @@ async function ldAllCfg(){
     isMgr?ldCfg('mgrOrderNotes'):Promise.resolve(null),
     ldCfg('ofi_products'),ldCfg('ofi_products2')
   ]);
-  if(t)TS=t;
+  if(t){
+    // Normalize all keys to strings after Firebase load
+    TS={};
+    Object.keys(t).forEach(y=>{ TS[String(y)]={}; Object.keys(t[y]).forEach(m=>{ TS[String(y)][String(m)]=t[y][m]; }); });
+  }
   if(co)CS=co;
   if(mn&&isMgr)MGR_ORDER_NOTES=mn;
   if(ofi)OFI_PRODUCTS=ofi;
@@ -887,10 +1204,10 @@ const isInScore=k=>!SCORE_EXCLUDED.has(k);
 const showSS=(id,msg,cls)=>{const el=document.getElementById(id);if(!el)return;el.style.display='inline-block';el.className='ss '+cls;el.textContent=msg;if(cls==='ok')setTimeout(()=>{el.style.display='none';},2500);};
 
 function getMT(y,m){
-  // Check both number and string keys since Firebase may return strings
   const yr=TS[y]||TS[String(y)];
   if(yr){const mo=yr[m]||yr[String(m)];if(mo)return mo;}
-  return{...DTGT};
+  // Return zeros for unsaved months
+  const zero={}; KKEYS.forEach(k=>zero[k]=0); return zero;
 }
 function getWDs(y,m){const d=[];const dt=new Date(y,m-1,1);while(dt.getMonth()===m-1){const dw=dt.getDay();if(dw!==0)d.push({date:dt.getDate(),dow:dw,label:MKD[dw]+' '+dt.getDate()+'/'+m});dt.setDate(dt.getDate()+1);}return d;}
 function gWks(wd){const w=[];let wk=[];wd.forEach((d,i)=>{wk.push(d);if(d.dow===6||i===wd.length-1){w.push(wk);wk=[];}});return w;}
@@ -977,6 +1294,9 @@ document.getElementById('lPs').addEventListener('keydown',e=>{if(e.key==='Enter'
 window.doLogout=async()=>{
   if(_unsubDay){_unsubDay();_unsubDay=null;}
   if(_unsubOrders){_unsubOrders();_unsubOrders=null;}
+  if(_unsubOfi1){_unsubOfi1();_unsubOfi1=null;}
+  if(_unsubOfi2){_unsubOfi2();_unsubOfi2=null;}
+  if(_unsubSched){_unsubSched();_unsubSched=null;}
   await signOut(auth);
   curUsr=null;isMgr=false;mID=null;AS={};TS={};CS={};ORDERS=[];OFI_PRODUCTS={};OFI_PRODUCTS2={};
   document.body.classList.remove('emp-mode');
@@ -995,6 +1315,7 @@ async function postLogin(){
   await ldMonth(cY,cM);
   subToMonth(cY,cM);
   subToOrders();
+  subToOfi();
   if(isMgr){
     document.getElementById('mgrNav').style.display='flex';
     document.getElementById('mgrTabs').style.display='flex';
@@ -1016,7 +1337,7 @@ document.getElementById('sLoad').style.display='flex';
 
 // ══ BACKUP SAVE / LOAD ══
 window.saveBackup=()=>{
-  const data={AS,TS,CS,ORDERS,OFI_PRODUCTS,OFI_PRODUCTS2,MGR_ORDER_NOTES,SCORE_EXCLUDED:[...SCORE_EXCLUDED],savedAt:new Date().toISOString(),version:3};
+  const data={AS,TS,CS,ORDERS,OFI_PRODUCTS:JSON.parse(JSON.stringify(OFI_PRODUCTS)),OFI_PRODUCTS2:JSON.parse(JSON.stringify(OFI_PRODUCTS2)),MGR_ORDER_NOTES,SCORE_EXCLUDED:[...SCORE_EXCLUDED],savedAt:new Date().toISOString(),version:3};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download=`mkt-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();
@@ -1044,7 +1365,7 @@ function rndNav(){
   const mb=document.getElementById('moBtns');mb.innerHTML='';
   MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();};mb.appendChild(b);});
   const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('wkBtns');wb.innerHTML='';
-  wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndDailyView();};wb.appendChild(b);});
+  wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;mgrWkIdx=i;document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndDailyView();if(document.getElementById('tp-weekly')?.classList.contains('act'))rndMgrWeekly();};wb.appendChild(b);});
 }
 window.chgYr=async d=>{cY+=d;cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();};
 window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();if(document.getElementById('tp-weekly')?.classList.contains('act'))rndMgrWeekly();};
@@ -1343,13 +1664,19 @@ function rndInv(){
   etb.innerHTML='';
   MEMBERS.forEach(mb=>{
     const wks=gWks(getWDs(cY,cM));const dO=wks[cW]?.[cD];
-    // Today: sum all OFI products sold by this employee today
-    const todaySold=prods.reduce((s,p)=>{const ms=dO?AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mb.id]:null;return s+(ms?.[p.ofi]||0);},0);
-    // Month: sum all OFI
-    const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms[p.ofi]||0);});return s+tot;},0);
-    const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms[p.ofi]||0);});return s+tot*(p.price||0);},0);
+    // Today: count equip_log entries
+    const todayLog=dO?(AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mb.id]?.equip_log||[]):[];
+    const todaySold=todayLog.length;
+    const todayRev=todayLog.reduce((s,e)=>{const ofi=typeof e==='object'?e.num:e;return s+(OFI_PRODUCTS[ofi]?.price||0);},0);
+    // Month: count equip_log across all days
+    let moSold=0,moRev=0;
+    getWDs(cY,cM).forEach(d=>{
+      const log=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id]?.equip_log||[];
+      moSold+=log.length;
+      moRev+=log.reduce((s,e)=>{const ofi=typeof e==='object'?e.num:e;return s+(OFI_PRODUCTS[ofi]?.price||0);},0);
+    });
     const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(moSold/wd).toFixed(1):0;
-    etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700">${todaySold}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
+    etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700;color:${todaySold>0?'var(--mg)':'var(--t3)'}">${todaySold}${todaySold>0?' ('+todayRev.toLocaleString()+' ден.)':''}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
   });
   rndOfiAnalytics(1);
 }
@@ -1448,7 +1775,7 @@ function rndInv2(){
     const moSold=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms['mob_'+p.ofi]||0);});return s+tot;},0);
     const moRev=prods.reduce((s,p)=>{let tot=0;getWDs(cY,cM).forEach(d=>{const ms=AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id];if(ms)tot+=(ms['mob_'+p.ofi]||0);});return s+tot*(p.price||0);},0);
     const wd=mWDs(mb.id,cY,cM);const avg=wd>0?(moSold/wd).toFixed(1):0;
-    etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700">${todaySold}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
+    etb.innerHTML+=`<tr><td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div>${mb.name}</div></td><td style="font-size:12px;font-weight:700;color:${todaySold>0?'var(--mg)':'var(--t3)'}">${todaySold}${todaySold>0?' ('+todayRev.toLocaleString()+' ден.)':''}</td><td>${moSold}</td><td style="color:var(--gr)">${moRev.toLocaleString()} ден.</td><td>${avg}</td></tr>`;
   });
   rndOfiAnalytics(2);
 }
@@ -1664,12 +1991,44 @@ function rndOfiAnalytics(inv){
     });
   }
 
+  // Per-employee sales in period
+  const empSales = MEMBERS.map(mb=>{
+    const days=getDaysInPeriod(period);
+    let sold=0,rev=0;
+    days.forEach(dk=>{
+      const parts=dk.split('-');const y=parseInt(parts[0]),m=parseInt(parts[1]);
+      const log=AS[y]?.[m]?.[dk]?.[mb.id]?.equip_log||[];
+      sold+=log.length;
+      rev+=log.reduce((s,e)=>{const ofi=typeof e==='object'?e.num:e;return s+(OFI_PRODUCTS[ofi]?.price||0);},0);
+    });
+    return {...mb,sold,rev};
+  }).sort((a,b)=>b.sold-a.sold);
+  const topSeller=empSales[0];
+
   const periodLabel=period==='week'?'Недела':period==='month'?'Месец':'Година';
+  const topSellerBadge=topSeller&&topSeller.sold>0?
+    '<div class="sc" style="border-color:var(--mg)"><div class="scl">🥇 TOP '+periodLabel+'</div><div class="scv" style="font-size:13px;color:var(--mg)">'+topSeller.name.split(' ')[0]+'</div><div class="scs" style="color:var(--mg)">'+topSeller.sold+' бр · '+topSeller.rev.toLocaleString()+' ден.</div></div>':'';
+
   statsEl.innerHTML=
     '<div class="sc"><div class="scl">Продадено '+periodLabel+'</div><div class="scv" style="font-size:16px">'+totalQty+'</div><div class="scs">парчиња</div></div>'+
     '<div class="sc"><div class="scl">Приход '+periodLabel+'</div><div class="scv" style="font-size:14px;color:var(--gr)">'+totalRev.toLocaleString()+'</div><div class="scs">ден.</div></div>'+
     '<div class="sc"><div class="scl">Вредност лагер</div><div class="scv" style="font-size:14px;color:var(--bl)">'+stockVal.toLocaleString()+'</div><div class="scs">ден.</div></div>'+
-    '<div class="sc"><div class="scl">Производи</div><div class="scv" style="font-size:16px">'+prods.length+'</div><div class="scs">во лагер</div></div>';
+    '<div class="sc"><div class="scl">Производи</div><div class="scv" style="font-size:16px">'+prods.length+'</div><div class="scs">во лагер</div></div>'+
+    topSellerBadge;
+
+  // Per-employee table for this period
+  const empTableHtml='<div style="margin-top:10px"><div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px">👥 Продажба по вработен — '+periodLabel+'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:4px">'
+    +empSales.map((mb,i)=>mb.sold>0?
+      '<div style="background:var(--s2);border-radius:var(--rs);padding:6px 10px;display:flex;align-items:center;gap:8px">'
+        +'<div class="av" style="background:'+mb.bg+';color:'+mb.tc+';width:22px;height:22px;font-size:9px;flex-shrink:0">'+mb.ini+'</div>'
+        +'<span style="flex:1;font-size:11px;font-weight:600">'+mb.name.split(' ')[0]+'</span>'
+        +(i===0?'<span style="font-size:9px;background:#FFF8DC;color:#B8860B;padding:1px 6px;border-radius:20px;font-weight:700">🥇 TOP</span>':'')
+        +'<span style="font-size:12px;font-weight:700;color:var(--mg)">'+mb.sold+' бр.</span>'
+        +'<span style="font-size:11px;color:var(--gr)">'+mb.rev.toLocaleString()+' ден.</span>'
+      +'</div>'
+    :'').join('')
+    +'</div></div>';
 
   // Today's sold items
   let todayHtml='';
@@ -1715,7 +2074,7 @@ function rndOfiAnalytics(inv){
     }).join('')+'</div>'
     :'<div style="font-size:11px;color:var(--t3)">Нема продажби во избраниот период.</div>';
 
-  topEl.innerHTML=todayHtml+topHtml;
+  topEl.innerHTML=todayHtml+empTableHtml+topHtml;
 }
 
 // ── TARGETS ──
@@ -1723,20 +2082,38 @@ function rndTgts(){tgY=cY;tgM=cM;document.getElementById('tgYrLbl').textContent=
 function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();};c.appendChild(b);});}
 window.chgTgYr=d=>{tgY+=d;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();};
 function rndTgTbl(){
-  const tb=document.getElementById('tgTb');const wd=getWDs(tgY,tgM).length;const ex=TS[tgY]&&TS[tgY][tgM];const cur=ex?{...ex}:{...DTGT};
+  const tb=document.getElementById('tgTb');const wd=getWDs(tgY,tgM).length;const _tyr=TS[tgY]||TS[String(tgY)];
+  const _texact=_tyr?(_tyr[tgM]||_tyr[String(tgM)]):null;
+  const cur=_texact?{..._texact}:getMT(tgY,tgM);
   const bdg=document.getElementById('tgBadge');
-  bdg.innerHTML=ex?`<span class="bdgr" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span class="bdrd" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">⚠️ Default за ${MKM[tgM-1]} ${tgY}</span>`;
+  bdg.innerHTML=_texact?`<span class="bdgr" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span class="bdrd" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">⚠️ Default за ${MKM[tgM-1]} ${tgY}</span>`;
   tb.innerHTML='';
-  KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);const on=isInScore(k);tb.innerHTML+=`<tr style="opacity:${on?1:.55}"><td style="text-align:left;padding-left:10px;font-weight:600;font-size:11px">${KLBLS[i]}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td><td><input type="number" min="0" id="tg_${k}" value="${mv}" class="ti" oninput="updTgPv('${k}',${wd})"></td><td style="font-size:11px;color:var(--t2)" id="dt_${k}">${dv}/ден</td><td style="font-size:11px;color:var(--t2)" id="wt_${k}">${wv}/нед</td><td style="font-size:10px;color:var(--t3)">${DTGT[k]}</td></tr>`;});
+  KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);const on=isInScore(k);const perEmp=Math.round(mv/5*10)/10;
+    // Sum all 12 months for annual
+    const annV=Array.from({length:12},(_,i)=>{const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(i+1)]||tyr[i+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);
+    tb.innerHTML+=`<tr style="opacity:${on?1:.55}">
+      <td style="text-align:left;padding-left:10px;font-weight:600;font-size:11px">${KLBLS[i]}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td>
+      <td style="font-size:12px;font-weight:700;color:var(--t2);text-align:center" id="ann_${k}">${annV}</td>
+      <td><input type="number" min="0" id="tg_${k}" value="${mv}" class="ti" oninput="updTgPv('${k}',${wd})"></td>
+      <td style="background:var(--mgl);color:var(--mgd);font-weight:700;font-size:12px;text-align:center" id="pe_${k}">${perEmp}</td>
+      <td style="font-size:11px;color:var(--t2)" id="dt_${k}">${dv}/ден</td>
+      <td style="font-size:11px;color:var(--t2)" id="wt_${k}">${wv}/нед</td>
+      <td style="font-size:10px;color:var(--t3)">${DTGT[k]}</td>
+    </tr>`;});
 }
-window.updTgPv=(k,wd)=>{const v=parseInt(document.getElementById('tg_'+k).value)||0;document.getElementById('dt_'+k).textContent=(wd>0?(v/wd).toFixed(2):0)+'/ден';document.getElementById('wt_'+k).textContent=(wd>0?(v/wd*5).toFixed(1):0)+'/нед';};
+window.updTgPv=(k,wd)=>{const v=parseInt(document.getElementById('tg_'+k).value)||0;document.getElementById('dt_'+k).textContent=(wd>0?(v/wd).toFixed(2):0)+'/ден';document.getElementById('wt_'+k).textContent=(wd>0?(v/wd*5).toFixed(1):0)+'/нед';const ae=document.getElementById('ann_'+k);if(ae){const annSum=Array.from({length:12},(_,i)=>{if(i+1===tgM)return v;const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(i+1)]||tyr[i+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);ae.textContent=annSum;}const pe=document.getElementById('pe_'+k);if(pe)pe.textContent=Math.round(v/5*10)/10;};
 window.saveTgt=async()=>{
   if(!TS[tgY])TS[tgY]={};
   const nt={};KKEYS.forEach(k=>{nt[k]=parseInt(document.getElementById('tg_'+k)?.value)||0;});
-  TS[tgY][tgM]=nt;  // tgM is always a number
+  TS[tgY][String(tgM)]=nt;  // store as string key for Firebase consistency
+  // Normalize entire TS to string keys
+  const normTS={};
+  Object.keys(TS).forEach(y=>{ normTS[String(y)]={}; Object.keys(TS[y]).forEach(m=>{ normTS[String(y)][String(m)]=TS[y][m]; }); });
+  TS=normTS;
   await svCfg('targets',TS);rndTgTbl();rndAllTgs();
   if(tgY===cY&&tgM===cM){rndTbl();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();}
-  showSS('sStat','✅ Таргет зачуван за '+MKM[tgM-1]+' '+tgY,'ok');
+  // Show confirmation AFTER render (rndTgTbl re-creates the DOM)
+
 };
 window.cpyPrev=()=>{
   let pm=tgM-1,py=tgY;if(pm<1){pm=12;py--;}
@@ -1870,7 +2247,11 @@ window.gotoTab=(name,el)=>{
   else if(name==='inventory2')rndInv2();
   else if(name==='targets')rndTgts();
   else if(name==='orders')rndOrders();
+  else if(name==='yearly')rndMgrYearly();
+  else if(name==='ofireport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(1);}
+  else if(name==='mobreport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(2);}
   else if(name==='boost')rndBoostBoard();
+  else if(name==='schedule')scInit();
 };
 
 // ── BOOST BOARD ──
@@ -1952,6 +2333,7 @@ window.empTab=(name,el)=>{
   else if(name==='yearly')rndEmpYr();
   else if(name==='emporders')rndEmpOrders();
   else if(name==='history')rndEmpHistory();
+  else if(name==='empschedule')empScInit();
 };
 function rndEmpDyBtns(){
   const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];
@@ -2089,6 +2471,9 @@ let mgrWkIdx=0; // which week index in current month
 window.chgMgrWk=d=>{
   const wks=gWks(getWDs(cY,cM));
   mgrWkIdx=Math.max(0,Math.min(wks.length-1,mgrWkIdx+d));
+  cW=mgrWkIdx;
+  // Update wkBtns highlight
+  document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===mgrWkIdx));
   rndMgrWeekly();
 };
 
@@ -2427,6 +2812,661 @@ if('serviceWorker' in navigator){
       .catch(e=>console.warn('SW:',e));
   });
 }
+
+
+
+// ── MANAGER YEARLY ──
+let mgrYr = new Date().getFullYear();
+window.chgMgrYr = d => { mgrYr += d; rndMgrYearly(); };
+
+function rndMgrYearly(){
+  document.getElementById('mgrYrTit').textContent = mgrYr;
+  document.getElementById('mgrYrLbl').textContent = mgrYr;
+
+  // Month score cards
+  const cards = document.getElementById('mgrYrMonthCards'); if(!cards) return;
+  cards.innerHTML = '';
+  for(let m=1; m<=12; m++){
+    const mt = getMT(mgrYr, m);
+    let teamScore=0, cnt=0;
+    MEMBERS.forEach(mb=>{
+      KKEYS.forEach(k=>{ if(isInScore(k)){ teamScore += pct(mMoSum(mb.id,k,mgrYr,m), mt[k]||1); cnt++; }});
+    });
+    const sc = cnt>0 ? Math.round(teamScore/cnt) : 0;
+    const hasData = MEMBERS.some(mb => KKEYS.some(k => mMoSum(mb.id,k,mgrYr,m)>0));
+    cards.innerHTML += `<div class="sc" style="border-color:${hasData?pc(sc):'var(--brd)'}">
+      <div class="scl">${MKM[m-1].substring(0,3)}</div>
+      <div class="scv" style="color:${hasData?pc(sc):'var(--t3)'};font-size:14px">${hasData?sc+'%':'—'}</div>
+      <div class="scs" style="color:${hasData?pc(sc):'var(--t3)'}">${hasData?pem(sc):''}</div>
+    </div>`;
+  }
+
+  // Table header: Вработен | Јан | Фев | ... | Дек | Вкупно | Год.Score
+  const head = document.getElementById('mgrYrHead'); if(!head) return;
+  let hh = '<th style="text-align:left;padding-left:10px">Вработен</th>';
+  for(let m=1; m<=12; m++) hh += `<th style="font-size:10px">${MKM[m-1].substring(0,3)}</th>`;
+  hh += '<th>Вкупно</th><th>Score</th>';
+  head.innerHTML = hh;
+
+  // Table body
+  const body = document.getElementById('mgrYrBody'); if(!body) return;
+  body.innerHTML = '';
+  const teamTotals = Array(12).fill(0);
+  const empCards = document.getElementById('mgrYrEmpCards'); if(empCards) empCards.innerHTML='';
+
+  MEMBERS.forEach(mb => {
+    let row = `<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}</span></div></td>`;
+    let yrTotal = 0; let yrScore=0; let yrScCnt=0;
+    const moScores = [];
+
+    for(let m=1; m<=12; m++){
+      const mt = getMT(mgrYr, m);
+      let moTot=0; let moSc=0; let moScC=0;
+      KKEYS.forEach(k=>{
+        const v = mMoSum(mb.id, k, mgrYr, m);
+        moTot += v;
+        if(isInScore(k)){ moSc += pct(v, mt[k]||1); moScC++; }
+      });
+      const sc = moScC>0 ? Math.round(moSc/moScC) : 0;
+      moScores.push(sc);
+      const hasData = moTot > 0;
+      yrTotal += moTot;
+      teamTotals[m-1] += moTot;
+      if(hasData){ yrScore += sc; yrScCnt++; }
+      row += `<td style="font-size:11px;text-align:center;color:${hasData?pc(sc):'var(--t3)'}">${hasData?sc+'%':'—'}</td>`;
+    }
+
+    const avgSc = yrScCnt>0 ? Math.round(yrScore/yrScCnt) : 0;
+    row += `<td style="font-size:12px;font-weight:700;color:var(--mg);text-align:center">${yrTotal}</td>`;
+    row += `<td style="font-size:13px;font-weight:700;color:${pc(avgSc)};text-align:center">${avgSc}% ${pem(avgSc)}</td>`;
+    const tr = document.createElement('tr'); tr.innerHTML = row; body.appendChild(tr);
+
+    // Employee card
+    if(empCards){
+      const kh = KKEYS.map((k,i)=>{
+        if(!isInScore(k)) return '';
+        let yrK=0; for(let m=1;m<=12;m++) yrK += mMoSum(mb.id,k,mgrYr,m);
+        return `<div class="mkc"><div class="mkl">${KLBLS[i]}</div><div class="mkv">${yrK}</div><div class="mkp" style="color:var(--t3)">вкупно</div></div>`;
+      }).join('');
+      empCards.innerHTML += `<div class="mc"><div class="mch">
+        <div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px">${mb.ini}</div>
+        <div><div class="mcn">${mb.name}</div><div class="mci">Година ${mgrYr}</div></div>
+        <div style="margin-left:auto"><span style="font-size:13px;padding:2px 9px;border-radius:20px;font-weight:700" class="${pbc(avgSc)}">${avgSc}% ${pem(avgSc)}</span></div>
+      </div><div class="mck">${kh}</div></div>`;
+    }
+  });
+
+  // Footer
+  const foot = document.getElementById('mgrYrFoot'); if(!foot) return;
+  let fh = '<td style="padding-left:10px">Тим вкупно</td>';
+  let grandTotal = 0;
+  teamTotals.forEach(t => { grandTotal += t; fh += `<td style="font-size:11px;font-weight:700;text-align:center">${t||'—'}</td>`; });
+  fh += `<td style="font-size:12px;font-weight:700;color:var(--mg)">${grandTotal}</td><td></td>`;
+  foot.innerHTML = fh;
+}
+window.rndMgrYearly = rndMgrYearly;
+
+
+// ── OFI/MOB REPORT ──
+const ofiRep = {yr:new Date().getFullYear(), m:new Date().getMonth()+1, wk:0, per1:'week', per2:'week'};
+
+function ofiRepGetDays(inv, yr, m, wk, per){
+  if(per==='year'){
+    const days=[];
+    for(let mo=1;mo<=12;mo++) getWDs(yr,mo).forEach(d=>days.push(dK(yr,mo,d)));
+    return days;
+  }
+  if(per==='month') return getWDs(yr,m).map(d=>dK(yr,m,d));
+  // week
+  const wks=gWks(getWDs(yr,m));
+  return (wks[wk]||wks[0]||[]).map(d=>dK(yr,m,d));
+}
+
+function ofiRepCalc(inv, days){
+  const prods=Object.values(inv===1?OFI_PRODUCTS:OFI_PRODUCTS2);
+  const logKey=inv===1?'equip_log':'mob_log';
+  let totalSold=0, totalRev=0;
+  const empData=MEMBERS.map(mb=>({...mb,sold:0,rev:0}));
+  const prodSales={};
+
+  days.forEach(dk=>{
+    const parts=dk.split('-');const y=parseInt(parts[0]),mo=parseInt(parts[1]);
+    MEMBERS.forEach((mb,mi)=>{
+      const log=AS[y]?.[mo]?.[dk]?.[mb.id]?.[logKey]||[];
+      log.forEach(e=>{
+        const ofi=typeof e==='object'?e.num:e;
+        const price=(inv===1?OFI_PRODUCTS:OFI_PRODUCTS2)[ofi]?.price||0;
+        const name=(inv===1?OFI_PRODUCTS:OFI_PRODUCTS2)[ofi]?.name||ofi;
+        totalSold++; totalRev+=price;
+        empData[mi].sold++; empData[mi].rev+=price;
+        prodSales[ofi]=(prodSales[ofi]||{ofi,name,sold:0,rev:0});
+        prodSales[ofi].sold++; prodSales[ofi].rev+=price;
+      });
+    });
+  });
+
+  empData.sort((a,b)=>b.sold-a.sold);
+  const topProds=Object.values(prodSales).sort((a,b)=>b.sold-a.sold);
+  return {totalSold,totalRev,empData,topProds};
+}
+
+function rndOfiReport(inv){
+  const yr=ofiRep.yr, m=ofiRep.m, wk=ofiRep.wk;
+  const per=inv===1?ofiRep.per1:ofiRep.per2;
+  const perLbl=per==='week'?'Недела':per==='month'?'Месец':'Година';
+
+  // Update nav labels
+  document.getElementById('ofiRep'+inv+'Yr').textContent=yr;
+
+  // Month buttons
+  const moC=document.getElementById('ofiRep'+inv+'Mo'); if(moC){
+    moC.innerHTML='';
+    MKM.forEach((mn,i)=>{
+      const b=document.createElement('button');
+      b.className='nb'+(i+1===m?' act':'');
+      b.textContent=mn.substring(0,3);
+      b.onclick=()=>{ofiRep.m=i+1;ofiRep.wk=0;document.querySelectorAll('#ofiRep'+inv+'Mo .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndOfiRepWks(inv);rndOfiReport(inv);};
+      moC.appendChild(b);
+    });
+  }
+  rndOfiRepWks(inv);
+
+  // Get days and calc
+  const days=ofiRepGetDays(inv,yr,m,wk,per);
+  const {totalSold,totalRev,empData,topProds}=ofiRepCalc(inv,days);
+  const prods=Object.values(inv===1?OFI_PRODUCTS:OFI_PRODUCTS2);
+  const stockVal=prods.reduce((s,p)=>s+(p.qty||0)*(p.price||0),0);
+
+  // Stats cards
+  const statsEl=document.getElementById('ofiRep'+inv+'Stats'); if(!statsEl)return;
+  const top=empData[0];
+  statsEl.innerHTML=
+    '<div class="sc"><div class="scl">📦 Продадено '+perLbl+'</div><div class="scv" style="font-size:18px;color:var(--mg)">'+totalSold+'</div><div class="scs">парчиња</div></div>'+
+    '<div class="sc"><div class="scl">💰 Приход '+perLbl+'</div><div class="scv" style="font-size:14px;color:var(--gr)">'+totalRev.toLocaleString()+'</div><div class="scs">ден.</div></div>'+
+    '<div class="sc"><div class="scl">🏷 Вред. лагер</div><div class="scv" style="font-size:13px;color:var(--bl)">'+stockVal.toLocaleString()+'</div><div class="scs">ден.</div></div>'+
+    (top&&top.sold>0?'<div class="sc" style="border-color:var(--mg)"><div class="scl">🥇 TOP '+perLbl+'</div><div class="scv" style="font-size:13px;color:var(--mg)">'+top.name.split(' ')[0]+'</div><div class="scs" style="color:var(--mg)">'+top.sold+' бр · '+top.rev.toLocaleString()+' ден.</div></div>':'');
+
+  // Top section - per employee ranking
+  const topEl=document.getElementById('ofiRep'+inv+'Top'); if(!topEl)return;
+  const empHtml=empData.filter(e=>e.sold>0).length?
+    '<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px">👥 Продажба по вработен — '+perLbl+'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:4px">'
+    +empData.map((mb,i)=>mb.sold>0?
+      '<div style="background:var(--s2);border-radius:var(--rs);padding:8px 12px;display:flex;align-items:center;gap:8px">'
+        +(i===0?'<span style="font-size:14px">🥇</span>':i===1?'<span style="font-size:14px">🥈</span>':i===2?'<span style="font-size:14px">🥉</span>':'<span style="font-size:11px;color:var(--t3);min-width:18px">#'+(i+1)+'</span>')
+        +'<div class="av" style="background:'+mb.bg+';color:'+mb.tc+';width:24px;height:24px;font-size:9px">'+mb.ini+'</div>'
+        +'<span style="flex:1;font-size:12px;font-weight:600">'+mb.name+'</span>'
+        +'<span style="font-size:13px;font-weight:700;color:var(--mg)">'+mb.sold+' бр.</span>'
+        +'<span style="font-size:11px;color:var(--gr);min-width:80px;text-align:right">'+mb.rev.toLocaleString()+' ден.</span>'
+      +'</div>'
+    :'').join('')+'</div></div>'
+    :'<div style="font-size:11px;color:var(--t3);margin-bottom:12px">Нема продажби во избраниот период.</div>';
+
+  // Top products
+  const prodsHtml=topProds.length?
+    '<div><div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px">📦 Топ производи</div>'
+    +'<div style="display:flex;flex-direction:column;gap:4px">'
+    +topProds.map((p,i)=>{
+      const pct2=totalSold>0?Math.round(p.sold/totalSold*100):0;
+      return '<div style="background:var(--s2);border-radius:var(--rs);padding:7px 10px;display:flex;align-items:center;gap:8px">'
+        +'<span style="font-size:11px;color:var(--t3);min-width:20px">#'+(i+1)+'</span>'
+        +'<div style="flex:1"><div style="font-size:11px;font-weight:600">'+p.name+'</div>'
+        +'<div style="height:3px;background:var(--brd);border-radius:2px;margin-top:3px"><div style="width:'+pct2+'%;height:100%;background:var(--mg);border-radius:2px"></div></div></div>'
+        +'<span style="font-size:12px;font-weight:700;color:var(--mg)">'+p.sold+'</span>'
+        +'<span style="font-size:11px;color:var(--gr);min-width:80px;text-align:right">'+p.rev.toLocaleString()+' ден.</span>'
+      +'</div>';
+    }).join('')+'</div></div>'
+    :'<div style="font-size:11px;color:var(--t3)">Нема продажби.</div>';
+
+  const prodsEl=document.getElementById('ofiRep'+inv+'Prods');
+  if(prodsEl) prodsEl.innerHTML=empHtml+prodsHtml;
+}
+
+function rndOfiRepWks(inv){
+  const wks=gWks(getWDs(ofiRep.yr,ofiRep.m));
+  const wkC=document.getElementById('ofiRep'+inv+'Wk'); if(!wkC)return;
+  wkC.innerHTML='';
+  wks.forEach((wk,i)=>{
+    const b=document.createElement('button');
+    b.className='nb'+(i===ofiRep.wk?' act':'');
+    b.textContent='Н'+( i+1)+'('+(wk[0]?.date)+'-'+(wk[wk.length-1]?.date)+')';
+    b.style.fontSize='10px';
+    b.onclick=()=>{ofiRep.wk=i;document.querySelectorAll('#ofiRep'+inv+'Wk .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndOfiReport(inv);};
+    wkC.appendChild(b);
+  });
+}
+
+window.ofiRepChg=(inv,field,delta)=>{
+  if(field==='yr') ofiRep.yr+=delta;
+  rndOfiRepWks(inv); rndOfiReport(inv);
+};
+window.ofiRepPer=(inv,per,btn)=>{
+  if(inv===1)ofiRep.per1=per; else ofiRep.per2=per;
+  ['w','m','y'].forEach(s=>{const b=document.getElementById('ofiRep'+inv+'p'+s);if(b)b.classList.remove('act');});
+  if(btn)btn.classList.add('act');
+  rndOfiReport(inv);
+};
+window.rndOfiReport=rndOfiReport;
+
+
+window.mgrOfiFilter=(inv,q)=>{
+  const rows=document.querySelectorAll('#ofiTb'+(inv===1?'':'2')+' tr');
+  const sq=q.trim().toLowerCase();
+  rows.forEach(tr=>{
+    const txt=tr.textContent.toLowerCase();
+    tr.style.display=(!sq||txt.includes(sq))?'':'none';
+  });
+};
+
+
+// ═══════════════════════════════════════════════════
+// 🕐 SCHEDULE / РАСПОРЕД MODULE
+// ═══════════════════════════════════════════════════
+const SC_EMPS=[
+  {n:'Meli', av:'ME',bg:'#FAD8EC',tc:'#6B1535',id:'MS'},
+  {n:'Fuku', av:'FU',bg:'#E4E2FD',tc:'#2E2680',id:'FM'},
+  {n:'Kate', av:'KA',bg:'#C4EEDB',tc:'#064D37',id:'KM'},
+  {n:'Hane', av:'HA',bg:'#FADFBC',tc:'#7A3F00',id:'HS'},
+  {n:'Ivona',av:'IV',bg:'#D0E8F8',tc:'#0B3A6E',id:'IN'},
+];
+const SC_S={
+  T1:{al:'Ndërrimi 1',mk:'Смена 1',bot:'08:00–15:00',css:'pill-T1',dot:'#E8207D'},
+  T2:{al:'Ndërrimi 2',mk:'Смена 2',bot:'10:00–17:00',css:'pill-T2',dot:'#0D2D6B'},
+  SAT:{al:'E Shtunë',mk:'Сабота',bot:'09:00–15:00',css:'pill-SAT',dot:'#1279A5'},
+  TM:{al:'Ndërrimi mes.',mk:'Меѓусмена',bot:'10:00–17:00',css:'pill-TM',dot:'#B8860B'},
+  OFF:{al:'Pushim',mk:'Одмор',bot:'',css:'pill-OFF',dot:'#9A9890'},
+};
+const SC_AL_DAYS=['Hën','Mar','Mër','Enj','Pre','Sht','Die'];
+const SC_MK_DAYS=['Пон','Вто','Сре','Чет','Пет','Саб','Нед'];
+const SC_AL_FULL=['E Hënë','E Martë','E Mërkurë','E Enjte','E Premte','E Shtunë','E Diel'];
+const SC_MK_FULL=['Понеделник','Вторник','Среда','Четврток','Петок','Сабота','Недела'];
+
+
+function scNextMon(){const d=new Date();const wd=d.getDay();d.setDate(d.getDate()+(wd===0?1:8-wd));d.setHours(0,0,0,0);return d;}
+function scFmt(d){return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0');}
+
+
+// ── SCHEDULE STATE ──
+let scSelYr=new Date().getFullYear(), scSelMo=new Date().getMonth()+1, scSelWk=0;
+let scAllData={}; // scAllData[yr][mo][wk] = {data, shal, vrap}
+let scDays=[], scMode='T1', scLang='both', scAddingSlot=0, scModalEmp=null, scModalDay=null;
+
+function scWkKey(yr,mo,wk){return yr+'-'+mo+'-'+wk;}
+function scGetWkData(){const k=scWkKey(scSelYr,scSelMo,scSelWk);return scAllData[k]||null;}
+
+function scMkDefaultData(days){
+  const data={};
+  SC_EMPS.forEach(e=>{data[e.n]={};days.forEach((_,i)=>{data[e.n][i]=i===5?'SAT':i===6?'OFF':null;});});
+  return data;
+}
+function scMkDefaultShal(){return {0:{Hane:1,Kate:2,Ivona:3,Fuku:4},1:{Kate:1,Ivona:2,Hane:3,Meli:4},2:{Fuku:1,Hane:2,Ivona:3,Meli:4},3:{Meli:1,Ivona:2,Kate:3,Hane:4},4:{Hane:1,Fuku:3,Meli:4}};}
+
+// Get days array for selected week
+function scBuildDays(){
+  const wks=scGetCalWks(scSelYr,scSelMo);
+  const wk=wks[scSelWk]||wks[0]||[];
+  scDays=wk;
+}
+
+function scGetCalWks(yr,mo){
+  // Build full Mon-Sun weeks that CONTAIN days of this month
+  // Find the Monday of the week containing the 1st of the month
+  const first=new Date(yr,mo-1,1);
+  const dow1=(first.getDay()+6)%7; // 0=Mon
+  const mon=new Date(first);mon.setDate(first.getDate()-dow1);
+
+  // Find the Sunday of the week containing the last day of the month
+  const last=new Date(yr,mo,0); // last day of month
+  const dow2=(last.getDay()+6)%7;
+  const sun=new Date(last);sun.setDate(last.getDate()+(6-dow2));
+
+  const weeks=[];let wk=[];
+  const cur=new Date(mon);
+  while(cur<=sun){
+    wk.push(new Date(cur));
+    if(wk.length===7){weeks.push(wk);wk=[];}
+    cur.setDate(cur.getDate()+1);
+  }
+  if(wk.length)weeks.push(wk);
+  return weeks;
+}
+
+async function scLoadWk(yr,mo,wk){
+  const k=scWkKey(yr,mo,wk);
+  if(scAllData[k])return;
+  const saved=await ldCfg('sched_'+k);
+  if(saved){scAllData[k]=saved;}
+}
+
+async function scInit(){
+  scSelYr=new Date().getFullYear();
+  scSelMo=new Date().getMonth()+1;
+  // Find current week
+  const today=new Date();
+  const wks=scGetCalWks(scSelYr,scSelMo);
+  scSelWk=0;
+  wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.getDate()===today.getDate()&&d.getMonth()===today.getMonth())scSelWk=wi;});});
+
+  await scLoadWk(scSelYr,scSelMo,scSelWk);
+  scBuildDays();
+  scBuildNav();
+  scApplyLang();
+  scRender();
+}
+
+function scBuildNav(){
+  // Year/Month nav
+  const el=id=>document.getElementById(id);
+  if(el('sc-sel-yr'))el('sc-sel-yr').textContent=scSelYr;
+  // Month buttons
+  const moC=el('sc-mo-btns');
+  if(moC){
+    moC.innerHTML='';
+    MKM.forEach((mn,i)=>{
+      const b=document.createElement('button');
+      b.className='nb'+(i+1===scSelMo?' act':'');
+      b.textContent=mn.substring(0,3);b.title=mn;
+      b.onclick=async()=>{scSelMo=i+1;scSelWk=0;await scLoadWk(scSelYr,scSelMo,0);scBuildDays();scBuildNav();scRender();};
+      moC.appendChild(b);
+    });
+  }
+  // Week buttons
+  const wkC=el('sc-wk-btns');
+  if(wkC){
+    wkC.innerHTML='';
+    const wks=scGetCalWks(scSelYr,scSelMo);
+    wks.forEach((wk,wi)=>{
+      const b=document.createElement('button');
+      b.className='nb'+(wi===scSelWk?' act':'');
+      const fd=wk[0],ld=wk[wk.length-1];
+      b.textContent='Нед '+(wi+1)+' ('+fd.getDate()+'/'+String(fd.getMonth()+1).padStart(2,'0')+'-'+ld.getDate()+'/'+String(ld.getMonth()+1).padStart(2,'0')+')';
+      b.style.fontSize='10px';
+      b.onclick=async()=>{scSelWk=wi;await scLoadWk(scSelYr,scSelMo,wi);scBuildDays();document.querySelectorAll('#sc-wk-btns .nb').forEach((x,j)=>x.classList.toggle('act',j===wi));subToSchedule(scSelYr,scSelMo,wi);scRender();};
+      wkC.appendChild(b);
+    });
+  }
+  // Update week range label
+  if(scDays.length&&el('sc-week-range')){
+    const fd=scDays[0],ld=scDays[scDays.length-1];
+    if(scDays.length){const _f=scDays[0],_l=scDays[scDays.length-1];el('sc-week-range').textContent=_f.getDate()+'.'+String(_f.getMonth()+1).padStart(2,'0')+'.'+_f.getFullYear()+' – '+_l.getDate()+'.'+String(_l.getMonth()+1).padStart(2,'0')+'.'+_l.getFullYear()+' · Makedonski Telekom Kičevo';}
+  }
+}
+
+// Get or create data for current week
+function scCurData(){
+  const k=scWkKey(scSelYr,scSelMo,scSelWk);
+  if(!scAllData[k]){
+    const d=scMkDefaultData(scDays.length?scDays:Array(7));
+    scAllData[k]={data:d,shal:scMkDefaultShal(),vrap:{1:[],2:[]}};
+  }
+  return scAllData[k];
+}
+function scData(){return scCurData().data;}
+function scShalterData(){return scCurData().shal;}
+function scVrapList(){return scCurData().vrap;}
+
+function scGetShalter(n,di){return di>4?null:(scShalterData()[di]?.[n]||null);}
+function scSetShalter(n,di,num){
+  if(di>4)return;
+  const sh=scShalterData();
+  if(!sh[di])sh[di]={};
+  if(num===null){delete sh[di][n];}
+  else{Object.keys(sh[di]).forEach(k=>{if(sh[di][k]===num&&k!==n)delete sh[di][k];});sh[di][n]=num;}
+}
+
+window.scSetLang=(l,btn)=>{scLang=l;document.querySelectorAll('.sc-lbtn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');scApplyLang();scRender();};
+window.scSetMode=(code,btn)=>{
+  scMode=code;
+  document.querySelectorAll('.sc-ctrl').forEach(b=>{b.classList.remove('sel');b.style.borderColor='transparent';});
+  btn.classList.add('sel');btn.style.borderColor=SC_S[code].dot;
+};
+window.scToggle=(emp,di)=>{const d=scData();d[emp][di]=(d[emp][di]===scMode)?null:scMode;scRender();};
+window.scOpenShalModal=(n,di,evt)=>{
+  evt.stopPropagation();scModalEmp=n;scModalDay=di;
+  const cur=scGetShalter(n,di);
+  const shl=scLang==='mk'?'\u0428\u0430\u043b\u0442\u0435\u0440':'Banka';
+  const dayLbl=scLang==='mk'?SC_MK_FULL[di]:scLang==='al'?SC_AL_FULL[di]:SC_AL_FULL[di]+'/'+SC_MK_FULL[di];
+  document.getElementById('sc-shal-modal-title').textContent=n+' · '+dayLbl;
+  const list=document.getElementById('sc-shal-modal-list');
+  list.innerHTML=[1,2,3,4].map(num=>{
+    const sh=scShalterData();
+    const occ=Object.entries(sh[di]||{}).find(([k,v])=>v===num&&k!==n);
+    const isCur=cur===num;
+    return `<button class="sc-mopt" style="${isCur?'outline:2px solid var(--mg);':''}" onclick="scAssignShal(${num})">${shl} ${num}${occ?' ('+occ[0]+')':''}${isCur?' \u2713':''}</button>`;
+  }).join('')+`<button class="sc-mopt sc-mopt-rem" onclick="scAssignShal(null)">\u2014 ${scLang==='mk'?'\u041e\u0442\u0441\u0442\u0440\u0430\u043d\u0438':'Hiq'}</button>`;
+  document.getElementById('sc-shal-modal').classList.add('open');
+};
+window.scAssignShal=(num)=>{scSetShalter(scModalEmp,scModalDay,num);scCloseShalModal();scRender();};
+window.scCloseShalModal=()=>{document.getElementById('sc-shal-modal').classList.remove('open');};
+
+function scRender(){
+  const thead=document.getElementById('sc-thead');
+  const tbody=document.getElementById('sc-tbody');
+  if(!thead||!tbody||!scDays.length)return;
+
+  const dl=(d,i)=>{
+    const dow=(d.getDay()+6)%7;
+    const al=SC_AL_DAYS[dow],mk=SC_MK_DAYS[dow],dt=scFmt(d);
+    const isToday=new Date().toDateString()===d.toDateString();
+    const todaySt=isToday?'background:var(--mgl);color:var(--mgd);':'';
+    if(scLang==='al')return `<div style="font-size:9px;color:var(--t3);${todaySt}">${al}</div><div style="font-size:11px;font-weight:700">${dt}</div>`;
+    if(scLang==='mk')return `<div style="font-size:9px;color:var(--t3)">${mk}</div><div style="font-size:11px;font-weight:700;${isToday?'color:var(--mg)':''}">${dt}</div>`;
+    return `<div style="font-size:9px;color:var(--t3)">${al}/${mk}</div><div style="font-size:11px;font-weight:700;${isToday?'color:var(--mg)':''}">${dt}</div>`;
+  };
+
+  thead.innerHTML='<tr><th style="text-align:left;padding-left:10px;min-width:90px">\u0412\u0440\u0430\u0431\u043e\u0442\u0435\u043d</th>'+scDays.map((d,i)=>`<th style="text-align:center;padding:5px 4px;font-size:10px">${dl(d,i)}</th>`).join('')+'</tr>';
+
+  const d=scData();const sh=scShalterData();
+  tbody.innerHTML=SC_EMPS.map(emp=>{
+    const cells=scDays.map((_,di)=>{
+      const shift=d[emp.n]?d[emp.n][di]:null;
+      const shalNum=scGetShalter(emp.n,di);
+      const shl=scLang==='mk'?'\u0428\u0430\u043b\u0442.':'Banka';
+      const shalBadge=di<5?(shalNum
+        ?`<button class="sc-shal" onclick="scOpenShalModal('${emp.n}',${di},event)">${shl} ${shalNum} \u270e</button>`
+        :`<button class="sc-shal-empty" onclick="scOpenShalModal('${emp.n}',${di},event)">+ ${shl}</button>`):'';
+      if(shift){
+        const s=SC_S[shift];
+        const lbl=scLang==='mk'?s.mk:s.al;
+        return `<td class="sc-cell"><div class="sc-cpill ${s.css}" onclick="scToggle('${emp.n}',${di})"><span class="sc-cp-top">${lbl}</span><span class="sc-cp-mid">${s.bot}</span></div>${shalBadge}</td>`;
+      }
+      return `<td class="sc-cell"><button class="sc-add-btn" onclick="scToggle('${emp.n}',${di})">+</button>${shalBadge}</td>`;
+    }).join('');
+    return `<tr><td style="padding:6px 10px"><div style="display:flex;align-items:center;gap:6px"><div class="av" style="background:${emp.bg};color:${emp.tc};width:24px;height:24px;font-size:9px;flex-shrink:0">${emp.av}</div><span style="font-size:11px;font-weight:600">${emp.n}</span></div></td>${cells}</tr>`;
+  }).join('');
+
+  scRenderVrap();scRenderStats();
+}
+
+function scRenderVrap(){
+  const vl=scVrapList();
+  [1,2].forEach(slot=>{
+    const sec=document.getElementById('sc-vslot'+slot);if(!sec)return;
+    if(!vl[slot]||!vl[slot].length){sec.innerHTML='';return;}
+    sec.innerHTML=vl[slot].map((v,idx)=>{
+      const dayLbl=v.day===-1?(scLang==='mk'?'\u0421\u0435\u043a\u043e\u0458 \u0434\u0435\u043d':'Çdo ditë'):(scLang==='mk'?SC_MK_FULL[v.day]:SC_AL_FULL[v.day]);
+      return `<div class="sc-vrap-row"><span style="font-size:11px;font-weight:600">${v.name}</span><span style="font-size:10px;opacity:.7;margin-left:4px">${dayLbl}</span><button class="sc-vrap-del" onclick="scRemoveVrap(${slot},${idx})">\u2715</button></div>`;
+    }).join('');
+  });
+}
+
+function scRenderStats(){
+  const d=scData();const vl=scVrapList();
+  let tot=0,t1=0,t2=0;
+  SC_EMPS.forEach(e=>Array.from({length:scDays.length}).forEach((_,di)=>{
+    const sh=d[e.n]?d[e.n][di]:null;
+    if(!sh)return;const hrs={T1:7,T2:7,SAT:6,TM:7,OFF:0};
+    tot+=hrs[sh]||0;if(sh==='T1')t1++;if(sh==='T2')t2++;
+  }));
+  const el=document.getElementById('sc-stats');if(!el)return;
+  const lbl=(a,m)=>scLang==='mk'?m:scLang==='al'?a:`${a}/${m}`;
+  el.innerHTML=`
+    <div class="sc-stat"><div class="sl">${lbl('Orë','Часови')}</div><div class="sv">${tot}</div></div>
+    <div class="sc-stat"><div class="sl">${lbl('Ndërrimi 1','\u0421\u043c\u0435\u043d\u0430 1')}</div><div class="sv" style="color:#E8207D">${t1}</div></div>
+    <div class="sc-stat"><div class="sl">${lbl('Ndërrimi 2','\u0421\u043c\u0435\u043d\u0430 2')}</div><div class="sv" style="color:#0D2D6B">${t2}</div></div>
+    <div class="sc-stat"><div class="sl">${lbl('Vrapues 1','\u0422\u0440\u0447\u0430\u0447 1')}</div><div class="sv" style="color:#7F77DD">${(vl[1]||[]).length}</div></div>
+    <div class="sc-stat"><div class="sl">${lbl('Vrapues 2','\u0422\u0440\u0447\u0430\u0447 2')}</div><div class="sv" style="color:#534AB7">${(vl[2]||[]).length}</div></div>`;
+}
+
+window.scOpenAdd=(slot)=>{
+  scAddingSlot=slot;
+  document.getElementById('sc-add-form').style.display='block';
+  document.getElementById('sc-v-name').value='';
+  const sel=document.getElementById('sc-v-day');sel.innerHTML='';
+  const all=document.createElement('option');all.value=-1;all.textContent=scLang==='mk'?'\u0421\u0435\u043a\u043e\u0458 \u0434\u0435\u043d':'Çdo ditë';sel.appendChild(all);
+  scDays.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=(scLang==='mk'?SC_MK_FULL[(d.getDay()+6)%7]:SC_AL_FULL[(d.getDay()+6)%7])+' '+scFmt(d);sel.appendChild(o);});
+};
+window.scCloseAdd=()=>{document.getElementById('sc-add-form').style.display='none';};
+window.scSaveVrap=()=>{
+  const name=document.getElementById('sc-v-name').value.trim();if(!name)return;
+  const day=parseInt(document.getElementById('sc-v-day').value);
+  const vl=scVrapList();if(!vl[scAddingSlot])vl[scAddingSlot]=[];
+  vl[scAddingSlot].push({name,day});
+  scCloseAdd();scRenderVrap();scRenderStats();
+};
+window.scRemoveVrap=(slot,idx)=>{const vl=scVrapList();if(vl[slot])vl[slot].splice(idx,1);scRenderVrap();scRenderStats();};
+
+window.scSave=async()=>{
+  const k=scWkKey(scSelYr,scSelMo,scSelWk);
+  const cur=scAllData[k];if(!cur)return;
+  await svCfg('sched_'+k,cur);
+  const b=document.getElementById('sc-save-btn');
+  if(b){b.textContent='\u2713 \u0417\u0430\u0447\u0443\u0432\u0430\u043d\u043e';b.style.background='#16a34a';setTimeout(()=>{b.textContent='\U0001f4be \u0417\u0430\u0447\u0443\u0432\u0430\u0458';b.style.background='';},2500);}
+};
+
+window.scChgYr=async(d)=>{scSelYr+=d;scSelMo=1;scSelWk=0;await scLoadWk(scSelYr,scSelMo,0);scBuildDays();scBuildNav();scRender();};
+
+window.scExportCSV=()=>{
+  const d=scData();
+  let csv='\u0412\u0440\u0430\u0431\u043e\u0442\u0435\u043d,'+scDays.map(d2=>{const dow=(d2.getDay()+6)%7;return scLang==='mk'?SC_MK_FULL[dow]:SC_AL_FULL[dow];}).join(',')+'\\n';
+  SC_EMPS.forEach(e=>{
+    const row=scDays.map((_,di)=>{
+      const sh=d[e.n]?d[e.n][di]:null;const sn=scGetShalter(e.n,di);
+      const sl=sh?(scLang==='mk'?SC_S[sh].mk:SC_S[sh].al):'';
+      return sn?sl+' \u0428.'+sn:sl;
+    });
+    csv+=e.n+','+row.join(',')+'\\n';
+  });
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='raspored_'+scSelYr+'_'+scSelMo+'.csv';a.click();
+};
+
+function scApplyLang(){
+  const lbl=(a,m)=>scLang==='mk'?m:scLang==='al'?a:`${a} / ${m}`;
+  const el=id=>document.getElementById(id);
+  if(el('sc-lg1'))el('sc-lg1').textContent=lbl('Ndërrimi 1 \xb7 08\u201315','\u0421\u043c\u0435\u043d\u0430 1 \xb7 08\u201315\u0447');
+  if(el('sc-lg2'))el('sc-lg2').textContent=lbl('Ndërrimi 2 \xb7 10\u201317','\u0421\u043c\u0435\u043d\u0430 2 \xb7 10\u201317\u0447');
+  if(el('sc-lg3'))el('sc-lg3').textContent=lbl('E Shtu\xebn\xeb \xb7 09\u201315','\u0421\u0430\u0431 \xb7 09\u201315\u0447');
+  if(el('sc-lg4'))el('sc-lg4').textContent=lbl('Pushim','\u041e\u0434\u043c\u043e\u0440');
+  if(el('sc-c1'))el('sc-c1').textContent=lbl('Ndërrimi 1 \xb7 08\u201315','\u0421\u043c\u0435\u043d\u0430 1 \xb7 08\u201315');
+  if(el('sc-c2'))el('sc-c2').textContent=lbl('Ndërrimi 2 \xb7 10\u201317','\u0421\u043c\u0435\u043d\u0430 2 \xb7 10\u201317');
+  if(el('sc-c3'))el('sc-c3').textContent=lbl('E Shtu\xebng \xb7 09\u201315','\u0421\u0430\u0431 \xb7 09\u201315');
+  if(el('sc-c4'))el('sc-c4').textContent=lbl('Ndërrimi mes.','\u041c\u0435\u0453\u0443\u0441\u043c\u0435\u043d\u0430');
+  if(el('sc-vt1'))el('sc-vt1').textContent=lbl('Vrapues 1 \u2014 13:00\u201314:00','\u0422\u0440\u0447\u0430\u0447 1 \u2014 13:00\u201314:00');
+  if(el('sc-vt2'))el('sc-vt2').textContent=lbl('Vrapues 2 \u2014 14:00\u201315:00','\u0422\u0440\u0447\u0430\u0447 2 \u2014 14:00\u201315:00');
+  if(el('sc-bp-title'))el('sc-bp-title').textContent=lbl('Pauzat','\u041f\u0430\u0443\u0437\u0438');
+}
+window.scInit=scInit;
+
+
+
+// ── EMPLOYEE SCHEDULE READONLY ──
+let empScYr=new Date().getFullYear(), empScMo=new Date().getMonth()+1, empScWk=0;
+
+async function empScInit(){
+  empScYr=cY; empScMo=cM;
+  const today=new Date();
+  const wks=scGetCalWks(empScYr,empScMo);
+  empScWk=0;
+  wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.getDate()===today.getDate()&&d.getMonth()===today.getMonth())empScWk=wi;});});
+  await scLoadWk(empScYr,empScMo,empScWk);
+  subToSchedule(empScYr,empScMo,empScWk);
+  empScBuildNav();
+  empScRender();
+}
+
+function empScBuildNav(){
+  const el=id=>document.getElementById(id);
+  if(el('emp-sc-yr'))el('emp-sc-yr').textContent=empScYr;
+  // Month buttons
+  const moC=el('emp-sc-mo');
+  if(moC){
+    moC.innerHTML='';
+    MKM.forEach((mn,i)=>{
+      const b=document.createElement('button');b.className='nb'+(i+1===empScMo?' act':'');
+      b.textContent=mn.substring(0,3);b.title=mn;
+      b.onclick=async()=>{empScMo=i+1;empScWk=0;await scLoadWk(empScYr,empScMo,0);empScBuildNav();empScRender();document.querySelectorAll('#emp-sc-mo .nb').forEach((x,j)=>x.classList.toggle('act',j===i));};
+      moC.appendChild(b);
+    });
+  }
+  // Week buttons
+  const wkC=el('emp-sc-wk');
+  if(wkC){
+    wkC.innerHTML='';
+    const wks=scGetCalWks(empScYr,empScMo);
+    wks.forEach((wk,wi)=>{
+      const b=document.createElement('button');b.className='nb'+(wi===empScWk?' act':'');
+      const fd=wk[0],ld=wk[wk.length-1];
+      b.textContent='Нед '+(wi+1)+' ('+fd.getDate()+'-'+ld.getDate()+')';
+      b.style.fontSize='10px';
+      b.onclick=async()=>{empScWk=wi;await scLoadWk(empScYr,empScMo,wi);empScRender();document.querySelectorAll('#emp-sc-wk .nb').forEach((x,j)=>x.classList.toggle('act',j===wi));};
+      wkC.appendChild(b);
+    });
+  }
+}
+
+function empScRender(){
+  const k=scWkKey(empScYr,empScMo,empScWk);
+  const wkData=scAllData[k];
+  const thead=document.getElementById('emp-sc-thead');
+  const tbody=document.getElementById('emp-sc-tbody');
+  if(!thead||!tbody)return;
+
+  const wks=scGetCalWks(empScYr,empScMo);
+  const days=(wks[empScWk]||wks[0]||[]);
+
+  if(!days.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:16px;color:var(--t3)">Нема денови</td></tr>';return;}
+
+  thead.innerHTML='<tr><th style="text-align:left;padding-left:10px">Вработен</th>'+days.map(d=>{const dow=(d.getDay()+6)%7;const isToday=new Date().toDateString()===d.toDateString();return `<th style="text-align:center;font-size:10px;${isToday?'background:var(--mgl);color:var(--mgd)':''}">${SC_MK_DAYS[dow]}<br><span style="font-weight:400">${d.getDate()}.${d.getMonth()+1}</span></th>`}).join('')+'</tr>';
+
+  if(!wkData){
+    tbody.innerHTML='<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:20px;color:var(--t3)">Распоредот за оваа недела сеуште не е внесен.</td></tr>';
+    return;
+  }
+
+  const d=wkData.data||{};const sh=wkData.shal||{};
+  const myEmp=SC_EMPS.find(e=>e.id===mID);
+
+  tbody.innerHTML=SC_EMPS.map(emp=>{
+    const isMe=emp.id===mID;
+    const cells=days.map((_,di)=>{
+      const shift=d[emp.n]?d[emp.n][di]:null;
+      const shalNum=sh[di]?.[emp.n]||null;
+      const shalBadge=shalNum?`<div style="font-size:9px;background:var(--mgl);color:var(--mgd);padding:1px 5px;border-radius:10px;margin-top:2px;font-weight:700">Шалт. ${shalNum}</div>`:'';
+      if(shift){
+        const s=SC_S[shift];
+        return `<td class="sc-cell" style="${isMe?'background:var(--mgl)':''}"><div class="sc-cpill ${s.css}" style="cursor:default"><span class="sc-cp-top">${s.mk}</span><span class="sc-cp-mid">${s.bot}</span></div>${shalBadge}</td>`;
+      }
+      return `<td class="sc-cell" style="${isMe?'background:var(--mgl)':''}"><span style="color:var(--t3);font-size:11px">—</span></td>`;
+    }).join('');
+    return `<tr style="${isMe?'font-weight:700':''}"><td style="padding:6px 10px"><div style="display:flex;align-items:center;gap:5px"><div class="av" style="background:${emp.bg};color:${emp.tc};width:22px;height:22px;font-size:9px">${emp.av}</div><span style="font-size:11px${isMe?';font-weight:700;color:var(--mg)':''}">${emp.n}${isMe?' ←':''}${isMe?'':''}</span></div></td>${cells}</tr>`;
+  }).join('');
+
+  // Трчач readonly
+  const vrap=wkData.vrap||{1:[],2:[]};
+  const vrapEl=document.getElementById('emp-sc-vrap');
+  if(vrapEl){
+    let vh='<div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px">🏃 Трчачи</div><div style="display:flex;gap:10px;flex-wrap:wrap">';
+    [1,2].forEach(slot=>{
+      const list=vrap[slot]||[];
+      vh+=`<div><div style="font-size:10px;font-weight:700;color:#7F77DD;margin-bottom:4px">Трчач ${slot}</div>`+(list.length?list.map(v=>`<div class="sc-vrap-row">${v.name} <span style="opacity:.6;font-size:9px">${v.day===-1?'Секој ден':SC_MK_FULL[v.day]||''}</span></div>`).join(''):'<div style="font-size:10px;color:var(--t3)">—</div>')+'</div>';
+    });
+    vh+='</div>';
+    vrapEl.innerHTML=vh;
+  }
+}
+
+window.empScChgYr=async(d)=>{empScYr+=d;empScMo=1;empScWk=0;await scLoadWk(empScYr,empScMo,0);empScBuildNav();empScRender();};
+window.empScInit=empScInit;
 
 </script>
 </body>
