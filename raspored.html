@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sq">
+<html
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -151,6 +151,10 @@ input[type=text]{font-size:12px;padding:5px 10px;border-radius:10px;border:1.5px
 </head>
 <body>
 <div class="wrap">
+  <div id="shortLinkBar" style="display:none;background:#fde8f2;padding:8px 16px;border-radius:10px;margin-bottom:10px;font-size:11px;text-align:center;color:#E8207D">
+    🔗 Линк за вработените: <b id="shortLink"></b>
+    <button onclick="copyLink()" style="margin-left:8px;padding:2px 10px;border-radius:20px;border:1px solid #E8207D;background:#fff;color:#E8207D;cursor:pointer;font-size:10px">Копирај</button>
+  </div>
   <!-- VIEW SWITCHER -->
   <div id="viewSwitcher" style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap">
     <span style="font-size:11px;font-weight:700;color:#666">Преглед:</span>
@@ -158,12 +162,22 @@ input[type=text]{font-size:12px;padding:5px 10px;border-radius:10px;border:1.5px
     <button onclick="setView('month')" id="vb-month" style="padding:5px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;color:#555;cursor:pointer;font-size:11px">📆 Месец</button>
     <button onclick="setView('year')"  id="vb-year"  style="padding:5px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;color:#555;cursor:pointer;font-size:11px">📊 Година</button>
     <span id="roBadge" style="display:none;margin-left:auto;background:#fde8f2;color:#E8207D;font-size:10px;padding:4px 12px;border-radius:20px;font-weight:700">👀 Само за читање</span>
+    <div id="saveBtns" style="display:flex;gap:6px;margin-left:auto">
+      <button onclick="saveWeek()" style="padding:5px 14px;border-radius:20px;border:2px solid #2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:700;cursor:pointer;font-size:11px">💾 Зачувај</button>
+      <button onclick="backupAll()" style="padding:5px 14px;border-radius:20px;border:2px solid #1565c0;background:#e3f2fd;color:#1565c0;font-weight:700;cursor:pointer;font-size:11px">📦 Backup</button>
+      <label style="padding:5px 14px;border-radius:20px;border:2px solid #e65100;background:#fff3e0;color:#e65100;font-weight:700;cursor:pointer;font-size:11px">📂 Врати <input type="file" accept=".json" onchange="restoreBackup(event)" style="display:none"></label>
+    </div>
   </div>
 
 <div class="hdr">
   <div>
     <div class="ttl" id="main-title">Orar javor / Неделен распоред</div>
-    <div class="sub" id="week-range">Makedonski Telekom Kičevo</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+    <button onclick="shiftWeek(-1)" style="padding:4px 12px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:13px">◀</button>
+    <div class="sub" id="week-range" style="font-weight:700;color:#555;min-width:160px;text-align:center"></div>
+    <button onclick="shiftWeek(1)"  style="padding:4px 12px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:13px">▶</button>
+    <button onclick="shiftWeek(0)"  style="padding:4px 12px;border-radius:20px;border:1.5px solid #E8207D;background:#fde8f2;color:#E8207D;font-size:11px;font-weight:700;cursor:pointer">Оваа недела</button>
+  </div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
     <div class="lang-sw">
@@ -275,6 +289,8 @@ input[type=text]{font-size:12px;padding:5px 10px;border-radius:10px;border:1.5px
 </div>
 
 <script>
+const IS_RO=new URLSearchParams(location.search).get('readonly')==='1';
+
 const EMPS=[
   {n:'Meli', av:'ME',bg:'#FAD8EC',tc:'#6B1535',ck:'meli'},
   {n:'Fuku', av:'FU',bg:'#E4E2FD',tc:'#2E2680',ck:'fuku'},
@@ -330,9 +346,9 @@ const MK_DAYS=['Пон','Вто','Сре','Чет','Пет','Саб','Нед'];
 const AL_FULL=['E Hënë','E Martë','E Mërkurë','E Enjte','E Premte','E Shtunë','E Diel'];
 const MK_FULL=['Понеделник','Вторник','Среда','Четврток','Петок','Сабота','Недела'];
 
-function nextMon(){const d=new Date();const wd=d.getDay();d.setDate(d.getDate()+(wd===0?1:8-wd));d.setHours(0,0,0,0);return d;}
-const mon=nextMon();
-const days=Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
+function nextMon(){const d=new Date();const wd=d.getDay()||7;d.setDate(d.getDate()-wd+1);d.setHours(0,0,0,0);return d;}
+let mon=nextMon();
+let days=Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
 const fmt=d=>`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
 document.getElementById('week-range').textContent=`${fmt(days[0])} – ${fmt(days[6])} ${days[6].getFullYear()} · Makedonski Telekom Kičevo`;
 
@@ -468,7 +484,7 @@ function setMode(code,btn){
   document.querySelectorAll('.ctrl').forEach(b=>{b.classList.remove('sel');b.style.borderColor='transparent';});
   btn.classList.add('sel');btn.style.borderColor=DOTS[code];
 }
-function toggle(emp,di){data[emp][di]=(data[emp][di]===mode)?null:mode;render();}
+function toggle(emp,di){data[emp][di]=(data[emp][di]===mode)?null:mode;render();if(typeof saveWeek==="function")saveWeek();}
 
 function shalterLabel(){return lang==='mk'?'Шалт.':'Banka';}
 
@@ -641,7 +657,149 @@ function exportCSV(){
   a.download='raspored.csv';a.click();
 }
 
+function copyLink() {
+  const url = window.location.origin + window.location.pathname + '?readonly=1';
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.querySelector('[onclick="copyLink()"]');
+    if(btn){btn.textContent='✅ Копирано!';setTimeout(()=>btn.textContent='Копирај',2000);}
+  });
+}
+window.addEventListener('DOMContentLoaded', ()=>{
+  if(!IS_RO) {
+    const bar = document.getElementById('shortLinkBar');
+    const lnk = document.getElementById('shortLink');
+    if(bar && lnk) {
+      lnk.textContent = window.location.origin + window.location.pathname + '?readonly=1';
+      bar.style.display = 'block';
+    }
+  }
+});
+
+// ── WEEK NAVIGATION ──
+let weekOffset = 0;
+
+function shiftWeek(d) {
+  if(d === 0) weekOffset = 0;
+  else weekOffset += d;
+  // Recalculate mon and days
+  const base = nextMon();
+  base.setDate(base.getDate() + weekOffset * 7);
+  // Update global mon
+  mon.setTime(base.getTime());
+  // Update days array
+  for(let i=0;i<7;i++){days[i]=new Date(mon);days[i].setDate(mon.getDate()+i);}
+  // Load saved data for this week
+  loadWeek();
+  render();
+  updateWeekRange();
+}
+
+function updateWeekRange() {
+  const el = document.getElementById('week-range');
+  if(!el) return;
+  const end = new Date(mon); end.setDate(mon.getDate()+6);
+  const fmt = d => d.getDate()+'.'+(d.getMonth()+1)+'.'+d.getFullYear();
+  el.textContent = fmt(mon) + ' – ' + fmt(end);
+}
+
 applyLang();
+
+// ══════════════════════════════════════════
+// SAVE / LOAD / BACKUP
+// ══════════════════════════════════════════
+
+function weekKey(d) {
+  const m = new Date(d);
+  const wd = m.getDay()||7;
+  m.setDate(m.getDate()-wd+1);
+  m.setHours(0,0,0,0);
+  return m.toISOString().slice(0,10);
+}
+
+function saveWeek() {
+  const wk = weekKey(mon);
+  const payload = {
+    data: JSON.parse(JSON.stringify(data)),
+    shalterData: JSON.parse(JSON.stringify(shalterData)),
+    vrapList: JSON.parse(JSON.stringify(vrapList))
+  };
+  localStorage.setItem('rasp_' + wk, JSON.stringify(payload));
+  // Show saved feedback
+  const btn = document.querySelector('[onclick="saveWeek()"]');
+  if(btn) { btn.textContent = '✅ Зачувано!'; setTimeout(()=>btn.textContent='💾 Зачувај',1500); }
+}
+
+function loadWeek() {
+  const wk = weekKey(mon);
+  const saved = localStorage.getItem('rasp_' + wk);
+  if(saved) {
+    try {
+      const p = JSON.parse(saved);
+      // Restore data
+      if(p.data) Object.assign(data, p.data);
+      if(p.shalterData) Object.assign(shalterData, p.shalterData);
+      if(p.vrapList) { vrapList[1]=p.vrapList[1]||[]; vrapList[2]=p.vrapList[2]||[]; }
+      return true;
+    } catch(e) { return false; }
+  }
+  return false;
+}
+
+function backupAll() {
+  // Collect all saved weeks from localStorage
+  const allData = {};
+  for(let i=0; i<localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if(key && key.startsWith('rasp_')) {
+      allData[key] = JSON.parse(localStorage.getItem(key));
+    }
+  }
+  // Also save current week
+  const wk = weekKey(mon);
+  allData['rasp_'+wk] = {
+    data: JSON.parse(JSON.stringify(data)),
+    shalterData: JSON.parse(JSON.stringify(shalterData)),
+    vrapList: JSON.parse(JSON.stringify(vrapList))
+  };
+  
+  const blob = new Blob([JSON.stringify(allData, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'raspored-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+function restoreBackup(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const allData = JSON.parse(e.target.result);
+      // Save all weeks to localStorage
+      Object.keys(allData).forEach(key => {
+        if(key.startsWith('rasp_')) localStorage.setItem(key, JSON.stringify(allData[key]));
+      });
+      // Load current week
+      loadWeek();
+      render();
+      alert('✅ Backup вратен успешно!');
+    } catch(err) {
+      alert('❌ Грешка при враќање на backup!');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// Hide save buttons in readonly mode
+window.addEventListener('DOMContentLoaded', () => {
+  if(IS_RO) {
+    const saveBtns = document.getElementById('saveBtns');
+    if(saveBtns) saveBtns.style.display = 'none';
+  }
+});
+
 render();
 
 // ══════════════════════════════════════════
@@ -649,12 +807,13 @@ render();
 // ══════════════════════════════════════════
 const MK_MONTHS_V = ['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 const MK_DAYS_V   = ['Пон','Вт','Сре','Чет','Пет','Саб','Нед'];
-const IS_RO = new URLSearchParams(location.search).get('readonly')==='1';
+
 let viewMode = 'week';
 let viewMonthDate = new Date();
 let viewYearDate  = new Date();
 
 function setView(v) {
+  loadWeek();
   viewMode = v;
   // Show/hide panels
   const weekEls = document.querySelectorAll('.tbl-wrap,.controls,.legend-wrap,.breaks-panel,.vrap-section');
