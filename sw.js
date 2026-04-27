@@ -1,6 +1,5 @@
-// MKT Sales Pro — Service Worker v2.0
-const CACHE = 'mkt-kicevo-v2';
-const SHELL = ['./index.html', './manifest.json', './raspored.html'];
+const CACHE = 'mkt-kicevo-v3';
+const SHELL = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -19,5 +18,5 @@ self.addEventListener('fetch', e => {
       e.request.url.includes('firebase') ||
       e.request.url.includes('googleapis') ||
       e.request.url.includes('gstatic')) return;
-  e.respondWith(caches.match(e.request).then(cached => cached || fetch(e.request)));
+  e.respondWith(caches.match(e.request).then(c => c || fetch(e.request)));
 });
