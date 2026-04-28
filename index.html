@@ -1359,10 +1359,21 @@ window.loadBackup=async(input)=>{
     if(data.OFI_PRODUCTS2)OFI_PRODUCTS2=data.OFI_PRODUCTS2;
     if(data.MGR_ORDER_NOTES)MGR_ORDER_NOTES=data.MGR_ORDER_NOTES;
     if(data.SCORE_EXCLUDED){SCORE_EXCLUDED=new Set(data.SCORE_EXCLUDED);saveScoreExcl();}
+    // Save everything to Firebase
+    showSS('sStat','⏳ Зачувување во Firebase...','sv');
+    await Promise.all([
+      svCfg('targets',TS),
+      svCfg('comments',CS),
+      svCfg('ofi_products',OFI_PRODUCTS),
+      svCfg('ofi_products2',OFI_PRODUCTS2),
+      svCfg('mgrOrderNotes',MGR_ORDER_NOTES),
+    ]);
     rndTbl();rndKpiToggles();calcAlerts();initPreData();
-    showSS('sStat','✓ Backup вчитан','ok');
-    alert('✅ Backup вчитан успешно!');
-  }catch(e){alert('⚠ Грешка при вчитување: '+e.message);}
+    if(document.getElementById('tp-inventory')?.classList.contains('act'))rndInv();
+    if(document.getElementById('tp-inventory2')?.classList.contains('act'))rndInv2();
+    showSS('sStat','✓ Backup вчитан и зачуван во Firebase','ok');
+    alert('✅ Backup вчитан и зачуван во Firebase!');
+  }catch(e){alert('⚠ Грешка: '+e.message);}
   input.value='';
 };
 
