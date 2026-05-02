@@ -1,4 +1,4 @@
-const CACHE = 'mkt-kicevo-v5';
+const CACHE = 'mkt-kicevo-v6';
 const SHELL = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -21,7 +21,6 @@ self.addEventListener('fetch', e => {
   e.respondWith(caches.match(e.request).then(c => c || fetch(e.request)));
 });
 
-// Push notification handler
 self.addEventListener('push', e => {
   let data = { title: '📢 MKT Кичево', body: 'Нова порака од менаџерот' };
   try { if(e.data) data = e.data.json(); } catch(err) {}
