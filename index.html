@@ -1443,7 +1443,10 @@ let _infoUnsubscribe = null;
 // ── Storage (Firebase Storage instance) ──
 let _storage = null;
 function getStorageInst(){
-  if(!_storage) _storage = getStorage(fbApp);
+  if(!_storage){
+    try{ _storage = getStorage(fbApp); }
+    catch(e){ console.warn('Storage init failed:', e); return null; }
+  }
   return _storage;
 }
 
@@ -1563,7 +1566,7 @@ async function uploadInfoFile(file){
         const url = await getDownloadURL(task.snapshot.ref);
         document.getElementById('uploadProgress').style.display = 'none';
         resolve({ name: file.name, url, path, size: file.size });
-        updateStorageMeter();
+        trackStorageAdd(file.size);
       }
     );
   });
@@ -1577,8 +1580,7 @@ window.deleteInfoMsg = async (msgId, filePath) => {
     if(filePath){
       try {
         const storage = getStorageInst();
-        await deleteObject(ref(storage, filePath));
-        updateStorageMeter();
+        if(storage) await deleteObject(ref(storage, filePath));
       } catch(e){ console.warn('File delete:', e); }
     }
     showSS('sStat','🗑 Избришано','ok');
@@ -1736,27 +1738,33 @@ function renderInfoMsgEmp(m){
 async function updateStorageMeter(){
   const meterEl = document.getElementById('storageMeter');
   if(!meterEl) return;
+  // Track storage locally - avoid CORS issues with listAll
+  const textEl = document.getElementById('storageText');
+  const fillEl = document.getElementById('storageFill');
+  const warnEl = document.getElementById('storageWarn');
   try {
-    const storage = getStorageInst();
-    const listRef = ref(storage, 'info-files/');
-    const result = await listAll(listRef);
-    let totalBytes = 0;
-    const metas = await Promise.all(result.items.map(item => getMetadata(item).catch(() => null)));
-    metas.forEach(m => { if(m) totalBytes += m.size || 0; });
-    const gb = totalBytes / (1024*1024*1024);
+    // Use locally tracked size (updated on upload/delete)
+    const trackedBytes = parseInt(localStorage.getItem('mkt_storage_bytes')||'0');
+    const gb = trackedBytes / (1024*1024*1024);
     const pct = Math.min(100, (gb / 5) * 100);
-    document.getElementById('storageFill').style.width = pct + '%';
-    document.getElementById('storageFill').style.background = gb > 4 ? '#ef4444' : gb > 3 ? '#f59e0b' : 'var(--mg)';
-    document.getElementById('storageText').textContent = gb.toFixed(3) + ' GB / 5 GB (' + Math.round(pct) + '%)';
-    const warnEl = document.getElementById('storageWarn');
-    if(warnEl) warnEl.style.display = gb > 3 ? 'block' : 'none';
-  } catch(e){ 
-    const el = document.getElementById('storageText');
-    if(el) el.textContent = '—';
+    if(fillEl){ fillEl.style.width = pct+'%'; fillEl.style.background = gb>4?'#ef4444':gb>3?'#f59e0b':'var(--mg)'; }
+    if(textEl) textEl.textContent = gb.toFixed(3)+' GB / 5 GB ('+Math.round(pct)+'%)';
+    if(warnEl) warnEl.style.display = gb>3?'block':'none';
+  } catch(e){
+    if(textEl) textEl.textContent = '0.000 GB / 5 GB (0%)';
   }
 }
+function trackStorageAdd(bytes){ 
+  const cur = parseInt(localStorage.getItem('mkt_storage_bytes')||'0');
+  localStorage.setItem('mkt_storage_bytes', cur+bytes);
+  updateStorageMeter();
+}
+function trackStorageRemove(bytes){ 
+  const cur = parseInt(localStorage.getItem('mkt_storage_bytes')||'0');
+  localStorage.setItem('mkt_storage_bytes', Math.max(0,cur-bytes));
+  updateStorageMeter();
+}
 
-// ── Push notifications ──
 async function requestPushPermission(){
   if(!('Notification' in window)) return false;
   if(Notification.permission === 'granted') return true;
@@ -1912,6 +1920,14 @@ async function postLogin(){
     document.getElementById('empView').style.display='none';
     document.body.classList.remove('emp-mode');
     rndNav();rndDailyView();calcAlerts();rndKpiToggles();
+    setTimeout(()=>{
+      document.querySelectorAll('#mgrTabs .tab').forEach(t=>t.classList.remove('act'));
+      document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));
+      const dt=document.querySelector('#mgrTabs .tab[onclick*=\'daily\']');
+      if(dt) dt.classList.add('act');
+      const dtp=document.getElementById('tp-daily');
+      if(dtp) dtp.classList.add('act');
+    },150);
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
@@ -2858,7 +2874,7 @@ window.gotoTab=(name,el)=>{
   else if(name==='mobreport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(2);}
   else if(name==='boost')rndBoostBoard();
   else if(name==='schedule')scInit();
-  else if(name==='info'){loadInfoMsgs();updateStorageMeter();}
+  else if(name==='info'){loadInfoMsgs();setTimeout(()=>updateStorageMeter(),500);}
 };
 
 // ── BOOST BOARD ──
