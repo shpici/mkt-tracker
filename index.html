@@ -1527,7 +1527,7 @@ window.submitInfoMsg = async () => {
       // Date labels
       dateLabel: fmtInfoDate(now),
       weekLabel: 'Нед. ' + getWeekNumber(now),
-      monthLabel: MN[now.getMonth()] + ' ' + now.getFullYear(),
+      monthLabel: ['Јан','Фев','Мар','Апр','Мај','Јун','Јул','Авг','Сеп','Окт','Ное','Дек'][now.getMonth()] + ' ' + now.getFullYear(),
       yearLabel: String(now.getFullYear()),
     };
 
