@@ -1948,10 +1948,10 @@ async function postLogin(){
       const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}
     });
     document.getElementById('empView').style.display='block';
-      // Info system
-      loadEmpInfoMsgs(uid);
+      // Info system — use mID (member ID like 'IN','KM') not Firebase UID
+      loadEmpInfoMsgs(mID);
       requestPushPermission().then(granted => {
-        if(granted) checkPushNotifications(uid);
+        if(granted) checkPushNotifications(mID);
       });
     document.body.classList.add('emp-mode');
     initEmp();
