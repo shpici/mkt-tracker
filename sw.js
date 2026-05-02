@@ -1,4 +1,4 @@
-const CACHE = 'mkt-kicevo-v6';
+const CACHE = 'mkt-kicevo-v7';
 const SHELL = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -18,7 +18,10 @@ self.addEventListener('fetch', e => {
       e.request.url.includes('firebase') ||
       e.request.url.includes('googleapis') ||
       e.request.url.includes('gstatic')) return;
-  e.respondWith(caches.match(e.request).then(c => c || fetch(e.request)));
+  // Network first — секогаш земи нов фајл
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
+  );
 });
 
 self.addEventListener('push', e => {
