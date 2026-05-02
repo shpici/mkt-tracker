@@ -829,6 +829,112 @@ body.emp-mode #empView{display:block!important}
 </div>
 
 <!-- ═══════ EMPLOYEE VIEW ═══════ -->
+<!-- ═══ MANAGER INFO TAB PANEL ═══ -->
+<div id="tp-info" class="tp">
+<div class="card">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="font-size:16px;font-weight:700">📢 Инфо — Огласна Табла</div>
+    <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn" onclick="window.showInfoForm()" style="background:var(--mg);color:#fff;border:none;padding:6px 14px;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">+ Нова Порака</button>
+    </div>
+  </div>
+
+  <!-- Storage meter -->
+  <div style="background:var(--s2);border-radius:var(--rs);padding:10px 12px;margin-bottom:14px" id="storageMeter">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--t2)">☁️ Firebase Storage</span>
+      <span id="storageText" style="font-size:11px;font-weight:700">Вчитување...</span>
+    </div>
+    <div class="storage-bar"><div id="storageFill" class="storage-fill" style="width:0%;background:var(--mg)"></div></div>
+    <div id="storageWarn" style="display:none;margin-top:4px;font-size:11px;color:var(--rd);font-weight:700">⚠️ Над 3GB — почни со бришење на стари фајлови!</div>
+  </div>
+
+  <!-- New message form (hidden by default) -->
+  <div id="infoFormWrap" style="display:none;background:var(--s2);border-radius:var(--r);padding:14px;margin-bottom:14px;border:2px solid var(--mg)">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">✏️ Нова Порака</div>
+
+    <!-- Type selector -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Тип на порака:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="msgTypeBar">
+        <button onclick="window.selMsgType('general',this)" class="msg-type-btn act-type" data-type="general" style="padding:5px 10px;border-radius:20px;border:2px solid #6366f1;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:700;cursor:pointer">📣 Општа</button>
+        <button onclick="window.selMsgType('boost',this)" class="msg-type-btn" data-type="boost" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">🎯 Boost</button>
+        <button onclick="window.selMsgType('reward',this)" class="msg-type-btn" data-type="reward" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">🏆 Награда</button>
+        <button onclick="window.selMsgType('training',this)" class="msg-type-btn" data-type="training" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">📊 Обука</button>
+        <button onclick="window.selMsgType('warning',this)" class="msg-type-btn" data-type="warning" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">⚠️ Предупредување</button>
+      </div>
+    </div>
+
+    <!-- Priority -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Приоритет:</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="window.selPriority('normal',this)" class="pri-btn act-pri" style="padding:4px 10px;border-radius:20px;border:2px solid #3b82f6;background:#eff6ff;color:#1d4ed8;font-size:11px;cursor:pointer;font-weight:600">🔵 Нормален</button>
+        <button onclick="window.selPriority('important',this)" class="pri-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">🟠 Важно</button>
+        <button onclick="window.selPriority('urgent',this)" class="pri-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">🔴 Итно</button>
+      </div>
+    </div>
+
+    <!-- Target -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">До:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="msgTargetBar">
+        <button onclick="window.selTarget('all',this)" class="tgt-btn act-tgt" style="padding:4px 10px;border-radius:20px;border:2px solid var(--mg);background:var(--mgl);color:var(--mgd);font-size:11px;cursor:pointer;font-weight:700">👥 Сите</button>
+        <button onclick="window.selTarget('IN',this)" class="tgt-btn" data-id="IN" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ИН</button>
+        <button onclick="window.selTarget('KM',this)" class="tgt-btn" data-id="KM" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">КМ</button>
+        <button onclick="window.selTarget('HS',this)" class="tgt-btn" data-id="HS" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ХС</button>
+        <button onclick="window.selTarget('FM',this)" class="tgt-btn" data-id="FM" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ФМ</button>
+        <button onclick="window.selTarget('MS',this)" class="tgt-btn" data-id="MS" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">МС</button>
+      </div>
+    </div>
+
+    <!-- Expiry -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Стои до:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="expiryBar">
+        <button onclick="window.selExpiry(1,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">1 час</button>
+        <button onclick="window.selExpiry(4,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">4 часа</button>
+        <button onclick="window.selExpiry(24,this)" class="exp-btn act-exp" style="padding:4px 10px;border-radius:20px;border:2px solid var(--mg);background:var(--mgl);color:var(--mgd);font-size:11px;cursor:pointer;font-weight:700">1 ден</button>
+        <button onclick="window.selExpiry(72,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">3 дена</button>
+        <button onclick="window.selExpiry(168,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">1 недела</button>
+        <button onclick="window.selExpiry(0,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">♾️ Рачно</button>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Порака:</div>
+      <textarea id="msgText" rows="3" placeholder="Напиши порака..." style="width:100%;border:1px solid var(--brd);border-radius:var(--rs);padding:8px;font-size:13px;font-family:inherit;resize:vertical;background:var(--sur);color:var(--t1);box-sizing:border-box"></textarea>
+    </div>
+
+    <!-- File upload -->
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Прикачи фајл (опционално):</div>
+      <input type="file" id="msgFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" style="font-size:12px;width:100%">
+      <div id="uploadProgress" style="display:none;margin-top:6px">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:3px" id="uploadProgressText">Качување...</div>
+        <div class="storage-bar"><div id="uploadFill" class="storage-fill" style="width:0%;background:var(--mg)"></div></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:8px">
+      <button onclick="window.submitInfoMsg()" style="background:var(--mg);color:#fff;border:none;padding:8px 18px;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;flex:1">📤 Прати</button>
+      <button onclick="window.hideInfoForm()" style="background:var(--s2);color:var(--t1);border:1px solid var(--brd);padding:8px 14px;border-radius:var(--rs);font-size:13px;cursor:pointer">Откажи</button>
+    </div>
+  </div>
+
+  <!-- Messages list -->
+  <div id="infoMsgList">
+    <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување пораки...</div>
+  </div>
+
+</div>
+</div>
+<!-- ═══ END MANAGER INFO TAB ═══ -->
+
 <div id="empView" style="display:none">
 <div class="hdr" style="position:relative">
   <div style="font-size:13px;font-weight:700" id="empWel"></div>
@@ -1059,111 +1165,7 @@ body.emp-mode #empView{display:block!important}
   </div>
 </div>
 
-<!-- ═══ MANAGER INFO TAB PANEL ═══ -->
-<div id="tp-info" class="tp">
-<div class="card">
 
-  <!-- Header -->
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-    <div style="font-size:16px;font-weight:700">📢 Инфо — Огласна Табла</div>
-    <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
-      <button class="btn" onclick="window.showInfoForm()" style="background:var(--mg);color:#fff;border:none;padding:6px 14px;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">+ Нова Порака</button>
-    </div>
-  </div>
-
-  <!-- Storage meter -->
-  <div style="background:var(--s2);border-radius:var(--rs);padding:10px 12px;margin-bottom:14px" id="storageMeter">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <span style="font-size:11px;font-weight:700;color:var(--t2)">☁️ Firebase Storage</span>
-      <span id="storageText" style="font-size:11px;font-weight:700">Вчитување...</span>
-    </div>
-    <div class="storage-bar"><div id="storageFill" class="storage-fill" style="width:0%;background:var(--mg)"></div></div>
-    <div id="storageWarn" style="display:none;margin-top:4px;font-size:11px;color:var(--rd);font-weight:700">⚠️ Над 3GB — почни со бришење на стари фајлови!</div>
-  </div>
-
-  <!-- New message form (hidden by default) -->
-  <div id="infoFormWrap" style="display:none;background:var(--s2);border-radius:var(--r);padding:14px;margin-bottom:14px;border:2px solid var(--mg)">
-    <div style="font-size:13px;font-weight:700;margin-bottom:10px">✏️ Нова Порака</div>
-
-    <!-- Type selector -->
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Тип на порака:</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="msgTypeBar">
-        <button onclick="window.selMsgType('general',this)" class="msg-type-btn act-type" data-type="general" style="padding:5px 10px;border-radius:20px;border:2px solid #6366f1;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:700;cursor:pointer">📣 Општа</button>
-        <button onclick="window.selMsgType('boost',this)" class="msg-type-btn" data-type="boost" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">🎯 Boost</button>
-        <button onclick="window.selMsgType('reward',this)" class="msg-type-btn" data-type="reward" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">🏆 Награда</button>
-        <button onclick="window.selMsgType('training',this)" class="msg-type-btn" data-type="training" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">📊 Обука</button>
-        <button onclick="window.selMsgType('warning',this)" class="msg-type-btn" data-type="warning" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">⚠️ Предупредување</button>
-      </div>
-    </div>
-
-    <!-- Priority -->
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Приоритет:</div>
-      <div style="display:flex;gap:6px">
-        <button onclick="window.selPriority('normal',this)" class="pri-btn act-pri" style="padding:4px 10px;border-radius:20px;border:2px solid #3b82f6;background:#eff6ff;color:#1d4ed8;font-size:11px;cursor:pointer;font-weight:600">🔵 Нормален</button>
-        <button onclick="window.selPriority('important',this)" class="pri-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">🟠 Важно</button>
-        <button onclick="window.selPriority('urgent',this)" class="pri-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">🔴 Итно</button>
-      </div>
-    </div>
-
-    <!-- Target -->
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">До:</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="msgTargetBar">
-        <button onclick="window.selTarget('all',this)" class="tgt-btn act-tgt" style="padding:4px 10px;border-radius:20px;border:2px solid var(--mg);background:var(--mgl);color:var(--mgd);font-size:11px;cursor:pointer;font-weight:700">👥 Сите</button>
-        <button onclick="window.selTarget('IN',this)" class="tgt-btn" data-id="IN" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ИН</button>
-        <button onclick="window.selTarget('KM',this)" class="tgt-btn" data-id="KM" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">КМ</button>
-        <button onclick="window.selTarget('HS',this)" class="tgt-btn" data-id="HS" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ХС</button>
-        <button onclick="window.selTarget('FM',this)" class="tgt-btn" data-id="FM" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ФМ</button>
-        <button onclick="window.selTarget('MS',this)" class="tgt-btn" data-id="MS" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">МС</button>
-      </div>
-    </div>
-
-    <!-- Expiry -->
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Стои до:</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap" id="expiryBar">
-        <button onclick="window.selExpiry(1,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">1 час</button>
-        <button onclick="window.selExpiry(4,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">4 часа</button>
-        <button onclick="window.selExpiry(24,this)" class="exp-btn act-exp" style="padding:4px 10px;border-radius:20px;border:2px solid var(--mg);background:var(--mgl);color:var(--mgd);font-size:11px;cursor:pointer;font-weight:700">1 ден</button>
-        <button onclick="window.selExpiry(72,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">3 дена</button>
-        <button onclick="window.selExpiry(168,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">1 недела</button>
-        <button onclick="window.selExpiry(0,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">♾️ Рачно</button>
-      </div>
-    </div>
-
-    <!-- Text -->
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Порака:</div>
-      <textarea id="msgText" rows="3" placeholder="Напиши порака..." style="width:100%;border:1px solid var(--brd);border-radius:var(--rs);padding:8px;font-size:13px;font-family:inherit;resize:vertical;background:var(--sur);color:var(--t1);box-sizing:border-box"></textarea>
-    </div>
-
-    <!-- File upload -->
-    <div style="margin-bottom:12px">
-      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Прикачи фајл (опционално):</div>
-      <input type="file" id="msgFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" style="font-size:12px;width:100%">
-      <div id="uploadProgress" style="display:none;margin-top:6px">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:3px" id="uploadProgressText">Качување...</div>
-        <div class="storage-bar"><div id="uploadFill" class="storage-fill" style="width:0%;background:var(--mg)"></div></div>
-      </div>
-    </div>
-
-    <!-- Actions -->
-    <div style="display:flex;gap:8px">
-      <button onclick="window.submitInfoMsg()" style="background:var(--mg);color:#fff;border:none;padding:8px 18px;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;flex:1">📤 Прати</button>
-      <button onclick="window.hideInfoForm()" style="background:var(--s2);color:var(--t1);border:1px solid var(--brd);padding:8px 14px;border-radius:var(--rs);font-size:13px;cursor:pointer">Откажи</button>
-    </div>
-  </div>
-
-  <!-- Messages list -->
-  <div id="infoMsgList">
-    <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување пораки...</div>
-  </div>
-
-</div>
-</div>
-<!-- ═══ END MANAGER INFO TAB ═══ -->
 
 </div><!-- end empView -->
 
