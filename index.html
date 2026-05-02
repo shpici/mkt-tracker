@@ -1920,14 +1920,13 @@ async function postLogin(){
     document.getElementById('empView').style.display='none';
     document.body.classList.remove('emp-mode');
     rndNav();rndDailyView();calcAlerts();rndKpiToggles();
-    setTimeout(()=>{
-      document.querySelectorAll('#mgrTabs .tab').forEach(t=>t.classList.remove('act'));
-      document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));
-      const dt=document.querySelector('#mgrTabs .tab[onclick*=\'daily\']');
-      if(dt) dt.classList.add('act');
-      const dtp=document.getElementById('tp-daily');
-      if(dtp) dtp.classList.add('act');
-    },150);
+    // Force Дневен tab active
+    document.querySelectorAll('#mgrTabs .tab').forEach(t=>t.classList.remove('act'));
+    document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));
+    const _dt=document.querySelector('#mgrTabs .tab[onclick*=\'daily\']');
+    if(_dt) _dt.classList.add('act');
+    const _dtp=document.getElementById('tp-daily');
+    if(_dtp) _dtp.classList.add('act');
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
