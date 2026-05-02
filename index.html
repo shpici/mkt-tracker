@@ -1590,8 +1590,13 @@ window.deleteInfoMsg = async (msgId, filePath) => {
 // ── Load & render manager info messages ──
 function loadInfoMsgs(){
   const listEl = document.getElementById('infoMsgList');
-  if(!listEl) return;
+  if(!listEl){ 
+    setTimeout(loadInfoMsgs, 200);
+    return; 
+  }
+  listEl.innerHTML = '<div style="text-align:center;color:var(--t2);padding:20px;font-size:13px">⏳ Вчитување...</div>';
 
+  // Use onSnapshot for real-time updates
   if(_infoUnsubscribe) _infoUnsubscribe();
 
   const q = query(collection(db,'info'), orderBy('createdAt','desc'));
@@ -1603,7 +1608,7 @@ function loadInfoMsgs(){
       if(data.expiresAt && new Date(data.expiresAt) < now){
         deleteDoc(doc(db,'info',d.id)).catch(()=>{});
         if(data.file?.path){
-          try{ deleteObject(ref(getStorageInst(), data.file.path)); }catch(e){}
+          try{ const st=getStorageInst(); if(st) deleteObject(ref(st,data.file.path)); }catch(e){}
         }
       }
     });
@@ -1613,14 +1618,21 @@ function loadInfoMsgs(){
       .filter(m => !m.expiresAt || new Date(m.expiresAt) >= now)
       .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+    const el = document.getElementById('infoMsgList');
+    if(!el) return;
+
     if(msgs.length === 0){
-      listEl.innerHTML = '<div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">📭 Нема активни пораки</div>';
+      el.innerHTML = '<div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">📭 Нема активни пораки</div>';
       return;
     }
-
-    listEl.innerHTML = msgs.map(m => renderInfoMsgMgr(m)).join('');
+    el.innerHTML = msgs.map(m => renderInfoMsgMgr(m)).join('');
+  }, err => {
+    console.error('Info listener error:', err);
+    const el = document.getElementById('infoMsgList');
+    if(el) el.innerHTML = '<div style="text-align:center;color:var(--rd);padding:20px;font-size:13px">❌ Грешка: ' + err.message + '</div>';
   });
 }
+
 
 function renderInfoMsgMgr(m){
   const t = INFO_TYPES[m.type] || INFO_TYPES.general;
@@ -2873,7 +2885,12 @@ window.gotoTab=(name,el)=>{
   else if(name==='mobreport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(2);}
   else if(name==='boost')rndBoostBoard();
   else if(name==='schedule')scInit();
-  else if(name==='info'){loadInfoMsgs();setTimeout(()=>updateStorageMeter(),500);}
+  else if(name==='info'){
+    // Ensure panel is visible first
+    const infoPanel = document.getElementById('tp-info');
+    if(infoPanel){ infoPanel.style.display=''; infoPanel.classList.add('act'); }
+    setTimeout(()=>{ loadInfoMsgs(); updateStorageMeter(); }, 50);
+  }
 };
 
 // ── BOOST BOARD ──
