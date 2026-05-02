@@ -237,6 +237,22 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .sc-stat{background:var(--s2);border-radius:8px;padding:7px 11px;text-align:center;font-size:10px}
 .sc-stat .sv{font-size:15px;font-weight:700;margin-top:2px}
 .sc-stat .sl{color:var(--t3);font-size:9px;text-transform:uppercase}
+
+/* ═══ INFO TAB CSS ═══ */
+.info-msg{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px 14px;position:relative;margin-bottom:8px;transition:box-shadow .2s}
+.info-msg:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.info-msg.urgent{border-left:4px solid var(--rd);animation:pulse 2s infinite}
+.info-msg.important{border-left:4px solid var(--am)}
+.info-msg.normal{border-left:4px solid var(--mg)}
+.info-type-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin-bottom:6px}
+.emp-notif-banner{background:linear-gradient(135deg,var(--mgl) 0%,#fff5fb 100%);border:2px solid var(--mg);border-radius:var(--r);padding:12px 14px;margin:10px 16px;cursor:pointer;position:relative;overflow:hidden}
+.emp-notif-banner.pulse-border{animation:borderPulse 2s ease-in-out infinite}
+@keyframes borderPulse{0%,100%{border-color:var(--mg);box-shadow:0 0 0 0 rgba(184,0,90,.0)}50%{border-color:#ff4db2;box-shadow:0 0 0 6px rgba(184,0,90,.1)}}
+.info-badge{background:var(--rd);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;position:absolute;top:-5px;right:-5px}
+.storage-bar{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin:6px 0}
+.storage-fill{height:100%;border-radius:4px;transition:width .5s}
+.msg-target-pill{background:var(--mgl);color:var(--mgd);border-radius:20px;padding:1px 8px;font-size:10px;font-weight:600}
+/* ═══ END INFO TAB CSS ═══ */
 </style>
 </head>
 <body>
@@ -313,6 +329,7 @@ body.emp-mode #empView{display:block!important}
 
 <!-- MANAGER TABS -->
 <div class="tabs" id="mgrTabs" style="display:none">
+  <div class="tab" onclick="gotoTab('info',this)" id="mgrInfoTab" style="position:relative">📢 Инфо<span id="mgrInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;display:none;align-items:center;justify-content:center"></span></div>
   <div class="tab act" onclick="gotoTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="gotoTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
@@ -817,6 +834,9 @@ body.emp-mode #empView{display:block!important}
   <div style="font-size:13px;font-weight:700" id="empWel"></div>
   <div id="empPB" style="margin-left:auto"></div>
 </div>
+  <div id="empInfoBanner" style="display:none;margin:0 0 0 0">
+    <!-- filled by JS -->
+  </div>
 <div class="nav" id="empNav">
   <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
     <span class="nl">Год.</span>
@@ -841,6 +861,7 @@ body.emp-mode #empView{display:block!important}
   </div>
 </div>
 <div class="tabs" style="margin:0 16px">
+  <div class="tab" onclick="empTab('empinfo',this)" id="empInfoTab" style="position:relative">📢 Инфо<span id="empInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;align-items:center;justify-content:center"></span></div>
   <div class="tab act" onclick="empTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="empTab('weekly',this)">📆 Неделен</div>
   <div class="tab" onclick="empTab('monthly',this)">📊 Месечен</div>
@@ -850,6 +871,18 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="empTab('empschedule',this)">🕐 Распоред</div>
 </div>
 <!-- EMP DAILY -->
+
+<!-- ═══ EMPLOYEE INFO TAB PANEL ═══ -->
+<div id="etp-empinfo" class="tp" style="padding:0 16px 16px;margin-top:0">
+  <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px">📢 Пораки од Менаџерот</div>
+    <div id="empInfoMsgList">
+      <div style="text-align:center;color:var(--t2);padding:20px;font-size:13px">Вчитување...</div>
+    </div>
+  </div>
+</div>
+<!-- ═══ END EMPLOYEE INFO TAB PANEL ═══ -->
+
 <div id="etp-daily" class="tp act" style="padding:0 16px 16px;margin-top:0">
   <div style="background:var(--sur);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);padding:14px">
     <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
@@ -1025,6 +1058,113 @@ body.emp-mode #empView{display:block!important}
     <div id="emp-sc-vrap" style="margin-top:10px;border-top:1px solid var(--brd);padding-top:10px"></div>
   </div>
 </div>
+
+<!-- ═══ MANAGER INFO TAB PANEL ═══ -->
+<div id="tp-info" class="tp">
+<div class="card">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="font-size:16px;font-weight:700">📢 Инфо — Огласна Табла</div>
+    <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn" onclick="window.showInfoForm()" style="background:var(--mg);color:#fff;border:none;padding:6px 14px;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">+ Нова Порака</button>
+    </div>
+  </div>
+
+  <!-- Storage meter -->
+  <div style="background:var(--s2);border-radius:var(--rs);padding:10px 12px;margin-bottom:14px" id="storageMeter">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span style="font-size:11px;font-weight:700;color:var(--t2)">☁️ Firebase Storage</span>
+      <span id="storageText" style="font-size:11px;font-weight:700">Вчитување...</span>
+    </div>
+    <div class="storage-bar"><div id="storageFill" class="storage-fill" style="width:0%;background:var(--mg)"></div></div>
+    <div id="storageWarn" style="display:none;margin-top:4px;font-size:11px;color:var(--rd);font-weight:700">⚠️ Над 3GB — почни со бришење на стари фајлови!</div>
+  </div>
+
+  <!-- New message form (hidden by default) -->
+  <div id="infoFormWrap" style="display:none;background:var(--s2);border-radius:var(--r);padding:14px;margin-bottom:14px;border:2px solid var(--mg)">
+    <div style="font-size:13px;font-weight:700;margin-bottom:10px">✏️ Нова Порака</div>
+
+    <!-- Type selector -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Тип на порака:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="msgTypeBar">
+        <button onclick="window.selMsgType('general',this)" class="msg-type-btn act-type" data-type="general" style="padding:5px 10px;border-radius:20px;border:2px solid #6366f1;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:700;cursor:pointer">📣 Општа</button>
+        <button onclick="window.selMsgType('boost',this)" class="msg-type-btn" data-type="boost" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">🎯 Boost</button>
+        <button onclick="window.selMsgType('reward',this)" class="msg-type-btn" data-type="reward" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">🏆 Награда</button>
+        <button onclick="window.selMsgType('training',this)" class="msg-type-btn" data-type="training" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">📊 Обука</button>
+        <button onclick="window.selMsgType('warning',this)" class="msg-type-btn" data-type="warning" style="padding:5px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:700;cursor:pointer">⚠️ Предупредување</button>
+      </div>
+    </div>
+
+    <!-- Priority -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Приоритет:</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="window.selPriority('normal',this)" class="pri-btn act-pri" style="padding:4px 10px;border-radius:20px;border:2px solid #3b82f6;background:#eff6ff;color:#1d4ed8;font-size:11px;cursor:pointer;font-weight:600">🔵 Нормален</button>
+        <button onclick="window.selPriority('important',this)" class="pri-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">🟠 Важно</button>
+        <button onclick="window.selPriority('urgent',this)" class="pri-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">🔴 Итно</button>
+      </div>
+    </div>
+
+    <!-- Target -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">До:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="msgTargetBar">
+        <button onclick="window.selTarget('all',this)" class="tgt-btn act-tgt" style="padding:4px 10px;border-radius:20px;border:2px solid var(--mg);background:var(--mgl);color:var(--mgd);font-size:11px;cursor:pointer;font-weight:700">👥 Сите</button>
+        <button onclick="window.selTarget('IN',this)" class="tgt-btn" data-id="IN" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ИН</button>
+        <button onclick="window.selTarget('KM',this)" class="tgt-btn" data-id="KM" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">КМ</button>
+        <button onclick="window.selTarget('HS',this)" class="tgt-btn" data-id="HS" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ХС</button>
+        <button onclick="window.selTarget('FM',this)" class="tgt-btn" data-id="FM" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">ФМ</button>
+        <button onclick="window.selTarget('MS',this)" class="tgt-btn" data-id="MS" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">МС</button>
+      </div>
+    </div>
+
+    <!-- Expiry -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Стои до:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="expiryBar">
+        <button onclick="window.selExpiry(1,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">1 час</button>
+        <button onclick="window.selExpiry(4,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">4 часа</button>
+        <button onclick="window.selExpiry(24,this)" class="exp-btn act-exp" style="padding:4px 10px;border-radius:20px;border:2px solid var(--mg);background:var(--mgl);color:var(--mgd);font-size:11px;cursor:pointer;font-weight:700">1 ден</button>
+        <button onclick="window.selExpiry(72,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">3 дена</button>
+        <button onclick="window.selExpiry(168,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">1 недела</button>
+        <button onclick="window.selExpiry(0,this)" class="exp-btn" style="padding:4px 10px;border-radius:20px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;cursor:pointer;font-weight:600">♾️ Рачно</button>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Порака:</div>
+      <textarea id="msgText" rows="3" placeholder="Напиши порака..." style="width:100%;border:1px solid var(--brd);border-radius:var(--rs);padding:8px;font-size:13px;font-family:inherit;resize:vertical;background:var(--sur);color:var(--t1);box-sizing:border-box"></textarea>
+    </div>
+
+    <!-- File upload -->
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Прикачи фајл (опционално):</div>
+      <input type="file" id="msgFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" style="font-size:12px;width:100%">
+      <div id="uploadProgress" style="display:none;margin-top:6px">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:3px" id="uploadProgressText">Качување...</div>
+        <div class="storage-bar"><div id="uploadFill" class="storage-fill" style="width:0%;background:var(--mg)"></div></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:8px">
+      <button onclick="window.submitInfoMsg()" style="background:var(--mg);color:#fff;border:none;padding:8px 18px;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;flex:1">📤 Прати</button>
+      <button onclick="window.hideInfoForm()" style="background:var(--s2);color:var(--t1);border:1px solid var(--brd);padding:8px 14px;border-radius:var(--rs);font-size:13px;cursor:pointer">Откажи</button>
+    </div>
+  </div>
+
+  <!-- Messages list -->
+  <div id="infoMsgList">
+    <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување пораки...</div>
+  </div>
+
+</div>
+</div>
+<!-- ═══ END MANAGER INFO TAB ═══ -->
+
 </div><!-- end empView -->
 
 </div><!-- end sApp -->
@@ -1036,6 +1176,7 @@ body.emp-mode #empView{display:block!important}
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import{getFirestore,doc,setDoc,getDoc,updateDoc,deleteDoc,collection,onSnapshot,query,orderBy,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import{getStorage,ref,uploadBytesResumable,getDownloadURL,deleteObject,listAll,getMetadata}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 
 const FB={apiKey:"AIzaSyD2lqOi4rm_7L-C9yO1HTGipaKGPl5UBs8",authDomain:"mkt-kicevo-tracker.firebaseapp.com",projectId:"mkt-kicevo-tracker",storageBucket:"mkt-kicevo-tracker.firebasestorage.app",messagingSenderId:"850383341068",appId:"1:850383341068:web:bf5e71d3a10cb301e9d029"};
 const fbApp=initializeApp(FB);const auth=getAuth(fbApp);const db=getFirestore(fbApp);
@@ -1173,16 +1314,16 @@ const MEMBERS=[
 ];
 const KKEYS=['fmc','post','bb','iptv','loy','prep','cc','equip','loybus','ict','fmcbus','postbus','bbbus'];
 const KLBLS=['FMC Cons.','Postpaid','BB Cons.','IPTV','Loyalty','Prepaid','C&C','Доп. Опрема','Loyalty Bus.','ICT','FMC Bus.','Post. Bus.','BB Bus.'];
-const DTGT={fmc:9,post:26,bb:15,iptv:12,loy:104,prep:16,cc:42,equip:66,loybus:5,ict:5,fmcbus:5,postbus:5,bbbus:5};
+const DTGT={"2026": {"4": {"cc": 210, "equip": 240, "prep": 80, "fmcbus": 0, "bb": 75, "ict": 0, "postbus": 0, "loy": 520, "loybus": 0, "post": 130, "bbbus": 0, "fmc": 45, "iptv": 60}, "5": {"loybus": 5, "post": 130, "bbbus": 5, "fmc": 45, "iptv": 45, "cc": 240, "equip": 240, "prep": 100, "fmcbus": 5, "bb": 70, "ict": 5, "postbus": 5, "loy": 350}}};
 const SIC=['🏢'];const SLBL=['На работа'];
 const MKM=['Јануари','Февруари','Март','Април','Мај','Јуни','Јули','Август','Септември','Октомври','Ноември','Декември'];
 const MKD=['Нед','Пон','Вт','Сре','Чет','Пет','Саб'];
 // Вградени резултати Април 2026 (merged од сите вработени)
-const PRE_DATA={"2026":{"4":{"2026-04-01":{"IN":{"status":0,"fmc":4,"post":4,"bb":3,"iptv":2,"prep":0,"loy":1,"cc":1,"equip":20,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":2,"post":3,"bb":3,"iptv":1,"prep":2,"loy":33,"cc":21,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":1,"post":10,"bb":3,"iptv":4,"prep":1,"loy":24,"cc":39,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":2,"post":6,"bb":4,"iptv":3,"prep":1,"loy":39,"cc":52,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-02":{"FM":{"status":0,"fmc":0,"post":1,"bb":0,"iptv":0,"prep":0,"loy":7,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-03":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-04":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-06":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-07":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-08":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-09":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-10":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-11":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-13":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":10,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"loy_log":["1","2","3","4","5","6","7","8","9","10"]},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-14":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-15":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-16":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-17":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":1,"post":6,"bb":4,"iptv":0,"prep":0,"loy":13,"cc":12,"equip":21,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-18":{"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-20":{"IN":{"status":0,"fmc":1,"post":3,"bb":1,"iptv":0,"prep":0,"loy":2,"cc":7,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":2,"post":0,"bb":1,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":4,"bb":1,"iptv":0,"prep":0,"loy":2,"cc":14,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":2,"post":2,"bb":4,"iptv":2,"prep":0,"loy":9,"cc":7,"equip":1,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":1,"bb":1,"iptv":0,"prep":0,"loy":3,"cc":1,"equip":2,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-21":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":12,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"loy_log":["1","2","3","4","5","6","7","8","9","10","11","12"]},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-22":{"IN":{"status":0,"fmc":4,"post":8,"bb":6,"iptv":4,"prep":3,"loy":29,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1"],"iptv_log":["1","1","1","1"],"prep_log":["1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]},"KM":{"status":0,"fmc":2,"post":9,"bb":6,"iptv":1,"prep":3,"loy":37,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","2"],"post_log":["1","2","3","4","5","7","8","9","10"],"bb_log":["1","2","3","4","1","1"],"iptv_log":["1"],"prep_log":["1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","2","1","1","1","1","1","1","1","1","1","1"]},"HS":{"status":0,"fmc":0,"post":5,"bb":4,"iptv":1,"prep":8,"loy":10,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":[],"post_log":["1","2","3","4","5"],"bb_log":["1","2","3","46119126"],"iptv_log":["1"],"prep_log":["1","1","1","1","1","1","1","1"],"loy_log":["1","2","3","4","5","6","7","8","9","10"]},"FM":{"status":0,"fmc":9,"post":12,"bb":13,"iptv":5,"prep":5,"loy":53,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1","1","1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1","1","1","1","1","1","1","1"],"iptv_log":["1","1","1","1","1"],"prep_log":["1","1","1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]},"MS":{"status":0,"fmc":8,"post":26,"bb":12,"iptv":6,"prep":9,"loy":81,"cc":1,"equip":2,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0,"fmc_log":["1","1","1","1","1","1","1","1"],"post_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"bb_log":["1","1","1","1","1","1","1","1","1","1","1","1"],"iptv_log":["1","1","1","1","1","1"],"prep_log":["1","1","1","1","1","1","1","1","1"],"loy_log":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"cc_log":["4"],"equip_log":[{"num":"47353468","name":"3mk Smoke MagCase Samsung Galaxy A37"},{"num":"47247431","name":"SAMSUNG 45W PowerAdapter(w/o cable)-Wht."}]}},"2026-04-23":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-24":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-25":{"IN":{"status":0,"fmc":0,"post":8,"bb":2,"iptv":1,"prep":3,"loy":37,"cc":18,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-27":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-28":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-29":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}},"2026-04-30":{"IN":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":3,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":0,"post":0,"bb":0,"iptv":0,"prep":0,"loy":0,"cc":0,"equip":0,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}}},"5":{"2026-05-31":{"IN":{"status":0,"fmc":9,"post":23,"bb":12,"iptv":7,"prep":8,"loy":77,"cc":22,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"KM":{"status":0,"fmc":7,"post":12,"bb":11,"iptv":2,"prep":5,"loy":70,"cc":22,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"HS":{"status":0,"fmc":1,"post":16,"bb":8,"iptv":1,"prep":9,"loy":48,"cc":15,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"FM":{"status":0,"fmc":12,"post":25,"bb":20,"iptv":12,"prep":6,"loy":93,"cc":42,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0},"MS":{"status":0,"fmc":10,"post":33,"bb":17,"iptv":9,"prep":10,"loy":123,"cc":53,"equip":42,"addser":0,"loybus":0,"ict":0,"fmcbus":0,"postbus":0,"bbbus":0}}}}};
+const PRE_DATA={"2026": {"4": {"2026-04-01": {"IN": {"status": 0, "fmc": 4, "post": 4, "bb": 3, "iptv": 2, "prep": 0, "loy": 1, "cc": 1, "equip": 20, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 2, "post": 3, "bb": 3, "iptv": 1, "prep": 2, "loy": 33, "cc": 21, "equip": 21, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 1, "post": 10, "bb": 3, "iptv": 4, "prep": 1, "loy": 24, "cc": 39, "equip": 21, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 2, "post": 6, "bb": 4, "iptv": 3, "prep": 1, "loy": 39, "cc": 52, "equip": 21, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-02": {"FM": {"status": 0, "fmc": 0, "post": 1, "bb": 0, "iptv": 0, "prep": 0, "loy": 7, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-03": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-04": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-06": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-07": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-08": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-09": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-10": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-11": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-13": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 10, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "loy_log": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-14": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-15": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-16": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-17": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 1, "post": 6, "bb": 4, "iptv": 0, "prep": 0, "loy": 13, "cc": 12, "equip": 21, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-18": {"HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-20": {"IN": {"status": 0, "fmc": 1, "post": 3, "bb": 1, "iptv": 0, "prep": 0, "loy": 2, "cc": 7, "equip": 1, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 2, "post": 0, "bb": 1, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 4, "bb": 1, "iptv": 0, "prep": 0, "loy": 2, "cc": 14, "equip": 1, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 2, "post": 2, "bb": 4, "iptv": 2, "prep": 0, "loy": 9, "cc": 7, "equip": 1, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 1, "bb": 1, "iptv": 0, "prep": 0, "loy": 3, "cc": 1, "equip": 2, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-21": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 12, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "loy_log": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-22": {"IN": {"status": 0, "fmc": 4, "post": 8, "bb": 6, "iptv": 4, "prep": 3, "loy": 29, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "fmc_log": ["1", "1", "1", "1"], "post_log": ["1", "1", "1", "1", "1", "1", "1", "1"], "bb_log": ["1", "1", "1", "1", "1", "1"], "iptv_log": ["1", "1", "1", "1"], "prep_log": ["1", "1", "1"], "loy_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]}, "KM": {"status": 0, "fmc": 2, "post": 9, "bb": 6, "iptv": 1, "prep": 3, "loy": 37, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "fmc_log": ["1", "2"], "post_log": ["1", "2", "3", "4", "5", "7", "8", "9", "10"], "bb_log": ["1", "2", "3", "4", "1", "1"], "iptv_log": ["1"], "prep_log": ["1", "1", "1"], "loy_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "2", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]}, "HS": {"status": 0, "fmc": 0, "post": 5, "bb": 4, "iptv": 1, "prep": 8, "loy": 10, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "fmc_log": [], "post_log": ["1", "2", "3", "4", "5"], "bb_log": ["1", "2", "3", "46119126"], "iptv_log": ["1"], "prep_log": ["1", "1", "1", "1", "1", "1", "1", "1"], "loy_log": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]}, "FM": {"status": 0, "fmc": 9, "post": 12, "bb": 13, "iptv": 5, "prep": 5, "loy": 53, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "fmc_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1"], "post_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"], "bb_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"], "iptv_log": ["1", "1", "1", "1", "1"], "prep_log": ["1", "1", "1", "1", "1"], "loy_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]}, "MS": {"status": 0, "fmc": 8, "post": 26, "bb": 12, "iptv": 6, "prep": 9, "loy": 81, "cc": 1, "equip": 2, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0, "fmc_log": ["1", "1", "1", "1", "1", "1", "1", "1"], "post_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"], "bb_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"], "iptv_log": ["1", "1", "1", "1", "1", "1"], "prep_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1"], "loy_log": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"], "cc_log": ["4"], "equip_log": [{"num": "47353468", "name": "3mk Smoke MagCase Samsung Galaxy A37"}, {"num": "47247431", "name": "SAMSUNG 45W PowerAdapter(w/o cable)-Wht."}]}}, "2026-04-23": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-24": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-25": {"IN": {"status": 0, "fmc": 0, "post": 8, "bb": 2, "iptv": 1, "prep": 3, "loy": 37, "cc": 18, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-27": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-28": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-29": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-04-30": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 3, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "prep": 0, "loy": 0, "cc": 0, "equip": 0, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}}, "5": {"2026-05-31": {"IN": {"status": 0, "fmc": 9, "post": 23, "bb": 12, "iptv": 7, "prep": 8, "loy": 77, "cc": 22, "equip": 42, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 7, "post": 12, "bb": 11, "iptv": 2, "prep": 5, "loy": 70, "cc": 22, "equip": 42, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 1, "post": 16, "bb": 8, "iptv": 1, "prep": 9, "loy": 48, "cc": 15, "equip": 42, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 12, "post": 25, "bb": 20, "iptv": 12, "prep": 6, "loy": 93, "cc": 42, "equip": 42, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 10, "post": 33, "bb": 17, "iptv": 9, "prep": 10, "loy": 123, "cc": 53, "equip": 42, "addser": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-01": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-02": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-04": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-05": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-06": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-07": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-08": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-09": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-11": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-12": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-13": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-14": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-15": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-16": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-18": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-19": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-20": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-21": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-22": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-23": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-25": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-26": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-27": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-28": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-29": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}, "2026-05-30": {"IN": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "KM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "HS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "FM": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}, "MS": {"status": 0, "fmc": 0, "post": 0, "bb": 0, "iptv": 0, "loy": 0, "prep": 0, "cc": 0, "equip": 0, "loybus": 0, "ict": 0, "fmcbus": 0, "postbus": 0, "bbbus": 0}}}}};
 
 
 // Default: FMC,Post,BB,IPTV,Loyalty,C&C ON — rest OFF
-const DEFAULT_EXCLUDED=new Set(['prep','equip','loybus','ict','fmcbus','postbus','bbbus']);
+const DEFAULT_EXCLUDED=new Set(["prep", "addser", "fmcbus", "postbus", "bbbus", "loybus", "ict", "equip"]);
 
 // ── STATE ──
 let curUsr=null,isMgr=false,mID=null;
@@ -1275,6 +1416,448 @@ function rndKpiToggles(){
 }
 
 // ── AUTH ──
+
+// ═══════════════════════════════════════════════════════════
+// 📢 INFO / ОГЛАСНА ТАБЛА СИСТЕМ
+// ═══════════════════════════════════════════════════════════
+
+const INFO_TYPES = {
+  general:  {emoji:'📣', label:'Општа',          color:'#4f46e5', bg:'#eef2ff', border:'#a5b4fc'},
+  boost:    {emoji:'🎯', label:'Boost / Акција',  color:'#b45309', bg:'#fef3c7', border:'#fcd34d'},
+  reward:   {emoji:'🏆', label:'Награда',         color:'#065f46', bg:'#d1fae5', border:'#6ee7b7'},
+  training: {emoji:'📊', label:'Обука',           color:'#1e40af', bg:'#dbeafe', border:'#93c5fd'},
+  warning:  {emoji:'⚠️', label:'Предупредување', color:'#991b1b', bg:'#fee2e2', border:'#fca5a5'},
+};
+const INFO_PRIORITIES = {
+  normal:    {label:'Нормален', color:'#3b82f6'},
+  important: {label:'Важно',    color:'#f59e0b'},
+  urgent:    {label:'Итно',     color:'#ef4444'},
+};
+
+let _infoMsgType = 'general';
+let _infoPriority = 'normal';
+let _infoTarget   = 'all';
+let _infoExpiry   = 24; // hours, 0 = manual
+let _infoUnsubscribe = null;
+
+// ── Storage (Firebase Storage instance) ──
+let _storage = null;
+function getStorageInst(){
+  if(!_storage) _storage = getStorage(fbApp);
+  return _storage;
+}
+
+// ── Form helpers ──
+window.showInfoForm = () => {
+  document.getElementById('infoFormWrap').style.display = 'block';
+  document.getElementById('msgText').focus();
+};
+window.hideInfoForm = () => {
+  document.getElementById('infoFormWrap').style.display = 'none';
+  document.getElementById('msgText').value = '';
+  document.getElementById('msgFile').value = '';
+  document.getElementById('uploadProgress').style.display = 'none';
+};
+
+window.selMsgType = (type, el) => {
+  _infoMsgType = type;
+  document.querySelectorAll('.msg-type-btn').forEach(b => {
+    b.style.borderColor = '#e5e7eb'; b.style.background = '#fff'; b.style.color = '#374151';
+  });
+  const t = INFO_TYPES[type];
+  el.style.borderColor = t.border; el.style.background = t.bg; el.style.color = t.color;
+};
+window.selPriority = (p, el) => {
+  _infoPriority = p;
+  document.querySelectorAll('.pri-btn').forEach(b => {
+    b.style.borderColor = '#e5e7eb'; b.style.background = '#fff'; b.style.color = '#374151';
+  });
+  const col = INFO_PRIORITIES[p].color;
+  el.style.borderColor = col; el.style.background = col + '22'; el.style.color = col;
+};
+window.selTarget = (tgt, el) => {
+  _infoTarget = tgt;
+  document.querySelectorAll('.tgt-btn').forEach(b => {
+    b.style.borderColor = '#e5e7eb'; b.style.background = '#fff'; b.style.color = '#374151';
+  });
+  el.style.borderColor = 'var(--mg)'; el.style.background = 'var(--mgl)'; el.style.color = 'var(--mgd)';
+};
+window.selExpiry = (hrs, el) => {
+  _infoExpiry = hrs;
+  document.querySelectorAll('.exp-btn').forEach(b => {
+    b.style.borderColor = '#e5e7eb'; b.style.background = '#fff'; b.style.color = '#374151';
+  });
+  el.style.borderColor = 'var(--mg)'; el.style.background = 'var(--mgl)'; el.style.color = 'var(--mgd)';
+};
+
+// ── Submit message ──
+window.submitInfoMsg = async () => {
+  const text = document.getElementById('msgText').value.trim();
+  if(!text){ showSS('sStat','⚠️ Напиши порака!','warn'); return; }
+
+  const btn = document.querySelector('#infoFormWrap button');
+  btn.disabled = true; btn.textContent = '⏳ Се праќа...';
+
+  try {
+    let fileData = null;
+    const fileInput = document.getElementById('msgFile');
+    if(fileInput.files[0]){
+      fileData = await uploadInfoFile(fileInput.files[0]);
+    }
+
+    const now = new Date();
+    const expiresAt = _infoExpiry > 0 ? new Date(now.getTime() + _infoExpiry * 3600000).toISOString() : null;
+
+    const msgId = 'msg_' + Date.now();
+    const msgData = {
+      id: msgId,
+      type: _infoMsgType,
+      priority: _infoPriority,
+      target: _infoTarget,
+      text: text,
+      file: fileData,
+      createdAt: now.toISOString(),
+      createdBy: 'MGR',
+      expiresAt: expiresAt,
+      // Date labels
+      dateLabel: fmtInfoDate(now),
+      weekLabel: 'Нед. ' + getWeekNumber(now),
+      monthLabel: MN[now.getMonth()] + ' ' + now.getFullYear(),
+      yearLabel: String(now.getFullYear()),
+    };
+
+    await setDoc(doc(db,'info',msgId), msgData);
+
+    // Send push notification
+    await sendInfoPush(msgData);
+
+    showSS('sStat','✅ Пораката е пратена!','ok');
+    window.hideInfoForm();
+    loadInfoMsgs();
+  } catch(e){
+    console.error(e);
+    showSS('sStat','❌ Грешка: ' + e.message,'err');
+  } finally {
+    btn.disabled = false; btn.textContent = '📤 Прати';
+  }
+};
+
+// ── Upload file to Firebase Storage ──
+async function uploadInfoFile(file){
+  const storage = getStorageInst();
+  const path = 'info-files/' + Date.now() + '_' + file.name;
+  const storRef = ref(storage, path);
+
+  document.getElementById('uploadProgress').style.display = 'block';
+
+  return new Promise((resolve, reject) => {
+    const task = uploadBytesResumable(storRef, file);
+    task.on('state_changed',
+      snap => {
+        const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
+        document.getElementById('uploadFill').style.width = pct + '%';
+        document.getElementById('uploadProgressText').textContent = 'Качување... ' + pct + '%';
+      },
+      err => reject(err),
+      async () => {
+        const url = await getDownloadURL(task.snapshot.ref);
+        document.getElementById('uploadProgress').style.display = 'none';
+        resolve({ name: file.name, url, path, size: file.size });
+        updateStorageMeter();
+      }
+    );
+  });
+}
+
+// ── Delete message ──
+window.deleteInfoMsg = async (msgId, filePath) => {
+  if(!confirm('Избриши ја пораката?')) return;
+  try {
+    await deleteDoc(doc(db,'info',msgId));
+    if(filePath){
+      try {
+        const storage = getStorageInst();
+        await deleteObject(ref(storage, filePath));
+        updateStorageMeter();
+      } catch(e){ console.warn('File delete:', e); }
+    }
+    showSS('sStat','🗑 Избришано','ok');
+  } catch(e){ showSS('sStat','❌ Грешка','err'); }
+};
+
+// ── Load & render manager info messages ──
+function loadInfoMsgs(){
+  const listEl = document.getElementById('infoMsgList');
+  if(!listEl) return;
+
+  if(_infoUnsubscribe) _infoUnsubscribe();
+
+  const q = query(collection(db,'info'), orderBy('createdAt','desc'));
+  _infoUnsubscribe = onSnapshot(q, snap => {
+    const now = new Date();
+    // Auto-delete expired
+    snap.docs.forEach(d => {
+      const data = d.data();
+      if(data.expiresAt && new Date(data.expiresAt) < now){
+        deleteDoc(doc(db,'info',d.id)).catch(()=>{});
+        if(data.file?.path){
+          try{ deleteObject(ref(getStorageInst(), data.file.path)); }catch(e){}
+        }
+      }
+    });
+
+    const msgs = snap.docs
+      .map(d => d.data())
+      .filter(m => !m.expiresAt || new Date(m.expiresAt) >= now)
+      .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if(msgs.length === 0){
+      listEl.innerHTML = '<div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">📭 Нема активни пораки</div>';
+      return;
+    }
+
+    listEl.innerHTML = msgs.map(m => renderInfoMsgMgr(m)).join('');
+  });
+}
+
+function renderInfoMsgMgr(m){
+  const t = INFO_TYPES[m.type] || INFO_TYPES.general;
+  const p = INFO_PRIORITIES[m.priority] || INFO_PRIORITIES.normal;
+  const tgtLabel = m.target === 'all' ? '👥 До сите' : '👤 До: ' + getMemberName(m.target);
+  const expLabel = m.expiresAt ? '⏱ ' + fmtExpiry(m.expiresAt) : '♾️ Рачно бришење';
+
+  return `<div class="info-msg ${m.priority}" style="border-left:4px solid ${p.color}">
+    <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+      <span class="info-type-badge" style="background:${t.bg};color:${t.color};border:1px solid ${t.border}">${t.emoji} ${t.label}</span>
+      <span class="msg-target-pill">${tgtLabel}</span>
+      <span style="font-size:10px;color:var(--t2);margin-left:auto">${m.dateLabel} · ${m.weekLabel} · ${m.monthLabel}</span>
+    </div>
+    <div style="font-size:13px;color:var(--t1);margin-bottom:8px;line-height:1.5">${m.text}</div>
+    ${m.file ? `<div style="background:var(--s2);border-radius:var(--rs);padding:6px 10px;display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="font-size:16px">📎</span>
+      <span style="font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.file.name}</span>
+      <a href="${m.file.url}" target="_blank" download style="background:var(--mg);color:#fff;padding:3px 10px;border-radius:var(--rs);font-size:11px;font-weight:700;text-decoration:none">⬇ Преземи</a>
+    </div>` : ''}
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:10px;color:${p.color};font-weight:600">${expLabel}</span>
+      <button onclick="window.deleteInfoMsg('${m.id}','${m.file?.path||''}')" style="margin-left:auto;background:#fee2e2;color:#991b1b;border:none;padding:3px 10px;border-radius:var(--rs);font-size:11px;font-weight:700;cursor:pointer">🗑 Избриши</button>
+    </div>
+  </div>`;
+}
+
+// ── Load employee info messages ──
+let _empInfoUnsub = null;
+function loadEmpInfoMsgs(empId){
+  const listEl = document.getElementById('empInfoMsgList');
+  const bannerEl = document.getElementById('empInfoBanner');
+  const badgeEl = document.getElementById('empInfoBadge');
+  const tabEl = document.getElementById('empInfoTab');
+  if(!listEl) return;
+
+  if(_empInfoUnsub) _empInfoUnsub();
+
+  const q = query(collection(db,'info'), orderBy('createdAt','desc'));
+  _empInfoUnsub = onSnapshot(q, snap => {
+    const now = new Date();
+    const msgs = snap.docs
+      .map(d => d.data())
+      .filter(m => {
+        if(m.expiresAt && new Date(m.expiresAt) < now) return false;
+        return m.target === 'all' || m.target === empId;
+      })
+      .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const unread = msgs.length;
+
+    // Badge on Info tab
+    if(badgeEl){
+      if(unread > 0){
+        badgeEl.style.display = 'inline-flex';
+        badgeEl.textContent = unread > 9 ? '9+' : String(unread);
+        if(tabEl) tabEl.style.position = 'relative';
+      } else {
+        badgeEl.style.display = 'none';
+      }
+    }
+
+    // Dashboard banner
+    if(bannerEl){
+      if(msgs.length > 0){
+        const latest = msgs[0];
+        const t = INFO_TYPES[latest.type] || INFO_TYPES.general;
+        const p = INFO_PRIORITIES[latest.priority] || INFO_PRIORITIES.normal;
+        bannerEl.style.display = 'block';
+        bannerEl.innerHTML = `<div class="emp-notif-banner pulse-border" onclick="empTab('empinfo', document.querySelector('#empView .tab[onclick*=empinfo]'))" style="border-color:${p.color}">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:20px">${t.emoji}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12px;font-weight:700;color:${p.color}">${unread > 1 ? unread + ' нови пораки' : 'Нова порака'} од Менаџерот</div>
+              <div style="font-size:12px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${latest.text}</div>
+              <div style="font-size:10px;color:var(--t2);margin-top:2px">${latest.dateLabel} · ${latest.weekLabel}</div>
+            </div>
+            <span style="font-size:11px;color:var(--mg);font-weight:700">▸ Отвори</span>
+          </div>
+        </div>`;
+      } else {
+        bannerEl.style.display = 'none';
+      }
+    }
+
+    // Employee info list
+    if(msgs.length === 0){
+      listEl.innerHTML = '<div style="text-align:center;color:var(--t2);padding:20px;font-size:13px">📭 Нема активни пораки</div>';
+      return;
+    }
+    listEl.innerHTML = msgs.map(m => renderInfoMsgEmp(m)).join('');
+  });
+}
+
+function renderInfoMsgEmp(m){
+  const t = INFO_TYPES[m.type] || INFO_TYPES.general;
+  const p = INFO_PRIORITIES[m.priority] || INFO_PRIORITIES.normal;
+  return `<div class="info-msg" style="border-left:4px solid ${p.color}">
+    <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+      <span class="info-type-badge" style="background:${t.bg};color:${t.color};border:1px solid ${t.border}">${t.emoji} ${t.label}</span>
+      <span style="font-size:10px;color:var(--t2);margin-left:auto">${m.dateLabel} · ${m.weekLabel} · ${m.monthLabel}</span>
+    </div>
+    <div style="font-size:13px;color:var(--t1);line-height:1.5;margin-bottom:8px">${m.text}</div>
+    ${m.file ? `<div style="background:var(--s2);border-radius:var(--rs);padding:8px 12px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px">📎</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.file.name}</div>
+        <div style="font-size:10px;color:var(--t2)">${fmtFileSize(m.file.size)}</div>
+      </div>
+      <a href="${m.file.url}" target="_blank" download style="background:var(--mg);color:#fff;padding:5px 14px;border-radius:var(--rs);font-size:12px;font-weight:700;text-decoration:none;flex-shrink:0">⬇ Преземи</a>
+    </div>` : ''}
+  </div>`;
+}
+
+// ── Storage meter ──
+async function updateStorageMeter(){
+  const meterEl = document.getElementById('storageMeter');
+  if(!meterEl) return;
+  try {
+    const storage = getStorageInst();
+    const listRef = ref(storage, 'info-files/');
+    const result = await listAll(listRef);
+    let totalBytes = 0;
+    const metas = await Promise.all(result.items.map(item => getMetadata(item).catch(() => null)));
+    metas.forEach(m => { if(m) totalBytes += m.size || 0; });
+    const gb = totalBytes / (1024*1024*1024);
+    const pct = Math.min(100, (gb / 5) * 100);
+    document.getElementById('storageFill').style.width = pct + '%';
+    document.getElementById('storageFill').style.background = gb > 4 ? '#ef4444' : gb > 3 ? '#f59e0b' : 'var(--mg)';
+    document.getElementById('storageText').textContent = gb.toFixed(3) + ' GB / 5 GB (' + Math.round(pct) + '%)';
+    const warnEl = document.getElementById('storageWarn');
+    if(warnEl) warnEl.style.display = gb > 3 ? 'block' : 'none';
+  } catch(e){ 
+    const el = document.getElementById('storageText');
+    if(el) el.textContent = '—';
+  }
+}
+
+// ── Push notifications ──
+async function requestPushPermission(){
+  if(!('Notification' in window)) return false;
+  if(Notification.permission === 'granted') return true;
+  if(Notification.permission === 'denied') return false;
+  const result = await Notification.requestPermission();
+  return result === 'granted';
+}
+
+async function sendInfoPush(msgData){
+  // Save push token request to Firestore so SW can pick it up
+  // Use Web Notifications API via Service Worker
+  if(!('serviceWorker' in navigator)) return;
+  const reg = await navigator.serviceWorker.ready;
+  const t = INFO_TYPES[msgData.type] || INFO_TYPES.general;
+  const targetLabel = msgData.target === 'all' ? 'до сите' : 'до ' + getMemberName(msgData.target);
+  // Store notification request in Firestore for employee SW to receive
+  const notifId = 'notif_' + Date.now();
+  await setDoc(doc(db,'notifications',notifId), {
+    title: t.emoji + ' ' + t.label + ' — MKT Кичево',
+    body: msgData.text.substring(0,80),
+    target: msgData.target,
+    msgId: msgData.id,
+    createdAt: msgData.createdAt,
+    expiresAt: msgData.expiresAt,
+  });
+  // Also show local push for manager
+  if(Notification.permission === 'granted'){
+    reg.showNotification(t.emoji + ' Пораката е пратена (' + targetLabel + ')', {
+      body: msgData.text.substring(0,60),
+      icon: './icon-192.png',
+      badge: './favicon-32.png',
+      tag: 'info-sent',
+    });
+  }
+}
+
+async function checkPushNotifications(empId){
+  if(!('serviceWorker' in navigator)) return;
+  // Listen for new notifications in Firestore
+  const q = query(
+    collection(db,'notifications'),
+    orderBy('createdAt','desc')
+  );
+  onSnapshot(q, async snap => {
+    const reg = await navigator.serviceWorker.ready;
+    const now = new Date();
+    snap.docChanges().forEach(change => {
+      if(change.type !== 'added') return;
+      const n = change.doc.data();
+      if(n.expiresAt && new Date(n.expiresAt) < now) return;
+      if(n.target !== 'all' && n.target !== empId) return;
+      // Only show if recent (last 30s) to avoid showing old ones on login
+      const age = now - new Date(n.createdAt);
+      if(age > 30000) return;
+      if(Notification.permission === 'granted'){
+        reg.showNotification(n.title, {
+          body: n.body,
+          icon: './icon-192.png',
+          badge: './favicon-32.png',
+          tag: 'info-' + n.msgId,
+          requireInteraction: false,
+          silent: false,
+        });
+      }
+    });
+  });
+}
+
+// ── Helper functions ──
+function fmtInfoDate(d){
+  return d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+}
+function getWeekNumber(d){
+  const s = new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const dow = s.getUTCDay()||7;
+  s.setUTCDate(s.getUTCDate()+4-dow);
+  const y = new Date(Date.UTC(s.getUTCFullYear(),0,1));
+  return Math.ceil((((s-y)/86400000)+1)/7);
+}
+function fmtExpiry(isoStr){
+  const diff = new Date(isoStr) - new Date();
+  if(diff < 0) return 'Истечено';
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  if(h > 24) return Math.floor(h/24) + ' дена';
+  if(h > 0) return h + 'ч ' + m + 'мин';
+  return m + ' мин';
+}
+function fmtFileSize(bytes){
+  if(!bytes) return '';
+  if(bytes > 1048576) return (bytes/1048576).toFixed(1) + ' MB';
+  if(bytes > 1024) return (bytes/1024).toFixed(0) + ' KB';
+  return bytes + ' B';
+}
+function getMemberName(id){
+  const found = MEMBERS.find(m => m.id === id);
+  return found ? found.name.split(' ')[0] : id;
+}
+
+// ═══ END INFO SYSTEM ═══
+
 onAuthStateChanged(auth,async user=>{
   setTimeout(async()=>{
     document.getElementById('sLoad').style.display='none';
@@ -1336,6 +1919,11 @@ async function postLogin(){
       const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}
     });
     document.getElementById('empView').style.display='block';
+      // Info system
+      loadEmpInfoMsgs(uid);
+      requestPushPermission().then(granted => {
+        if(granted) checkPushNotifications(uid);
+      });
     document.body.classList.add('emp-mode');
     initEmp();
   }
@@ -2270,6 +2858,7 @@ window.gotoTab=(name,el)=>{
   else if(name==='mobreport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(2);}
   else if(name==='boost')rndBoostBoard();
   else if(name==='schedule')scInit();
+  else if(name==='info'){loadInfoMsgs();updateStorageMeter();}
 };
 
 // ── BOOST BOARD ──
@@ -2352,6 +2941,7 @@ window.empTab=(name,el)=>{
   else if(name==='emporders')rndEmpOrders();
   else if(name==='history')rndEmpHistory();
   else if(name==='empschedule')empScInit();
+  else if(name==='empinfo'){/* rendered by listener */}
 };
 function rndEmpDyBtns(){
   const wks=gWks(getWDs(cY,cM));if(!wks[cW])cW=0;const wk=wks[cW]||[];
