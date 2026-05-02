@@ -1604,16 +1604,18 @@ function loadInfoMsgs(){
   const q = query(collection(db,'info'), orderBy('createdAt','desc'));
   _infoUnsubscribe = onSnapshot(q, snap => {
     const now = new Date();
-    // Auto-delete expired
-    snap.docs.forEach(d => {
-      const data = d.data();
-      if(data.expiresAt && new Date(data.expiresAt) < now){
-        deleteDoc(doc(db,'info',d.id)).catch(()=>{});
-        if(data.file?.path){
-          try{ const st=getStorageInst(); if(st) deleteObject(ref(st,data.file.path)); }catch(e){}
+    // Auto-delete expired (only manager can delete)
+    if(isMgr){
+      snap.docs.forEach(d => {
+        const data = d.data();
+        if(data.expiresAt && new Date(data.expiresAt) < now){
+          deleteDoc(doc(db,'info',d.id)).catch(()=>{});
+          if(data.file?.path){
+            try{ const st=getStorageInst(); if(st) deleteObject(ref(st,data.file.path)); }catch(e){}
+          }
         }
-      }
-    });
+      });
+    }
 
     const msgs = snap.docs
       .map(d => d.data())
@@ -1944,7 +1946,7 @@ async function postLogin(){
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
-    ['daily','monthly','ranking','inventory','inventory2','targets','orders','weekly'].forEach(t=>{
+    ['daily','monthly','ranking','inventory','inventory2','targets','orders','weekly','info'].forEach(t=>{
       const el=document.getElementById('tp-'+t);if(el){el.style.cssText='display:none!important';el.classList.remove('act');}
     });
     document.getElementById('empView').style.display='block';
