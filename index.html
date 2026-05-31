@@ -287,6 +287,29 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .cmp-toggle-btn{padding:7px 18px;border-radius:calc(var(--rs) + 1px);border:none;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
 .cmp-toggle-btn.act{background:var(--mg);color:#fff}
 .cmp-toggle-btn:not(.act){background:transparent;color:var(--t2)}
+/* ══ EXECUTIVE DASHBOARD ══ */
+@keyframes xPulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}}
+@keyframes xFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes xFlash{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes xSpin{to{transform:rotate(360deg)}}
+.xbg{background:linear-gradient(145deg,#060d1a 0%,#0b1628 55%,#070e1c 100%);border-radius:var(--r);padding:22px 18px;position:relative;overflow:hidden}
+.xbg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(59,130,246,.08) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(99,102,241,.06) 0%,transparent 60%);pointer-events:none}
+.xcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:16px;position:relative;overflow:hidden}
+.xcard-hi{background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(99,102,241,.1));border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:16px}
+.xcard-gold{background:linear-gradient(135deg,rgba(234,179,8,.12),rgba(251,146,60,.08));border:1px solid rgba(234,179,8,.25);border-radius:12px;padding:16px}
+.xlive{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);border-radius:20px;padding:3px 10px 3px 8px;font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.8px;text-transform:uppercase}
+.xdot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:xPulse 2s infinite;flex-shrink:0}
+.xring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.xring-lbl{position:absolute;text-align:center;pointer-events:none}
+.xins{display:flex;gap:9px;align-items:flex-start;padding:9px 11px;border-radius:8px;margin-bottom:6px}
+.xins-g{background:rgba(34,197,94,.09);border-left:3px solid rgba(34,197,94,.8)}
+.xins-w{background:rgba(234,179,8,.09);border-left:3px solid rgba(234,179,8,.8)}
+.xins-r{background:rgba(239,68,68,.09);border-left:3px solid rgba(239,68,68,.8)}
+.xins-b{background:rgba(99,102,241,.09);border-left:3px solid rgba(99,102,241,.8)}
+.xvbg{background:rgba(255,255,255,.07);border-radius:4px;height:7px;overflow:hidden;margin-top:4px}
+.xvfill{height:100%;border-radius:4px;transition:width 1.3s cubic-bezier(.22,1,.36,1)}
+.xtag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
+.xnum{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -381,6 +404,7 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('schedule',this)">🕐 Распоред</div>
   <div class="tab" onclick="gotoTab('fullreport',this)">📋 Целосен</div>
   <div class="tab" onclick="gotoTab('compare',this)">⚖️ Споредба</div>
+  <div class="tab" onclick="gotoTab('executive',this)">🏆 Executive</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -990,6 +1014,14 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
+<div id="tp-executive" class="tp">
+<div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
+  <div id="exec-content">
+    <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
+  </div>
+</div>
+</div>
+
 <div class="emp-profile-overlay" id="emp-profile-overlay">
   <div class="ep-backdrop" onclick="closeEmpProfile()"></div>
   <div class="ep-panel">
@@ -1281,6 +1313,7 @@ function subToMonth(y,m){
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
         if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
         if(document.getElementById('tp-fullreport')?.classList.contains('act'))rndFullReport();
+        if(document.getElementById('tp-executive')?.classList.contains('act'))rndExecutive();
         if(_profileEmpId&&document.getElementById('emp-profile-overlay')?.classList.contains('open'))rndEmpProfile();
       }
     },err=>console.error('onSnapshot day',dk,err));
@@ -2812,6 +2845,253 @@ function _rndCmpMonths(){
   <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center">Последни ${_cmpNMonths} месеци · ${isTeam?'Цел Тим':MEMBERS.find(m=>m.id===_cmpMid)?.name.split(' ')[0]||''}</div>`;
 }
 
+// ══════════════════════════════════════════════════════
+// ── EXECUTIVE DASHBOARD ──
+// ══════════════════════════════════════════════════════
+function rndExecutive(){
+  const el=document.getElementById('exec-content');if(!el)return;
+  const y=cY,m=cM;
+  const mt=getMT(y,m);
+  const wds=getWDs(y,m);const wd=wds.length;
+  const now=new Date();const isCur=now.getFullYear()===y&&now.getMonth()+1===m;
+  const todayD=isCur?now.getDate():wd;
+  const elapsedWD=Math.max(1,wds.filter(d=>d.date<=todayD).length);
+  const remainWD=wds.filter(d=>d.date>todayD).length;
+  const daysInMonth=new Date(y,m,0).getDate();
+  const daysLeft=isCur?daysInMonth-todayD:0;
+  const pctMoElapsed=Math.round(elapsedWD/wd*100);
+
+  const memberData=MEMBERS.map(mb=>{
+    const score=perfScore(mb.id,y,m);
+    const totals=Object.fromEntries(KKEYS.map(k=>[k,mMoSum(mb.id,k,y,m)]));
+    return{...mb,score,totals};
+  }).sort((a,b)=>b.score-a.score);
+
+  const teamScore=Math.round(memberData.reduce((s,mb)=>s+mb.score,0)/memberData.length);
+  const projected=Math.min(999,elapsedWD>0?Math.round(teamScore/elapsedWD*wd):teamScore);
+  const teamTotals=Object.fromEntries(KKEYS.map(k=>[k,MEMBERS.reduce((s,mb)=>s+mMoSum(mb.id,k,y,m),0)]));
+
+  // colours
+  const col=s=>s>=100?'#22c55e':s>=70?'#3b82f6':'#ef4444';
+  const colBg=s=>s>=100?'rgba(34,197,94,.18)':s>=70?'rgba(59,130,246,.18)':'rgba(239,68,68,.18)';
+  const status=s=>s>=100?'ОДЛИЧЕН':s>=70?'НА ПАТ':'ТРЕБА ПОДОБРУВАЊЕ';
+  const mo=MKM[m-1];
+
+  // ── team ring
+  const tRsz=130,tSw=11,tR=(tRsz-tSw)/2,tCirc=2*Math.PI*tR;
+  const tDash=Math.min(teamScore,100)/100*tCirc;
+
+  // ── employee rings
+  const empRingsHtml=memberData.map((mb,idx)=>{
+    const sz=84,sw=8,r=(sz-sw)/2,circ=2*Math.PI*r;
+    const d=Math.min(mb.score,100)/100*circ;
+    const crown=idx===0?`<div style="position:absolute;top:-6px;right:-6px;font-size:16px;filter:drop-shadow(0 0 4px gold);z-index:2">👑</div>`:'';
+    const rank=`<div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);background:${col(mb.score)};color:#fff;font-size:8px;font-weight:800;padding:1px 6px;border-radius:10px">#${idx+1}</div>`;
+    return `<div style="text-align:center;animation:xFadeUp .5s ease ${idx*.12}s both">
+      <div class="xring-wrap" style="margin:0 auto 8px;width:${sz}px;height:${sz}px">
+        ${crown}
+        <svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="transform:rotate(-90deg)">
+          <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="${sw}"/>
+          <circle class="xrc" cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col(mb.score)}" stroke-width="${sw}" stroke-linecap="round" data-d="${d}" data-c="${circ}" stroke-dasharray="0 ${circ}" style="filter:drop-shadow(0 0 4px ${col(mb.score)})"/>
+        </svg>
+        <div class="xring-lbl">
+          <div class="xct xnum" data-t="${mb.score}" style="font-size:15px;font-weight:900;color:#fff;line-height:1">0%</div>
+        </div>
+        ${rank}
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:${mb.bg};color:${mb.tc};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin:0 auto 5px;box-shadow:0 0 0 2px rgba(255,255,255,.15)">${mb.ini}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.8);font-weight:700">${mb.name.split(' ')[0]}</div>
+      <div style="font-size:10px;color:${col(mb.score)};margin-top:2px;font-weight:600">${pem(mb.score)}</div>
+    </div>`;
+  }).join('');
+
+  // ── smart insights
+  const ins=_execInsights(memberData,teamScore,projected,elapsedWD,wd,remainWD,mt,teamTotals,y,m);
+  const insHtml=ins.map((x,i)=>`<div class="xins ${x.cls}" style="animation:xFadeUp .4s ease ${i*.07+.2}s both">
+    <span style="font-size:13px;flex-shrink:0;line-height:1.3">${x.ico}</span>
+    <span style="font-size:11px;color:rgba(255,255,255,.88);line-height:1.45;font-weight:500">${x.txt}</span>
+  </div>`).join('');
+
+  // ── KPI velocity
+  const velHtml=KKEYS.map((k,i)=>{
+    if(!isInScore(k))return'';
+    const t=mt[k]||1;const teamT=t*MEMBERS.length;
+    const p=pct(teamTotals[k],teamT);const c=col(p);
+    return `<div style="margin-bottom:9px;animation:xFadeUp .3s ease ${i*.04+.3}s both">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px">
+        <span style="font-size:10px;color:rgba(255,255,255,.65);font-weight:600">${KLBLS[i]}</span>
+        <span style="font-size:11px;font-weight:800;color:${c}" class="xnum">${p}%</span>
+      </div>
+      <div class="xvbg"><div class="xvfill xvb" data-p="${Math.min(p,100)}" style="width:0%;background:linear-gradient(90deg,${c}88,${c})"></div></div>
+    </div>`;
+  }).join('');
+
+  // ── forecast arc
+  const fCol=col(projected);
+  const fPct=Math.min(projected,100);
+  const faR=46,faSw=9,faCirc=2*Math.PI*faR;
+  const faHalf=faCirc/2;
+  const faFill=fPct/100*faHalf;
+
+  // ── team stats row
+  const statsHtml=`
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      ${[
+        {lbl:'Score',val:teamScore+'%',c:col(teamScore),bg:colBg(teamScore)},
+        {lbl:'Прогноза',val:projected+'%',c:fCol,bg:colBg(projected)},
+        {lbl:'Таргет',val:'100%',c:'rgba(255,255,255,.5)',bg:'rgba(255,255,255,.05)'},
+        {lbl:'Работни денови',val:`${elapsedWD}/${wd}`,c:'rgba(255,255,255,.8)',bg:'rgba(255,255,255,.05)'},
+      ].map(s=>`<div style="flex:1;min-width:80px;background:${s.bg};border-radius:8px;padding:9px 10px;text-align:center">
+        <div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">${s.lbl}</div>
+        <div style="font-size:16px;font-weight:900;color:${s.c}" class="xnum">${s.val}</div>
+      </div>`).join('')}
+    </div>`;
+
+  // ── top performer spotlight
+  const top=memberData[0];
+  const spotHtml=`
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(135deg,rgba(234,179,8,.12),rgba(251,146,60,.08));border:1px solid rgba(234,179,8,.2);border-radius:10px;margin-bottom:14px;animation:xFadeUp .4s ease both">
+      <div style="font-size:28px">👑</div>
+      <div>
+        <div style="font-size:9px;color:rgba(234,179,8,.8);font-weight:800;text-transform:uppercase;letter-spacing:.7px">Вработен на Месецот</div>
+        <div style="font-size:15px;font-weight:900;color:#fff;margin-top:2px">${top.name}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:26px;font-weight:900;color:#22c55e" class="xnum">${top.score}%</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4)">${pem(top.score)} Score</div>
+      </div>
+    </div>`;
+
+  el.innerHTML=`
+  <div class="xbg">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;position:relative;z-index:1">
+      <div>
+        <div style="font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px">📊 Executive Dashboard</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;font-weight:500">${mo} ${y} · МКТ Кичево</div>
+      </div>
+      <div class="xlive"><div class="xdot"></div>LIVE</div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Месецот е</div>
+        <div style="font-size:13px;color:#fff;font-weight:800">${pctMoElapsed}% завршен${daysLeft>0?' · '+daysLeft+' ден'+( daysLeft===1?'':'')+' остануваат':''}</div>
+      </div>
+    </div>
+
+    <!-- TOP ROW: Team ring + Emp rings -->
+    <div style="display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;position:relative;z-index:1">
+
+      <!-- Team card -->
+      <div class="xcard-hi" style="flex:0 0 auto;min-width:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+        <div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.5px;align-self:flex-start">🏢 Тим Перформанс</div>
+        <div class="xring-wrap" style="width:${tRsz}px;height:${tRsz}px">
+          <svg width="${tRsz}" height="${tRsz}" viewBox="0 0 ${tRsz} ${tRsz}" style="transform:rotate(-90deg)">
+            <circle cx="${tRsz/2}" cy="${tRsz/2}" r="${tR}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="${tSw}"/>
+            <circle class="xrc" cx="${tRsz/2}" cy="${tRsz/2}" r="${tR}" fill="none" stroke="${col(teamScore)}" stroke-width="${tSw}" stroke-linecap="round" data-d="${tDash}" data-c="${tCirc}" stroke-dasharray="0 ${tCirc}" style="filter:drop-shadow(0 0 6px ${col(teamScore)})"/>
+          </svg>
+          <div class="xring-lbl">
+            <div class="xct xnum" data-t="${teamScore}" style="font-size:22px;font-weight:900;color:#fff;line-height:1">0%</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.4);margin-top:2px">ТИМ SCORE</div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div class="xtag" style="background:${colBg(teamScore)};color:${col(teamScore)}">${status(teamScore)}</div>
+        </div>
+        ${statsHtml}
+      </div>
+
+      <!-- Employee rings card -->
+      <div class="xcard" style="flex:1;min-width:280px">
+        <div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">👥 Индивидуален Перформанс · Рангирано</div>
+        <div style="display:flex;gap:14px;justify-content:space-around;flex-wrap:wrap;padding:0 4px">
+          ${empRingsHtml}
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW: Spotlight + Insights + KPI Velocity -->
+    <div style="display:flex;gap:14px;flex-wrap:wrap;position:relative;z-index:1">
+
+      <!-- Left: Spotlight + Insights -->
+      <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:0">
+        ${spotHtml}
+        <div class="xcard" style="flex:1">
+          <div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">🧠 Паметна Анализа</div>
+          ${insHtml}
+        </div>
+      </div>
+
+      <!-- Right: KPI Velocity -->
+      <div class="xcard" style="flex:1;min-width:240px">
+        <div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">📈 KPI Прогрес · Тим (${mo})</div>
+        ${velHtml}
+      </div>
+    </div>
+  </div>`;
+
+  // ── Animations ──
+  requestAnimationFrame(()=>{
+    // rings
+    document.querySelectorAll('.xrc').forEach(c=>{
+      const d=parseFloat(c.dataset.d),total=parseFloat(c.dataset.c);
+      let t0=null;
+      (function step(ts){
+        if(!t0)t0=ts;
+        const prog=Math.min((ts-t0)/1500,1);
+        const e=1-Math.pow(1-prog,3);
+        c.style.strokeDasharray=`${d*e} ${total}`;
+        if(prog<1)requestAnimationFrame(step);
+      })(performance.now());
+    });
+    // counters
+    document.querySelectorAll('.xct').forEach(el=>{
+      const target=parseInt(el.dataset.t);let t0=null;
+      (function step(ts){
+        if(!t0)t0=ts;
+        const prog=Math.min((ts-t0)/1300,1);
+        const e=1-Math.pow(1-prog,3);
+        el.textContent=Math.round(target*e)+'%';
+        if(prog<1)requestAnimationFrame(step);
+      })(performance.now());
+    });
+    // velocity bars (slight delay for stagger effect)
+    setTimeout(()=>{
+      document.querySelectorAll('.xvb').forEach(b=>{b.style.width=b.dataset.p+'%';});
+    },200);
+  });
+}
+
+function _execInsights(memberData,teamScore,projected,elapsed,wd,remaining,mt,teamTotals,y,m){
+  const ins=[];
+  const top=memberData[0],bot=memberData[memberData.length-1];
+  const above100=memberData.filter(mb=>mb.score>=100);
+  const below70=memberData.filter(mb=>mb.score<70);
+
+  if(top.score>=100)ins.push({ico:'👑',cls:'xins-g',txt:`<strong>${top.name.split(' ')[0]}</strong> е неостапен — ${top.score}% овој месец!`});
+  else ins.push({ico:'🥇',cls:'xins-b',txt:`<strong>${top.name.split(' ')[0]}</strong> води со ${top.score}%`});
+
+  if(above100.length>1)ins.push({ico:'🌟',cls:'xins-g',txt:`${above100.length} вработени го надминаа таргетот — одличен тим!`});
+
+  if(projected>=100)ins.push({ico:'🚀',cls:'xins-g',txt:`Прогноза: <strong>~${projected}%</strong> — тимот е на пат да го постигне таргетот!`});
+  else if(projected>=70)ins.push({ico:'📊',cls:'xins-b',txt:`Прогноза: <strong>~${projected}%</strong> до крај на месецот`});
+  else ins.push({ico:'📉',cls:'xins-r',txt:`Прогноза: само <strong>~${projected}%</strong> — потребно е забрзување!`});
+
+  if(bot.score<60)ins.push({ico:'⚠️',cls:'xins-w',txt:`<strong>${bot.name.split(' ')[0]}</strong> треба поддршка — ${bot.score}% (под 60%)`});
+
+  KKEYS.forEach((k,i)=>{
+    if(!isInScore(k))return;
+    const t=mt[k]||1,tT=t*MEMBERS.length;
+    const p=pct(teamTotals[k],tT);
+    if(p>=115)ins.push({ico:'🔥',cls:'xins-g',txt:`<strong>${KLBLS[i]}</strong> — тимот го скрши таргетот (${p}%)!`});
+    else if(p<40)ins.push({ico:'🚨',cls:'xins-r',txt:`<strong>${KLBLS[i]}</strong> — само ${p}% — итна акција потребна!`});
+  });
+
+  if(remaining<=3&&remaining>0)ins.push({ico:'⏰',cls:'xins-w',txt:`Само <strong>${remaining}</strong> работни ден${remaining===1?'':'а'} до крај на месецот!`});
+  if(remaining===0)ins.push({ico:'🏁',cls:'xins-b',txt:`Месецот е завршен. Финален тим резултат: <strong>${teamScore}%</strong>`});
+
+  if(below70.length===0&&above100.length===MEMBERS.length)ins.push({ico:'💎',cls:'xins-g',txt:`Сите вработени се над 100% — перфектен тим месец!`});
+
+  return ins.slice(0,7);
+}
+
 // ── ALERTS ──
 function calcAlerts(){
   const als=[];const mt=getMT(cY,cM);
@@ -3549,6 +3829,7 @@ window.gotoTab=(name,el)=>{
   }
   else if(name==='fullreport')rndFullReport();
   else if(name==='compare')window.rndCmpTab();
+  else if(name==='executive')rndExecutive();
 };
 
 // ── BOOST BOARD ──
