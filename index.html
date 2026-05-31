@@ -228,6 +228,14 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .sc-cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .sc-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;align-items:center;justify-content:center}
 .sc-modal-overlay.open{display:flex}
+.emp-profile-overlay{display:none;position:fixed;inset:0;z-index:600;justify-content:flex-end}
+.emp-profile-overlay.open{display:flex}
+.ep-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35)}
+.ep-panel{position:relative;z-index:1;background:var(--sur);width:min(480px,100vw);height:100vh;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.15);display:flex;flex-direction:column;animation:ep-in .22s ease}
+@keyframes ep-in{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.ep-hdr{background:var(--mg);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:sticky;top:0;z-index:2}
+.ep-body{padding:16px;flex:1}
+.ep-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);margin-bottom:8px}
 .sc-mbox{background:var(--sur);border-radius:12px;padding:20px;min-width:220px;max-width:320px}
 .sc-mopt{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--brd);background:var(--sur);cursor:pointer;font-size:12px;font-weight:600;margin-bottom:5px;text-align:left}
 .sc-mopt:hover{background:var(--mgl);border-color:var(--mg)}
@@ -944,6 +952,14 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
+<div class="emp-profile-overlay" id="emp-profile-overlay">
+  <div class="ep-backdrop" onclick="closeEmpProfile()"></div>
+  <div class="ep-panel">
+    <div class="ep-hdr" id="epm-hdr"></div>
+    <div class="ep-body" id="epm-body"></div>
+  </div>
+</div>
+
 <div id="empView" style="display:none">
 <div class="hdr" style="position:relative">
   <div style="font-size:13px;font-weight:700" id="empWel"></div>
@@ -1226,6 +1242,8 @@ function subToMonth(y,m){
         calcAlerts();
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
         if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
+        if(document.getElementById('tp-fullreport')?.classList.contains('act'))rndFullReport();
+        if(_profileEmpId&&document.getElementById('emp-profile-overlay')?.classList.contains('open'))rndEmpProfile();
       }
     },err=>console.error('onSnapshot day',dk,err));
     unsubs.push(u);
@@ -2205,7 +2223,7 @@ function rndFullReport(){
         <span style="min-width:28px;text-align:right;font-weight:700;color:${pc(p)}">${v}/${t}</span>
       </div>`;
     }).join('');
-    return `<div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--r);padding:12px;flex:1;min-width:180px">
+    return `<div onclick="openEmpProfile('${mb.id}')" style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--r);padding:12px;flex:1;min-width:180px;cursor:pointer;transition:box-shadow .15s,border-color .15s" onmouseover="this.style.borderColor='var(--mg)';this.style.boxShadow='0 4px 14px rgba(200,0,110,.18)'" onmouseout="this.style.borderColor='var(--brd)';this.style.boxShadow=''">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <div class="av" style="background:${mb.bg};color:${mb.tc};width:32px;height:32px;font-size:11px;flex-shrink:0">${mb.ini}</div>
         <div style="flex:1;min-width:0">
@@ -2218,6 +2236,7 @@ function rndFullReport(){
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:3px">${kpiMini}</div>
+      <div style="text-align:center;font-size:10px;color:var(--mg);font-weight:700;margin-top:8px;opacity:.7">▸ Детален профил</div>
     </div>`;
   }).join('');
 
@@ -2269,6 +2288,155 @@ function rndFullReport(){
         <tbody>${dayRows}</tbody>
         <tfoot><tr><td style="text-align:left;padding-left:8px">Вкупно</td>${ftTots}<td style="text-align:center;font-size:10px;font-weight:700;color:${pc(teamScore)}">${teamScore}%</td></tr></tfoot>
       </table></div>
+    </div>`;
+}
+
+// ── EMPLOYEE PROFILE MODAL ──
+let _profileEmpId = null;
+
+window.openEmpProfile = function(mid){
+  _profileEmpId = mid;
+  rndEmpProfile();
+  document.getElementById('emp-profile-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+window.closeEmpProfile = function(){
+  document.getElementById('emp-profile-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  _profileEmpId = null;
+};
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && _profileEmpId) window.closeEmpProfile(); });
+
+function rndEmpProfile(){
+  if(!_profileEmpId) return;
+  const mid = _profileEmpId;
+  const mb = MEMBERS.find(m => m.id === mid);
+  if(!mb) return;
+
+  const mt = getMT(cY, cM);
+  const wd = getWDs(cY, cM).length;
+  const score = perfScore(mid, cY, cM);
+  const workDays = mWDs(mid, cY, cM);
+
+  // Previous month
+  let pm = cM - 1, py = cY;
+  if(pm < 1){ pm = 12; py--; }
+  const mtPrev = getMT(py, pm);
+
+  const totals = {};
+  const prevTotals = {};
+  KKEYS.forEach(k => {
+    totals[k] = mMoSum(mid, k, cY, cM);
+    prevTotals[k] = mMoSum(mid, k, py, pm);
+  });
+
+  // Weekly breakdown
+  const wks = gWks(getWDs(cY, cM));
+  const wkData = wks.map(wk => {
+    const wkTot = {};
+    KKEYS.forEach(k => {
+      wkTot[k] = wk.reduce((s, d) => s + (AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mid]?.[k] || 0), 0);
+    });
+    let wOp = 0, wCnt = 0;
+    KKEYS.forEach(k => {
+      if(!isInScore(k)) return;
+      const tgtWk = wd > 0 ? (mt[k] || 0) * wk.length / wd : 0;
+      wOp += pct(wkTot[k], tgtWk || 1);
+      wCnt++;
+    });
+    return { wk, tot: wkTot, score: wCnt > 0 ? Math.round(wOp / wCnt) : 0 };
+  });
+
+  // Header
+  const hdr = document.getElementById('epm-hdr');
+  if(hdr) hdr.innerHTML =
+    `<div class="av" style="background:${mb.bg};color:${mb.tc};width:38px;height:38px;font-size:13px;flex-shrink:0">${mb.ini}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${mb.name}</div>
+      <div style="font-size:11px;opacity:.8">${MKM[cM-1]} ${cY} · ${workDays} работни денови</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:22px;font-weight:900">${score}%</div>
+      <div style="font-size:9px;opacity:.75">Score ${pem(score)}</div>
+    </div>
+    <button onclick="closeEmpProfile()" style="width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;font-size:15px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:4px">✕</button>`;
+
+  // KPI rows
+  const kpiRows = KKEYS.map((k, i) => {
+    const on = isInScore(k);
+    const v = totals[k];
+    const t = mt[k] || 0;
+    const p = pct(v, t || 1);
+    const prev = prevTotals[k];
+    const delta = v - prev;
+    const deltaColor = delta > 0 ? 'var(--gr)' : delta < 0 ? 'var(--rd)' : 'var(--t3)';
+    const deltaLabel = delta > 0 ? '↑+' + delta : delta < 0 ? '↓' + delta : '→';
+    return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--brd);opacity:${on?1:.45}">
+      <div style="min-width:80px;font-size:11px;font-weight:${on?600:400};color:${on?'var(--txt)':'var(--t3)'}">${KLBLS[i]}${on?'':' ⊘'}</div>
+      <div style="flex:1"><div class="bar" style="height:7px"><div class="bf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div></div>
+      <div style="font-size:11px;font-weight:700;color:${pc(p)};min-width:46px;text-align:right">${v}<span style="font-weight:400;color:var(--t3)">/${t}</span></div>
+      <div style="font-size:11px;font-weight:700;color:${pc(p)};min-width:34px;text-align:right">${p}%</div>
+      <div style="font-size:10px;font-weight:700;color:${deltaColor};min-width:28px;text-align:right">${deltaLabel}</div>
+    </div>`;
+  }).join('');
+
+  // Weekly badges
+  const wkBadges = wkData.map((w, wi) => {
+    const miniTrack = KKEYS.filter(k => isInScore(k)).map(k => {
+      const tgtWk = wd > 0 ? (mt[k] || 0) * w.wk.length / wd : 0;
+      const p2 = pct(w.tot[k], tgtWk || 1);
+      return `<div style="height:3px;background:var(--brd);border-radius:2px;margin-top:2px;overflow:hidden"><div style="width:${Math.min(100,p2)}%;height:100%;background:${pc(p2)};border-radius:2px"></div></div>`;
+    }).join('');
+    return `<div style="display:flex;flex-direction:column;align-items:center;background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:8px 10px;min-width:70px">
+      <div style="font-size:10px;color:var(--t2);margin-bottom:3px;font-weight:700">Нед ${wi+1}</div>
+      <div style="font-size:20px;font-weight:700;color:${pc(w.score)}">${w.score}%</div>
+      <div style="font-size:9px;color:var(--t3)">${w.wk.length} дена</div>
+      <div style="width:100%;margin-top:5px">${miniTrack}</div>
+    </div>`;
+  }).join('');
+
+  // Prev month comparison (active KPIs only)
+  const prevCmp = KKEYS.filter(k => isInScore(k)).map(k => {
+    const i = KKEYS.indexOf(k);
+    const cur = totals[k];
+    const prev = prevTotals[k];
+    const tgt = mt[k] || 0;
+    const tgtP = mtPrev[k] || 0;
+    const diff = cur - prev;
+    const dColor = diff > 0 ? 'var(--gr)' : diff < 0 ? 'var(--rd)' : 'var(--t3)';
+    const dLabel = diff > 0 ? '+' + diff : String(diff);
+    return `<div style="display:flex;align-items:center;gap:8px;background:var(--s2);border-radius:var(--rs);padding:5px 10px;font-size:11px">
+      <span style="flex:1;font-weight:600">${KLBLS[i]}</span>
+      <span style="color:var(--t2)">${prev}<span style="font-size:9px;color:var(--t3)">/${tgtP}</span></span>
+      <span style="color:var(--t3);font-size:10px">→</span>
+      <span style="font-weight:700">${cur}<span style="font-size:9px;color:var(--t3)">/${tgt}</span></span>
+      <span style="font-weight:700;color:${dColor};min-width:28px;text-align:right">${dLabel}</span>
+    </div>`;
+  }).join('');
+
+  const body = document.getElementById('epm-body');
+  if(!body) return;
+  body.innerHTML =
+    `<div style="background:var(--s2);border-radius:var(--r);padding:10px 14px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:11px;font-weight:700;color:var(--t2)">Score ${MKM[cM-1]} ${cY}</span>
+        <span style="font-size:13px;font-weight:700;color:${pc(score)}">${score}% ${pem(score)}</span>
+      </div>
+      <div class="bar" style="height:10px;border-radius:5px"><div class="bf" style="width:${Math.min(100,score)}%;height:10px;border-radius:5px;${barcl(score)}"></div></div>
+      <div style="font-size:10px;color:var(--t2);margin-top:5px">${workDays} / ${wd} работни денови</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div class="ep-section-title">📊 KPI Месечен Преглед</div>
+      <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:8px 12px">${kpiRows}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px;padding-left:2px">↑↓ споредба со ${MKM[pm-1]} ${py}</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div class="ep-section-title">📈 Неделен Тренд</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${wkBadges}</div>
+    </div>
+    <div>
+      <div class="ep-section-title">🔄 Споредба: ${MKM[cM-1]} ${cY} vs ${MKM[pm-1]} ${py}</div>
+      <div style="display:flex;flex-direction:column;gap:4px">${prevCmp}</div>
     </div>`;
 }
 
