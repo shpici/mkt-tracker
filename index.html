@@ -261,6 +261,40 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .storage-fill{height:100%;border-radius:4px;transition:width .5s}
 .msg-target-pill{background:var(--mgl);color:var(--mgd);border-radius:20px;padding:1px 8px;font-size:10px;font-weight:600}
 /* ═══ END INFO TAB CSS ═══ */
+/* DARK MODE */
+body.dark-mode{--bg:#0f0f1a;--sur:#1a1a2e;--s2:#1f2038;--s3:#252545;--brd:#2e2e50;--txt:#e0e0f0;--t2:#9090b8;--t3:#5050a0;--sh:0 2px 8px rgba(0,0,0,.5)}
+body.dark-mode .fi,body.dark-mode .ki,body.dark-mode input:not(.lbtn):not([type=range]),body.dark-mode textarea,body.dark-mode select{background:var(--s2)!important;color:var(--txt)!important;border-color:var(--brd)!important}
+body.dark-mode .hdr,body.dark-mode .nav,body.dark-mode .tabs,body.dark-mode .card{background:var(--sur)!important;border-color:var(--brd)!important}
+body.dark-mode .tab{background:var(--s3)!important;color:var(--t2)!important}
+body.dark-mode .tab.act{background:var(--sur)!important;color:var(--mg)!important}
+body.dark-mode thead th,body.dark-mode tfoot td{background:var(--s3)!important}
+body.dark-mode .nb{background:var(--s3)!important;color:var(--t2)!important;border-color:var(--brd)!important}
+body.dark-mode .nb.act{background:var(--mg)!important;color:#fff!important;border-color:var(--mg)!important}
+body.dark-mode .sc{background:var(--s2)!important;border-color:var(--brd)!important}
+body.dark-mode .mc,body.dark-mode .ekc,body.dark-mode .rr{background:var(--s2)!important;border-color:var(--brd)!important}
+body.dark-mode .lcard{background:var(--sur)!important;border-color:var(--brd)!important}
+body.dark-mode .llogo{background:var(--mg)!important}
+/* HEATMAP */
+.hmap-cell{width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(255,255,255,.85);cursor:default;position:relative;flex-shrink:0}
+.hmap-cell:hover .hmap-tt{display:block}
+.hmap-tt{display:none;position:absolute;bottom:115%;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;white-space:nowrap;z-index:20;pointer-events:none}
+/* BADGES */
+.bdg-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid;margin:2px 2px 2px 0;white-space:nowrap}
+/* SVG CHART */
+.svg-wrap{overflow-x:auto}
+.svg-wrap svg{display:block;overflow:visible}
+/* COMMISSION */
+.com-tbl{width:100%;border-collapse:separate;border-spacing:0;min-width:900px}
+.com-tbl th{background:var(--s2);padding:5px 6px;font-size:9px;font-weight:700;color:var(--t2);border-bottom:1px solid var(--brd);text-align:center;white-space:nowrap}
+.com-tbl th:first-child{text-align:left;padding-left:10px;border-radius:var(--rs) 0 0 0}
+.com-tbl td{padding:5px 6px;border-bottom:1px solid var(--brd);font-size:11px;text-align:center;vertical-align:middle}
+.com-tbl td:first-child{text-align:left;padding-left:10px}
+.com-inp{width:52px;padding:2px 5px;border:1px solid var(--brd);border-radius:4px;font-size:11px;text-align:center;background:var(--sur);color:var(--txt)}
+/* COMPARISON MODAL */
+.cmp-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:700;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.cmp-ov.open{display:flex}
+.cmp-box{background:var(--sur);border-radius:var(--r);width:100%;max-width:740px;margin:auto;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.cmp-hdr-bar{padding:12px 16px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:8px;background:var(--s2);border-radius:var(--r) var(--r) 0 0;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -273,6 +307,7 @@ body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{disp
 body.emp-mode #empView{display:block!important}
 </style>
 
+<script>if(localStorage.getItem('dark_mode')==='1')document.body.classList.add('dark-mode');</script>
 <!-- LOADING -->
 <div id="sLoad" style="display:none">
   <div class="spin"></div>
@@ -302,6 +337,8 @@ body.emp-mode #empView{display:block!important}
   <div class="hr">
     <span id="sStat" class="ss" style="display:none"></span>
     <span id="uBadge" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--mgl);color:var(--mgd)"></span>
+    <button id="dmBtn" class="hbtn" onclick="toggleDarkMode()" title="🌙 Темен режим">🌙</button>
+    <button class="hbtn no-print" onclick="exportCSV()" title="📥 Извези CSV">📥</button>
     <!-- Save HTML backup -->
     <button class="hbtn" onclick="saveBackup()" title="💾 Зачувај HTML backup">💾</button>
     <!-- Load HTML backup -->
@@ -351,6 +388,7 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">🕐 Распоред</div>
   <div class="tab" onclick="gotoTab('fullreport',this)">📋 Целосен</div>
+  <div class="tab" onclick="gotoTab('commission',this)">💰 Комисија</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -950,6 +988,37 @@ body.emp-mode #empView{display:block!important}
     <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
   </div>
 </div>
+</div>
+
+<div id="tp-commission" class="tp">
+<div class="card">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:16px;font-weight:700">💰 Калкулатор за Комисија</div>
+      <div style="font-size:12px;color:var(--t2)" id="comSubtitle">Постави провизија по единица за секое KPI</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <label style="font-size:11px;color:var(--t2);white-space:nowrap">Основна плата (ден.):</label>
+      <input class="fi" id="comBase" type="number" min="0" placeholder="0" style="width:90px;padding:5px 8px;font-size:12px" oninput="rndCommission()">
+      <button class="btn bmg" onclick="window.print()">🖨 PDF</button>
+    </div>
+  </div>
+  <div class="tw"><div id="comContent"><div style="text-align:center;color:var(--t2);padding:30px">Вчитување...</div></div></div>
+</div>
+</div>
+
+<div class="cmp-ov" id="cmp-ov">
+  <div style="position:fixed;inset:0" onclick="closeComparison()"></div>
+  <div class="cmp-box" style="position:relative;z-index:1">
+    <div class="cmp-hdr-bar">
+      <div style="font-size:14px;font-weight:700;flex:1">⚖️ Споредба на Вработени</div>
+      <select id="cmpSelA" onchange="setCmpA(this.value)" class="fi" style="font-size:12px;padding:4px 8px;width:auto"></select>
+      <span style="font-size:13px;color:var(--t2);font-weight:700">vs</span>
+      <select id="cmpSelB" onchange="setCmpB(this.value)" class="fi" style="font-size:12px;padding:4px 8px;width:auto"></select>
+      <button onclick="closeComparison()" style="width:28px;height:28px;border-radius:50%;border:1px solid var(--brd);background:var(--s2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div id="cmp-body" style="padding:16px"></div>
+  </div>
 </div>
 
 <div class="emp-profile-overlay" id="emp-profile-overlay">
@@ -2203,6 +2272,19 @@ function rndFullReport(){
   const memberScores=MEMBERS.map(mb=>({...mb,score:perfScore(mb.id,cY,cM),totals:Object.fromEntries(KKEYS.map(k=>[k,mMoSum(mb.id,k,cY,cM)]))})).sort((a,b)=>b.score-a.score);
   const medals=['🥇','🥈','🥉'];
   const medal=i=>i<3?medals[i]:'#'+(i+1);
+  // Weekly data for chart
+  const frWks=gWks(allDays);
+  const frWkData=frWks.map((wk,wi)=>{
+    let wOp=0,wCnt=0;
+    KKEYS.forEach(k=>{if(!isInScore(k))return;const tgtWk=(mt[k]||0)*MEMBERS.length*wk.length/(wd||1);const wkTot=wk.reduce((s,d)=>s+MEMBERS.reduce((s2,mb)=>(s2+(AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id]?.[k]||0)),0),0);wOp+=pct(wkTot,tgtWk||1);wCnt++;});
+    return{score:wCnt>0?Math.round(wOp/wCnt):0};
+  });
+  const frChart=svgWeekChart(frWkData,300,90);
+  // Team forecast
+  const today=new Date();const todayD=cY===today.getFullYear()&&cM===today.getMonth()+1?today.getDate():allDays[allDays.length-1]?.date||99;
+  const frPast=allDays.filter(d=>d.date<=todayD);const frRem=allDays.filter(d=>d.date>todayD);
+  const frPastScore=frPast.length>0?Math.round(frPast.reduce((s,d)=>{let dOp=0,dCnt=0;KKEYS.forEach(k=>{if(!isInScore(k))return;const dtgt=(mt[k]||0)*MEMBERS.length/(wd||1);const dtot=MEMBERS.reduce((s2,mb)=>s2+(AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id]?.[k]||0),0);dOp+=pct(dtot,dtgt||1);dCnt++;});return s+(dCnt>0?Math.round(dOp/dCnt):0);},0)/frPast.length):teamScore;
+  const frProjected=frPast.length>0?Math.round((frPast.reduce((s,d)=>{let dOp=0,dCnt=0;KKEYS.forEach(k=>{if(!isInScore(k))return;const dtgt=(mt[k]||0)*MEMBERS.length/(wd||1);const dtot=MEMBERS.reduce((s2,mb)=>s2+(AS[cY]?.[cM]?.[dK(cY,cM,d)]?.[mb.id]?.[k]||0),0);dOp+=pct(dtot,dtgt||1);dCnt++;});return s+(dCnt>0?Math.round(dOp/dCnt):0);},0)+frPastScore*frRem.length)/(frPast.length+frRem.length)):teamScore;
 
   const kpiRows=KKEYS.map((k,i)=>{
     const on=isInScore(k);const tot=teamTotals[k];const tgt=teamTargets[k];const p=pct(tot,tgt||1);const w=Math.min(100,p);
@@ -2260,7 +2342,11 @@ function rndFullReport(){
         <div style="font-size:16px;font-weight:700">📋 Целосен Извештај</div>
         <div style="font-size:12px;color:var(--t2)">${monthName} · ${wd} работни денови</div>
       </div>
-      <div style="margin-left:auto"><button class="btn bmg" onclick="window.print()">🖨 Зачувај PDF</button></div>
+      <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn" onclick="openComparison()" style="font-size:11px">⚖️ Споредба</button>
+        <button class="btn" onclick="exportCSV()" style="font-size:11px">📥 CSV</button>
+        <button class="btn bmg" onclick="window.print()">🖨 PDF</button>
+      </div>
     </div>
     <div style="background:${teamScore>=100?'var(--grl)':teamScore>=70?'var(--bll)':'var(--rdl)'};border:1px solid ${teamScore>=100?'#a5d6a7':teamScore>=70?'#90caf9':'#ef9a9a'};border-radius:var(--r);padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <div>
@@ -2277,8 +2363,25 @@ function rndFullReport(){
       <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">📊 KPI Прогрес — Тим Вкупно</div>
       <div style="background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:10px 14px">${kpiRows}</div>
     </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">📈 Неделен Тренд — Тим Score</div>
+        <div class="svg-wrap" style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:8px 12px">${frChart}</div>
+      </div>
+      <div style="flex:1;min-width:180px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">🔮 Прогноза до Крај</div>
+        <div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:12px 14px">
+          <div style="font-size:11px;color:var(--t2);margin-bottom:4px">Моментален Score</div>
+          <div style="font-size:22px;font-weight:700;color:${pc(teamScore)}">${teamScore}%</div>
+          <div style="font-size:11px;color:var(--t2);margin-top:10px;margin-bottom:4px">Предвидување (крај месец)</div>
+          <div style="font-size:22px;font-weight:700;color:${pc(frProjected)}">${frProjected}%</div>
+          <div class="bar" style="height:7px;margin-top:6px;border-radius:4px"><div class="bf" style="width:${Math.min(100,frProjected)}%;${barcl(frProjected)}"></div></div>
+          <div style="font-size:10px;color:var(--t3);margin-top:5px">${frPast.length} изминати · ${frRem.length} преостанати денови</div>
+        </div>
+      </div>
+    </div>
     <div style="margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">👥 Вработени — Ранкинг</div>
+      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">👥 Вработени — Ранкинг <span style="font-size:10px;font-weight:400;color:var(--t3)">(кликни за детали)</span></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">${memberCards}</div>
     </div>
     <div>
@@ -2317,6 +2420,10 @@ function rndEmpProfile(){
   const wd = getWDs(cY, cM).length;
   const score = perfScore(mid, cY, cM);
   const workDays = mWDs(mid, cY, cM);
+  const strk = empStreak(mid);
+  const fcst = empForecast(mid);
+  const bdgs = empBadges(mid);
+  const hmap = buildHeatmap(mid);
 
   // Previous month
   let pm = cM - 1, py = cY;
@@ -2416,6 +2523,7 @@ function rndEmpProfile(){
 
   const body = document.getElementById('epm-body');
   if(!body) return;
+  const bdgHtml=bdgs.map(b=>`<span class="bdg-chip" style="background:${b.bg};color:${b.c};border-color:${b.c}">${b.e} ${b.l}</span>`).join('');
   body.innerHTML =
     `<div style="background:var(--s2);border-radius:var(--r);padding:10px 14px;margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -2424,6 +2532,23 @@ function rndEmpProfile(){
       </div>
       <div class="bar" style="height:10px;border-radius:5px"><div class="bf" style="width:${Math.min(100,score)}%;height:10px;border-radius:5px;${barcl(score)}"></div></div>
       <div style="font-size:10px;color:var(--t2);margin-top:5px">${workDays} / ${wd} работни денови</div>
+    </div>
+    <div style="margin-bottom:12px">${bdgHtml}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="flex:1;min-width:120px;background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:10px 12px;text-align:center">
+        <div style="font-size:10px;color:var(--t2);margin-bottom:4px">🔥 Моментален стрик</div>
+        <div style="font-size:26px;font-weight:700;color:${strk.current>=5?'#c62828':strk.current>=3?'#e65100':'var(--t2)'}">${strk.current}<span style="font-size:12px;font-weight:400;color:var(--t2)"> дена</span></div>
+        <div style="font-size:10px;color:var(--t3);margin-top:3px">Макс: ${strk.max} дена</div>
+      </div>
+      ${fcst?`<div style="flex:1;min-width:120px;background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:10px 12px;text-align:center">
+        <div style="font-size:10px;color:var(--t2);margin-bottom:4px">🔮 Прогноза</div>
+        <div style="font-size:26px;font-weight:700;color:${pc(fcst.projected)}">${fcst.projected}%</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:3px">Ако темпото продолжи</div>
+      </div>`:''}
+    </div>
+    <div style="margin-bottom:14px">
+      <div class="ep-section-title">🗓 Хитмап — Дневен Перформанс</div>
+      ${hmap}
     </div>
     <div style="margin-bottom:16px">
       <div class="ep-section-title">📊 KPI Месечен Преглед</div>
@@ -2438,6 +2563,218 @@ function rndEmpProfile(){
       <div class="ep-section-title">🔄 Споредба: ${MKM[cM-1]} ${cY} vs ${MKM[pm-1]} ${py}</div>
       <div style="display:flex;flex-direction:column;gap:4px">${prevCmp}</div>
     </div>`;
+}
+
+// ── DARK MODE ──
+window.toggleDarkMode=function(){
+  const on=document.body.classList.toggle('dark-mode');
+  localStorage.setItem('dark_mode',on?'1':'0');
+  const btn=document.getElementById('dmBtn');
+  if(btn)btn.textContent=on?'☀️':'🌙';
+};
+(function(){const btn=document.getElementById('dmBtn');if(btn)btn.textContent=localStorage.getItem('dark_mode')==='1'?'☀️':'🌙';})();
+
+// ── CSV EXPORT ──
+window.exportCSV=function(){
+  const mt=getMT(cY,cM);
+  const rows=[['Вработен',...KLBLS,'Score %','Работни денови']];
+  MEMBERS.forEach(mb=>{
+    const vals=KKEYS.map(k=>mMoSum(mb.id,k,cY,cM));
+    rows.push([mb.name,...vals,perfScore(mb.id,cY,cM)+'%',mWDs(mb.id,cY,cM)]);
+  });
+  const tots=KKEYS.map(k=>MEMBERS.reduce((s,mb)=>s+mMoSum(mb.id,k,cY,cM),0));
+  rows.push(['ТИМ ВКУПНО',...tots,'','']);
+  rows.push(['Таргет/вработен',...KKEYS.map(k=>mt[k]||0),'','']);
+  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download='MKT_'+MKM[cM-1]+'_'+cY+'.csv';
+  a.click();URL.revokeObjectURL(a.href);
+};
+
+// ── SVG BAR CHART ──
+function svgWeekChart(wkData,w,h){
+  const n=wkData.length;const pL=22,pB=18,pT=10;const cW=w-pL-6;const bW=Math.floor(cW/n)-4;
+  let s=`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  [0,50,100].forEach(v=>{const y=pT+(1-v/100)*(h-pT-pB);s+=`<line x1="${pL}" y1="${y}" x2="${w-2}" y2="${y}" stroke="var(--brd)" stroke-width="1"/>`;s+=`<text x="${pL-2}" y="${y+3}" text-anchor="end" font-size="8" fill="var(--t3)">${v}</text>`;});
+  wkData.forEach((w2,i)=>{
+    const x=pL+i*(cW/n)+2;const sc=w2.score;const bH=Math.max(2,sc/100*(h-pT-pB));const y=pT+(h-pT-pB)-bH;
+    const col=sc>=100?'#2e7d32':sc>=70?'#1565c0':'#c62828';
+    s+=`<rect x="${x}" y="${y}" width="${bW}" height="${bH}" rx="3" fill="${col}" opacity=".85"/>`;
+    s+=`<text x="${x+bW/2}" y="${h-pB+12}" text-anchor="middle" font-size="9" fill="var(--t2)">Н${i+1}</text>`;
+    if(sc>0)s+=`<text x="${x+bW/2}" y="${Math.max(y-3,pT+7)}" text-anchor="middle" font-size="8" font-weight="bold" fill="${col}">${sc}%</text>`;
+  });
+  s+='</svg>';return s;
+}
+
+// ── HEATMAP ──
+function buildHeatmap(mid){
+  const mt=getMT(cY,cM);const allDays=getWDs(cY,cM);const wd=allDays.length;
+  const scoreKeys=KKEYS.filter(k=>isInScore(k));
+  const cells=allDays.map(d=>{
+    const dk2=dK(cY,cM,d);let score=0,cnt=0;
+    scoreKeys.forEach(k=>{const v=AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0;const dtgt=wd>0?(mt[k]||0)/wd:0;score+=pct(v,dtgt||1);cnt++;});
+    const ds=cnt>0?Math.round(score/cnt):0;
+    const hasData=scoreKeys.some(k=>(AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0)>0);
+    const bg=!hasData?'var(--s3)':ds>=100?'#2e7d32':ds>=70?'#1565c0':ds>=40?'#e65100':'#c62828';
+    return `<div class="hmap-cell" style="background:${bg}">${d.date}<div class="hmap-tt">${MKD[d.dow]} ${d.date}/${cM}: ${ds}%</div></div>`;
+  }).join('');
+  const legend=`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--t2)">
+    <span><span style="display:inline-block;width:10px;height:10px;background:var(--s3);border-radius:2px;vertical-align:middle;margin-right:3px"></span>Без активност</span>
+    <span><span style="display:inline-block;width:10px;height:10px;background:#c62828;border-radius:2px;vertical-align:middle;margin-right:3px"></span>&lt;40%</span>
+    <span><span style="display:inline-block;width:10px;height:10px;background:#e65100;border-radius:2px;vertical-align:middle;margin-right:3px"></span>40–69%</span>
+    <span><span style="display:inline-block;width:10px;height:10px;background:#1565c0;border-radius:2px;vertical-align:middle;margin-right:3px"></span>70–99%</span>
+    <span><span style="display:inline-block;width:10px;height:10px;background:#2e7d32;border-radius:2px;vertical-align:middle;margin-right:3px"></span>≥100%</span>
+  </div>`;
+  return `<div style="display:flex;flex-wrap:wrap;gap:3px">${cells}</div>${legend}`;
+}
+
+// ── STREAK ──
+function empStreak(mid){
+  const mt=getMT(cY,cM);const allDays=getWDs(cY,cM);const wd=allDays.length;
+  const scoreKeys=KKEYS.filter(k=>isInScore(k));
+  const today=new Date();const todayD=cY===today.getFullYear()&&cM===today.getMonth()+1?today.getDate():99;
+  let maxS=0,curS=0;
+  const pastDays=allDays.filter(d=>d.date<=todayD);
+  pastDays.forEach(d=>{
+    const dk2=dK(cY,cM,d);let score=0,cnt=0;
+    scoreKeys.forEach(k=>{const v=AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0;const dtgt=wd>0?(mt[k]||0)/wd:0;score+=pct(v,dtgt||1);cnt++;});
+    const ds=cnt>0?Math.round(score/cnt):0;
+    const hasData=scoreKeys.some(k=>(AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0)>0);
+    if(hasData&&ds>=70){curS++;maxS=Math.max(maxS,curS);}else curS=0;
+  });
+  // Current streak from today backwards
+  let cur=0;
+  for(let i=pastDays.length-1;i>=0;i--){
+    const d=pastDays[i];const dk2=dK(cY,cM,d);let score=0,cnt=0;
+    scoreKeys.forEach(k=>{const v=AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0;const dtgt=wd>0?(mt[k]||0)/wd:0;score+=pct(v,dtgt||1);cnt++;});
+    const ds=cnt>0?Math.round(score/cnt):0;
+    const hasData=scoreKeys.some(k=>(AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0)>0);
+    if(hasData&&ds>=70)cur++;else break;
+  }
+  return{current:cur,max:maxS};
+}
+
+// ── FORECAST ──
+function empForecast(mid){
+  const mt=getMT(cY,cM);const allDays=getWDs(cY,cM);const wd=allDays.length;
+  const today=new Date();const todayD=cY===today.getFullYear()&&cM===today.getMonth()+1?today.getDate():allDays[allDays.length-1]?.date||99;
+  const past=allDays.filter(d=>d.date<=todayD);const rem=allDays.filter(d=>d.date>todayD);
+  if(!past.length)return null;
+  const scoreKeys=KKEYS.filter(k=>isInScore(k));
+  let sum=0;
+  past.forEach(d=>{
+    const dk2=dK(cY,cM,d);let score=0,cnt=0;
+    scoreKeys.forEach(k=>{const v=AS[cY]?.[cM]?.[dk2]?.[mid]?.[k]||0;const dtgt=wd>0?(mt[k]||0)/wd:0;score+=pct(v,dtgt||1);cnt++;});
+    sum+=cnt>0?Math.round(score/cnt):0;
+  });
+  const avg=sum/past.length;
+  const projected=Math.round((sum+avg*rem.length)/(past.length+rem.length));
+  return{projected,current:perfScore(mid,cY,cM),past:past.length,rem:rem.length,avg:Math.round(avg)};
+}
+
+// ── BADGES ──
+function empBadges(mid){
+  const score=perfScore(mid,cY,cM);
+  const {current:streak}=empStreak(mid);
+  let pm=cM-1,py=cY;if(pm<1){pm=12;py--;}
+  const prevScore=perfScore(mid,py,pm);
+  const impr=prevScore>0?Math.round((score-prevScore)/prevScore*100):0;
+  const rank=MEMBERS.map(mb=>({id:mb.id,s:perfScore(mb.id,cY,cM)})).sort((a,b)=>b.s-a.s).findIndex(m=>m.id===mid)+1;
+  const b=[];
+  if(score>=100)b.push({e:'🎯',l:'100% Таргет',c:'#2e7d32',bg:'#e8f5e9'});
+  else if(score>=90)b.push({e:'⭐',l:'Топ 90%',c:'#1565c0',bg:'#e3f2fd'});
+  else if(score>=80)b.push({e:'👍',l:'80%+',c:'#1565c0',bg:'#e3f2fd'});
+  if(rank===1)b.push({e:'🏆',l:'#1 Ранкинг',c:'#92400e',bg:'#fef3c7'});
+  else if(rank===2)b.push({e:'🥈',l:'#2 Место',c:'#546e7a',bg:'#eceff1'});
+  if(streak>=5)b.push({e:'🔥',l:streak+'д стрик',c:'#c62828',bg:'#ffebee'});
+  else if(streak>=3)b.push({e:'💪',l:'3д+ стрик',c:'#e65100',bg:'#fff3e0'});
+  if(impr>=20)b.push({e:'🚀',l:'+'+impr+'% vs пред',c:'#6a1b9a',bg:'#f3e5f5'});
+  if(!b.length)b.push({e:'📈',l:'Во прогрес',c:'var(--t2)',bg:'var(--s2)'});
+  return b;
+}
+
+// ── COMMISSION CALCULATOR ──
+let COM_RATES={};
+function initComRates(){try{COM_RATES=JSON.parse(localStorage.getItem('com_rates')||'{}');}catch(e){COM_RATES={};}}
+window.updateComRate=function(k,v){COM_RATES[k]=parseFloat(v)||0;localStorage.setItem('com_rates',JSON.stringify(COM_RATES));rndCommission();};
+function rndCommission(){
+  initComRates();
+  const base=parseFloat(document.getElementById('comBase')?.value||'0')||0;
+  const el=document.getElementById('comContent');if(!el)return;
+  document.getElementById('comSubtitle').textContent=MKM[cM-1]+' '+cY+' — Постави провизија по единица (ден.) за секое KPI';
+  const rateHdr=KKEYS.map((k,i)=>`<th><div style="font-size:9px">${KLBLS[i]}</div><input class="com-inp" type="number" min="0" step="1" value="${COM_RATES[k]||0}" oninput="updateComRate('${k}',this.value)" placeholder="0"></th>`).join('');
+  const rows=MEMBERS.map(mb=>{
+    let com=0;
+    const cells=KKEYS.map(k=>{const sold=mMoSum(mb.id,k,cY,cM);const rate=COM_RATES[k]||0;const c=sold*rate;com+=c;return `<td><div style="font-size:10px;color:var(--t2)">${sold}×${rate}</div><div style="font-size:11px;font-weight:${c>0?700:400};color:${c>0?'var(--gr)':'var(--t3)'}">${c>0?c.toLocaleString()+' ден.':'—'}</div></td>`;}).join('');
+    const tot=base+com;
+    const sc=perfScore(mb.id,cY,cM);
+    return `<tr>
+      <td><div class="nc" style="gap:6px"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px;flex-shrink:0">${mb.ini}</div><div><div style="font-size:11px;font-weight:700">${mb.name}</div><div style="font-size:9px;color:${pc(sc)}">${sc}% Score</div></div></div></td>
+      ${cells}
+      <td style="color:var(--gr);font-weight:700;font-size:12px">${com>0?com.toLocaleString()+' ден.':'—'}</td>
+      <td style="background:var(--mgl);font-weight:700;font-size:12px;color:var(--mgd)">${base>0||com>0?tot.toLocaleString()+' ден.':'—'}</td>
+    </tr>`;
+  }).join('');
+  el.innerHTML=`<table class="com-tbl">
+    <thead><tr><th style="text-align:left;padding-left:10px">Вработен</th>${rateHdr}<th>Комисија</th><th>Вкупно (плата+ком.)</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+// ── EMPLOYEE COMPARISON ──
+let _cmpA=null,_cmpB=null;
+window.openComparison=function(a,b){
+  _cmpA=a||MEMBERS[0].id;_cmpB=b||MEMBERS[1].id;
+  // Populate selects
+  const opts=MEMBERS.map(mb=>`<option value="${mb.id}">${mb.name.split(' ')[0]}</option>`).join('');
+  const sa=document.getElementById('cmpSelA');const sb=document.getElementById('cmpSelB');
+  if(sa){sa.innerHTML=opts;sa.value=_cmpA;}if(sb){sb.innerHTML=opts;sb.value=_cmpB;}
+  rndComparison();
+  document.getElementById('cmp-ov').classList.add('open');
+  document.body.style.overflow='hidden';
+};
+window.closeComparison=function(){document.getElementById('cmp-ov').classList.remove('open');document.body.style.overflow='';};
+window.setCmpA=v=>{_cmpA=v;rndComparison();};
+window.setCmpB=v=>{_cmpB=v;rndComparison();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('cmp-ov')?.classList.contains('open'))window.closeComparison();});
+function rndComparison(){
+  const mbA=MEMBERS.find(m=>m.id===_cmpA);const mbB=MEMBERS.find(m=>m.id===_cmpB);
+  if(!mbA||!mbB)return;
+  const mt=getMT(cY,cM);
+  const scA=perfScore(_cmpA,cY,cM);const scB=perfScore(_cmpB,cY,cM);
+  const rows=KKEYS.map((k,i)=>{
+    const on=isInScore(k);const t=mt[k]||0;
+    const vA=mMoSum(_cmpA,k,cY,cM);const vB=mMoSum(_cmpB,k,cY,cM);
+    const pA=pct(vA,t||1);const pB=pct(vB,t||1);
+    const winA=vA>vB;const winB=vB>vA;
+    return `<tr style="opacity:${on?1:.45}">
+      <td style="font-weight:700;color:${pc(pA)};background:${winA?'var(--mgl)':'transparent'};padding:5px 8px;text-align:center">${vA}<span style="font-size:9px;color:var(--t3)">/${t}</span> <span style="font-size:9px">(${pA}%)</span>${winA?'<span style="font-size:9px;color:var(--mg);margin-left:3px">▲</span>':''}</td>
+      <td style="text-align:center;font-size:10px;font-weight:700;color:var(--t2);padding:5px 4px;white-space:nowrap">${KLBLS[i]}</td>
+      <td style="font-weight:700;color:${pc(pB)};background:${winB?'var(--mgl)':'transparent'};padding:5px 8px;text-align:center">${winB?'<span style="font-size:9px;color:var(--mg);margin-right:3px">▲</span>':''}${vB}<span style="font-size:9px;color:var(--t3)">/${t}</span> <span style="font-size:9px">(${pB}%)</span></td>
+    </tr>`;
+  }).join('');
+  const scoreRow=(mb,sc)=>`<div style="text-align:center">
+    <div class="av" style="background:${mb.bg};color:${mb.tc};width:36px;height:36px;font-size:12px;margin:0 auto 4px">${mb.ini}</div>
+    <div style="font-size:11px;font-weight:700">${mb.name.split(' ')[0]}</div>
+    <div style="font-size:22px;font-weight:900;color:${pc(sc)}">${sc}%</div>
+    <div style="font-size:10px;color:var(--t2)">${pem(sc)} Score</div>
+  </div>`;
+  document.getElementById('cmp-body').innerHTML=`
+    <div style="display:flex;gap:16px;margin-bottom:14px;justify-content:space-around;padding:10px;background:var(--s2);border-radius:var(--rs)">
+      ${scoreRow(mbA,scA)}
+      <div style="display:flex;align-items:center;font-size:20px;color:var(--t3)">vs</div>
+      ${scoreRow(mbB,scB)}
+    </div>
+    <div class="tw"><table style="width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th style="text-align:center;padding:6px 8px;background:${mbA.bg};color:${mbA.tc};border-radius:var(--rs) 0 0 0;font-size:11px">${mbA.name.split(' ')[0]}</th>
+        <th style="text-align:center;padding:6px 8px;background:var(--s2);color:var(--t2);font-size:10px">KPI</th>
+        <th style="text-align:center;padding:6px 8px;background:${mbB.bg};color:${mbB.tc};border-radius:0 var(--rs) 0 0;font-size:11px">${mbB.name.split(' ')[0]}</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center">${MKM[cM-1]} ${cY} · ▲ = больше резултат</div>`;
 }
 
 // ── ALERTS ──
@@ -3176,6 +3513,7 @@ window.gotoTab=(name,el)=>{
     setTimeout(()=>{ loadInfoMsgs(); updateStorageMeter(); }, 50);
   }
   else if(name==='fullreport')rndFullReport();
+  else if(name==='commission')rndCommission();
 };
 
 // ── BOOST BOARD ──
