@@ -283,11 +283,10 @@ body.dark-mode .llogo{background:var(--mg)!important}
 /* SVG CHART */
 .svg-wrap{overflow-x:auto}
 .svg-wrap svg{display:block;overflow:visible}
-/* COMPARISON MODAL */
-.cmp-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:700;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
-.cmp-ov.open{display:flex}
-.cmp-box{background:var(--sur);border-radius:var(--r);width:100%;max-width:740px;margin:auto;box-shadow:0 8px 40px rgba(0,0,0,.3)}
-.cmp-hdr-bar{padding:12px 16px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:8px;background:var(--s2);border-radius:var(--r) var(--r) 0 0;flex-wrap:wrap}
+/* COMPARISON TAB */
+.cmp-toggle-btn{padding:7px 18px;border-radius:calc(var(--rs) + 1px);border:none;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
+.cmp-toggle-btn.act{background:var(--mg);color:#fff}
+.cmp-toggle-btn:not(.act){background:transparent;color:var(--t2)}
 </style>
 </head>
 <body>
@@ -381,6 +380,7 @@ body.emp-mode #empView{display:block!important}
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">🕐 Распоред</div>
   <div class="tab" onclick="gotoTab('fullreport',this)">📋 Целосен</div>
+  <div class="tab" onclick="gotoTab('compare',this)">⚖️ Споредба</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -982,18 +982,12 @@ body.emp-mode #empView{display:block!important}
 </div>
 </div>
 
-<div class="cmp-ov" id="cmp-ov">
-  <div style="position:fixed;inset:0" onclick="closeComparison()"></div>
-  <div class="cmp-box" style="position:relative;z-index:1">
-    <div class="cmp-hdr-bar">
-      <div style="font-size:14px;font-weight:700;flex:1">⚖️ Споредба на Вработени</div>
-      <select id="cmpSelA" onchange="setCmpA(this.value)" class="fi" style="font-size:12px;padding:4px 8px;width:auto"></select>
-      <span style="font-size:13px;color:var(--t2);font-weight:700">vs</span>
-      <select id="cmpSelB" onchange="setCmpB(this.value)" class="fi" style="font-size:12px;padding:4px 8px;width:auto"></select>
-      <button onclick="closeComparison()" style="width:28px;height:28px;border-radius:50%;border:1px solid var(--brd);background:var(--s2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">✕</button>
-    </div>
-    <div id="cmp-body" style="padding:16px"></div>
+<div id="tp-compare" class="tp">
+<div class="card">
+  <div id="cmp-tab-content">
+    <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
   </div>
+</div>
 </div>
 
 <div class="emp-profile-overlay" id="emp-profile-overlay">
@@ -2318,7 +2312,6 @@ function rndFullReport(){
         <div style="font-size:12px;color:var(--t2)">${monthName} · ${wd} работни денови</div>
       </div>
       <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn" onclick="openComparison()" style="font-size:11px">⚖️ Споредба</button>
         <button class="btn" onclick="exportCSV()" style="font-size:11px">📥 CSV</button>
         <button class="btn bmg" onclick="window.print()">🖨 PDF</button>
       </div>
@@ -2669,59 +2662,154 @@ function empBadges(mid){
   return b;
 }
 
-// ── EMPLOYEE COMPARISON ──
-let _cmpA=null,_cmpB=null;
-window.openComparison=function(a,b){
-  _cmpA=a||MEMBERS[0].id;_cmpB=b||MEMBERS[1].id;
-  // Populate selects
-  const opts=MEMBERS.map(mb=>`<option value="${mb.id}">${mb.name.split(' ')[0]}</option>`).join('');
-  const sa=document.getElementById('cmpSelA');const sb=document.getElementById('cmpSelB');
-  if(sa){sa.innerHTML=opts;sa.value=_cmpA;}if(sb){sb.innerHTML=opts;sb.value=_cmpB;}
-  rndComparison();
-  document.getElementById('cmp-ov').classList.add('open');
-  document.body.style.overflow='hidden';
+// ── СПОРЕДБА TAB ──
+let _cmpView='emp',_cmpA=null,_cmpB=null,_cmpMid=null,_cmpY=null,_cmpM=null,_cmpNMonths=6;
+function _cmpInit(){
+  if(!_cmpA)_cmpA=MEMBERS[0].id;
+  if(!_cmpB)_cmpB=MEMBERS[1]?.id||MEMBERS[0].id;
+  if(!_cmpMid)_cmpMid=MEMBERS[0].id;
+  if(_cmpY===null)_cmpY=cY;
+  if(_cmpM===null)_cmpM=cM;
+}
+window.rndCmpTab=async function(){
+  _cmpInit();
+  const el=document.getElementById('cmp-tab-content');if(!el)return;
+  const moOpts=MKM.map((mn,i)=>`<option value="${i+1}"${(i+1)===_cmpM?' selected':''}>${mn}</option>`).join('');
+  const yrOpts=[2024,2025,2026,2027].map(y=>`<option value="${y}"${y===_cmpY?' selected':''}>${y}</option>`).join('');
+  const nmOpts=[3,6,9,12].map(n=>`<option value="${n}"${n===_cmpNMonths?' selected':''}>${n} месеци</option>`).join('');
+  const isEmp=_cmpView==='emp';
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:16px;font-weight:700">⚖️ Споредба</div>
+        <div style="font-size:12px;color:var(--t2)">Анализа на перформанси</div>
+      </div>
+    </div>
+    <div style="display:inline-flex;gap:4px;background:var(--s2);border-radius:var(--r);padding:4px;margin-bottom:14px">
+      <button class="cmp-toggle-btn${isEmp?' act':''}" onclick="window.setCmpView('emp')">👥 Вработени</button>
+      <button class="cmp-toggle-btn${!isEmp?' act':''}" onclick="window.setCmpView('months')">📅 Месеци</button>
+    </div>
+    <div style="background:var(--s2);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      ${isEmp?`
+        <select class="fi" onchange="window.setCmpEmpA(this.value)" style="font-size:12px;padding:4px 8px;width:auto">
+          ${MEMBERS.map(mb=>`<option value="${mb.id}"${mb.id===_cmpA?' selected':''}>${mb.name.split(' ')[0]}</option>`).join('')}
+        </select>
+        <span style="font-size:12px;color:var(--t2);font-weight:700">vs</span>
+        <select class="fi" onchange="window.setCmpEmpB(this.value)" style="font-size:12px;padding:4px 8px;width:auto">
+          ${MEMBERS.map(mb=>`<option value="${mb.id}"${mb.id===_cmpB?' selected':''}>${mb.name.split(' ')[0]}</option>`).join('')}
+        </select>
+        <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+          <select class="fi" onchange="window.setCmpMonth(+this.value)" style="font-size:12px;padding:4px 8px;width:auto">${moOpts}</select>
+          <select class="fi" onchange="window.setCmpYear(+this.value)" style="font-size:12px;padding:4px 8px;width:auto">${yrOpts}</select>
+        </div>
+      `:`
+        <select class="fi" onchange="window.setCmpMid(this.value)" style="font-size:12px;padding:4px 8px;width:auto">
+          <option value="__team__"${_cmpMid==='__team__'?' selected':''}>🏢 Цел Тим</option>
+          ${MEMBERS.map(mb=>`<option value="${mb.id}"${mb.id===_cmpMid?' selected':''}>${mb.name.split(' ')[0]}</option>`).join('')}
+        </select>
+        <div style="margin-left:auto">
+          <select class="fi" onchange="window.setCmpNMonths(+this.value)" style="font-size:12px;padding:4px 8px;width:auto">${nmOpts}</select>
+        </div>
+      `}
+    </div>
+    <div id="cmp-tab-body"><div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div></div>`;
+  if(isEmp){await ldMonth(_cmpY,_cmpM);_rndCmpEmp();}
+  else{await _ldCmpMonths();_rndCmpMonths();}
 };
-window.closeComparison=function(){document.getElementById('cmp-ov').classList.remove('open');document.body.style.overflow='';};
-window.setCmpA=v=>{_cmpA=v;rndComparison();};
-window.setCmpB=v=>{_cmpB=v;rndComparison();};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('cmp-ov')?.classList.contains('open'))window.closeComparison();});
-function rndComparison(){
-  const mbA=MEMBERS.find(m=>m.id===_cmpA);const mbB=MEMBERS.find(m=>m.id===_cmpB);
-  if(!mbA||!mbB)return;
-  const mt=getMT(cY,cM);
-  const scA=perfScore(_cmpA,cY,cM);const scB=perfScore(_cmpB,cY,cM);
+window.setCmpView=function(v){_cmpView=v;window.rndCmpTab();};
+window.setCmpEmpA=function(v){_cmpA=v;_rndCmpEmp();};
+window.setCmpEmpB=function(v){_cmpB=v;_rndCmpEmp();};
+window.setCmpMonth=async function(v){_cmpM=v;const el=document.getElementById('cmp-tab-body');if(el)el.innerHTML='<div style="text-align:center;color:var(--t2);padding:20px">Вчитување...</div>';await ldMonth(_cmpY,_cmpM);_rndCmpEmp();};
+window.setCmpYear=async function(v){_cmpY=v;const el=document.getElementById('cmp-tab-body');if(el)el.innerHTML='<div style="text-align:center;color:var(--t2);padding:20px">Вчитување...</div>';await ldMonth(_cmpY,_cmpM);_rndCmpEmp();};
+window.setCmpMid=function(v){_cmpMid=v;_rndCmpMonths();};
+window.setCmpNMonths=async function(v){_cmpNMonths=v;const el=document.getElementById('cmp-tab-body');if(el)el.innerHTML='<div style="text-align:center;color:var(--t2);padding:20px">Вчитување...</div>';await _ldCmpMonths();_rndCmpMonths();};
+
+async function _ldCmpMonths(){
+  const fetches=[];let y=cY,m=cM;
+  for(let i=0;i<_cmpNMonths;i++){fetches.push(ldMonth(y,m));m--;if(m<1){m=12;y--;}}
+  await Promise.all(fetches);
+}
+
+function _rndCmpEmp(){
+  const el=document.getElementById('cmp-tab-body');if(!el)return;
+  _cmpInit();
+  const mbA=MEMBERS.find(m=>m.id===_cmpA),mbB=MEMBERS.find(m=>m.id===_cmpB);
+  if(!mbA||!mbB){el.innerHTML='<div style="color:var(--t2);padding:20px;text-align:center">Избери двајца вработени</div>';return;}
+  const mt=getMT(_cmpY,_cmpM);
+  const scA=perfScore(_cmpA,_cmpY,_cmpM),scB=perfScore(_cmpB,_cmpY,_cmpM);
   const rows=KKEYS.map((k,i)=>{
-    const on=isInScore(k);const t=mt[k]||0;
-    const vA=mMoSum(_cmpA,k,cY,cM);const vB=mMoSum(_cmpB,k,cY,cM);
-    const pA=pct(vA,t||1);const pB=pct(vB,t||1);
-    const winA=vA>vB;const winB=vB>vA;
+    const on=isInScore(k),t=mt[k]||0;
+    const vA=mMoSum(_cmpA,k,_cmpY,_cmpM),vB=mMoSum(_cmpB,k,_cmpY,_cmpM);
+    const pA=pct(vA,t||1),pB=pct(vB,t||1);
+    const winA=vA>vB,winB=vB>vA;
     return `<tr style="opacity:${on?1:.45}">
-      <td style="font-weight:700;color:${pc(pA)};background:${winA?'var(--mgl)':'transparent'};padding:5px 8px;text-align:center">${vA}<span style="font-size:9px;color:var(--t3)">/${t}</span> <span style="font-size:9px">(${pA}%)</span>${winA?'<span style="font-size:9px;color:var(--mg);margin-left:3px">▲</span>':''}</td>
-      <td style="text-align:center;font-size:10px;font-weight:700;color:var(--t2);padding:5px 4px;white-space:nowrap">${KLBLS[i]}</td>
-      <td style="font-weight:700;color:${pc(pB)};background:${winB?'var(--mgl)':'transparent'};padding:5px 8px;text-align:center">${winB?'<span style="font-size:9px;color:var(--mg);margin-right:3px">▲</span>':''}${vB}<span style="font-size:9px;color:var(--t3)">/${t}</span> <span style="font-size:9px">(${pB}%)</span></td>
+      <td style="font-weight:700;color:${pc(pA)};background:${winA?'var(--mgl)':'transparent'};padding:6px 10px;text-align:center;min-width:90px">${vA}<span style="font-size:9px;color:var(--t3)">/${t}</span> <span style="font-size:9px;color:${pc(pA)}">(${pA}%)</span>${winA?'<span style="font-size:9px;color:var(--mg);margin-left:2px">▲</span>':''}</td>
+      <td style="text-align:center;font-size:10px;font-weight:700;color:var(--t2);padding:5px 8px;white-space:nowrap">${KLBLS[i]}</td>
+      <td style="font-weight:700;color:${pc(pB)};background:${winB?'var(--mgl)':'transparent'};padding:6px 10px;text-align:center;min-width:90px">${winB?'<span style="font-size:9px;color:var(--mg);margin-right:2px">▲</span>':''}${vB}<span style="font-size:9px;color:var(--t3)">/${t}</span> <span style="font-size:9px;color:${pc(pB)}">(${pB}%)</span></td>
     </tr>`;
   }).join('');
-  const scoreRow=(mb,sc)=>`<div style="text-align:center">
-    <div class="av" style="background:${mb.bg};color:${mb.tc};width:36px;height:36px;font-size:12px;margin:0 auto 4px">${mb.ini}</div>
-    <div style="font-size:11px;font-weight:700">${mb.name.split(' ')[0]}</div>
-    <div style="font-size:22px;font-weight:900;color:${pc(sc)}">${sc}%</div>
+  const sCard=(mb,sc)=>`<div style="text-align:center">
+    <div class="av" style="background:${mb.bg};color:${mb.tc};width:42px;height:42px;font-size:14px;margin:0 auto 6px">${mb.ini}</div>
+    <div style="font-size:12px;font-weight:700">${mb.name.split(' ')[0]}</div>
+    <div style="font-size:28px;font-weight:900;color:${pc(sc)};line-height:1.1">${sc}%</div>
     <div style="font-size:10px;color:var(--t2)">${pem(sc)} Score</div>
   </div>`;
-  document.getElementById('cmp-body').innerHTML=`
-    <div style="display:flex;gap:16px;margin-bottom:14px;justify-content:space-around;padding:10px;background:var(--s2);border-radius:var(--rs)">
-      ${scoreRow(mbA,scA)}
-      <div style="display:flex;align-items:center;font-size:20px;color:var(--t3)">vs</div>
-      ${scoreRow(mbB,scB)}
+  el.innerHTML=`
+    <div style="display:flex;gap:16px;margin-bottom:14px;justify-content:space-around;padding:14px;background:var(--s2);border-radius:var(--r)">
+      ${sCard(mbA,scA)}
+      <div style="display:flex;align-items:center;font-size:18px;color:var(--t3);font-weight:700">vs</div>
+      ${sCard(mbB,scB)}
     </div>
     <div class="tw"><table style="width:100%;border-collapse:collapse">
       <thead><tr>
-        <th style="text-align:center;padding:6px 8px;background:${mbA.bg};color:${mbA.tc};border-radius:var(--rs) 0 0 0;font-size:11px">${mbA.name.split(' ')[0]}</th>
-        <th style="text-align:center;padding:6px 8px;background:var(--s2);color:var(--t2);font-size:10px">KPI</th>
-        <th style="text-align:center;padding:6px 8px;background:${mbB.bg};color:${mbB.tc};border-radius:0 var(--rs) 0 0;font-size:11px">${mbB.name.split(' ')[0]}</th>
+        <th style="text-align:center;padding:7px 10px;background:${mbA.bg};color:${mbA.tc};border-radius:var(--rs) 0 0 0;font-size:12px">${mbA.name.split(' ')[0]}</th>
+        <th style="text-align:center;padding:7px 8px;background:var(--s2);color:var(--t2);font-size:10px">KPI</th>
+        <th style="text-align:center;padding:7px 10px;background:${mbB.bg};color:${mbB.tc};border-radius:0 var(--rs) 0 0;font-size:12px">${mbB.name.split(' ')[0]}</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
-    <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center">${MKM[cM-1]} ${cY} · ▲ = больше резултат</div>`;
+    <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center">${MKM[_cmpM-1]} ${_cmpY} · ▲ = поголем резултат</div>`;
+}
+
+function _rndCmpMonths(){
+  const el=document.getElementById('cmp-tab-body');if(!el)return;
+  _cmpInit();
+  const months=[];let y=cY,m=cM;
+  for(let i=0;i<_cmpNMonths;i++){months.push({y,m,lbl:MKM[m-1].substring(0,3)+" '"+String(y).slice(2)});m--;if(m<1){m=12;y--;}}
+  months.reverse();
+  const isTeam=_cmpMid==='__team__';
+  const getScore=(y,m)=>{
+    if(isTeam){
+      let tot=0;MEMBERS.forEach(mb=>{tot+=perfScore(mb.id,y,m);});return Math.round(tot/MEMBERS.length);
+    }
+    return perfScore(_cmpMid,y,m);
+  };
+  const getVal=(k,y,m)=>isTeam?MEMBERS.reduce((s,mb)=>s+mMoSum(mb.id,k,y,m),0):mMoSum(_cmpMid,k,y,m);
+  const hdrCells=months.map(({lbl})=>`<th style="text-align:center;padding:6px 8px;font-size:10px;font-weight:700;color:var(--t2);white-space:nowrap;background:var(--s2);min-width:64px">${lbl}</th>`).join('');
+  const scoreRow=months.map(({y,m})=>{const sc=getScore(y,m);return `<td style="text-align:center;padding:6px 8px;font-weight:900;font-size:13px;color:${pc(sc)}">${sc}%<br><span style="font-size:9px">${pem(sc)}</span></td>`;}).join('');
+  const kpiRows=KKEYS.map((k,i)=>{
+    const on=isInScore(k);
+    const cells=months.map(({y,m})=>{
+      const mt=getMT(y,m),t=mt[k]||0;
+      const v=getVal(k,y,m),p=pct(v,t||1);
+      return `<td style="text-align:center;padding:5px 8px;opacity:${on?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${v}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;
+    }).join('');
+    return `<tr><td style="font-size:10px;font-weight:700;color:var(--t2);padding:5px 8px;white-space:nowrap;background:var(--s2);opacity:${on?1:.45}">${KLBLS[i]}</td>${cells}</tr>`;
+  }).join('');
+  el.innerHTML=`<div class="tw"><table style="width:100%;border-collapse:collapse">
+    <thead><tr>
+      <th style="text-align:left;padding:6px 8px;font-size:10px;color:var(--t2);background:var(--s2);min-width:80px">KPI</th>
+      ${hdrCells}
+    </tr></thead>
+    <tbody>
+      <tr style="border-bottom:2px solid var(--brd)">
+        <td style="font-size:10px;font-weight:700;padding:6px 8px;color:var(--t1);background:var(--s2)">📊 Score</td>
+        ${scoreRow}
+      </tr>
+      ${kpiRows}
+    </tbody>
+  </table></div>
+  <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center">Последни ${_cmpNMonths} месеци · ${isTeam?'Цел Тим':MEMBERS.find(m=>m.id===_cmpMid)?.name.split(' ')[0]||''}</div>`;
 }
 
 // ── ALERTS ──
@@ -3460,6 +3548,7 @@ window.gotoTab=(name,el)=>{
     setTimeout(()=>{ loadInfoMsgs(); updateStorageMeter(); }, 50);
   }
   else if(name==='fullreport')rndFullReport();
+  else if(name==='compare')window.rndCmpTab();
 };
 
 // ── BOOST BOARD ──
