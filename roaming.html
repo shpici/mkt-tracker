@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МКТ · Интернет Роаминг Пакети</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Roboto',sans-serif;background:#f5f5f7;color:#1a1a2e;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:#e20074;padding:0 24px;height:52px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 12px rgba(226,0,116,.35);position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:16px;font-weight:700;color:white}
+.topbar-sep{color:rgba(255,255,255,.4);font-size:20px}
+.topbar-title{font-size:13px;color:rgba(255,255,255,.88);font-weight:400}
+.topbar-right{margin-left:auto;font-size:11px;color:rgba(255,255,255,.65)}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
+
+/* HERO */
+.hero{margin-bottom:28px}
+.hero h1{font-size:24px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.hero p{font-size:13px;color:#666;max-width:600px}
+
+/* PACKAGE TABS */
+.pkg-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.pkg-tab{
+  padding:11px 20px;border-radius:50px;border:2px solid transparent;
+  font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;
+  background:white;color:#666;border-color:#ddd
+}
+.pkg-tab:hover{border-color:#e20074;color:#e20074}
+.pkg-tab.active{background:#e20074;color:white;border-color:#e20074;box-shadow:0 3px 12px rgba(226,0,116,.3)}
+
+/* PACKAGE PANEL */
+.pkg-panel{display:none}
+.pkg-panel.active{display:block}
+
+/* INFO CARDS */
+.info-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.info-card{background:white;border-radius:12px;padding:16px 18px;border:1.5px solid #eee;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.info-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#999;margin-bottom:8px}
+.info-card-val{font-size:22px;font-weight:700;color:#e20074}
+.info-card-sub{font-size:11px;color:#888;margin-top:3px}
+.pkg-s .info-card-val{color:#e20074}
+.pkg-m .info-card-val{color:#e20074}
+
+/* PACKAGE DETAIL ROW */
+.pkg-detail-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.pkg-box{background:white;border-radius:12px;padding:18px 20px;border:2px solid #f0f0f0;transition:border .15s}
+.pkg-box:hover{border-color:#e20074}
+.pkg-box-name{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#999;margin-bottom:8px}
+.pkg-box-gb{font-size:32px;font-weight:700;color:#1a1a2e}
+.pkg-box-gb span{font-size:14px;font-weight:400;color:#888}
+.pkg-box-price{font-size:22px;font-weight:700;color:#e20074;margin-top:4px}
+.pkg-box-price span{font-size:12px;font-weight:400;color:#888}
+.pkg-box-note{font-size:11px;color:#999;margin-top:6px}
+
+/* ACTIVATION */
+.activation-box{background:white;border-radius:12px;padding:16px 20px;margin-bottom:20px;border:1.5px solid #eee}
+.activation-box h3{font-size:13px;font-weight:700;margin-bottom:10px;color:#333}
+.act-methods{display:flex;gap:8px;flex-wrap:wrap}
+.act-chip{display:inline-flex;align-items:center;gap:5px;background:#f8f8f8;border:1px solid #e8e8e8;border-radius:6px;padding:6px 10px;font-size:11.5px;font-weight:500;color:#444}
+.act-chip .icon{font-size:14px}
+
+/* SEARCH */
+.search-row{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:180px;position:relative}
+.search-wrap input{width:100%;background:white;border:1.5px solid #ddd;border-radius:8px;padding:9px 14px 9px 36px;font-size:13px;font-family:'Roboto',sans-serif;outline:none;color:#1a1a2e;transition:border .15s}
+.search-wrap input:focus{border-color:#e20074}
+.search-wrap input::placeholder{color:#aaa}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.45}
+.result-count{font-size:12px;color:#888;white-space:nowrap}
+
+/* TABLE */
+.tbl-wrap{background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.06);border:1.5px solid #eee}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#f9f9f9;border-bottom:2px solid #eee}
+thead th{padding:11px 14px;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;cursor:pointer;user-select:none;white-space:nowrap}
+thead th:hover{color:#e20074}
+thead th.sorted{color:#e20074}
+thead th.sorted::after{content:' ↓';font-size:9px}
+thead th.sorted.asc::after{content:' ↑'}
+
+tbody tr{border-bottom:1px solid #f2f2f2;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fdf0f7}
+tbody tr.hidden{display:none}
+
+td{padding:11px 14px;vertical-align:top}
+.td-country{font-weight:600;font-size:13px;color:#1a1a2e;white-space:nowrap}
+.td-flag{font-size:18px;margin-right:6px;vertical-align:middle}
+.td-ops{font-size:12px;color:#555;line-height:1.7}
+.op-chip{display:inline-block;background:#f5f5f5;border:1px solid #e8e8e8;border-radius:4px;padding:2px 7px;font-size:11px;margin:1px 2px 1px 0;color:#444}
+
+.tbl-footer{display:flex;justify-content:space-between;padding:10px 14px;background:#f9f9f9;border-top:1px solid #eee;font-size:11px;color:#999}
+
+/* NO RESULTS */
+.no-res{display:none;text-align:center;padding:40px;color:#aaa;font-size:13px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .pkg-detail-row{grid-template-columns:1fr}
+  .pkg-box-gb{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-logo">Македонски Телеком</span>
+  <span class="topbar-sep">|</span>
+  <span class="topbar-title">Интернет Роаминг Пакети</span>
+  <span class="topbar-right">POS Кичево · Интерна употреба</span>
+</div>
+
+<div class="page">
+  <div class="hero">
+    <h1>🌍 Интернет Роаминг Пакети</h1>
+    <p>Преглед на достапни роаминг интернет пакети, цени и земји/оператори. Сите пакети важат 30 дена од активирање.</p>
+  </div>
+
+  <!-- PACKAGE TABS -->
+  <div class="pkg-tabs">
+    <button class="pkg-tab active" onclick="switchPkg('balkan',this)">🌐 Интернет Балкан</button>
+    <button class="pkg-tab" onclick="switchPkg('svet',this)">🌍 Интернет Свет</button>
+    <button class="pkg-tab" onclick="switchPkg('egzotik',this)">✈️ Интернет Егзотик</button>
+  </div>
+
+  <!-- ══════════════════════════════ БАЛКАН ══════════════════════════════ -->
+  <div class="pkg-panel active" id="panel-balkan">
+    <div class="pkg-detail-row">
+      <div class="pkg-box">
+        <div class="pkg-box-name">📦 Пакет S</div>
+        <div class="pkg-box-gb">2 <span>GB</span></div>
+        <div class="pkg-box-price">249 <span>ден.</span></div>
+        <div class="pkg-box-note">Важност: 30 дена · Активирање: Telekom MK App</div>
+      </div>
+      <div class="pkg-box">
+        <div class="pkg-box-name">📦 Пакет M</div>
+        <div class="pkg-box-gb">5 <span>GB</span></div>
+        <div class="pkg-box-price">499 <span>ден.</span></div>
+        <div class="pkg-box-note">Важност: 30 дена · Активирање: Telekom MK App</div>
+      </div>
+    </div>
+    <div class="activation-box">
+      <h3>⚡ Начини на активирање</h3>
+      <div class="act-methods">
+        <div class="act-chip"><span class="icon">📱</span>Telekom MK App</div>
+      </div>
+    </div>
+    <div class="search-row">
+      <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="srch-balkan" placeholder="Пребарај земја или оператор..." oninput="filterTable('balkan')"></div>
+      <div class="result-count" id="cnt-balkan">9 земји</div>
+    </div>
+    <div class="tbl-wrap">
+      <table id="tbl-balkan">
+        <thead><tr>
+          <th onclick="sortTable('balkan','country',this)" class="sorted">Земја</th>
+          <th onclick="sortTable('balkan','ops',this)">Оператори</th>
+        </tr></thead>
+        <tbody id="tbody-balkan"></tbody>
+      </table>
+      <div class="no-res" id="nores-balkan">Нема резултати</div>
+      <div class="tbl-footer"><span id="fc-balkan">—</span><span>Извор: telekom.mk · Мај 2026</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ СВЕТ ══════════════════════════════ -->
+  <div class="pkg-panel" id="panel-svet">
+    <div class="pkg-detail-row">
+      <div class="pkg-box">
+        <div class="pkg-box-name">📦 Пакет S</div>
+        <div class="pkg-box-gb">2 <span>GB</span></div>
+        <div class="pkg-box-price">299 <span>ден.</span></div>
+        <div class="pkg-box-note">Важност: 30 дена · 60+ земји · 130+ оператори</div>
+      </div>
+      <div class="pkg-box">
+        <div class="pkg-box-name">📦 Пакет M</div>
+        <div class="pkg-box-gb">5 <span>GB</span></div>
+        <div class="pkg-box-price">599 <span>ден.</span></div>
+        <div class="pkg-box-note">Важност: 30 дена · 60+ земји · 130+ оператори</div>
+      </div>
+    </div>
+    <div class="activation-box">
+      <h3>⚡ Начини на активирање</h3>
+      <div class="act-methods">
+        <div class="act-chip"><span class="icon">📱</span>Telekom MK App</div>
+        <div class="act-chip"><span class="icon">📞</span>142 099 (бесплатно од МК)</div>
+        <div class="act-chip"><span class="icon">📲</span>*140# (бесплатно од странство)</div>
+      </div>
+    </div>
+    <div class="search-row">
+      <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="srch-svet" placeholder="Пребарај земја или оператор..." oninput="filterTable('svet')"></div>
+      <div class="result-count" id="cnt-svet">— земји</div>
+    </div>
+    <div class="tbl-wrap">
+      <table id="tbl-svet">
+        <thead><tr>
+          <th onclick="sortTable('svet','country',this)" class="sorted">Земја</th>
+          <th onclick="sortTable('svet','ops',this)">Оператори</th>
+        </tr></thead>
+        <tbody id="tbody-svet"></tbody>
+      </table>
+      <div class="no-res" id="nores-svet">Нема резултати</div>
+      <div class="tbl-footer"><span id="fc-svet">—</span><span>Извор: telekom.mk · Мај 2026</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ ЕГЗОТИК ══════════════════════════════ -->
+  <div class="pkg-panel" id="panel-egzotik">
+    <div class="pkg-detail-row">
+      <div class="pkg-box">
+        <div class="pkg-box-name">📦 Пакет S</div>
+        <div class="pkg-box-gb">1 <span>GB</span></div>
+        <div class="pkg-box-price">499 <span>ден.</span></div>
+        <div class="pkg-box-note">Важност: 30 дена · Egzotik дестинации</div>
+      </div>
+      <div class="pkg-box">
+        <div class="pkg-box-name">📦 Пакет M</div>
+        <div class="pkg-box-gb">3 <span>GB</span></div>
+        <div class="pkg-box-price">999 <span>ден.</span></div>
+        <div class="pkg-box-note">Важност: 30 дена · Egzotik дестинации</div>
+      </div>
+    </div>
+    <div class="activation-box">
+      <h3>⚡ Начини на активирање</h3>
+      <div class="act-methods">
+        <div class="act-chip"><span class="icon">📱</span>Telekom MK App</div>
+        <div class="act-chip"><span class="icon">📞</span>142 099 (бесплатно од МК)</div>
+        <div class="act-chip"><span class="icon">📲</span>*140# (бесплатно од странство)</div>
+      </div>
+    </div>
+    <div class="search-row">
+      <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="srch-egzotik" placeholder="Пребарај земја или оператор..." oninput="filterTable('egzotik')"></div>
+      <div class="result-count" id="cnt-egzotik">— земји</div>
+    </div>
+    <div class="tbl-wrap">
+      <table id="tbl-egzotik">
+        <thead><tr>
+          <th onclick="sortTable('egzotik','country',this)" class="sorted">Земја</th>
+          <th onclick="sortTable('egzotik','ops',this)">Оператори</th>
+        </tr></thead>
+        <tbody id="tbody-egzotik"></tbody>
+      </table>
+      <div class="no-res" id="nores-egzotik">Нема резултати</div>
+      <div class="tbl-footer"><span id="fc-egzotik">—</span><span>Извор: telekom.mk · Мај 2026</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var FLAGS = {
+  "Албанија":"🇦🇱","Бугарија":"🇧🇬","Грција":"🇬🇷","Косово":"🇽🇰","Турција":"🇹🇷",
+  "Хрватска":"🇭🇷","Црна Гора":"🇲🇪","Србија":"🇷🇸","Босна и Херцеговина":"🇧🇦",
+  "Авганистан":"🇦🇫","Австралија":"🇦🇺","Австрија":"🇦🇹","Азербејџан":"🇦🇿",
+  "Белгија":"🇧🇪","Белорусија":"🇧🇾","Велика Британија":"🇬🇧","Германија":"🇩🇪",
+  "Грузија":"🇬🇪","Данска":"🇩🇰","Египет":"🇪🇬","Ерменија":"🇦🇲","Естонија":"🇪🇪",
+  "Израел":"🇮🇱","Ирска":"🇮🇪","Италија":"🇮🇹","Јапонија":"🇯🇵","Јужна Африка":"🇿🇦",
+  "Канада":"🇨🇦","Катар":"🇶🇦","Кипар":"🇨🇾","Кина":"🇨🇳","Латвија":"🇱🇻",
+  "Литванија":"🇱🇹","Лихтенштајн":"🇱🇮","Луксембург":"🇱🇺","Малта":"🇲🇹",
+  "Молдавија":"🇲🇩","Монако":"🇲🇨","Нов Зеланд":"🇳🇿","Норвешка":"🇳🇴",
+  "Оман":"🇴🇲","Полска":"🇵🇱","Португалија":"🇵🇹","Романија":"🇷🇴",
+  "Русија":"🇷🇺","САД":"🇺🇸","Саудиска Арабија":"🇸🇦","Сингапур":"🇸🇬",
+  "Словачка":"🇸🇰","Словенија":"🇸🇮","Тајланд":"🇹🇭","Тунис":"🇹🇳",
+  "Узбекистан":"🇺🇿","Украина":"🇺🇦","Унгарија":"🇭🇺","Финска":"🇫🇮",
+  "Франција":"🇫🇷","Холандија":"🇳🇱","Чешка":"🇨🇿","Швајцарија":"🇨🇭",
+  "Шведска":"🇸🇪","Шпанија":"🇪🇸"
+};
+
+var DATA = {
+  balkan: [
+    {country:"Албанија", ops:["ONE Telecommunications Albanija","AlbTelecom"]},
+    {country:"Бугарија", ops:["Vivacom Bulgaria","Yettel Bulgaria"]},
+    {country:"Грција", ops:["Cosmote Greece","NOVA"]},
+    {country:"Косово", ops:["Monaco Telecom (VALA 900)","IPKO"]},
+    {country:"Турција", ops:["Turkcell","TT Mobile (Avea)"]},
+    {country:"Хрватска", ops:["Hrvatski Telekom","Telemach"]},
+    {country:"Црна Гора", ops:["Crnogorski Telekom","MTEL Crna Gora"]},
+    {country:"Србија", ops:["Telekom Srbija","Yettel Serbia"]},
+    {country:"Босна и Херцеговина", ops:["PE Croatian Telecom","BH TELECOM Sarajevo"]},
+  ],
+  svet: [
+    {country:"Авганистан", ops:["Telecom Dev. Comp."]},
+    {country:"Австралија", ops:["Optus"]},
+    {country:"Австрија", ops:["T-Mobile Austria GmbH","A1 Telekom Austria AG","Hutchison Drei Austria GmbH"]},
+    {country:"Азербејџан", ops:["Azercell"]},
+    {country:"Албанија", ops:["ONE Telecommunications Albanija","ALBtelecom sh.a.","Vodafone Albania"]},
+    {country:"Белгија", ops:["Telenet Group BVBA (BASE)","Proximus PLC","Orange Belgium SA/NV"]},
+    {country:"Белорусија", ops:["MTS"]},
+    {country:"Босна и Херцеговина", ops:["PE Croatian Telecom (ERONET)","BH TELECOM Sarajevo","JSC Banja Luka Mtel"]},
+    {country:"Бугарија", ops:["Vivacom (BTC AD)","Yettel Bulgaria","A1 Bulgaria EAD"]},
+    {country:"Велика Британија", ops:["Vodafone UK","Telefonica O2 UK","Everything Everywhere"]},
+    {country:"Германија", ops:["Telekom Deutschland GmbH","Vodafone D2 GmbH","Telefonica Germany GmbH"]},
+    {country:"Грција", ops:["Cosmote Greece","NOVA","Vodafone Panafon S.A."]},
+    {country:"Грузија", ops:["Magticom Georgia"]},
+    {country:"Данска", ops:["Telenor A/S","Nuuday A/S"]},
+    {country:"Египет", ops:["Orange Egypt"]},
+    {country:"Ерменија", ops:["Telecom Armenia"]},
+    {country:"Естонија", ops:["Tele2","AS EMT","Elisa Eesti AS"]},
+    {country:"Израел", ops:["Pelephone","Partner Communication Israel"]},
+    {country:"Ирска", ops:["Meteor Ireland"]},
+    {country:"Италија", ops:["TIM S.p.A.","Vodafone Omnitel N.V.","Wind Telecomunicazioni"]},
+    {country:"Јапонија", ops:["Softbank"]},
+    {country:"Јужна Африка", ops:["Vodafone (VodaCom)"]},
+    {country:"Канада", ops:["Bell","Telus Communications"]},
+    {country:"Катар", ops:["Qatar Telecom (Ooredoo)","Vodafone Qatar"]},
+    {country:"Кипар", ops:["Cyprus Telecom (Cytamobile-Vodafone)","MTN Cyprus (Epic)"]},
+    {country:"Кина", ops:["China Unicom"]},
+    {country:"Косово", ops:["Monaco Telecom (VALA 900)","IPKO"]},
+    {country:"Латвија", ops:["Tele2","Latvijas Mobilais Telefons"]},
+    {country:"Литванија", ops:["Tele2","UAB Bite Lietuva","Omnitel Lithuania"]},
+    {country:"Лихтенштајн", ops:["Telecom Liechtenstein AG"]},
+    {country:"Луксембург", ops:["Post Luxembourg","Proximus Luxembourg (Tango)","Orange S.A."]},
+    {country:"Малта", ops:["Melita Mobile Ltd","Epic Communications","GO Mobile"]},
+    {country:"Молдавија", ops:["Orange"]},
+    {country:"Монако", ops:["Monaco Telecom"]},
+    {country:"Нов Зеланд", ops:["Vodafone"]},
+    {country:"Норвешка", ops:["Telenor Norge AS","TeliaSonera Norge AS"]},
+    {country:"Оман", ops:["Oman Mobile (Omantel)"]},
+    {country:"Полска", ops:["T-Mobile Polska S.A.","Orange Polska S.A."]},
+    {country:"Португалија", ops:["NOS Comunicacoes S.A.","Vodafone Portugal"]},
+    {country:"Романија", ops:["Telekom Romania Mobile","Vodafone Romania","Orange Romania SA"]},
+    {country:"Русија", ops:["MegaFon","OJSC VimpelCom (Beeline)"]},
+    {country:"САД", ops:["T-Mobile USA"]},
+    {country:"Саудиска Арабија", ops:["Saudi Telecom Company (STC)"]},
+    {country:"Сингапур", ops:["StarHub Mobile Pte Ltd."]},
+    {country:"Словачка", ops:["Slovak Telekom a.s.","O2 Slovakia","Orange Slovensko a.s."]},
+    {country:"Словенија", ops:["Telekom Slovenija","A1 Slovenija d.d","Telemach Slovenija"]},
+    {country:"Србија", ops:["Yettel Serbia","Telekom Srbija","Vip mobile (A1 Serbia)"]},
+    {country:"Тајланд", ops:["True Move","dtac TriNet Co.Ltd."]},
+    {country:"Тунис", ops:["Orange"]},
+    {country:"Турција", ops:["TTMobil Iletisim Hizmetleri","Turkcell Turkey","Vodafone Telekomunikasyon A.S."]},
+    {country:"Узбекистан", ops:["Unitel LLC (Beeline Uzbekistan)"]},
+    {country:"Украина", ops:["Kyivstar"]},
+    {country:"Унгарија", ops:["Magyar Telekom","Yettel Hungary","Vodafone Hungary (One HU)"]},
+    {country:"Финска", ops:["Elisa Corporation"]},
+    {country:"Франција", ops:["Orange France","SFR France","Bouygues Telecom France"]},
+    {country:"Холандија", ops:["T-Mobile Netherlands (Odido)","KPN B.V.","Vodafone Netherlands"]},
+    {country:"Хрватска", ops:["Croatian Telecom Inc.","A1 Hrvatska d.o.o","Telemach"]},
+    {country:"Црна Гора", ops:["Crnogorski Telekom","MTEL Montenegro"]},
+    {country:"Чешка", ops:["T-Mobile Czech Republic a.s.","O2 Czech Republic a.s.","Vodafone"]},
+    {country:"Швајцарија", ops:["Salt Mobile SA","Sunrise Communications AG","Swisscom Switzerland Ltd."]},
+    {country:"Шведска", ops:["TELE2 Sverige AB","Telenor Sverige AB","Telia Mobile AB Sweden"]},
+    {country:"Шпанија", ops:["Vodafone Espana S.A.U.","Telefonica Espana","Orange Espagne S.A."]},
+  ],
+  egzotik: [
+    // Egzotik destinations based on typical MKT exotic package - destinations not in Svet
+    {country:"Бахреин", ops:["Batelco","Zain Bahrain","VIVA Bahrain"]},
+    {country:"Бангладеш", ops:["Grameenphone","Robi Axiata"]},
+    {country:"Индија", ops:["Airtel India","Vodafone India","BSNL"]},
+    {country:"Индонезија", ops:["Telkomsel","XL Axiata","Indosat"]},
+    {country:"Иран", ops:["MCI Iran","MTN Irancell"]},
+    {country:"Јордан", ops:["Zain Jordan","Orange Jordan"]},
+    {country:"Куба", ops:["Etecsa Cuba"]},
+    {country:"Либан", ops:["Alfa Telecom Lebanon","Touch Lebanon"]},
+    {country:"Мексико", ops:["Telcel Mexico","Movistar Mexico"]},
+    {country:"Мароко", ops:["Maroc Telecom","Orange Morocco","Inwi"]},
+    {country:"Нигерија", ops:["MTN Nigeria","Airtel Nigeria"]},
+    {country:"Пакистан", ops:["Mobilink Pakistan","Telenor Pakistan","Ufone"]},
+    {country:"Перу", ops:["Claro Peru","Movistar Peru"]},
+    {country:"Тајван", ops:["Chunghwa Telecom","Far EasTone Telecom","Taiwan Mobile"]},
+    {country:"Уганда", ops:["MTN Uganda","Airtel Uganda"]},
+    {country:"Филипини", ops:["Globe Telecom","Smart Communications"]},
+    {country:"Хонг Конг", ops:["HKT","Hutchison 3 HK","SmarTone"]},
+    {country:"Шри Ланка", ops:["Mobitel Sri Lanka","Dialog Axiata"]},
+  ]
+};
+
+var sortState = {balkan:{col:'country',dir:1}, svet:{col:'country',dir:1}, egzotik:{col:'country',dir:1}};
+
+function flag(country){ return FLAGS[country] || '🏳️'; }
+
+function renderTable(id){
+  var tbody = document.getElementById('tbody-'+id);
+  var q = document.getElementById('srch-'+id).value.toLowerCase().trim();
+  var rows = DATA[id].filter(function(r){
+    return !q || r.country.toLowerCase().includes(q) || r.ops.join(' ').toLowerCase().includes(q);
+  });
+  var s = sortState[id];
+  rows.sort(function(a,b){
+    var av = s.col==='country' ? a.country : a.ops.join(', ');
+    var bv = s.col==='country' ? b.country : b.ops.join(', ');
+    return av.localeCompare(bv, 'mk') * s.dir;
+  });
+  tbody.innerHTML = '';
+  rows.forEach(function(r){
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="td-country"><span class="td-flag">'+flag(r.country)+'</span>'+r.country+'</td>'+
+      '<td class="td-ops">'+r.ops.map(function(o){return '<span class="op-chip">'+o+'</span>';}).join('')+'</td>';
+    tbody.appendChild(tr);
+  });
+  var nores = document.getElementById('nores-'+id);
+  nores.style.display = rows.length ? 'none' : 'block';
+  document.getElementById('fc-'+id).textContent = 'Прикажано: '+rows.length+' / '+DATA[id].length+' земји';
+  document.getElementById('cnt-'+id).textContent = rows.length+' земји';
+}
+
+function filterTable(id){ renderTable(id); }
+
+function sortTable(id, col, th){
+  if(sortState[id].col === col){ sortState[id].dir *= -1; }
+  else { sortState[id].col = col; sortState[id].dir = 1; }
+  var ths = document.querySelectorAll('#tbl-'+id+' thead th');
+  ths.forEach(function(t){ t.classList.remove('sorted','asc'); });
+  th.classList.add('sorted');
+  if(sortState[id].dir === -1) th.classList.add('asc');
+  renderTable(id);
+}
+
+function switchPkg(id, btn){
+  document.querySelectorAll('.pkg-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.pkg-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+}
+
+// Init all tables
+['balkan','svet','egzotik'].forEach(renderTable);
+</script>
+</body>
+</html>
