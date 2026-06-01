@@ -312,6 +312,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
 // ─── FIREBASE ───────────────────────────
@@ -324,6 +325,7 @@ firebase.initializeApp({
   appId:"1:850383341068:web:bf5e71d3a10cb301e9d029"
 });
 var db = firebase.firestore();
+var auth = firebase.auth();
 
 // ─── STATE ──────────────────────────────
 var MAIN='fiz', FIZ_TAB='mob', BIZ_TAB='bizmob';
@@ -755,7 +757,7 @@ function setSyncStatus(ok){
   }
 }
 
-function saveBudgets(){
+function doSave(){
   var btn=document.getElementById('saveBtn');
   btn.textContent='⏳ Зачувување...'; btn.disabled=true;
   db.collection('config').doc('tarif_budgets').set({budgets: BUD_OVERRIDES})
@@ -769,19 +771,35 @@ function saveBudgets(){
     });
 }
 
-// ─── INIT ───────────────────────────────
-db.collection('config').doc('tarif_budgets').onSnapshot(function(doc){
-  if(doc.exists){
-    var data=doc.data();
-    if(data && data.budgets) BUD_OVERRIDES=data.budgets;
+function saveBudgets(){
+  var user = auth.currentUser;
+  if(user){
+    doSave();
+  } else {
+    auth.signInAnonymously().then(doSave).catch(function(err){
+      var btn=document.getElementById('saveBtn');
+      btn.textContent='❌ Грешка'; btn.disabled=false;
+      console.error('Auth error:', err);
+    });
   }
-  setSyncStatus(true);
-  renderAll();
-}, function(err){
-  console.error('Snapshot error:', err);
-  setSyncStatus(true);
-  renderAll();
+}
+
+// ─── INIT ───────────────────────────────
+auth.onAuthStateChanged(function(){
+  db.collection('config').doc('tarif_budgets').onSnapshot(function(doc){
+    if(doc.exists){
+      var data=doc.data();
+      if(data && data.budgets) BUD_OVERRIDES=data.budgets;
+    }
+    setSyncStatus(true);
+    renderAll();
+  }, function(err){
+    console.error('Snapshot error:', err);
+    setSyncStatus(true);
+    renderAll();
+  });
 });
+auth.signInAnonymously().catch(function(){});
 </script>
 </body>
 </html>
