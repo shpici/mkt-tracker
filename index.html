@@ -585,7 +585,8 @@ body.emp-mode #riskBell,body.emp-mode #riskPanel,body.emp-mode #tickerWrap{displ
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
       <div style="font-size:13px;font-weight:700">📊 Аналитика — Доп.Опрема</div>
       <div style="display:flex;gap:3px;margin-left:auto">
-        <button class="nb act" id="ofi1wk" onclick="setOfiPeriod(1,'week',this)">Недела</button>
+        <button class="nb act" id="ofi1dy" onclick="setOfiPeriod(1,'day',this)">Денес</button>
+        <button class="nb" id="ofi1wk" onclick="setOfiPeriod(1,'week',this)">Недела</button>
         <button class="nb" id="ofi1mo" onclick="setOfiPeriod(1,'month',this)">Месец</button>
         <button class="nb" id="ofi1yr" onclick="setOfiPeriod(1,'year',this)">Година</button>
       </div>
@@ -647,7 +648,8 @@ body.emp-mode #riskBell,body.emp-mode #riskPanel,body.emp-mode #tickerWrap{displ
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
       <div style="font-size:13px;font-weight:700">📊 Аналитика — Моб.&amp;Друго</div>
       <div style="display:flex;gap:3px;margin-left:auto">
-        <button class="nb act" id="ofi2wk"  onclick="setOfiPeriod(2,'week',this)">Недела</button>
+        <button class="nb act" id="ofi2dy"  onclick="setOfiPeriod(2,'day',this)">Денес</button>
+        <button class="nb"     id="ofi2wk"  onclick="setOfiPeriod(2,'week',this)">Недела</button>
         <button class="nb"     id="ofi2mo"  onclick="setOfiPeriod(2,'month',this)">Месец</button>
         <button class="nb"     id="ofi2yr"  onclick="setOfiPeriod(2,'year',this)">Година</button>
       </div>
@@ -3619,7 +3621,7 @@ window.delOfiEntry=async(dk,type,idx)=>{
 };
 
 // ── OFI ANALYTICS ──
-let ofi1Period='week', ofi2Period='week';
+let ofi1Period='day', ofi2Period='day';
 
 window.setOfiPeriod=(inv,period,btn)=>{
   if(inv===1)ofi1Period=period;else ofi2Period=period;
@@ -3637,9 +3639,10 @@ window.setOfiPeriod=(inv,period,btn)=>{
 function getDaysInPeriod(period){
   const today=new Date();
   const days=[];
-  if(period==='week'){
-    // Current ISO week (Mon-Sun)
-    const dow=today.getDay()||7; // 1=Mon..7=Sun
+  if(period==='day'){
+    days.push(today.toISOString().slice(0,10));
+  }else if(period==='week'){
+    const dow=today.getDay()||7;
     for(let i=1;i<=7;i++){
       const d=new Date(today);d.setDate(today.getDate()-(dow-i));
       days.push(d.toISOString().slice(0,10));
@@ -3654,7 +3657,7 @@ function getDaysInPeriod(period){
   return days;
 }
 
-// Sum OFI product sales across days and members
+// Sum OFI product sales across days and members (reads from equip_log / mob_log arrays)
 function getOfiSalesInPeriod(prods,period,isMob){
   const days=getDaysInPeriod(period);
   const salesByOfi={};
@@ -3662,11 +3665,11 @@ function getOfiSalesInPeriod(prods,period,isMob){
   days.forEach(dk=>{
     const parts=dk.split('-');const y=parseInt(parts[0]),m=parseInt(parts[1]);
     MEMBERS.forEach(mb=>{
-      const ms=AS[y]?.[m]?.[dk]?.[mb.id];
-      if(!ms)return;
-      prods.forEach(p=>{
-        const key=isMob?'mob_'+p.ofi:p.ofi;
-        salesByOfi[p.ofi]=(salesByOfi[p.ofi]||0)+(ms[key]||0);
+      const ms=AS[y]?.[m]?.[dk]?.[mb.id];if(!ms)return;
+      const log=isMob?(ms.mob_log||[]):(ms.equip_log||[]);
+      log.forEach(e=>{
+        const ofi=typeof e==='object'?e.num:e;
+        if(salesByOfi[ofi]!==undefined)salesByOfi[ofi]++;
       });
     });
   });
@@ -3708,20 +3711,21 @@ function rndOfiAnalytics(inv){
   }
 
   // Per-employee sales in period
+  const PRODS_MAP=isMob?OFI_PRODUCTS2:OFI_PRODUCTS;
   const empSales = MEMBERS.map(mb=>{
     const days=getDaysInPeriod(period);
     let sold=0,rev=0;
     days.forEach(dk=>{
       const parts=dk.split('-');const y=parseInt(parts[0]),m=parseInt(parts[1]);
-      const log=AS[y]?.[m]?.[dk]?.[mb.id]?.equip_log||[];
+      const log=isMob?(AS[y]?.[m]?.[dk]?.[mb.id]?.mob_log||[]):(AS[y]?.[m]?.[dk]?.[mb.id]?.equip_log||[]);
       sold+=log.length;
-      rev+=log.reduce((s,e)=>{const ofi=typeof e==='object'?e.num:e;return s+(OFI_PRODUCTS[ofi]?.price||0);},0);
+      rev+=log.reduce((s,e)=>{const ofi=typeof e==='object'?e.num:e;return s+(PRODS_MAP[ofi]?.price||0);},0);
     });
     return {...mb,sold,rev};
   }).sort((a,b)=>b.sold-a.sold);
   const topSeller=empSales[0];
 
-  const periodLabel=period==='week'?'Недела':period==='month'?'Месец':'Година';
+  const periodLabel=period==='day'?'Денес':period==='week'?'Недела':period==='month'?'Месец':'Година';
   const topSellerBadge=topSeller&&topSeller.sold>0?
     '<div class="sc" style="border-color:var(--mg)"><div class="scl">🥇 TOP '+periodLabel+'</div><div class="scv" style="font-size:13px;color:var(--mg)">'+topSeller.name.split(' ')[0]+'</div><div class="scs" style="color:var(--mg)">'+topSeller.sold+' бр · '+topSeller.rev.toLocaleString()+' ден.</div></div>':'';
 
