@@ -2967,7 +2967,7 @@ function buildTickerAndRisk(){
 }
 
 let _riskOpen=false;
-function toggleRisk(){
+window.toggleRisk=function(){
   const p=document.getElementById('riskPanel');
   if(!p)return;
   _riskOpen=!_riskOpen;
