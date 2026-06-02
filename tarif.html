@@ -798,11 +798,8 @@ function saveBudgets(){
   if(user){
     doSave();
   } else {
-    auth.signInAnonymously().then(doSave).catch(function(err){
-      var btn=document.getElementById('saveBtn');
-      if(btn){ btn.textContent='❌ Грешка'; btn.disabled=false; }
-      console.error('Auth error:', err);
-    });
+    var btn=document.getElementById('saveBtn');
+    if(btn){ btn.textContent='⚠ Не си логиран'; btn.disabled=false; }
   }
 }
 
@@ -821,7 +818,6 @@ auth.onAuthStateChanged(function(){
     renderAll();
   });
 });
-auth.signInAnonymously().catch(function(){});
 </script>
 </body>
 </html>
