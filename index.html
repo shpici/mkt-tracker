@@ -58,7 +58,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .ticker-wrap{background:linear-gradient(90deg,var(--mgl),transparent);border-bottom:1px solid var(--brd);padding:0 16px;height:26px;display:none;align-items:center;gap:10px;overflow:hidden;flex-shrink:0}
 .ticker-wrap.vis{display:flex}
 .ticker-lbl{font-size:9px;font-weight:800;color:var(--mg);white-space:nowrap;letter-spacing:.5px;flex-shrink:0}
-.ticker-inner{display:flex;gap:28px;animation:marquee 35s linear infinite;white-space:nowrap}
+.ticker-inner{display:flex;gap:28px;animation:marquee 90s linear infinite;white-space:nowrap}
 .ticker-inner:hover{animation-play-state:paused}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 /* NAV */
@@ -2906,54 +2906,61 @@ function _rndCmpMonths(){
 // ── LIVE TICKER + RISK BELL ──
 // ══════════════════════════════════════════════════════
 function buildTickerAndRisk(){
-  const mt=getMT(cY,cM);
-  if(!mt||!MEMBERS||!MEMBERS.length)return;
-  const items=[];
+  if(!MEMBERS||!MEMBERS.length)return;
+
+  const SEP='<span style="color:var(--brd2);margin:0 8px">·</span>';
+  const BIG_SEP='<span style="color:var(--mg);margin:0 20px;font-size:13px">❱❱</span>';
   const risks=[];
+  const monthBlocks=[];
 
-  // Team overall score
-  let oP=0,oCnt=0;
-  MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{if(isInScore(k)){oP+=pct(mMoSum(mb.id,k,cY,cM),mt[k]||1);oCnt++;}});});
-  const teamSc=oCnt>0?Math.round(oP/oCnt):0;
-  const teamCol=teamSc>=100?'var(--gr)':teamSc>=70?'var(--bl)':'var(--rd)';
-  items.push(`<span style="color:${teamCol};font-weight:700">ТИМ SCORE: ${teamSc}%</span>`);
+  // Build a block for each of the last 3 months (oldest first)
+  for(let i=2;i>=0;i--){
+    let y=cY, m=cM-i;
+    if(m<=0){m+=12;y--;}
+    const mt=getMT(y,m);
+    const isLive=(y===cY&&m===cM);
+    const lbl=MKM[m-1]+' '+y;
+    const parts=[];
 
-  // Per-member score + risk check
-  MEMBERS.forEach(mb=>{
-    const sc=perfScore(mb.id,cY,cM);
-    const col=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
-    items.push(`<span style="color:var(--t2)">${mb.name.split(' ')[0]}: <b style="color:${col}">${sc}%</b></span>`);
-    if(sc<70){
-      risks.push({name:mb.name,sc,col:'var(--rd)',msg:`${sc}% — под 70% таргет`});
-    } else if(sc<100){
-      risks.push({name:mb.name,sc,col:'var(--am)',msg:`${sc}% — во тек`});
-    }
-  });
+    // Month header
+    parts.push(`<span style="color:var(--mg);font-weight:800;font-size:10px;letter-spacing:.6px">📅 Салон${SEP}${lbl}${SEP}постигнати резултати${isLive?'<span style="color:var(--rd);font-size:9px;font-weight:900;margin-left:6px;animation:pulse 1.5s infinite"> 🔴 LIVE</span>':''}</span>`);
 
-  // Top performer
-  const top=MEMBERS.map(mb=>({mb,sc:perfScore(mb.id,cY,cM)})).sort((a,b)=>b.sc-a.sc)[0];
-  if(top)items.push(`<span style="color:var(--gr)">🏆 Најдобар: ${top.mb.name.split(' ')[0]} ${top.sc}%</span>`);
+    // Per-member scores
+    MEMBERS.forEach(mb=>{
+      const sc=perfScore(mb.id,y,m);
+      const col=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
+      parts.push(`<span style="color:var(--t2)">${mb.name.split(' ')[0]}: <b style="color:${col}">${sc}%</b></span>`);
+      // Risk tracking only for current month
+      if(isLive){
+        if(sc<70) risks.push({name:mb.name,sc,col:'var(--rd)',msg:`${sc}% — под 70% таргет`});
+        else if(sc<100) risks.push({name:mb.name,sc,col:'var(--am)',msg:`${sc}% — во тек`});
+      }
+    });
 
-  // KPI alerts
-  KKEYS.forEach((k,i)=>{
-    if(!isInScore(k))return;
-    let tot=0;MEMBERS.forEach(mb=>{tot+=mMoSum(mb.id,k,cY,cM);});
-    const tgt=(mt[k]||1)*MEMBERS.length;
-    const p=pct(tot,tgt);
-    if(p<70)items.push(`<span style="color:var(--rd)">⚠ ${KLBLS[i]}: ${p}%</span>`);
-    else if(p>=100)items.push(`<span style="color:var(--gr)">✓ ${KLBLS[i]}: ${p}%</span>`);
-  });
+    // Team score for this month
+    let oP=0,oCnt=0;
+    MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{if(isInScore(k)){oP+=pct(mMoSum(mb.id,k,y,m),mt[k]||1);oCnt++;}});});
+    const teamSc=oCnt>0?Math.round(oP/oCnt):0;
+    const teamCol=teamSc>=100?'var(--gr)':teamSc>=70?'var(--bl)':'var(--rd)';
+    parts.push(`<span style="color:${teamCol};font-weight:700">ТИМ: ${teamSc}%</span>`);
 
-  // Build ticker — duplicate for seamless loop
+    monthBlocks.push(parts.join(SEP));
+  }
+
+  // Assemble ticker content and duplicate for seamless loop
   const tw=document.getElementById('tickerWrap');
   const ti=document.getElementById('tickerInner');
-  if(ti&&items.length){
-    const html=items.join('<span style="color:var(--brd2);margin:0 4px">·</span>');
-    ti.innerHTML=html+'<span style="margin:0 28px"></span>'+html;
+  if(ti&&monthBlocks.length){
+    const html=monthBlocks.join(BIG_SEP);
+    ti.innerHTML=html+BIG_SEP+html;
+    // Adjust animation speed based on content length
+    ti.style.animation='none';
+    ti.offsetHeight; // reflow
+    ti.style.animation='marquee 90s linear infinite';
     tw?.classList.add('vis');
   }
 
-  // Build risk panel
+  // Build risk panel (current month only)
   const ri=document.getElementById('riskItems');
   const rc=document.getElementById('riskCnt');
   if(ri){
