@@ -2227,7 +2227,7 @@ function rndTbl(){
     h+=`<td><div style="text-align:center"><span style="font-size:12px;font-weight:700;color:${pc(sc)}">${sc}%</span> ${pem(sc)}<div class="kt">месец</div></div></td>`;
     tr.innerHTML=h;tb.appendChild(tr);
   });
-  let fh='<td>Тим вкупно</td><td></td>';
+  let fh='<td>Тим вкупно</td>';
   KKEYS.forEach(k=>{const p=pct(tots[k],ttgs[k]);const on=isInScore(k);fh+=`<td style="background:${on?'':'var(--s3)'};opacity:${on?1:.5}"><div class="kc"><span style="font-size:10px;font-weight:700;color:${pc(p)}">${tots[k]}/${Number.isInteger(ttgs[k])?ttgs[k]:ttgs[k].toFixed(1)}</span><div class="bar" style="width:36px"><div class="bf" style="width:${Math.min(100,p)}%;${barcl(p)}"></div></div><span style="font-size:8px">${p}%</span></div></td>`;});
   fh+='<td></td>';ft.innerHTML=fh;
 }
