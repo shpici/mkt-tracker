@@ -1430,10 +1430,10 @@ function subToSchedule(yr,mo,wk){
   },err=>console.warn('sched snap',err));
 }
 
-async function ldMonth(y,m){
+async function ldMonth(y,m,force=false){
   const fetches=getWDs(y,m).map(async d=>{
     const dk=dK(y,m,d);
-    if(AS[y]?.[m]?.[dk])return;
+    if(!force&&AS[y]?.[m]?.[dk])return;
     try{const s=await getDoc(doc(db,'days',dk));if(!AS[y])AS[y]={};if(!AS[y][m])AS[y][m]={};if(s.exists())AS[y][m][dk]={...s.data()};else ensD(y,m,dk);}
     catch(e){ensD(y,m,dk);}
   });
@@ -2098,6 +2098,11 @@ async function postLogin(){
     const _dtp=document.getElementById('tp-daily');
     if(_dtp) _dtp.classList.add('act');
     setTimeout(buildTickerAndRisk, 1200);
+    // Load prev 2 months from Firestore (force=true to overwrite stale PRE_DATA)
+    (async()=>{
+      for(let i=1;i<=2;i++){let py=cY,pm=cM-i;if(pm<=0){pm+=12;py--;}await ldMonth(py,pm,true);}
+      buildTickerAndRisk();
+    })();
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
