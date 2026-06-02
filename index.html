@@ -44,6 +44,23 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
 .hbtn{width:30px;height:30px;border:1px solid var(--brd);border-radius:7px;background:var(--sur);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .hbtn:hover{background:var(--mgl);border-color:var(--mg)}
+/* RISK BELL */
+.rbell{position:relative;width:30px;height:30px;border:1px solid var(--brd);border-radius:7px;background:var(--sur);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.rbell:hover{background:var(--mgl);border-color:var(--mg)}
+.rbell-cnt{position:absolute;top:-4px;right:-4px;min-width:15px;height:15px;border-radius:8px;background:var(--rd);color:#fff;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;animation:pulse 1.5s infinite;display:none}
+.rpanel{position:fixed;top:54px;right:12px;width:300px;background:var(--sur);border:1px solid var(--brd);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.25);z-index:300;display:none;overflow:hidden}
+.rpanel.open{display:block}
+.rpanel-hdr{padding:10px 14px;font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.ritem{padding:9px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-start;gap:8px;font-size:11px}
+.ritem:last-child{border:none}
+.ritem-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
+/* LIVE TICKER */
+.ticker-wrap{background:linear-gradient(90deg,var(--mgl),transparent);border-bottom:1px solid var(--brd);padding:0 16px;height:26px;display:none;align-items:center;gap:10px;overflow:hidden;flex-shrink:0}
+.ticker-wrap.vis{display:flex}
+.ticker-lbl{font-size:9px;font-weight:800;color:var(--mg);white-space:nowrap;letter-spacing:.5px;flex-shrink:0}
+.ticker-inner{display:flex;gap:28px;animation:marquee 35s linear infinite;white-space:nowrap}
+.ticker-inner:hover{animation-play-state:paused}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 /* NAV */
 .nav{background:var(--sur);border-bottom:1px solid var(--brd);padding:7px 16px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .nb{padding:4px 10px;border:1px solid var(--brd);border-radius:20px;background:var(--sur);color:var(--t2);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
@@ -361,8 +378,21 @@ body.emp-mode #empView{display:block!important}
     <input type="file" id="loadFile" accept=".html,.json" style="display:none" onchange="loadBackup(this)">
     <!-- Save PDF -->
     <button class="hbtn" onclick="window.print()" title="📄 Зачувај PDF">📄</button>
+    <div class="rbell hbtn" id="riskBell" onclick="toggleRisk()" title="⚡ Live инсајти">🔔<span class="rbell-cnt" id="riskCnt">0</span></div>
     <button class="btn" onclick="doLogout()" style="font-size:11px">Одјави</button>
   </div>
+</div>
+
+<!-- RISK PANEL -->
+<div class="rpanel" id="riskPanel">
+  <div class="rpanel-hdr"><span>⚡ Live Инсајти</span><span style="cursor:pointer;font-size:14px" onclick="toggleRisk()">✕</span></div>
+  <div id="riskItems"><div style="padding:14px;font-size:11px;color:var(--t2);text-align:center">Нема предупредувања</div></div>
+</div>
+
+<!-- LIVE TICKER -->
+<div class="ticker-wrap" id="tickerWrap">
+  <span class="ticker-lbl">⚡ LIVE</span>
+  <div class="ticker-inner" id="tickerInner"></div>
 </div>
 
 <!-- MANAGER NAV -->
@@ -1332,6 +1362,7 @@ function subToMonth(y,m){
       if(cY===dy&&cM===dm){
         rndTbl();
         if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
+        buildTickerAndRisk();
         if(document.getElementById('tp-ranking')?.classList.contains('act'))rndRanking();
         calcAlerts();
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
@@ -2065,6 +2096,7 @@ async function postLogin(){
     if(_dt) _dt.classList.add('act');
     const _dtp=document.getElementById('tp-daily');
     if(_dtp) _dtp.classList.add('act');
+    setTimeout(buildTickerAndRisk, 1200);
   }else if(mID){
     document.getElementById('mgrNav').style.display='none';
     document.getElementById('mgrTabs').style.display='none';
@@ -2868,6 +2900,84 @@ function _rndCmpMonths(){
   </table></div>
   <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center">Последни ${_cmpNMonths} месеци · ${isTeam?'Цел Тим':MEMBERS.find(m=>m.id===_cmpMid)?.name.split(' ')[0]||''}</div>`;
 }
+
+// ══════════════════════════════════════════════════════
+// ── LIVE TICKER + RISK BELL ──
+// ══════════════════════════════════════════════════════
+function buildTickerAndRisk(){
+  const mt=getMT(cY,cM);
+  if(!mt||!MEMBERS||!MEMBERS.length)return;
+  const items=[];
+  const risks=[];
+
+  // Team overall score
+  let oP=0,oCnt=0;
+  MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{if(isInScore(k)){oP+=pct(mMoSum(mb.id,k,cY,cM),mt[k]||1);oCnt++;}});});
+  const teamSc=oCnt>0?Math.round(oP/oCnt):0;
+  const teamCol=teamSc>=100?'var(--gr)':teamSc>=70?'var(--bl)':'var(--rd)';
+  items.push(`<span style="color:${teamCol};font-weight:700">ТИМ SCORE: ${teamSc}%</span>`);
+
+  // Per-member score + risk check
+  MEMBERS.forEach(mb=>{
+    const sc=perfScore(mb.id,cY,cM);
+    const col=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
+    items.push(`<span style="color:var(--t2)">${mb.name.split(' ')[0]}: <b style="color:${col}">${sc}%</b></span>`);
+    if(sc<70){
+      risks.push({name:mb.name,sc,col:'var(--rd)',msg:`${sc}% — под 70% таргет`});
+    } else if(sc<100){
+      risks.push({name:mb.name,sc,col:'var(--am)',msg:`${sc}% — во тек`});
+    }
+  });
+
+  // Top performer
+  const top=MEMBERS.map(mb=>({mb,sc:perfScore(mb.id,cY,cM)})).sort((a,b)=>b.sc-a.sc)[0];
+  if(top)items.push(`<span style="color:var(--gr)">🏆 Најдобар: ${top.mb.name.split(' ')[0]} ${top.sc}%</span>`);
+
+  // KPI alerts
+  KKEYS.forEach((k,i)=>{
+    if(!isInScore(k))return;
+    let tot=0;MEMBERS.forEach(mb=>{tot+=mMoSum(mb.id,k,cY,cM);});
+    const tgt=(mt[k]||1)*MEMBERS.length;
+    const p=pct(tot,tgt);
+    if(p<70)items.push(`<span style="color:var(--rd)">⚠ ${KLBLS[i]}: ${p}%</span>`);
+    else if(p>=100)items.push(`<span style="color:var(--gr)">✓ ${KLBLS[i]}: ${p}%</span>`);
+  });
+
+  // Build ticker — duplicate for seamless loop
+  const tw=document.getElementById('tickerWrap');
+  const ti=document.getElementById('tickerInner');
+  if(ti&&items.length){
+    const html=items.join('<span style="color:var(--brd2);margin:0 4px">·</span>');
+    ti.innerHTML=html+'<span style="margin:0 28px"></span>'+html;
+    tw?.classList.add('vis');
+  }
+
+  // Build risk panel
+  const ri=document.getElementById('riskItems');
+  const rc=document.getElementById('riskCnt');
+  if(ri){
+    if(risks.length){
+      ri.innerHTML=risks.map(r=>`<div class="ritem"><span class="ritem-dot" style="background:${r.col}"></span><div><div style="font-weight:700">${r.name}</div><div style="color:var(--t2);margin-top:2px">${r.msg}</div></div></div>`).join('');
+      if(rc){rc.textContent=risks.filter(r=>r.sc<70).length||'';rc.style.display=risks.some(r=>r.sc<70)?'flex':'none';}
+    } else {
+      ri.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t2);text-align:center">✅ Сите над 70% — одлично!</div>';
+      if(rc)rc.style.display='none';
+    }
+  }
+}
+
+let _riskOpen=false;
+function toggleRisk(){
+  const p=document.getElementById('riskPanel');
+  if(!p)return;
+  _riskOpen=!_riskOpen;
+  p.className='rpanel'+(_riskOpen?' open':'');
+}
+document.addEventListener('click',e=>{
+  if(_riskOpen&&!e.target.closest('#riskPanel')&&!e.target.closest('#riskBell')){
+    _riskOpen=false;const p=document.getElementById('riskPanel');if(p)p.className='rpanel';
+  }
+});
 
 // ══════════════════════════════════════════════════════
 // ── EXECUTIVE DASHBOARD ──
