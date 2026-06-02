@@ -154,6 +154,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* ── SYNC DOT ── */
 .sync-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0}
 .sync-dot.loading{background:#f59e0b;animation:sdpulse .8s infinite}
+.sync-dot.pending{background:#f59e0b}
 @keyframes sdpulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* ── PIN MODAL ── */
@@ -700,7 +701,7 @@ function budCell(t, updateFn){
   if(IS_MANAGER){
     return '<div class="cbud">💰 Буџет: <input class="bud-edit" type="number" value="'+getBud(t)+'"'+
       ' data-tid="'+t.id+'" data-fn="'+updateFn+'"'+
-      ' onchange="var el=this;BUD_OVERRIDES[el.getAttribute(\x27data-tid\x27)]=parseInt(el.value)||0;window[el.getAttribute(\x27data-fn\x27)]()"'+
+      ' onchange="var el=this;BUD_OVERRIDES[el.getAttribute(\x27data-tid\x27)]=parseInt(el.value)||0;window[el.getAttribute(\x27data-fn\x27)]();scheduleAutoSave()"'+
       ' onclick="event.stopPropagation()"> ден <span class="mgr-badge">ЕДИТ</span></div>';
   }
   return '<div class="cbud">💰 Буџет: '+n(getBud(t))+' ден</div>';
@@ -745,40 +746,61 @@ function closePinModal(){
 }
 
 // ─── FIREBASE SYNC ──────────────────────
-function setSyncStatus(ok){
+var _autoSaveTimer = null;
+
+function setSyncStatus(state){
   var dot=document.getElementById('syncDot');
   var badge=document.getElementById('sync-badge');
-  if(ok){
+  if(state==='ok'){
     dot.className='sync-dot';
     badge.innerHTML='<span class="sync-dot"></span>синхронизирано';
+  } else if(state==='pending'){
+    dot.className='sync-dot pending';
+    badge.innerHTML='<span class="sync-dot pending"></span>незачувани промени...';
+  } else if(state==='saving'){
+    dot.className='sync-dot loading';
+    badge.innerHTML='<span class="sync-dot loading"></span>зачувување...';
   } else {
     dot.className='sync-dot loading';
     badge.innerHTML='<span class="sync-dot loading"></span>вчитување...';
   }
 }
 
-function doSave(){
+function scheduleAutoSave(){
+  setSyncStatus('pending');
   var btn=document.getElementById('saveBtn');
-  btn.textContent='⏳ Зачувување...'; btn.disabled=true;
+  if(btn) { btn.textContent='💾 Зачувај'; btn.disabled=false; }
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer = setTimeout(function(){
+    saveBudgets();
+  }, 2000);
+}
+
+function doSave(){
+  setSyncStatus('saving');
+  var btn=document.getElementById('saveBtn');
+  if(btn){ btn.textContent='⏳ Зачувување...'; btn.disabled=true; }
   db.collection('config').doc('tarif_budgets').set({budgets: BUD_OVERRIDES})
     .then(function(){
-      btn.textContent='✅ Зачувано!';
-      setTimeout(function(){btn.textContent='💾 Зачувај'; btn.disabled=false;}, 2000);
+      setSyncStatus('ok');
+      if(btn){ btn.textContent='✅ Зачувано!'; setTimeout(function(){btn.textContent='💾 Зачувај'; btn.disabled=false;}, 2000); }
     })
     .catch(function(err){
-      btn.textContent='❌ Грешка'; btn.disabled=false;
+      setSyncStatus('ok');
+      if(btn){ btn.textContent='❌ Грешка'; btn.disabled=false; }
       console.error('Save error:', err);
     });
 }
 
 function saveBudgets(){
+  clearTimeout(_autoSaveTimer);
   var user = auth.currentUser;
   if(user){
     doSave();
   } else {
     auth.signInAnonymously().then(doSave).catch(function(err){
       var btn=document.getElementById('saveBtn');
-      btn.textContent='❌ Грешка'; btn.disabled=false;
+      if(btn){ btn.textContent='❌ Грешка'; btn.disabled=false; }
       console.error('Auth error:', err);
     });
   }
