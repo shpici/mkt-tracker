@@ -20,6 +20,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 #sLoad{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
 .spin{width:36px;height:36px;border:3px solid var(--brd);border-top-color:var(--mg);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+@keyframes bar-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 /* LOGIN */
 .lwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .lcard{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:36px;width:100%;max-width:400px;box-shadow:var(--sh)}
@@ -106,7 +107,7 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .ki:disabled{background:var(--s2);color:var(--t3);cursor:not-allowed}
 .kp{font-size:8px;font-weight:700}.kt{font-size:8px;color:var(--t3)}
 .bar{width:34px;height:3px;background:var(--brd);border-radius:2px;overflow:hidden}
-.bf{height:100%;border-radius:2px;transition:width .3s}
+.bf{height:100%;border-radius:2px;transform-origin:left;animation:bar-fill .45s cubic-bezier(.4,0,.2,1) both}
 /* STATUS POP */
 .sbtn{width:26px;height:26px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
 .sbtn:hover{border-color:var(--mg)}
@@ -135,9 +136,16 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .mkl{font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
 .mkv{font-size:13px;font-weight:700}.mkp{font-size:9px;margin-top:2px}
 .mkb{height:4px;background:var(--brd);border-radius:2px;overflow:hidden;margin-top:3px}
-.mkbf{height:100%;border-radius:2px}
+.mkbf{height:100%;border-radius:2px;transform-origin:left;animation:bar-fill .5s cubic-bezier(.4,0,.2,1) both}
 /* RANKING */
 .rg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.rr:nth-child(1) .rbf{animation-delay:.04s}
+.rr:nth-child(2) .rbf{animation-delay:.1s}
+.rr:nth-child(3) .rbf{animation-delay:.16s}
+.rr:nth-child(4) .rbf{animation-delay:.22s}
+.rr:nth-child(5) .rbf{animation-delay:.28s}
+.rr:nth-child(6) .rbf{animation-delay:.34s}
+.rr:nth-child(7) .rbf{animation-delay:.4s}
 .rr{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:11px 13px;display:flex;align-items:center;gap:10px;transition:all .2s}
 .rr:hover{border-color:var(--mg);box-shadow:var(--sh)}
 .rpos{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
@@ -145,7 +153,7 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .rname{font-size:12px;font-weight:600;flex:1}.rscore{font-size:18px;font-weight:700}
 .rbadge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700}
 .rbar{flex:1;max-width:100px;height:5px;background:var(--brd);border-radius:3px;overflow:hidden}
-.rbf{height:100%;border-radius:3px;transition:width .5s}
+.rbf{height:100%;border-radius:3px;transform-origin:left;animation:bar-fill .6s cubic-bezier(.4,0,.2,1) both}
 /* ALERTS */
 .ap{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
 .ai{border-radius:var(--rs);padding:9px 12px;display:flex;align-items:flex-start;gap:9px;border:1px solid}
@@ -194,7 +202,7 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 .ebf{height:100%;border-radius:4px;transition:width .5s ease}
 /* Progress bar inside sc cards (monthly/weekly) */
 .sc-bar{height:6px;background:var(--brd);border-radius:3px;overflow:hidden;margin-top:5px}
-.sc-bar-f{height:100%;border-radius:3px;transition:width .5s ease}
+.sc-bar-f{height:100%;border-radius:3px;transform-origin:left;animation:bar-fill .6s ease both}
 .pbb{background:#FFF8DC;color:#B8860B;border:1px solid #FFD700;padding:2px 6px;border-radius:20px;font-size:9px;font-weight:700}
 /* TARGETS */
 .ti{width:64px;font-size:12px;font-weight:700;text-align:center;padding:4px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:var(--txt)}
