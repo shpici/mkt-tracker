@@ -52,6 +52,81 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .lbtn:hover{background:var(--mgd)}
 .lbtn:disabled{opacity:.6;cursor:not-allowed}
 .lerr{background:var(--rdl);color:var(--rd);border-radius:var(--rs);padding:9px 12px;font-size:12px;margin-top:10px;display:none;border:1px solid #ef9a9a}
+
+/* ═══ ULTRA PRO LOGIN ═══ */
+@keyframes cube-float{0%,100%{transform:rotateX(15deg) rotateY(0deg) translateY(0px)}50%{transform:rotateX(25deg) rotateY(180deg) translateY(-14px)}}
+@keyframes cube-float2{0%,100%{transform:rotateX(-10deg) rotateY(60deg) translateY(0px)}50%{transform:rotateX(8deg) rotateY(240deg) translateY(-18px)}}
+@keyframes cube-float3{0%,100%{transform:rotateX(20deg) rotateY(120deg) translateY(0px)}50%{transform:rotateX(-8deg) rotateY(300deg) translateY(-11px)}}
+@keyframes holo-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes holo-pulse{0%,100%{filter:drop-shadow(0 0 6px rgba(179,136,255,.6))}50%{filter:drop-shadow(0 0 22px rgba(128,222,234,.95))}}
+@keyframes badge-shim{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+@keyframes count-blink{0%,100%{color:inherit}50%{color:var(--mg)}}
+.lwrap-pro{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0a0a1a 0%,#12022e 40%,#001a12 70%,#0a0a1a 100%);position:relative;overflow:hidden}
+#loginCanvas{position:absolute;inset:0;z-index:0;opacity:.45;pointer-events:none}
+.lcard-pro{background:rgba(255,255,255,.04);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(179,136,255,.28);border-radius:22px;padding:40px 38px;width:100%;max-width:420px;box-shadow:0 0 70px rgba(179,136,255,.18),inset 0 1px 0 rgba(255,255,255,.1);position:relative;z-index:10}
+.llogo-pro{width:70px;height:70px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;animation:holo-pulse 3s ease-in-out infinite;position:relative}
+.holo-t{font-size:52px;font-weight:900;background:linear-gradient(135deg,#b388ff,#80deea,#ff7043,#b388ff);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:holo-shift 4s linear infinite;line-height:1}
+.lt-pro{text-align:center;font-size:23px;font-weight:800;color:#fff;margin-bottom:2px;letter-spacing:.3px}
+.ls-pro{text-align:center;font-size:11px;color:rgba(255,255,255,.45);margin-bottom:8px}
+.ent-badge{display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:linear-gradient(90deg,rgba(179,136,255,.15),rgba(128,222,234,.12));border:1px solid rgba(179,136,255,.4);border-radius:20px;padding:3px 14px;font-size:10px;font-weight:800;color:#b388ff;letter-spacing:1.8px;text-transform:uppercase;position:relative;overflow:hidden;width:fit-content}
+.ent-badge::after{content:'';position:absolute;top:-20px;left:-60%;width:35%;height:250%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:badge-shim 2.8s ease-in-out infinite}
+.ql-wrap{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+.ql-btn{padding:4px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:20px;color:rgba(255,255,255,.65);font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.ql-btn:hover{background:rgba(179,136,255,.22);border-color:#b388ff;color:#b388ff;transform:scale(1.06)}
+.fg-pro{margin-bottom:12px}
+.fg-pro label{font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.fi-pro{width:100%;padding:11px 14px;border:1px solid rgba(179,136,255,.22);border-radius:8px;font-size:13px;background:rgba(255,255,255,.06);color:#fff;transition:all .25s;outline:none}
+.fi-pro:focus{border-color:#b388ff;background:rgba(179,136,255,.12);box-shadow:0 0 0 3px rgba(179,136,255,.18)}
+.fi-pro::placeholder{color:rgba(255,255,255,.22)}
+.lbtn-pro{width:100%;padding:13px;background:linear-gradient(135deg,#b388ff,#7c4dff);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;margin-top:8px;transition:all .22s;letter-spacing:.5px;box-shadow:0 4px 24px rgba(124,77,255,.45)}
+.lbtn-pro:hover{background:linear-gradient(135deg,#ce93d8,#9575cd);box-shadow:0 6px 32px rgba(179,136,255,.7);transform:translateY(-2px)}
+.lbtn-pro:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.lerr-pro{background:rgba(198,40,40,.14);color:#ef9a9a;border-radius:8px;padding:9px 12px;font-size:12px;margin-top:10px;display:none;border:1px solid rgba(198,40,40,.32)}
+/* 3D CUBES */
+.cube-wrap{position:absolute;perspective:180px;z-index:1;pointer-events:none}
+.cube{transform-style:preserve-3d}
+.c1 .cube{width:58px;height:58px;animation:cube-float 11s ease-in-out infinite}
+.c2 .cube{width:52px;height:52px;animation:cube-float2 15s ease-in-out infinite}
+.c3 .cube{width:64px;height:64px;animation:cube-float3 13s ease-in-out infinite}
+.cube-face{position:absolute;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;border-radius:6px;backface-visibility:visible}
+.c1 .cube-face{width:58px;height:58px}.c2 .cube-face{width:52px;height:52px}.c3 .cube-face{width:64px;height:64px}
+.c1 .cf-fr{transform:translateZ(29px);background:rgba(179,136,255,.14);border:1px solid rgba(179,136,255,.5);color:#b388ff;text-shadow:0 0 14px #b388ff}
+.c1 .cf-bk{transform:rotateY(180deg) translateZ(29px);background:rgba(179,136,255,.06);border:1px solid rgba(179,136,255,.25);color:rgba(179,136,255,.4)}
+.c1 .cf-rt{transform:rotateY(90deg) translateZ(29px);background:rgba(179,136,255,.06);border:1px solid rgba(179,136,255,.22)}
+.c1 .cf-lt{transform:rotateY(-90deg) translateZ(29px);background:rgba(179,136,255,.06);border:1px solid rgba(179,136,255,.22)}
+.c1 .cf-tp{transform:rotateX(90deg) translateZ(29px);background:rgba(179,136,255,.06);border:1px solid rgba(179,136,255,.22)}
+.c1 .cf-bt{transform:rotateX(-90deg) translateZ(29px);background:rgba(179,136,255,.06);border:1px solid rgba(179,136,255,.22)}
+.c2 .cf-fr{transform:translateZ(26px);background:rgba(128,222,234,.14);border:1px solid rgba(128,222,234,.5);color:#80deea;text-shadow:0 0 14px #80deea}
+.c2 .cf-bk{transform:rotateY(180deg) translateZ(26px);background:rgba(128,222,234,.06);border:1px solid rgba(128,222,234,.25);color:rgba(128,222,234,.4)}
+.c2 .cf-rt{transform:rotateY(90deg) translateZ(26px);background:rgba(128,222,234,.06);border:1px solid rgba(128,222,234,.22)}
+.c2 .cf-lt{transform:rotateY(-90deg) translateZ(26px);background:rgba(128,222,234,.06);border:1px solid rgba(128,222,234,.22)}
+.c2 .cf-tp{transform:rotateX(90deg) translateZ(26px);background:rgba(128,222,234,.06);border:1px solid rgba(128,222,234,.22)}
+.c2 .cf-bt{transform:rotateX(-90deg) translateZ(26px);background:rgba(128,222,234,.06);border:1px solid rgba(128,222,234,.22)}
+.c3 .cf-fr{transform:translateZ(32px);background:rgba(255,112,67,.14);border:1px solid rgba(255,112,67,.5);color:#ff7043;text-shadow:0 0 14px #ff7043}
+.c3 .cf-bk{transform:rotateY(180deg) translateZ(32px);background:rgba(255,112,67,.06);border:1px solid rgba(255,112,67,.25);color:rgba(255,112,67,.4)}
+.c3 .cf-rt{transform:rotateY(90deg) translateZ(32px);background:rgba(255,112,67,.06);border:1px solid rgba(255,112,67,.22)}
+.c3 .cf-lt{transform:rotateY(-90deg) translateZ(32px);background:rgba(255,112,67,.06);border:1px solid rgba(255,112,67,.22)}
+.c3 .cf-tp{transform:rotateX(90deg) translateZ(32px);background:rgba(255,112,67,.06);border:1px solid rgba(255,112,67,.22)}
+.c3 .cf-bt{transform:rotateX(-90deg) translateZ(32px);background:rgba(255,112,67,.06);border:1px solid rgba(255,112,67,.22)}
+/* NEURAL CANVAS (app background) */
+#neuralCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.18}
+/* AI CHATBOT PANEL */
+#aiPanel{position:fixed;right:0;top:0;width:288px;height:100vh;background:rgba(10,10,26,.96);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid rgba(179,136,255,.22);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+#aiPanel.open{transform:translateX(0)}
+#aiToggle{position:fixed;right:0;top:50%;transform:translateY(-50%);background:linear-gradient(180deg,#b388ff,#7c4dff);color:#fff;border:none;border-radius:8px 0 0 8px;padding:13px 7px;cursor:pointer;z-index:401;font-size:10px;font-weight:800;writing-mode:vertical-rl;letter-spacing:1.5px;transition:right .35s cubic-bezier(.4,0,.2,1);box-shadow:-3px 0 22px rgba(179,136,255,.45);line-height:1}
+#aiToggle:hover{box-shadow:-5px 0 30px rgba(179,136,255,.75)}
+#aiToggle.shifted{right:288px}
+.ai-hdr{padding:14px 13px 10px;border-bottom:1px solid rgba(179,136,255,.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ai-hdr-t{font-size:11.5px;font-weight:800;color:#b388ff;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.ai-online{width:7px;height:7px;border-radius:50%;background:#69f0ae;animation:pulse 1.5s infinite;flex-shrink:0}
+.ai-close{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;padding:2px;line-height:1;transition:color .15s}
+.ai-close:hover{color:#fff}
+.ai-msgs{flex:1;overflow-y:auto;padding:10px 11px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(179,136,255,.28) transparent}
+.ai-msg{background:rgba(179,136,255,.08);border:1px solid rgba(179,136,255,.16);border-radius:10px;padding:9px 10px;font-size:10px;color:rgba(255,255,255,.8);line-height:1.5;animation:toast-in .32s ease both}
+.ai-msg-lbl{font-size:8.5px;font-weight:800;color:#b388ff;margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
+.ai-msg-time{font-size:8px;color:rgba(255,255,255,.28);float:right;margin-top:4px}
+/* ROLE BADGE */
+.role-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:linear-gradient(135deg,rgba(179,136,255,.2),rgba(128,222,234,.15));border:1px solid rgba(179,136,255,.35);color:#b388ff;white-space:nowrap}
 /* HEADER */
 .hdr{background:var(--sur);border-bottom:1px solid var(--brd);padding:9px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
 .hlogo{width:30px;height:30px;background:var(--mg);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -375,20 +450,65 @@ body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
 </div>
 
 <!-- LOGIN -->
-<div id="sLogin" class="lwrap" style="display:none">
-<div class="lcard">
-  <div class="llogo"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
-  <div class="lt">MKT Sales Pro</div>
-  <div class="ls">Македонски Телеком · Продажен Салон Кичево</div>
-  <div class="fg"><label>Email</label><input class="fi" type="email" id="lEm" placeholder="name@telekom.mk" autocomplete="email"></div>
-  <div class="fg"><label>Лозинка</label><input class="fi" type="password" id="lPs" placeholder="••••••••"></div>
-  <button class="lbtn" id="lBtn" onclick="doLogin()">Најави се</button>
-  <div class="lerr" id="lErr"></div>
+<div id="sLogin" class="lwrap-pro" style="display:none">
+<canvas id="loginCanvas"></canvas>
+<!-- 3D Floating cubes -->
+<div class="cube-wrap c1" style="top:14%;left:7%">
+  <div class="cube">
+    <div class="cube-face cf-fr">T</div><div class="cube-face cf-bk">T</div>
+    <div class="cube-face cf-rt"></div><div class="cube-face cf-lt"></div>
+    <div class="cube-face cf-tp"></div><div class="cube-face cf-bt"></div>
+  </div>
+</div>
+<div class="cube-wrap c2" style="bottom:18%;left:6%">
+  <div class="cube">
+    <div class="cube-face cf-fr">T</div><div class="cube-face cf-bk">T</div>
+    <div class="cube-face cf-rt"></div><div class="cube-face cf-lt"></div>
+    <div class="cube-face cf-tp"></div><div class="cube-face cf-bt"></div>
+  </div>
+</div>
+<div class="cube-wrap c3" style="top:22%;right:7%">
+  <div class="cube">
+    <div class="cube-face cf-fr">T</div><div class="cube-face cf-bk">T</div>
+    <div class="cube-face cf-rt"></div><div class="cube-face cf-lt"></div>
+    <div class="cube-face cf-tp"></div><div class="cube-face cf-bt"></div>
+  </div>
+</div>
+<div class="cube-wrap c1" style="bottom:14%;right:9%;opacity:.6">
+  <div class="cube" style="animation-delay:-5s">
+    <div class="cube-face cf-fr">T</div><div class="cube-face cf-bk">T</div>
+    <div class="cube-face cf-rt"></div><div class="cube-face cf-lt"></div>
+    <div class="cube-face cf-tp"></div><div class="cube-face cf-bt"></div>
+  </div>
+</div>
+<div class="lcard-pro">
+  <div class="llogo-pro"><span class="holo-t">T</span></div>
+  <div class="lt-pro">MKT Sales Pro</div>
+  <div class="ls-pro">Македонски Телеком · Продажен Салон Кичево</div>
+  <div class="ent-badge">⚡ ENTERPRISE EDITION</div>
+  <div class="ql-wrap" id="qlWrap"></div>
+  <div class="fg-pro"><label>Email</label><input class="fi-pro" type="email" id="lEm" placeholder="name@telekom.mk" autocomplete="email"></div>
+  <div class="fg-pro"><label>Лозинка</label><input class="fi-pro" type="password" id="lPs" placeholder="••••••••"></div>
+  <button class="lbtn-pro" id="lBtn" onclick="doLogin()">⚡ Најави се</button>
+  <div class="lerr-pro" id="lErr"></div>
 </div>
 </div>
 
 <!-- APP -->
 <div id="sApp" style="display:none">
+
+<!-- NEURAL NETWORK BACKGROUND CANVAS -->
+<canvas id="neuralCanvas"></canvas>
+
+<!-- AI CHATBOT PANEL -->
+<div id="aiPanel">
+  <div class="ai-hdr">
+    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар</div>
+    <button class="ai-close" onclick="toggleAI()">✕</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs"></div>
+</div>
+<button id="aiToggle" onclick="toggleAI()" title="AI Аналитичар">AI</button>
 
 <!-- HEADER -->
 <div class="hdr">
@@ -396,18 +516,15 @@ body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
   <div><div class="ht">MKT Sales Pro — Кичево</div><div class="hs">МТ · <span id="todStr"></span></div></div>
   <div class="hr">
     <span id="sStat" class="ss" style="display:none"></span>
-    <span id="uBadge" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--mgl);color:var(--mgd)"></span>
+    <span id="uBadge" class="role-badge"></span>
     <button id="dmBtn" class="hbtn" onclick="toggleDarkMode()" title="🌙 Темен режим">🌙</button>
     <button class="hbtn no-print" onclick="exportCSV()" title="📥 Извези CSV">📥</button>
-    <!-- Save HTML backup -->
     <button class="hbtn" onclick="saveBackup()" title="💾 Зачувај HTML backup">💾</button>
-    <!-- Load HTML backup -->
     <button class="hbtn" onclick="document.getElementById('loadFile').click()" title="📂 Вчитај HTML backup">📂</button>
     <input type="file" id="loadFile" accept=".html,.json" style="display:none" onchange="loadBackup(this)">
-    <!-- Save PDF -->
     <button class="hbtn" onclick="window.print()" title="📄 Зачувај PDF">📄</button>
     <div class="rbell hbtn" id="riskBell" onclick="toggleRisk()" title="⚡ Live инсајти">🔔<span class="rbell-cnt" id="riskCnt">0</span></div>
-    <button class="btn" onclick="doLogout()" style="font-size:11px">Одјави</button>
+    <button class="btn" onclick="doLogout()" style="font-size:11px">⏻ Одјави</button>
   </div>
 </div>
 
@@ -2290,7 +2407,8 @@ window.doLogout=async()=>{
 async function postLogin(){
   document.getElementById('sLogin').style.display='none';
   document.getElementById('sApp').style.display='block';
-  document.getElementById('uBadge').textContent=isMgr?'👔 Илир':(MEMBERS.find(m=>m.id===mID)?.name.split(' ')[0]||curUsr.email);
+  const _empName=MEMBERS.find(m=>m.id===mID)?.name.split(' ')[0]||curUsr.email;
+  document.getElementById('uBadge').textContent=isMgr?'👔 Менаџер · Илир':'👤 '+_empName;
   document.getElementById('todStr').textContent=new Date().toLocaleDateString('mk-MK',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   await ldAllCfg();
   initPreData();  // Load historical data immediately
@@ -5433,6 +5551,181 @@ function empScRender(){
 
 window.empScChgYr=async(d)=>{empScYr+=d;empScMo=1;empScWk=0;await scLoadWk(empScYr,empScMo,0);empScBuildNav();empScRender();};
 window.empScInit=empScInit;
+
+// One-time bulk price update — call from console: updateOfiPrices()
+/* ═══════════════════════════════════════════════════
+   ULTRA PRO — Login Canvas, Neural Canvas, AI Panel
+   ═══════════════════════════════════════════════════ */
+
+// ── Quick-login buttons ──────────────────────────────
+(function buildQuickLogin(){
+  const accounts=[
+    {label:'👔 Менаџер',  email:'ilir.murati@telekom.mk'},
+    {label:'ИН',          email:'ivona@mkt-kicevo.com'},
+    {label:'КМ',          email:'katerina@mkt-kicevo.com'},
+    {label:'ХС',          email:'hane@mkt-kicevo.com'},
+    {label:'ФМ',          email:'flutrime@mkt-kicevo.com'},
+    {label:'МС',          email:'melihan@mkt-kicevo.com'},
+  ];
+  const wrap=document.getElementById('qlWrap');
+  if(!wrap)return;
+  accounts.forEach(a=>{
+    const btn=document.createElement('button');
+    btn.className='ql-btn';
+    btn.textContent=a.label;
+    btn.onclick=()=>{
+      document.getElementById('lEm').value=a.email;
+      document.getElementById('lPs').focus();
+    };
+    wrap.appendChild(btn);
+  });
+})();
+
+// ── Login neural canvas ──────────────────────────────
+(function initLoginCanvas(){
+  const cv=document.getElementById('loginCanvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W=0,H=0,pts=[];
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+  function mkPts(){pts=Array.from({length:55},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.38,vy:(Math.random()-.5)*.38}));}
+  function draw(){
+    if(!W){resize();mkPts();}
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle=`rgba(179,136,255,${(1-d/130)*.38})`;ctx.lineWidth=.7;ctx.stroke();
+        }
+      }
+      ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,2.2,0,Math.PI*2);
+      ctx.fillStyle='rgba(179,136,255,.6)';ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();mkPts();draw();
+  window.addEventListener('resize',()=>{resize();mkPts();});
+})();
+
+// ── App neural network canvas ────────────────────────
+(function initNeuralCanvas(){
+  const cv=document.getElementById('neuralCanvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,pts=[];
+  const COLORS=['rgba(200,0,110,',  'rgba(179,136,255,',  'rgba(128,222,234,'];
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+  function mkPts(){pts=Array.from({length:38},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,c:COLORS[Math.floor(Math.random()*COLORS.length)]}));}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle=pts[i].c+(1-d/120)*.18+')';ctx.lineWidth=.55;ctx.stroke();
+        }
+      }
+      ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,1.5,0,Math.PI*2);
+      ctx.fillStyle=pts[i].c+'.45)';ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();mkPts();draw();
+  window.addEventListener('resize',()=>{resize();mkPts();});
+})();
+
+// ── AI Chatbot panel ─────────────────────────────────
+window.toggleAI=function(){
+  const panel=document.getElementById('aiPanel');
+  const toggle=document.getElementById('aiToggle');
+  if(!panel||!toggle)return;
+  const open=panel.classList.toggle('open');
+  toggle.classList.toggle('shifted',open);
+  if(open&&document.getElementById('aiMsgs').children.length===0)seedAIMsgs();
+};
+
+const AI_TEMPLATES=[
+  ()=>{
+    if(!window.MEMBERS||!window.MEMBERS.length)return null;
+    const scores=window.MEMBERS.map(m=>({name:m.name.split(' ')[0],s:Math.round((window.perfScore&&window.perfScore(m.id,window.cY,window.cM))||0)}));
+    scores.sort((a,b)=>b.s-a.s);
+    const top=scores[0];
+    return top?`📊 Тековен месец: <b>${top.name}</b> е лидер со <b>${top.s}%</b> реализација. Тој/таа е пред сите колеги.`:null;
+  },
+  ()=>{
+    if(!window.MEMBERS||!window.MEMBERS.length)return null;
+    const scores=window.MEMBERS.map(m=>({name:m.name.split(' ')[0],s:Math.round((window.perfScore&&window.perfScore(m.id,window.cY,window.cM))||0)}));
+    const low=scores.filter(s=>s.s<70);
+    return low.length?`⚠️ Внимание: <b>${low.map(s=>s.name).join(', ')}</b> се под 70% реализација — потребна е поддршка.`:`✅ Одлично! Сите вработени се над 70% реализација овој месец.`;
+  },
+  ()=>{
+    if(!window.MEMBERS||!window.MEMBERS.length)return null;
+    const scores=window.MEMBERS.map(m=>({name:m.name.split(' ')[0],s:Math.round((window.perfScore&&window.perfScore(m.id,window.cY,window.cM))||0)}));
+    const avg=scores.reduce((a,b)=>a+b.s,0)/scores.length;
+    return `📈 Просечна тимска реализација: <b>${Math.round(avg)}%</b>. ${avg>=85?'Одличен тимски резултат!':avg>=70?'Добар напредок, има простор за подобрување.':'Потребно е зголемување на активностите.'}`;
+  },
+  ()=>{
+    const d=new Date();const h=d.getHours();
+    const msg=h<12?'Добро утро! Проверете ги дневните цели и мотивирајте го тимот за силен старт.':h<17?'Средина на денот: идеален момент за проверка на напредокот и прилагодување на стратегијата.':'Крај на работниот ден: направете резиме на постигнатото и планирајте го утрешниот ден.';
+    return `🕐 ${msg}`;
+  },
+  ()=>`💡 Совет: FMC производите носат највисока вредност. Фокусирајте се на конверзија на постпеид кон FMC пакети за максимален резултат.`,
+  ()=>`🔮 Прогноза: Врз основа на тековните трендови, тимот е на пат кон ${Math.floor(75+Math.random()*20)}% месечна реализација. Останете фокусирани!`,
+  ()=>`📱 Препорака: Зголемете ги активностите за Prepaid → Postpaid конверзија. Тоа е клучен KPI со висок потенцијал.`,
+  ()=>`🏆 Мотивација: Секој продажен разговор е можност. Тимот е во финишницата — нека секој вработен даде максимум до крајот на месецот!`,
+];
+
+let _aiIdx=0;
+function seedAIMsgs(){
+  const wrap=document.getElementById('aiMsgs');if(!wrap)return;
+  wrap.innerHTML='';
+  addAIMsg();
+  if(window._aiInterval)clearInterval(window._aiInterval);
+  window._aiInterval=setInterval(addAIMsg,5000);
+}
+function addAIMsg(){
+  const wrap=document.getElementById('aiMsgs');if(!wrap)return;
+  const fn=AI_TEMPLATES[_aiIdx%AI_TEMPLATES.length];_aiIdx++;
+  const text=fn();if(!text)return;
+  const now=new Date().toLocaleTimeString('mk-MK',{hour:'2-digit',minute:'2-digit'});
+  const div=document.createElement('div');div.className='ai-msg';
+  div.innerHTML=`<div class="ai-msg-lbl">🤖 AI Анализа</div>${text}<div class="ai-msg-time">${now}</div>`;
+  wrap.appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'end'});
+  if(wrap.children.length>18){wrap.removeChild(wrap.firstChild);}
+}
+
+// ── Count-up animation for numbers ──────────────────
+window.countUp=function(el,target,dur=900){
+  if(!el||isNaN(target))return;
+  const start=performance.now();
+  const from=parseFloat(el.textContent)||0;
+  function step(now){
+    const t=Math.min((now-start)/dur,1);
+    const ease=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+    el.textContent=Math.round(from+(target-from)*ease);
+    if(t<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+};
+
+// ── Apply count-up to KPI score elements ────────────
+const _origRnd=window.rndDailyView;
+if(_origRnd){
+  window.rndDailyView=function(){
+    _origRnd();
+    requestAnimationFrame(()=>{
+      document.querySelectorAll('.score-num,[data-cu]').forEach(el=>{
+        const v=parseFloat(el.textContent);if(!isNaN(v)&&v>0)window.countUp(el,v);
+      });
+    });
+  };
+}
 
 // One-time bulk price update — call from console: updateOfiPrices()
 window.updateOfiPrices=async()=>{
