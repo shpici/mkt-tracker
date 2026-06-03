@@ -2120,6 +2120,12 @@ async function postLogin(){
       });
     document.body.classList.add('emp-mode');
     initEmp();
+    setTimeout(buildTickerAndRisk, 1200);
+    // Load prev 2 months from Firestore so ticker shows real May/April data
+    (async()=>{
+      for(let i=1;i<=2;i++){let py=cY,pm=cM-i;if(pm<=0){pm+=12;py--;}await ldMonth(py,pm,true);}
+      buildTickerAndRisk();
+    })();
   }
 }
 document.getElementById('sLoad').style.display='flex';
