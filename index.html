@@ -338,7 +338,7 @@ body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
 body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,body.emp-mode #tp-weekly,
 body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
-body.emp-mode #riskBell,body.emp-mode #riskPanel,body.emp-mode #tickerWrap{display:none!important}
+body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
 </style>
 
 <script>if(localStorage.getItem('dark_mode')==='1')document.body.classList.add('dark-mode');</script>
@@ -2917,7 +2917,7 @@ function buildTickerAndRisk(){
   if(!MEMBERS||!MEMBERS.length)return;
 
   const SEP='<span style="color:var(--brd2);margin:0 8px">·</span>';
-  const BIG_SEP='<span style="color:var(--mg);margin:0 20px;font-size:13px">❱❱</span>';
+  const BIG_SEP='<span style="color:var(--mg);margin:0 28px;font-size:13px">❱❱</span>';
   const risks=[];
   const monthBlocks=[];
 
@@ -2930,27 +2930,29 @@ function buildTickerAndRisk(){
     const lbl=MKM[m-1]+' '+y;
     const parts=[];
 
-    // Month header
-    parts.push(`<span style="color:var(--mg);font-weight:800;font-size:10px;letter-spacing:.6px">📅 Салон${SEP}${lbl}${SEP}постигнати резултати${isLive?'<span style="color:var(--rd);font-size:9px;font-weight:900;margin-left:6px;animation:pulse 1.5s infinite"> 🔴 LIVE</span>':''}</span>`);
-
-    // Per-member scores
-    MEMBERS.forEach(mb=>{
-      const sc=perfScore(mb.id,y,m);
-      const col=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
-      parts.push(`<span style="color:var(--t2)">${mb.name.split(' ')[0]}: <b style="color:${col}">${sc}%</b></span>`);
-      // Risk tracking only for current month
-      if(isLive){
-        if(sc<70) risks.push({name:mb.name,sc,col:'var(--rd)',msg:`${sc}% — под 70% таргет`});
-        else if(sc<100) risks.push({name:mb.name,sc,col:'var(--am)',msg:`${sc}% — во тек`});
-      }
-    });
-
     // Team score for this month
     let oP=0,oCnt=0;
     MEMBERS.forEach(mb=>{KKEYS.forEach(k=>{if(isInScore(k)){oP+=pct(mMoSum(mb.id,k,y,m),mt[k]||1);oCnt++;}});});
     const teamSc=oCnt>0?Math.round(oP/oCnt):0;
     const teamCol=teamSc>=100?'var(--gr)':teamSc>=70?'var(--bl)':'var(--rd)';
-    parts.push(`<span style="color:${teamCol};font-weight:700">ТИМ: ${teamSc}%</span>`);
+    const teamRisk=isLive?(teamSc>=100?'✅':'⚠'):'';
+
+    // Month header with salon total
+    const liveTag=isLive?`<span style="color:var(--rd);font-size:9px;font-weight:900;margin-left:4px">🔴 LIVE</span>`:'';
+    parts.push(`<span style="color:var(--mg);font-weight:800;font-size:10px;letter-spacing:.5px">📅 ${lbl}${liveTag ? ' ' : ''}${liveTag}</span>${SEP}<span style="font-weight:700;color:${teamCol}">🏪 Салон: ${teamSc}%${isLive&&teamSc<100?' '+teamRisk:''}</span>`);
+
+    // Per-member scores with risk icons for current month
+    MEMBERS.forEach(mb=>{
+      const sc=perfScore(mb.id,y,m);
+      const col=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
+      const riskIco=isLive?(sc>=100?'✅ ':sc>=70?'⚠ ':'⛔ '):'';
+      const firstName=mb.name.split(' ')[0];
+      parts.push(`<span style="color:var(--t2)">${riskIco}<b style="color:${col}">${firstName}: ${sc}%</b></span>`);
+      if(isLive){
+        if(sc<70) risks.push({name:mb.name,sc,col:'var(--rd)',msg:`${sc}% — под 70% таргет`});
+        else if(sc<100) risks.push({name:mb.name,sc,col:'var(--am)',msg:`${sc}% — во тек`});
+      }
+    });
 
     monthBlocks.push(parts.join(SEP));
   }
@@ -2962,9 +2964,11 @@ function buildTickerAndRisk(){
     const html=monthBlocks.join(BIG_SEP);
     ti.innerHTML=html+BIG_SEP+html;
     // Adjust animation speed based on content length
+    // Speed: ~6px per char, adjust for content length
+    const spd=Math.max(60,Math.min(150,Math.round(html.replace(/<[^>]*>/g,'').length*0.18)));
     ti.style.animation='none';
     ti.offsetHeight; // reflow
-    ti.style.animation='marquee 90s linear infinite';
+    ti.style.animation=`marquee ${spd}s linear infinite`;
     tw?.classList.add('vis');
   }
 
