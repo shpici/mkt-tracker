@@ -457,8 +457,7 @@ body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
   <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
   <div class="tab" onclick="gotoTab('inventory',this)">📦 Доп.Опрема</div>
   <div class="tab" onclick="gotoTab('inventory2',this)">📱 Моб.&amp;Друго</div>
-  <div class="tab" onclick="gotoTab('ofireport',this)">📊 Доп. Извештај</div>
-  <div class="tab" onclick="gotoTab('mobreport',this)">📊 Моб. Извештај</div>
+  <div class="tab" onclick="gotoTab('calc',this)">🧮 Калк</div>
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">🕐 Распоред</div>
@@ -795,59 +794,226 @@ body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
 </div>
 
 <!-- ═══ OFI REPORT ═══ -->
-<div id="tp-ofireport" class="tp">
+<!-- ═══ КАЛКУЛАТОР НА РАТИ ═══ -->
+<div id="tp-calc" class="tp">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap');
+#tp-calc .rc-wrap{padding:0 0 24px;display:flex;flex-direction:column;align-items:center;gap:14px}
+#tp-calc .rc-panel{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:18px;width:100%;max-width:660px}
+#tp-calc .rc-panel-title{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--txt)}
+#tp-calc .rc-badge{background:var(--mgl);color:var(--mg);width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+#tp-calc .rc-srow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+#tp-calc .rc-sg{display:flex;flex-direction:column;gap:4px}
+#tp-calc .rc-sg label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t2)}
+#tp-calc .rc-sg input{width:110px;padding:7px 10px;border:1px solid var(--brd);border-radius:var(--rs);font-size:13px;background:var(--sur);color:var(--txt)}
+#tp-calc .rc-sg input:focus{outline:none;border-color:var(--mg)}
+#tp-calc .rc-fbox{font-size:11px;color:var(--t2);background:var(--s2);padding:7px 11px;border-radius:var(--rs);line-height:1.7}
+#tp-calc .rc-fbox b{color:var(--txt)}
+#tp-calc .rc-fbox .rc-ex{color:var(--mg)}
+#tp-calc .rc-prow-hdr{display:grid;grid-template-columns:1fr 105px 88px 26px;gap:8px;padding:0 8px;margin-bottom:4px}
+#tp-calc .rc-prow-hdr span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t3)}
+#tp-calc .rc-prow-hdr .h-r{text-align:right}
+#tp-calc .rc-plist{display:flex;flex-direction:column;gap:6px}
+#tp-calc .rc-prow{display:grid;grid-template-columns:1fr 105px 88px 26px;gap:8px;align-items:center;background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:7px 8px}
+#tp-calc .rc-prow:focus-within{border-color:var(--mg)}
+#tp-calc .rc-prow input[type=text]{border:none;background:transparent;font-size:12px;color:var(--txt);outline:none;min-width:0;width:100%}
+#tp-calc .rc-prow input[type=number]{border:none;background:transparent;font-size:12px;font-weight:600;color:var(--txt);outline:none;text-align:right;width:100%}
+#tp-calc .rc-rate{font-size:11px;font-weight:700;color:var(--mg);white-space:nowrap;text-align:right}
+#tp-calc .rc-del{background:none;border:none;cursor:pointer;color:var(--t3);font-size:14px;padding:2px;transition:color .15s;display:flex;align-items:center}
+#tp-calc .rc-del:hover{color:var(--rd)}
+#tp-calc .rc-add{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;padding:8px;background:none;border:1px dashed var(--brd);border-radius:var(--rs);font-size:12px;color:var(--t2);cursor:pointer;width:100%;transition:all .15s}
+#tp-calc .rc-add:hover{border-color:var(--mg);color:var(--mg);background:var(--mgl)}
+#tp-calc .rc-colrow{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--brd);flex-wrap:wrap}
+#tp-calc .rc-colrow label{font-size:11px;font-weight:600;color:var(--t2)}
+#tp-calc .rc-colbtns{display:flex;gap:5px}
+#tp-calc .rc-colbtn{padding:3px 11px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--sur);font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s}
+#tp-calc .rc-colbtn.on{border-color:var(--mg);background:var(--mgl);color:var(--mg)}
+#tp-calc .rc-disp{background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;text-align:right;min-height:68px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px}
+#tp-calc .rc-expr{font-size:11px;color:var(--t3);min-height:15px;word-break:break-all}
+#tp-calc .rc-num{font-size:28px;font-weight:500;color:var(--txt);word-break:break-all;line-height:1.1}
+#tp-calc .rc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+#tp-calc .ck{padding:13px 6px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--sur);font-size:15px;font-weight:400;color:var(--txt);cursor:pointer;transition:all .1s;text-align:center;user-select:none}
+#tp-calc .ck:hover{background:var(--s2)}
+#tp-calc .ck:active{transform:scale(0.95)}
+#tp-calc .ck.op{color:var(--mg);font-weight:600}
+#tp-calc .ck.fn{color:var(--t2);font-size:12px;font-weight:600}
+#tp-calc .ck.eq{background:var(--mgl);color:var(--mg);border-color:var(--mg);font-weight:700}
+#tp-calc .ck.eq:hover{background:var(--mg);color:#fff}
+#tp-calc .ck.zero{grid-column:span 2}
+#tp-calc .rc-hint{font-size:10px;color:var(--t3);margin-top:8px;padding:7px 10px;background:var(--s2);border-radius:var(--rs);line-height:1.7}
+#tp-calc .rc-hint b{color:var(--t2)}
+#tp-calc .rc-prev-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);width:100%;max-width:660px;display:flex;align-items:center;gap:8px}
+#tp-calc .rc-prev-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
+#tp-calc .rc-a4{background:white;border:1px solid var(--brd);width:100%;max-width:660px;aspect-ratio:210/297;padding:3.5% 3%;overflow:hidden;display:flex;flex-direction:column}
+#tp-calc .rc-a4-grid{display:grid;grid-template-columns:repeat(var(--rc-cols,3),1fr);gap:5px;flex:1;align-content:start}
+#tp-calc .rc-a4-item{border:0.5px solid #d8d4ce;border-radius:3px;padding:6px 7px;display:flex;flex-direction:column;gap:2px}
+#tp-calc .rc-a4-nm{font-size:7.5px;font-weight:500;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tp-calc .rc-a4-pl{font-size:6.5px;color:#888}
+#tp-calc .rc-a4-rl{display:flex;align-items:baseline;gap:2px}
+#tp-calc .rc-a4-mo{font-size:6.5px;color:#888}
+#tp-calc .rc-a4-am{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:#111;line-height:1}
+#tp-calc .rc-a4-cu{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:#111}
+#tp-calc .rc-a4-empty{border:0.5px dashed #eae6e0;border-radius:3px}
+#tp-calc .rc-print-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:var(--mgl);color:var(--mg);border:1px solid var(--mg);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;width:100%;max-width:660px;transition:all .15s}
+#tp-calc .rc-print-btn:hover{background:var(--mg);color:#fff}
+@media print{
+  #tp-calc .rc-wrap>*:not(.rc-a4){display:none!important}
+  #tp-calc .rc-a4{border:none;width:210mm;height:297mm;max-width:210mm;aspect-ratio:unset;padding:14mm 12mm}
+  #tp-calc .rc-a4-grid{gap:4mm}
+  #tp-calc .rc-a4-item{padding:3mm 3.5mm;border:0.3mm solid #d0ccc6}
+}
+</style>
 <div class="card">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-    <div><div style="font-size:14px;font-weight:700">📊 Доп.Опрема — Извештај</div>
-    <div style="font-size:11px;color:var(--t2)">Неделно · Месечно · Годишно · Топ продавач</div></div>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:var(--s2);padding:8px 12px;border-radius:var(--rs)">
-    <span class="nl">Год.:</span>
-    <button class="na" onclick="ofiRepChg(1,'yr',-1)">‹</button>
-    <span id="ofiRep1Yr" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
-    <button class="na" onclick="ofiRepChg(1,'yr',1)">›</button>
-    <span class="nl" style="margin-left:8px">Мес.:</span>
-    <div id="ofiRep1Mo" style="display:flex;gap:2px;flex-wrap:wrap"></div>
-    <span class="nl" style="margin-left:8px">Нед.:</span>
-    <div id="ofiRep1Wk" style="display:flex;gap:2px;flex-wrap:wrap"></div>
-  </div>
-  <div style="display:flex;gap:4px;margin-bottom:14px">
-    <button class="nb act" id="ofiRep1pw" onclick="ofiRepPer(1,'week',this)">📅 Недела</button>
-    <button class="nb" id="ofiRep1pm" onclick="ofiRepPer(1,'month',this)">📊 Месец</button>
-    <button class="nb" id="ofiRep1py" onclick="ofiRepPer(1,'year',this)">📅 Година</button>
-  </div>
-  <div id="ofiRep1Stats" class="scg"></div>
-  <div id="ofiRep1Top" style="margin-top:12px"></div>
-  <div id="ofiRep1Prods" style="margin-top:12px"></div>
-</div>
-</div>
+<div class="rc-wrap">
 
-<!-- ═══ MOB REPORT ═══ -->
-<div id="tp-mobreport" class="tp">
-<div class="card">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-    <div><div style="font-size:14px;font-weight:700">📊 Моб.&Друго — Извештај</div>
-    <div style="font-size:11px;color:var(--t2)">Неделно · Месечно · Годишно · Топ продавач</div></div>
+  <!-- 1. ПОСТАВКИ -->
+  <div class="rc-panel">
+    <div class="rc-panel-title"><span class="rc-badge">1</span> Поставки</div>
+    <div class="rc-srow">
+      <div class="rc-sg"><label>Камата (%)</label><input type="number" id="rcRate" value="11" min="0" max="100" step="0.1" oninput="rcUpdateAll()"></div>
+      <div class="rc-sg"><label>Бр. рати</label><input type="number" id="rcMonths" value="24" min="1" max="60" step="1" oninput="rcUpdateAll()"></div>
+    </div>
+    <div class="rc-fbox">
+      <b>Формула:</b> (Цена × (1 + камата/100)) ÷ рати → заокружено нагоре<br>
+      <span class="rc-ex">Пример: 299 × 1.11 ÷ 24 = <b id="rcExPrev">14</b> ден/мес</span>
+    </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:var(--s2);padding:8px 12px;border-radius:var(--rs)">
-    <span class="nl">Год.:</span>
-    <button class="na" onclick="ofiRepChg(2,'yr',-1)">‹</button>
-    <span id="ofiRep2Yr" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
-    <button class="na" onclick="ofiRepChg(2,'yr',1)">›</button>
-    <span class="nl" style="margin-left:8px">Мес.:</span>
-    <div id="ofiRep2Mo" style="display:flex;gap:2px;flex-wrap:wrap"></div>
-    <span class="nl" style="margin-left:8px">Нед.:</span>
-    <div id="ofiRep2Wk" style="display:flex;gap:2px;flex-wrap:wrap"></div>
+
+  <!-- 2. ПРОИЗВОДИ -->
+  <div class="rc-panel">
+    <div class="rc-panel-title"><span class="rc-badge">2</span> Производи</div>
+    <div class="rc-prow-hdr"><span>Назив</span><span class="h-r">Цена (ден)</span><span class="h-r">Рата/мес</span><span></span></div>
+    <div class="rc-plist" id="rcProductList"></div>
+    <button class="rc-add" onclick="rcAddProduct()">+ Додади производ</button>
+    <div class="rc-colrow">
+      <label>Колони A4:</label>
+      <div class="rc-colbtns">
+        <button class="rc-colbtn" onclick="rcSetCols(2,this)">2</button>
+        <button class="rc-colbtn on" onclick="rcSetCols(3,this)">3</button>
+        <button class="rc-colbtn" onclick="rcSetCols(4,this)">4</button>
+      </div>
+    </div>
   </div>
-  <div style="display:flex;gap:4px;margin-bottom:14px">
-    <button class="nb act" id="ofiRep2pw" onclick="ofiRepPer(2,'week',this)">📅 Недела</button>
-    <button class="nb" id="ofiRep2pm" onclick="ofiRepPer(2,'month',this)">📊 Месец</button>
-    <button class="nb" id="ofiRep2py" onclick="ofiRepPer(2,'year',this)">📅 Година</button>
+
+  <!-- 3. КАЛКУЛАТОР -->
+  <div class="rc-panel">
+    <div class="rc-panel-title"><span class="rc-badge">3</span> Калкулатор</div>
+    <div class="rc-disp">
+      <div class="rc-expr" id="rcExpr"></div>
+      <div class="rc-num" id="rcResult">0</div>
+    </div>
+    <div class="rc-grid">
+      <button class="ck fn" onclick="rcFn('AC')">AC</button>
+      <button class="ck fn" onclick="rcFn('+/-')">+/−</button>
+      <button class="ck fn" onclick="rcFn('%')">%</button>
+      <button class="ck op" onclick="rcCop('÷')">÷</button>
+      <button class="ck" onclick="rcNum('7')">7</button>
+      <button class="ck" onclick="rcNum('8')">8</button>
+      <button class="ck" onclick="rcNum('9')">9</button>
+      <button class="ck op" onclick="rcCop('×')">×</button>
+      <button class="ck" onclick="rcNum('4')">4</button>
+      <button class="ck" onclick="rcNum('5')">5</button>
+      <button class="ck" onclick="rcNum('6')">6</button>
+      <button class="ck op" onclick="rcCop('−')">−</button>
+      <button class="ck" onclick="rcNum('1')">1</button>
+      <button class="ck" onclick="rcNum('2')">2</button>
+      <button class="ck" onclick="rcNum('3')">3</button>
+      <button class="ck op" onclick="rcCop('+')">+</button>
+      <button class="ck zero" onclick="rcNum('0')">0</button>
+      <button class="ck" onclick="rcNum('.')">.</button>
+      <button class="ck eq" onclick="rcEq()">=</button>
+    </div>
+    <div class="rc-hint">
+      <b>70% од 140:</b> 140 × 70 % = 98 &nbsp;·&nbsp; <b>10% од 85:</b> 85 × 10 % = 8.5<br>
+      <b>Тастатура:</b> бројки, + − * / Enter Backspace Esc
+    </div>
   </div>
-  <div id="ofiRep2Stats" class="scg"></div>
-  <div id="ofiRep2Top" style="margin-top:12px"></div>
-  <div id="ofiRep2Prods" style="margin-top:12px"></div>
+
+  <div class="rc-prev-lbl">Преглед A4</div>
+  <div class="rc-a4" id="rcA4Sheet" style="--rc-cols:3">
+    <div class="rc-a4-grid" id="rcA4Grid"></div>
+  </div>
+  <button class="rc-print-btn" onclick="window.print()">🖨 Печати / Зачувај PDF (A4)</button>
+
 </div>
+</div>
+<script>
+(function(){
+let rcProds=[
+  {name:'Samsung Galaxy A15',price:299},
+  {name:'iPhone 16 128GB',price:1199},
+  {name:'Xiaomi Redmi Note 13',price:449},
+  {name:'USB-C Кабел 2м',price:149},
+  {name:'Заштитно стакло',price:99},
+  {name:'Торба за лаптоп',price:799},
+];
+let rcCols=3;
+let _rcV='0',_rcFirst=null,_rcOper=null,_rcWait=false,_rcExStr='';
+
+function rcCalcRate(p){const r=parseFloat(document.getElementById('rcRate').value)||11;const m=parseInt(document.getElementById('rcMonths').value)||24;return Math.ceil(p*(1+r/100)/m);}
+window.rcUpdateAll=()=>{rcRenderList();rcRenderPreview();const el=document.getElementById('rcExPrev');if(el)el.textContent=rcCalcRate(299);};
+window.rcAddProduct=()=>{rcProds.push({name:'',price:0});rcRenderList();setTimeout(()=>{const rows=document.querySelectorAll('#rcProductList .rc-prow');const last=rows[rows.length-1];if(last)last.querySelector('input[type=text]').focus();},40);};
+window.rcSetCols=(n,btn)=>{rcCols=n;document.getElementById('rcA4Sheet').style.setProperty('--rc-cols',n);document.querySelectorAll('.rc-colbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');rcRenderPreview();};
+
+function rcRenderList(){
+  const list=document.getElementById('rcProductList');if(!list)return;
+  list.innerHTML='';
+  rcProds.forEach((p,i)=>{
+    const row=document.createElement('div');row.className='rc-prow';
+    const ni=document.createElement('input');ni.type='text';ni.placeholder='Назив...';ni.value=p.name;
+    ni.addEventListener('input',()=>{rcProds[i].name=ni.value;rcRenderPreview();});
+    const pi=document.createElement('input');pi.type='number';pi.placeholder='Цена';pi.value=p.price;pi.min='0';pi.step='1';
+    const rs=document.createElement('span');rs.className='rc-rate';rs.textContent=rcCalcRate(p.price)+'ден/мес';
+    pi.addEventListener('input',()=>{rcProds[i].price=parseFloat(pi.value)||0;rs.textContent=rcCalcRate(rcProds[i].price)+'ден/мес';rcRenderPreview();});
+    const db=document.createElement('button');db.className='rc-del';db.title='Избриши';db.textContent='✕';
+    db.addEventListener('click',()=>{rcProds.splice(i,1);rcRenderList();});
+    row.appendChild(ni);row.appendChild(pi);row.appendChild(rs);row.appendChild(db);
+    list.appendChild(row);
+  });
+  rcRenderPreview();
+}
+
+function rcRenderPreview(){
+  const grid=document.getElementById('rcA4Grid');if(!grid)return;
+  const m=parseInt(document.getElementById('rcMonths').value)||24;
+  grid.style.setProperty('--rc-cols',rcCols);
+  grid.innerHTML='';
+  const total=Math.ceil(Math.max(rcProds.length,1)/rcCols)*rcCols;
+  rcProds.forEach(p=>{
+    const rate=rcCalcRate(p.price);
+    const div=document.createElement('div');div.className='rc-a4-item';
+    div.innerHTML='<div class="rc-a4-nm">'+(p.name||'—')+'</div>'+'<div class="rc-a4-pl">Цена '+p.price+'ден</div>'+'<div class="rc-a4-rl"><span class="rc-a4-mo">'+m+'x</span><span class="rc-a4-am">'+rate+'</span><span class="rc-a4-cu">ден</span></div>';
+    grid.appendChild(div);
+  });
+  for(let i=rcProds.length;i<total;i++){const e=document.createElement('div');e.className='rc-a4-empty';grid.appendChild(e);}
+}
+
+function rcRefresh(){document.getElementById('rcResult').textContent=_rcV;document.getElementById('rcExpr').textContent=_rcExStr;}
+function rcFmt(v){return parseFloat(parseFloat(v).toFixed(10)).toString();}
+window.rcNum=v=>{if(_rcWait){_rcV=(v==='.'?'0.':v);_rcWait=false;}else{if(v==='.'&&_rcV.includes('.'))return;_rcV=_rcV==='0'&&v!=='.'?v:_rcV+v;}rcRefresh();};
+window.rcCop=op=>{const cur=parseFloat(_rcV);if(_rcFirst!==null&&!_rcWait){const res=rcApply(_rcOper,_rcFirst,cur);_rcV=rcFmt(res);_rcFirst=parseFloat(_rcV);}else{_rcFirst=cur;}_rcOper=op;_rcWait=true;_rcExStr=rcFmt(_rcFirst)+' '+op;rcRefresh();};
+function rcApply(op,a,b){if(op==='÷')return b!==0?a/b:0;if(op==='×')return a*b;if(op==='−')return a-b;if(op==='+')return a+b;return b;}
+window.rcEq=()=>{if(_rcOper===null)return;const cur=parseFloat(_rcV);const res=rcApply(_rcOper,_rcFirst,cur);_rcExStr=rcFmt(_rcFirst)+' '+_rcOper+' '+rcFmt(cur)+' =';_rcV=rcFmt(res);_rcFirst=null;_rcOper=null;_rcWait=false;rcRefresh();};
+window.rcFn=fn=>{const cur=parseFloat(_rcV);if(fn==='AC'){_rcV='0';_rcExStr='';_rcFirst=null;_rcOper=null;_rcWait=false;}else if(fn==='+/-'){_rcV=rcFmt(-cur);}else if(fn==='%'){if(_rcFirst!==null&&_rcOper!==null){_rcV=(_rcOper==='+'||_rcOper==='−')?rcFmt(_rcFirst*(cur/100)):rcFmt(cur/100);_rcExStr=rcFmt(_rcFirst)+' '+_rcOper+' '+_rcV;}else{_rcV=rcFmt(cur/100);}_rcWait=false;}rcRefresh();};
+
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('tp-calc')?.classList.contains('act'))return;
+  if(document.activeElement&&document.activeElement.tagName==='INPUT')return;
+  if(e.key>='0'&&e.key<='9'){e.preventDefault();rcNum(e.key);}
+  else if(e.key==='.'){e.preventDefault();rcNum('.');}
+  else if(e.key==='+'){e.preventDefault();rcCop('+');}
+  else if(e.key==='-'){e.preventDefault();rcCop('−');}
+  else if(e.key==='*'){e.preventDefault();rcCop('×');}
+  else if(e.key==='/'){e.preventDefault();rcCop('÷');}
+  else if(e.key==='Enter'||e.key==='='){e.preventDefault();rcEq();}
+  else if(e.key==='Escape'){e.preventDefault();rcFn('AC');}
+  else if(e.key==='Backspace'){e.preventDefault();if(!_rcWait){_rcV=_rcV.length>1?_rcV.slice(0,-1):'0';rcRefresh();}}
+});
+
+window._rcInited=false;
+window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}};
+})();
+</script>
 </div>
 
 <!-- ═══ SCHEDULE / РАСПОРЕД ═══ -->
@@ -4038,8 +4204,7 @@ window.gotoTab=(name,el)=>{
   else if(name==='targets')rndTgts();
   else if(name==='orders')rndOrders();
   else if(name==='yearly')rndMgrYearly();
-  else if(name==='ofireport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(1);}
-  else if(name==='mobreport'){ofiRep.yr=cY;ofiRep.m=cM;ofiRep.wk=0;rndOfiReport(2);}
+  else if(name==='calc'){if(window.rcInit)window.rcInit();}
   else if(name==='boost')rndBoostBoard();
   else if(name==='schedule')scInit();
   else if(name==='info'){
