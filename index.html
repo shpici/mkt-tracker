@@ -2941,13 +2941,27 @@ function buildTickerAndRisk(){
     const liveTag=isLive?`<span style="color:var(--rd);font-size:9px;font-weight:900;margin-left:4px">🔴 LIVE</span>`:'';
     parts.push(`<span style="color:var(--mg);font-weight:800;font-size:10px;letter-spacing:.5px">📅 ${lbl}${liveTag ? ' ' : ''}${liveTag}</span>${SEP}<span style="font-weight:700;color:${teamCol}">🏪 Салон: ${teamSc}%${isLive&&teamSc<100?' '+teamRisk:''}</span>`);
 
-    // Per-member scores with risk icons for current month
+    // Short KPI labels for ticker
+    const SHLBL={fmc:'FMC',post:'Post',bb:'BB',iptv:'IPTV',loy:'Loy',prep:'Prep',cc:'C&C',equip:'Опр.',loybus:'LoyB',ict:'ICT',fmcbus:'FMCB',postbus:'PostB',bbbus:'BBB'};
+    const KSEP='<span style="color:var(--brd2);margin:0 5px">·</span>';
+
+    // Per-member: overall score + per-KPI breakdown
     MEMBERS.forEach(mb=>{
       const sc=perfScore(mb.id,y,m);
       const col=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
       const riskIco=isLive?(sc>=100?'✅ ':sc>=70?'⚠ ':'⛔ '):'';
       const firstName=mb.name.split(' ')[0];
-      parts.push(`<span style="color:var(--t2)">${riskIco}<b style="color:${col}">${firstName}: ${sc}%</b></span>`);
+      // Per-KPI values (only score KPIs with a target set)
+      const kpiParts=KKEYS.filter(k=>isInScore(k)).map(k=>{
+        const v=mMoSum(mb.id,k,y,m);
+        const t=mt[k]||0;
+        if(!t)return null;
+        const p=pct(v,t);
+        const kc=p>=100?'var(--gr)':p>=70?'var(--bl)':'var(--rd)';
+        return `<span style="color:var(--t3);font-size:9px">${SHLBL[k]||k}:</span><b style="color:${kc};font-size:9px">${v}/${t}</b>`;
+      }).filter(Boolean);
+      const kpiHtml=kpiParts.length?`<span style="color:var(--brd2);margin:0 6px">│</span>${kpiParts.join(KSEP)}`:'';
+      parts.push(`<span style="color:var(--t2)">${riskIco}<b style="color:${col}">${firstName}: ${sc}%</b>${kpiHtml}</span>`);
       if(isLive){
         if(sc<70) risks.push({name:mb.name,sc,col:'var(--rd)',msg:`${sc}% — под 70% таргет`});
         else if(sc<100) risks.push({name:mb.name,sc,col:'var(--am)',msg:`${sc}% — во тек`});
