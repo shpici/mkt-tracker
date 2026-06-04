@@ -5652,16 +5652,16 @@ window.toggleAI=function(){
 
 /* ── helpers ── */
 function _aiData(){
-  const Y=window.cY,M=window.cM;
-  const mems=window.MEMBERS||[];
-  const t=window.getMT?window.getMT(Y,M):{};
+  const Y=cY,M=cM;
+  const mems=MEMBERS||[];
+  const t=getMT?getMT(Y,M):{};
   const today=new Date().getDate();
   const dInM=new Date(Y,M,0).getDate();
   const ratio=Math.max(today/dInM,0.01);
   const SHLBL={fmc:'FMC',post:'Post',bb:'BB',iptv:'IPTV',loy:'Loy',prep:'Prep',cc:'C&C',equip:'Опр.',loybus:'LoyB',ict:'ICT',fmcbus:'FMCB',postbus:'PostB',bbbus:'BBB'};
   const MAIN=['fmc','post','bb','iptv','prep'];
-  const perf=id=>window.perfScore?window.perfScore(id,Y,M):0;
-  const sum=(id,k)=>window.mMoSum?window.mMoSum(id,k,Y,M):0;
+  const perf=id=>perfScore(id,Y,M);
+  const sum=(id,k)=>mMoSum(id,k,Y,M);
   return {Y,M,mems,t,today,dInM,ratio,SHLBL,MAIN,perf,sum};
 }
 
