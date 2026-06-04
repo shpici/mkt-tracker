@@ -5793,7 +5793,7 @@ function seedAIMsgs(){
   wrap.innerHTML='';
   addAIMsg();
   if(window._aiInterval)clearInterval(window._aiInterval);
-  window._aiInterval=setInterval(addAIMsg,7000);
+  window._aiInterval=setInterval(addAIMsg,300000);
 }
 function addAIMsg(){
   const wrap=document.getElementById('aiMsgs');if(!wrap)return;
