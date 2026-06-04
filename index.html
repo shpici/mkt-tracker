@@ -111,11 +111,11 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 /* NEURAL CANVAS (app background) */
 #neuralCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.18}
 /* AI CHATBOT PANEL */
-#aiPanel{position:fixed;right:0;top:0;width:288px;height:100vh;background:rgba(10,10,26,.96);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid rgba(179,136,255,.22);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+#aiPanel{position:fixed;right:0;top:0;width:310px;height:100vh;background:rgba(10,10,26,.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid rgba(179,136,255,.22);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
 #aiPanel.open{transform:translateX(0)}
 #aiToggle{position:fixed;right:0;top:50%;transform:translateY(-50%);background:linear-gradient(180deg,#b388ff,#7c4dff);color:#fff;border:none;border-radius:8px 0 0 8px;padding:13px 7px;cursor:pointer;z-index:401;font-size:10px;font-weight:800;writing-mode:vertical-rl;letter-spacing:1.5px;transition:right .35s cubic-bezier(.4,0,.2,1);box-shadow:-3px 0 22px rgba(179,136,255,.45);line-height:1}
 #aiToggle:hover{box-shadow:-5px 0 30px rgba(179,136,255,.75)}
-#aiToggle.shifted{right:288px}
+#aiToggle.shifted{right:310px}
 .ai-hdr{padding:14px 13px 10px;border-bottom:1px solid rgba(179,136,255,.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .ai-hdr-t{font-size:11.5px;font-weight:800;color:#b388ff;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
 .ai-online{width:7px;height:7px;border-radius:50%;background:#69f0ae;animation:pulse 1.5s infinite;flex-shrink:0}
@@ -440,6 +440,7 @@ body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comme
 body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
 body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
+body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 </style>
 
 <script>if(localStorage.getItem('dark_mode')==='1')document.body.classList.add('dark-mode');</script>
@@ -5649,35 +5650,129 @@ window.toggleAI=function(){
   if(open&&document.getElementById('aiMsgs').children.length===0)seedAIMsgs();
 };
 
+/* ── helpers ── */
+function _aiData(){
+  const Y=window.cY,M=window.cM;
+  const mems=window.MEMBERS||[];
+  const t=window.getMT?window.getMT(Y,M):{};
+  const today=new Date().getDate();
+  const dInM=new Date(Y,M,0).getDate();
+  const ratio=Math.max(today/dInM,0.01);
+  const SHLBL={fmc:'FMC',post:'Post',bb:'BB',iptv:'IPTV',loy:'Loy',prep:'Prep',cc:'C&C',equip:'Опр.',loybus:'LoyB',ict:'ICT',fmcbus:'FMCB',postbus:'PostB',bbbus:'BBB'};
+  const MAIN=['fmc','post','bb','iptv','prep'];
+  const perf=id=>window.perfScore?window.perfScore(id,Y,M):0;
+  const sum=(id,k)=>window.mMoSum?window.mMoSum(id,k,Y,M):0;
+  return {Y,M,mems,t,today,dInM,ratio,SHLBL,MAIN,perf,sum};
+}
+
 const AI_TEMPLATES=[
+  // Т1 — Тимски резултат + проекција
   ()=>{
-    if(!window.MEMBERS||!window.MEMBERS.length)return null;
-    const scores=window.MEMBERS.map(m=>({name:m.name.split(' ')[0],s:Math.round((window.perfScore&&window.perfScore(m.id,window.cY,window.cM))||0)}));
-    scores.sort((a,b)=>b.s-a.s);
-    const top=scores[0];
-    return top?`📊 Тековен месец: <b>${top.name}</b> е лидер со <b>${top.s}%</b> реализација. Тој/таа е пред сите колеги.`:null;
+    const {mems,perf,today,dInM,ratio}=_aiData();
+    if(!mems.length)return null;
+    const scores=mems.map(m=>perf(m.id));
+    const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+    const proj=ratio>0.08?Math.min(Math.round(avg/ratio),135):null;
+    const icon=avg>=85?'✅':avg>=70?'⚠️':'⛔';
+    const projTxt=proj?` Проекција до крај на месецот: <b>~${proj}%</b>.`:'';
+    return `📊 ${icon} <b>Тим — ${avg}% реализација</b> (ден ${today}/${dInM}).${projTxt}`;
   },
+  // Т2 — Лидер vs потребна поддршка
   ()=>{
-    if(!window.MEMBERS||!window.MEMBERS.length)return null;
-    const scores=window.MEMBERS.map(m=>({name:m.name.split(' ')[0],s:Math.round((window.perfScore&&window.perfScore(m.id,window.cY,window.cM))||0)}));
-    const low=scores.filter(s=>s.s<70);
-    return low.length?`⚠️ Внимание: <b>${low.map(s=>s.name).join(', ')}</b> се под 70% реализација — потребна е поддршка.`:`✅ Одлично! Сите вработени се над 70% реализација овој месец.`;
+    const {mems,perf}=_aiData();if(!mems.length)return null;
+    const sc=mems.map(m=>({n:m.name.split(' ')[0],s:perf(m.id)})).sort((a,b)=>b.s-a.s);
+    const top=sc[0],bot=sc[sc.length-1];
+    return `🏆 Лидер: <b>${top.n} ${top.s}%</b> | Треба поддршка: <b>${bot.n} ${bot.s}%</b> — разлика ${top.s-bot.s}пп. Фокусирај се на ${bot.n}.`;
   },
+  // Т3 — FMC статус по вработен (реални бројки)
   ()=>{
-    if(!window.MEMBERS||!window.MEMBERS.length)return null;
-    const scores=window.MEMBERS.map(m=>({name:m.name.split(' ')[0],s:Math.round((window.perfScore&&window.perfScore(m.id,window.cY,window.cM))||0)}));
-    const avg=scores.reduce((a,b)=>a+b.s,0)/scores.length;
-    return `📈 Просечна тимска реализација: <b>${Math.round(avg)}%</b>. ${avg>=85?'Одличен тимски резултат!':avg>=70?'Добар напредок, има простор за подобрување.':'Потребно е зголемување на активностите.'}`;
+    const {mems,t,sum}=_aiData();if(!mems.length)return null;
+    const tgt=t.fmc||0;
+    const lines=mems.map(m=>{const a=sum(m.id,'fmc');const g=Math.max(0,tgt-a);return `${m.name.split(' ')[0]}: ${a}/${tgt}${g>0?` ⚠️(-${g})`:' ✅'}`;});
+    return `💼 <b>FMC по вработен:</b><br>${lines.join('<br>')}`;
   },
+  // Т4 — Postpaid + BB статус
   ()=>{
-    const d=new Date();const h=d.getHours();
-    const msg=h<12?'Добро утро! Проверете ги дневните цели и мотивирајте го тимот за силен старт.':h<17?'Средина на денот: идеален момент за проверка на напредокот и прилагодување на стратегијата.':'Крај на работниот ден: направете резиме на постигнатото и планирајте го утрешниот ден.';
-    return `🕐 ${msg}`;
+    const {mems,t,sum}=_aiData();if(!mems.length)return null;
+    const lines=mems.map(m=>{
+      const pa=sum(m.id,'post'),pt=t.post||0,pg=Math.max(0,pt-pa);
+      const ba=sum(m.id,'bb'),bt=t.bb||0,bg=Math.max(0,bt-ba);
+      return `${m.name.split(' ')[0]}: Post ${pa}/${pt}${pg>0?`(-${pg})`:'✅'} | BB ${ba}/${bt}${bg>0?`(-${bg})`:'✅'}`;
+    });
+    return `📱 <b>Postpaid / BB по вработен:</b><br>${lines.join('<br>')}`;
   },
-  ()=>`💡 Совет: FMC производите носат највисока вредност. Фокусирајте се на конверзија на постпеид кон FMC пакети за максимален резултат.`,
-  ()=>`🔮 Прогноза: Врз основа на тековните трендови, тимот е на пат кон ${Math.floor(75+Math.random()*20)}% месечна реализација. Останете фокусирани!`,
-  ()=>`📱 Препорака: Зголемете ги активностите за Prepaid → Postpaid конверзија. Тоа е клучен KPI со висок потенцијал.`,
-  ()=>`🏆 Мотивација: Секој продажен разговор е можност. Тимот е во финишницата — нека секој вработен даде максимум до крајот на месецот!`,
+  // Т5 — Слаба точка по вработен (кој KPI е најлош)
+  ()=>{
+    const {mems,t,sum,SHLBL}=_aiData();if(!mems.length)return null;
+    const SCORE_KS=['fmc','post','bb','iptv','prep'];
+    const lines=mems.map(m=>{
+      let wk=null,wkPct=999;
+      SCORE_KS.forEach(k=>{const tgt=t[k]||0;if(!tgt)return;const pct=Math.round(sum(m.id,k)/tgt*100);if(pct<wkPct){wkPct=pct;wk=k;}});
+      if(!wk)return null;
+      const icon=wkPct>=90?'✅':wkPct>=70?'⚠️':'⛔';
+      return `${m.name.split(' ')[0]}: ${icon} <b>${SHLBL[wk]} ${wkPct}%</b>`;
+    }).filter(Boolean);
+    return `🎯 <b>Слаби точки по вработен:</b><br>${lines.join('<br>')}`;
+  },
+  // Т6 — Темпо анализа (пред/зад план)
+  ()=>{
+    const {mems,perf,today,dInM,ratio}=_aiData();if(!mems.length)return null;
+    const expected=Math.round(ratio*100);
+    const ahead=[],ontrack=[],behind=[];
+    mems.forEach(m=>{const s=perf(m.id);const diff=s-expected;if(diff>=8)ahead.push(`${m.name.split(' ')[0]} ${s}%`);else if(diff<-12)behind.push(`${m.name.split(' ')[0]} ${s}%`);else ontrack.push(`${m.name.split(' ')[0]} ${s}%`);});
+    let txt=`📅 <b>Темпо — ден ${today}/${dInM}, план ~${expected}%:</b><br>`;
+    if(ahead.length)txt+=`⬆️ Пред план: ${ahead.join(', ')}<br>`;
+    if(ontrack.length)txt+=`➡️ На план: ${ontrack.join(', ')}<br>`;
+    if(behind.length)txt+=`⬇️ Зад план: ${behind.join(', ')}`;
+    return txt;
+  },
+  // Т7 — Уште колку за 100% (главни KPI тимски)
+  ()=>{
+    const {mems,t,sum,dInM,today}=_aiData();if(!mems.length)return null;
+    const dLeft=dInM-today;const wdLeft=Math.max(1,Math.round(dLeft*5/7));
+    const KS=['fmc','post','bb','iptv'];
+    const SHLBL={fmc:'FMC',post:'Post',bb:'BB',iptv:'IPTV'};
+    const gaps=KS.map(k=>{
+      const totalA=mems.reduce((s,m)=>s+sum(m.id,k),0);
+      const totalT=mems.length*(t[k]||0);
+      const g=Math.max(0,totalT-totalA);
+      const pct=totalT>0?Math.round(totalA/totalT*100):0;
+      return `${SHLBL[k]}: ${totalA}/${totalT} (${pct}%)${g>0?` — уште <b>${g}</b>`:'✅'}`;
+    });
+    return `⏰ <b>Остануваат ~${wdLeft} работни дена:</b><br>${gaps.join('<br>')}`;
+  },
+  // Т8 — Вработени под 60% (ризик)
+  ()=>{
+    const {mems,perf,t,sum}=_aiData();if(!mems.length)return null;
+    const risk=mems.filter(m=>perf(m.id)<60);
+    if(!risk.length)return `✅ <b>Нема вработени во критичен ризик.</b> Сите се над 60%. Одржете го темпото!`;
+    const lines=risk.map(m=>{
+      const s=perf(m.id);
+      const fmcG=Math.max(0,(t.fmc||0)-sum(m.id,'fmc'));
+      const postG=Math.max(0,(t.post||0)-sum(m.id,'post'));
+      return `⛔ <b>${m.name.split(' ')[0]} ${s}%</b> — FMC уште ${fmcG}, Post уште ${postG}`;
+    });
+    return `🚨 <b>РИЗИК — под 60%:</b><br>${lines.join('<br>')}`;
+  },
+  // Т9 — Детален резиме по вработен (цикличен)
+  (()=>{let _i=0;return ()=>{
+    const {mems,perf,t,sum,SHLBL}=_aiData();if(!mems.length)return null;
+    const m=mems[_i%mems.length];_i++;
+    const s=perf(m.id);
+    const icon=s>=90?'✅':s>=75?'⚠️':s>=60?'⚠️':'⛔';
+    const KS=['fmc','post','bb','iptv','prep'];
+    const kpis=KS.map(k=>{const a=sum(m.id,k);const tgt=t[k]||0;if(!tgt)return null;const p=Math.round(a/tgt*100);return `${SHLBL[k]}: ${a}/${tgt}(${p}%)`;}).filter(Boolean);
+    return `👤 <b>${m.name.split(' ')[0]} — ${icon} ${s}%</b><br>${kpis.join(' · ')}`;
+  };})(),
+  // Т10 — Препеид / Лојалност статус
+  ()=>{
+    const {mems,t,sum}=_aiData();if(!mems.length)return null;
+    const lines=mems.map(m=>{
+      const pa=sum(m.id,'prep'),pt=t.prep||0,la=sum(m.id,'loy'),lt=t.loy||0;
+      return `${m.name.split(' ')[0]}: Prep ${pa}/${pt} | Loy ${la}/${lt}`;
+    });
+    return `🔄 <b>Prepaid / Loyalty:</b><br>${lines.join('<br>')}`;
+  },
 ];
 
 let _aiIdx=0;
@@ -5686,7 +5781,7 @@ function seedAIMsgs(){
   wrap.innerHTML='';
   addAIMsg();
   if(window._aiInterval)clearInterval(window._aiInterval);
-  window._aiInterval=setInterval(addAIMsg,5000);
+  window._aiInterval=setInterval(addAIMsg,7000);
 }
 function addAIMsg(){
   const wrap=document.getElementById('aiMsgs');if(!wrap)return;
