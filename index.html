@@ -439,6 +439,7 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .xtag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
 .xnum{font-variant-numeric:tabular-nums}
 </style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -590,8 +591,8 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
   <div class="tab" onclick="gotoTab('yearly',this)">📅 Годишен</div>
   <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
-  <div class="tab" onclick="gotoTab('inventory',this)">📦 Доп.Опрема</div>
-  <div class="tab" onclick="gotoTab('inventory2',this)">📱 Моб.&amp;Друго</div>
+  <div class="tab" onclick="gotoTab('inventory',this)">🏬 Маг. Доп.Оп.</div>
+  <div class="tab" onclick="gotoTab('inventory2',this)">🏬 Маг. Моб.&amp;Др.</div>
   <div class="tab" onclick="gotoTab('calc',this)">🧮 Калк</div>
   <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
@@ -698,8 +699,11 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <div id="tp-inventory" class="tp">
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-    <div><div style="font-size:14px;font-weight:700">📦 Инвентар OFI</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
-    <button class="btn bmg" style="margin-left:auto" onclick="showAddProduct()">+ Додај производ</button>
+    <div><div style="font-size:14px;font-weight:700">🏬 Магацин — Дополнителна Опрема</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <button class="btn bmg" onclick="showAddProduct()">+ Додај производ</button>
+      <button class="btn" style="background:var(--sur);border:1px solid var(--brd)" onclick="showBulkImport(1)">📋 Увези лагер листа</button>
+    </div>
   </div>
   <!-- Add product form -->
   <div id="addProdForm" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">
@@ -715,12 +719,59 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
       <button class="btn" onclick="document.getElementById('addProdForm').style.display='none'">✕</button>
     </div>
   </div>
+  <!-- Bulk import panel -->
+  <div id="bulkPanel1" style="display:none;background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:14px;border:1px solid var(--brd)">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700">📋 Увези лагер листа — Доп.Опрема</div>
+      <button class="btn" style="margin-left:auto;padding:2px 8px;font-size:11px" onclick="document.getElementById('bulkPanel1').style.display='none'">✕</button>
+    </div>
+    <!-- File upload -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px;background:var(--sur);border-radius:var(--rs);border:2px dashed var(--brd)" id="dropZone1">
+      <span style="font-size:20px">📂</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:700">Прикачи Excel / CSV фајл</div>
+        <div style="font-size:10px;color:var(--t2)">Поддржани: .xlsx, .xls, .csv</div>
+      </div>
+      <label style="cursor:pointer">
+        <input type="file" id="bulkFile1" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleBulkFile(1,this)">
+        <span class="btn bmg" style="font-size:11px;display:inline-block">Избери фајл</span>
+      </label>
+    </div>
+    <div style="font-size:10px;color:var(--t3);text-align:center;margin:-4px 0 8px">— или залепи текст директно —</div>
+    <textarea id="bulkText1" class="fi" rows="5" style="width:100%;font-size:11px;font-family:monospace;resize:vertical;white-space:pre" placeholder="42513654	Samsung полнач бел	250	10&#10;42513655	USB кабел тип-C	150	25&#10;42513656	Заштитно стакло	80	30"></textarea>
+    <div style="display:flex;gap:14px;margin:9px 0 6px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:11px;font-weight:700;color:var(--t2)">Режим:</div>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode1" value="add" checked>
+        <span><strong>Додај</strong> — прием нова стока</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode1" value="set">
+        <span><strong>Постави</strong> — точен лагер</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;margin-left:auto">
+        <input type="checkbox" id="bulkSkipHeader1" checked>
+        <span>Прескокни наслов ред</span>
+      </label>
+    </div>
+    <button class="btn bmg" onclick="previewBulk(1)">👁 Прегледај увоз</button>
+    <div id="bulkPreview1" style="margin-top:10px"></div>
+  </div>
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid"></div>
+  <!-- Manager quick OFI lookup (same as employee search, no selling) -->
+  <div style="position:relative;margin-bottom:10px">
+    <input id="mgrQuickSearch1" class="fi" type="text"
+      placeholder="🔍 Брзо барање — назив или OFI шифра..."
+      style="width:100%;max-width:440px;padding:7px 11px;font-size:12px"
+      oninput="mgrQuickSearch(1,this.value)"
+      onblur="setTimeout(()=>{const r=document.getElementById('mgrQuickRes1');if(r)r.style.display='none';},200)">
+    <div id="mgrQuickRes1" style="display:none;position:absolute;z-index:30;width:100%;max-width:440px;max-height:260px;overflow-y:auto;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rs);box-shadow:0 6px 18px rgba(0,0,0,.13);top:calc(100% + 4px)"></div>
+  </div>
   <!-- OFI product table -->
   <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px;margin-top:4px;flex-wrap:wrap">
     <div style="font-size:11px;font-weight:700;color:var(--t2)">Лагер листа</div>
-    <input id="mgrOfiSearch1" class="fi" type="text" placeholder="🔍 Барај производ / OFI шифра..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(1,this.value)">
+    <input id="mgrOfiSearch1" class="fi" type="text" placeholder="🔍 Филтрирај табела..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(1,this.value)">
   </div>
   <div class="tw ofi-table">
     <table style="min-width:650px">
@@ -761,8 +812,11 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <div id="tp-inventory2" class="tp">
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-    <div><div style="font-size:14px;font-weight:700">📱 Моб.&amp;Друго — Лагер</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
-    <button class="btn bmg" style="margin-left:auto" onclick="showAddProduct2()">+ Додај производ</button>
+    <div><div style="font-size:14px;font-weight:700">🏬 Магацин — Мобилни &amp; Друго</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <button class="btn bmg" onclick="showAddProduct2()">+ Додај производ</button>
+      <button class="btn" style="background:var(--sur);border:1px solid var(--brd)" onclick="showBulkImport(2)">📋 Увези лагер листа</button>
+    </div>
   </div>
   <!-- Add product form -->
   <div id="addProdForm2" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">
@@ -778,12 +832,59 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
       <button class="btn" onclick="document.getElementById('addProdForm2').style.display='none'">✕</button>
     </div>
   </div>
+  <!-- Bulk import panel -->
+  <div id="bulkPanel2" style="display:none;background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:14px;border:1px solid var(--brd)">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700">📋 Увези лагер листа — Моб.&amp;Друго</div>
+      <button class="btn" style="margin-left:auto;padding:2px 8px;font-size:11px" onclick="document.getElementById('bulkPanel2').style.display='none'">✕</button>
+    </div>
+    <!-- File upload -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px;background:var(--sur);border-radius:var(--rs);border:2px dashed var(--brd)" id="dropZone2">
+      <span style="font-size:20px">📂</span>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:700">Прикачи Excel / CSV фајл</div>
+        <div style="font-size:10px;color:var(--t2)">Поддржани: .xlsx, .xls, .csv</div>
+      </div>
+      <label style="cursor:pointer">
+        <input type="file" id="bulkFile2" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleBulkFile(2,this)">
+        <span class="btn bmg" style="font-size:11px;display:inline-block">Избери фајл</span>
+      </label>
+    </div>
+    <div style="font-size:10px;color:var(--t3);text-align:center;margin:-4px 0 8px">— или залепи текст директно —</div>
+    <textarea id="bulkText2" class="fi" rows="5" style="width:100%;font-size:11px;font-family:monospace;resize:vertical;white-space:pre" placeholder="42513700	Samsung Galaxy A55	35000	5&#10;42513701	iPhone 15 128GB	75000	3&#10;42513702	Power bank 20000mAh	2500	8"></textarea>
+    <div style="display:flex;gap:14px;margin:9px 0 6px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:11px;font-weight:700;color:var(--t2)">Режим:</div>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode2" value="add" checked>
+        <span><strong>Додај</strong> — прием нова стока</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode2" value="set">
+        <span><strong>Постави</strong> — точен лагер</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;margin-left:auto">
+        <input type="checkbox" id="bulkSkipHeader2" checked>
+        <span>Прескокни наслов ред</span>
+      </label>
+    </div>
+    <button class="btn bmg" onclick="previewBulk(2)">👁 Прегледај увоз</button>
+    <div id="bulkPreview2" style="margin-top:10px"></div>
+  </div>
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid2"></div>
+  <!-- Manager quick OFI lookup -->
+  <div style="position:relative;margin-bottom:10px">
+    <input id="mgrQuickSearch2" class="fi" type="text"
+      placeholder="🔍 Брзо барање — назив или OFI шифра..."
+      style="width:100%;max-width:440px;padding:7px 11px;font-size:12px"
+      oninput="mgrQuickSearch(2,this.value)"
+      onblur="setTimeout(()=>{const r=document.getElementById('mgrQuickRes2');if(r)r.style.display='none';},200)">
+    <div id="mgrQuickRes2" style="display:none;position:absolute;z-index:30;width:100%;max-width:440px;max-height:260px;overflow-y:auto;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rs);box-shadow:0 6px 18px rgba(0,0,0,.13);top:calc(100% + 4px)"></div>
+  </div>
   <!-- Product table -->
   <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px;margin-top:4px;flex-wrap:wrap">
     <div style="font-size:11px;font-weight:700;color:var(--t2)">Лагер листа — Мобилни &amp; Друго</div>
-    <input id="mgrOfiSearch2" class="fi" type="text" placeholder="🔍 Барај производ / OFI шифра..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(2,this.value)">
+    <input id="mgrOfiSearch2" class="fi" type="text" placeholder="🔍 Филтрирај табела..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(2,this.value)">
   </div>
   <div class="tw ofi-table">
     <table style="min-width:650px">
@@ -3693,6 +3794,208 @@ window.adjustProductQty2=async(ofi,delta)=>{
   if(span){span.textContent=OFI_PRODUCTS2[ofi].qty;const warn=OFI_PRODUCTS2[ofi].qty<=2;span.style.color=warn?'var(--rd)':'var(--txt)';}
   else rndInv2();
   calcAlerts();
+};
+
+// ── MANAGER QUICK OFI SEARCH ──
+window.mgrQuickSearch=(cat,query)=>{
+  const resEl=document.getElementById('mgrQuickRes'+cat);
+  if(!resEl)return;
+  const q=query.trim().toLowerCase();
+  if(!q){resEl.style.display='none';resEl.innerHTML='';return;}
+
+  const thisCat =cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  const otherCat=cat===1?OFI_PRODUCTS2:OFI_PRODUCTS;
+  const otherLabel=cat===1?'🏬 Маг. Моб.&Др.':'🏬 Маг. Доп.Оп.';
+
+  const hits=Object.values(thisCat).filter(p=>
+    p.ofi.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)
+  ).slice(0,10);
+
+  const crossHits=Object.values(otherCat).filter(p=>
+    p.ofi.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)
+  ).slice(0,5);
+
+  let html='';
+
+  if(hits.length){
+    html+=hits.map(p=>{
+      const qty=p.qty||0;
+      const outOfStock=qty<=0;
+      const low=qty>0&&qty<=2;
+      const qtyColor=outOfStock?'var(--rd)':low?'var(--am)':'var(--gr)';
+      const qtyBadge=outOfStock
+        ?'<span style="background:var(--rdl);color:var(--rd);padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700">⚠ НЕМА</span>'
+        :low
+          ?'<span style="background:var(--aml);color:var(--am);padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700">⚡ '+qty+' бр.</span>'
+          :'<span style="background:var(--grl);color:var(--gr);padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700">✓ '+qty+' бр.</span>';
+      return '<div style="padding:8px 11px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:8px">'
+        +'<div style="flex:1;min-width:0">'
+          +'<div style="font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.name+'</div>'
+          +'<div style="font-size:9px;color:var(--t3);font-family:monospace;margin-top:1px">'+p.ofi
+            +(p.price?' · '+(p.price.toLocaleString())+' ден.':'')+'</div>'
+        +'</div>'
+        +qtyBadge
+      +'</div>';
+    }).join('');
+  }else{
+    html='<div style="padding:9px 11px;font-size:11px;color:var(--t3)">Нема резултати во оваа категорија.</div>';
+  }
+
+  // Cross-category warning: RED if found in the other category
+  if(crossHits.length){
+    html+='<div style="background:var(--rdl);border-top:2px solid var(--rd);padding:8px 11px">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:4px">⚠ Овој производ е во '+otherLabel+'!</div>'
+      +crossHits.map(p=>'<div style="font-size:10px;color:var(--rd);padding:2px 0;font-family:monospace">'
+        +p.ofi+' — '+p.name+' <span style="font-weight:700">('+( p.qty||0)+' бр.)</span>'
+      +'</div>').join('')
+    +'</div>';
+  }
+
+  resEl.innerHTML=html;
+  resEl.style.display='block';
+};
+
+// ── BULK IMPORT (Увези лагер листа) ──
+window.showBulkImport=(cat)=>{
+  const el=document.getElementById('bulkPanel'+cat);
+  if(!el)return;
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  // Close the other add-product form to avoid confusion
+  if(!isOpen){
+    const f=document.getElementById(cat===1?'addProdForm':'addProdForm2');
+    if(f)f.style.display='none';
+  }
+};
+
+// Read XLSX/CSV file selected via file input, populate textarea, auto-trigger preview
+window.handleBulkFile=async(cat,input)=>{
+  const file=input.files?.[0];if(!file)return;
+  const ta=document.getElementById('bulkText'+cat);
+  const dz=document.getElementById('dropZone'+cat);
+  const dzTitle=dz?.children[1]?.children[0];
+  if(dzTitle){dz.style.borderColor='var(--mg)';dzTitle.textContent='⏳ Читам фајл...';}
+  try{
+    const ext=file.name.split('.').pop().toLowerCase();
+    if(ext==='csv'||ext==='txt'){
+      const text=await file.text();
+      if(ta)ta.value=text;
+    }else{
+      if(typeof XLSX==='undefined'){alert('SheetJS не е вчитан. Освежи ја страницата.');return;}
+      const buf=await file.arrayBuffer();
+      const wb=XLSX.read(buf,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''});
+      if(ta)ta.value=rows.map(r=>r.join('\t')).join('\n');
+    }
+    if(dzTitle){dz.style.borderColor='var(--gr)';dzTitle.textContent='✅ '+file.name;}
+    window.previewBulk(cat);
+  }catch(e){
+    console.error('File read error',e);
+    if(dzTitle){dz.style.borderColor='var(--rd)';dzTitle.textContent='⚠ Грешка при читање';}
+  }
+  input.value='';
+};
+
+function parseBulkRows(text,skipHeader){
+  const lines=text.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim());
+  if(!lines.length)return[];
+  // Auto-detect separator: tab (Excel paste) → semicolon → comma
+  const sample=lines[0];
+  const sep=sample.includes('\t')?'\t':sample.includes(';')?';':',';
+  let rows=lines;
+  if(skipHeader&&rows.length>1)rows=rows.slice(1);
+  return rows.map(line=>{
+    const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith(‘”’)&&v.endsWith(‘”’))v=v.slice(1,-1);return v;});
+    const ofi=(cols[0]||'').trim();
+    if(!ofi)return null;
+    // Handle 2-column (OFI,Qty), 3-column (OFI,Name,Qty), 4-column (OFI,Name,Price,Qty)
+    let name='',price=0,qty=0;
+    if(cols.length>=4){name=cols[1];price=parseFloat(cols[2].replace(',','.'))||0;qty=parseInt(cols[3])||0;}
+    else if(cols.length===3){name=cols[1];qty=parseInt(cols[2])||0;}
+    else if(cols.length===2){qty=parseInt(cols[1])||0;}
+    return {ofi,name,price,qty};
+  }).filter(Boolean);
+}
+
+window.previewBulk=(cat)=>{
+  const ta=document.getElementById('bulkText'+cat);
+  const pv=document.getElementById('bulkPreview'+cat);
+  if(!ta||!pv)return;
+  const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
+  const rows=parseBulkRows(ta.value,skipHeader);
+  if(!rows.length){pv.innerHTML='<div style="padding:10px;color:var(--t3);text-align:center">Нема валидни редови. Провери форматот.</div>';return;}
+  const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
+  let newCount=0,updCount=0;
+  const rows2=rows.map(r=>{
+    const exists=!!products[r.ofi];
+    const curQty=exists?(products[r.ofi].qty||0):0;
+    const finalQty=mode==='set'?r.qty:curQty+r.qty;
+    const nameShow=r.name||(exists?products[r.ofi].name:'—');
+    if(exists)updCount++;else newCount++;
+    return {ofi:r.ofi,name:nameShow,price:r.price,qty:r.qty,curQty,finalQty,exists};
+  });
+  pv.innerHTML=`
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px">
+      Преглед — ${rows2.length} производи
+      <span style="margin-left:8px;background:var(--grl);color:var(--gr);padding:1px 7px;border-radius:10px">${updCount} ажурирање</span>
+      <span style="margin-left:4px;background:#ede9fe;color:#7c3aed;padding:1px 7px;border-radius:10px">${newCount} нови</span>
+    </div>
+    <div class="tw" style="max-height:240px;overflow-y:auto;margin-bottom:8px">
+      <table style="min-width:520px;font-size:11px">
+        <thead><tr><th style="text-align:left;padding-left:8px">OFI</th><th style="text-align:left">Назив</th><th>Цена</th><th>${mode==='set'?'Се поставува':'Тековно → Ново'}</th><th>Статус</th></tr></thead>
+        <tbody>${rows2.map(r=>`<tr>
+          <td style="text-align:left;padding-left:8px;font-family:monospace;font-size:10px">${r.ofi}</td>
+          <td style="text-align:left;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.name}</td>
+          <td>${r.price?r.price.toLocaleString()+' ден.':'—'}</td>
+          <td style="font-weight:700;color:var(--mg)">${mode==='set'?r.qty:(r.curQty+' → '+r.finalQty)}</td>
+          <td>${r.exists
+            ?'<span style="background:var(--grl);color:var(--gr);padding:1px 6px;border-radius:10px;font-size:10px">постои</span>'
+            :'<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:10px;font-size:10px">+ ново</span>'
+          }</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <button class="btn bmg" onclick="executeBulkImport(${cat})">✅ Потврди увоз на ${rows2.length} производи</button>
+    <button class="btn" style="margin-left:6px" onclick="document.getElementById('bulkPreview${cat}').innerHTML=''">✕ Откажи</button>
+  `;
+};
+
+window.executeBulkImport=async(cat)=>{
+  const ta=document.getElementById('bulkText'+cat);
+  const pv=document.getElementById('bulkPreview'+cat);
+  if(!ta)return;
+  const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
+  const rows=parseBulkRows(ta.value,skipHeader);
+  if(!rows.length)return;
+  const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
+  let added=0,updated=0;
+  rows.forEach(r=>{
+    if(!r.ofi)return;
+    if(products[r.ofi]){
+      if(mode==='set')products[r.ofi].qty=r.qty;
+      else products[r.ofi].qty=(products[r.ofi].qty||0)+r.qty;
+      if(r.name)products[r.ofi].name=r.name;
+      if(r.price)products[r.ofi].price=r.price;
+      updated++;
+    }else{
+      products[r.ofi]={ofi:r.ofi,name:r.name||r.ofi,price:r.price||0,qty:r.qty};
+      added++;
+    }
+  });
+  const cfgKey=cat===1?'ofi_products':'ofi_products2';
+  await svCfg(cfgKey,products);
+  if(cat===1){rndInv();calcAlerts();}else{rndInv2();calcAlerts();}
+  ta.value='';
+  if(pv)pv.innerHTML=`<div style="background:var(--grl);color:var(--gr);padding:12px;border-radius:var(--rs);text-align:center;font-weight:700;font-size:13px">
+    ✅ Успешно увезено!&nbsp;&nbsp;${added>0?added+' нови производи':''}${added>0&&updated>0?' · ':''}${updated>0?updated+' ажурирани':''}
+  </div>`;
+  setTimeout(()=>{
+    document.getElementById('bulkPanel'+cat).style.display='none';
+    if(pv)pv.innerHTML='';
+  },3500);
 };
 
 function getOfiSoldToday(ofi){
