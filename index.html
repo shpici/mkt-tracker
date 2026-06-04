@@ -567,6 +567,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <div class="tabs" id="mgrTabs" style="display:none">
   <div class="tab" onclick="gotoTab('info',this)" id="mgrInfoTab" style="position:relative">📢 Инфо<span id="mgrInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;display:none;align-items:center;justify-content:center"></span></div>
   <div class="tab" onclick="gotoTab('tarif',this)">💼 Тарифа</div>
+  <div class="tab" onclick="gotoTab('tvint',this)">📺 INT+TV</div>
   <div class="tab" onclick="gotoTab('roaming',this)">🌍 Роаминг</div>
   <div class="tab act" onclick="gotoTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="gotoTab('weekly',this)">📆 Неделен</div>
@@ -1380,6 +1381,12 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 </div>
 </div>
 
+<div id="tp-tvint" class="tp">
+<div class="card" style="padding:0;overflow:hidden;min-height:80vh">
+  <iframe src="internet-tv.html" style="width:100%;height:80vh;min-height:600px;border:none;display:block" loading="lazy"></iframe>
+</div>
+</div>
+
 <div class="emp-profile-overlay" id="emp-profile-overlay">
   <div class="ep-backdrop" onclick="closeEmpProfile()"></div>
   <div class="ep-panel">
@@ -1422,6 +1429,7 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 <div class="tabs" style="margin:0 16px">
   <div class="tab" onclick="empTab('empinfo',this)" id="empInfoTab" style="position:relative">📢 Инфо<span id="empInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;align-items:center;justify-content:center"></span></div>
   <div class="tab" onclick="empTab('tarif',this)">💼 Тарифа</div>
+  <div class="tab" onclick="empTab('tvint',this)">📺 INT+TV</div>
   <div class="tab" onclick="empTab('roaming',this)">🌍 Роаминг</div>
   <div class="tab act" onclick="empTab('daily',this)">📅 Дневен</div>
   <div class="tab" onclick="empTab('weekly',this)">📆 Неделен</div>
@@ -1628,6 +1636,10 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 
 <div id="etp-roaming" class="tp" style="padding:0;margin:0">
   <iframe src="roaming.html" style="width:100%;height:calc(100vh - 130px);min-height:600px;border:none;display:block"></iframe>
+</div>
+
+<div id="etp-tvint" class="tp" style="padding:0;margin:0">
+  <iframe src="internet-tv.html" style="width:100%;height:calc(100vh - 130px);min-height:600px;border:none;display:block" loading="lazy"></iframe>
 </div>
 
 </div><!-- end empView -->
@@ -4335,7 +4347,7 @@ window.gotoTab=(name,el)=>{
   else if(name==='fullreport')rndFullReport();
   else if(name==='compare')window.rndCmpTab();
   else if(name==='executive')rndExecutive();
-  else if(name==='tarif'||name==='roaming'){}
+  else if(name==='tarif'||name==='roaming'||name==='tvint'){}
 };
 
 // ── BOOST BOARD ──

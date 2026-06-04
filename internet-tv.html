@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Македонски Телеком — Пакети & ТВ Канали</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@700;800;900&display=swap');
+:root{
+  --m:#e2007a;--m2:#b8005a;--m3:#ff4da6;
+  --bg:#f4f3f1;--card:#fff;--brd:#e5e1dc;
+  --txt:#1a1a2a;--txt2:#5a5a72;--txt3:#9999b0;
+  --grn:#1a8a3a;--grn2:#e6f7eb;
+  --rad:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+
+/* NAV */
+.nav-bar{background:#fff;border-bottom:1px solid var(--brd);position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.nav-inner{display:flex;gap:4px;padding:10px 20px;max-width:1100px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.ntab{padding:8px 16px;border-radius:22px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--txt2);white-space:nowrap;transition:all .15s}
+.ntab:hover{background:rgba(226,0,122,.07);color:var(--m)}
+.ntab.act{background:var(--m);color:#fff}
+
+/* SECTIONS */
+.sec{display:none;max-width:1100px;margin:0 auto;padding:24px 20px 48px}
+.sec.act{display:block;animation:fin .2s ease}
+@keyframes fin{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.sec-h{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}
+.sec-s{font-size:13px;color:var(--txt2);margin-bottom:22px}
+
+/* DISCOUNT BAR — shown only on tv-internet and internet tabs */
+.disc-bar{background:#fff;border-bottom:1px solid var(--brd);padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px}
+.disc-bar.hidden{display:none}
+.disc-lbl{font-size:13px;font-weight:500;color:var(--txt2)}
+.disc-badge-tv{background:rgba(226,0,122,.1);color:var(--m);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(226,0,122,.2)}
+.disc-badge-int{background:var(--grn2);color:var(--grn);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(26,138,58,.2)}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.slider{position:absolute;inset:0;background:#ddd;border-radius:24px;cursor:pointer;transition:.22s}
+.slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.22s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+input:checked+.slider{background:var(--m)}
+input:checked+.slider::before{transform:translateX(20px)}
+
+/* TV+INTERNET PACKAGES */
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:20px}
+.pkg-card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--rad);padding:20px;position:relative;overflow:hidden;transition:all .2s;cursor:default}
+.pkg-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(226,0,122,.1);border-color:rgba(226,0,122,.25)}
+.pkg-card.best-pkg{border-color:var(--m);border-width:2px}
+.best-ribbon{position:absolute;top:12px;right:-26px;background:var(--m);color:#fff;font-size:9px;font-weight:700;padding:4px 30px;transform:rotate(30deg);letter-spacing:.5px}
+.pkg-top-stripe{height:3px;position:absolute;top:0;left:0;right:0;border-radius:var(--rad) var(--rad) 0 0}
+.pkg-nm{font-family:'Sora',sans-serif;font-size:19px;font-weight:800;margin:4px 0 12px}
+.pkg-feats{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;min-height:72px}
+.pf-row{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--txt2)}
+.pf-row strong{color:var(--txt);font-weight:600}
+.pkg-tv-line{font-size:12px;padding:10px 0 0;border-top:1px solid var(--brd)}
+.pkg-tv-line strong{color:var(--txt);font-size:13px;font-weight:600;display:block;margin-bottom:2px}
+.price-area{margin-top:14px}
+.price-was{font-size:10px;color:var(--txt3);text-decoration:line-through;min-height:15px}
+.price-row{display:flex;align-items:baseline;gap:4px}
+.price-num{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;transition:color .3s}
+.price-num.disc-on{color:var(--m)}
+.price-unit{font-size:11px;color:var(--txt2)}
+
+/* INTERNET ONLY */
+.int-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.int-card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--rad);padding:16px 14px;text-align:center;transition:all .2s}
+.int-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(226,0,122,.1);border-color:rgba(226,0,122,.2)}
+.int-sz{font-family:'Sora',sans-serif;font-size:30px;font-weight:900;color:var(--m);margin-bottom:4px}
+.int-desc{font-size:11.5px;color:var(--txt2);line-height:1.6;margin-bottom:12px}
+.int-esm{font-size:10px;font-weight:600;color:var(--m);letter-spacing:.3px;margin-bottom:8px}
+.int-price{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;transition:color .3s}
+.int-price.disc-on{color:var(--m)}
+.int-was{font-size:10px;color:var(--txt3);text-decoration:line-through;min-height:15px;margin-top:2px}
+
+/* SPEC CARDS (vikendica, flexi, penzioneri) */
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
+.spec-card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--rad);padding:18px}
+.spec-hd{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.spec-rows{display:flex;flex-direction:column}
+.spec-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--brd);font-size:12.5px}
+.spec-row:last-child{border:none}
+.sk{color:var(--txt2)}.sv{font-weight:600;color:var(--txt)}
+.sv.accent{color:var(--m);font-size:14px;font-weight:700}
+.spec-sub{font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px}
+.spec-note{font-size:11px;color:var(--txt3);margin-top:10px;line-height:1.6;background:var(--bg);padding:8px 10px;border-radius:8px}
+.badge-green{background:var(--grn2);color:var(--grn);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* NOTE BOX */
+.note-box{font-size:11px;color:var(--txt3);padding:12px 14px;background:var(--card);border:1px solid var(--brd);border-radius:10px;line-height:1.7;margin-top:16px}
+.note-box a{color:var(--m)}
+
+/* ══ TV CHANNELS ══ */
+.ch-controls{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.ch-search{width:100%;max-width:360px;padding:9px 14px;border:1.5px solid var(--brd);border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border .15s;background:#fff}
+.ch-search:focus{border-color:var(--m)}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap}
+.fb{padding:5px 13px;border:1.5px solid var(--brd);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:var(--txt2);transition:all .15s}
+.fb:hover{border-color:var(--m);color:var(--m)}
+.fb.on{background:var(--m);color:#fff;border-color:var(--m)}
+
+/* Package sections in channels tab */
+.ch-pkg-section{margin-bottom:28px}
+.ch-pkg-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;cursor:pointer;user-select:none;padding:10px 14px;background:var(--card);border:1.5px solid var(--brd);border-radius:10px;transition:all .15s}
+.ch-pkg-hdr:hover{border-color:rgba(226,0,122,.3);background:rgba(226,0,122,.03)}
+.ch-pkg-hdr.open{border-color:var(--m);background:rgba(226,0,122,.04)}
+.ch-pkg-title{font-size:14px;font-weight:700;flex:1}
+.ch-pkg-count{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.ch-pkg-arrow{font-size:12px;color:var(--txt2);transition:transform .2s}
+.ch-pkg-arrow.open{transform:rotate(180deg)}
+.ch-pkg-body{display:none;margin-top:10px}
+.ch-pkg-body.open{display:block;animation:fin .2s ease}
+
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px}
+.ch-card{background:#fff;border:1px solid var(--brd);border-radius:9px;padding:9px 11px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;transition:all .15s;cursor:default}
+.ch-card:hover{border-color:rgba(226,0,122,.3);background:rgba(226,0,122,.03);transform:translateY(-1px)}
+.ch-cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ch-name{flex:1;line-height:1.3}
+.ch-cat-lbl{font-size:9px;color:var(--txt3);font-weight:600;white-space:nowrap}
+
+.cat-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.cl-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txt2)}
+.cl-dot{width:8px;height:8px;border-radius:50%}
+
+.tv-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.tv-stat{background:#fff;border:1px solid var(--brd);border-radius:8px;padding:6px 13px;font-size:12px;font-weight:600;color:var(--txt2)}
+.tv-stat span{color:var(--m);font-size:15px;font-weight:800;margin-right:4px}
+
+@media(max-width:600px){
+  .pkg-grid,.int-grid{grid-template-columns:1fr 1fr}
+  .ch-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:380px){
+  .pkg-grid,.int-grid,.ch-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <div class="nav-inner">
+    <button class="ntab act" onclick="goTab('tvint',this)">📺 Internet & TV</button>
+    <button class="ntab" onclick="goTab('int',this)">🌐 Само Интернет</button>
+    <button class="ntab" onclick="goTab('vik',this)">🏡 Викендица</button>
+    <button class="ntab" onclick="goTab('flexi',this)">⚡ Flexi & По потреба</button>
+    <button class="ntab" onclick="goTab('penz',this)">👴 Пензионери</button>
+    <button class="ntab" onclick="goTab('kanali',this)">📡 ТВ Канали</button>
+  </div>
+</div>
+
+<!-- DISCOUNT BAR -->
+<div class="disc-bar" id="discBar">
+  <span class="disc-lbl" id="discLblLeft">Редовна цена</span>
+  <label class="toggle"><input type="checkbox" id="discToggle" onchange="applyDiscount()"><span class="slider"></span></label>
+  <span class="disc-lbl">Со <span id="discBadge" class="disc-badge-tv">8% попуст</span></span>
+</div>
+
+<!-- ══ TV + INTERNET ══ -->
+<div class="sec act" id="sec-tvint">
+  <div class="sec-h">Unlimited Internet & TV Пакети</div>
+  <div class="sec-s">Гигабитни брзини + MagentaTV — идеална комбинација за вашиот дом</div>
+  <div class="pkg-grid" id="tvPkgGrid"></div>
+  <div class="note-box">* Цените се со ДДВ, месечна претплата, Е-сметка вклучена, Договор 24 месеци. Попустот 8% важи при онлајн купување / со Е-сметка.</div>
+</div>
+
+<!-- ══ САМО ИНТЕРНЕТ ══ -->
+<div class="sec" id="sec-int">
+  <div class="sec-h">Интернет Пакети</div>
+  <div class="sec-s">Најстабилниот интернет за дома — Е-сметка вклучена</div>
+  <div class="int-grid" id="intGrid"></div>
+  <div class="note-box">* Цените се со ДДВ, месечна претплата, Е-сметка вклучена, Договор 24 месеци. Попустот 18,7% е еко/онлајн попуст.</div>
+</div>
+
+<!-- ══ ВИКЕНДИЦА ══ -->
+<div class="sec" id="sec-vik">
+  <div class="sec-h">Интернет & ТВ за Викендица</div>
+  <div class="sec-s">Линии за повремено користење — плаќате само кога сте таму</div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-hd" style="color:#7c3aed">📺 Викенд линија — Internet & TV</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">Месечен надоместок</span><span class="sv accent">199 ден.</span></div>
+        <div class="spec-row"><span class="sk">Еднократен надоместок</span><span class="sv">0 ден.</span></div>
+        <div class="spec-row"><span class="sk">Опрема</span><span class="sv">Обезбедена</span></div>
+      </div>
+      <div class="spec-sub">Internet & TV по потреба</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">3 дена / 50 GB</span><span class="sv accent">199 ден.</span></div>
+        <div class="spec-row"><span class="sk">10 дена / 100 GB</span><span class="sv accent">499 ден.</span></div>
+        <div class="spec-row"><span class="sk">30 дена / 250 GB</span><span class="sv accent">999 ден.</span></div>
+      </div>
+      <div class="spec-note">Активација: MaxTV мени (кан.1111) или онлајн. Договор 24 месеци. Вклучена ТВ услуга со 110+ канали.</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-hd" style="color:#0ea5e9">🌐 Викенд линија — Само Internet</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">Месечен надоместок</span><span class="sv accent">99 ден.</span></div>
+        <div class="spec-row"><span class="sk">Еднократен надоместок</span><span class="sv">0 ден.</span></div>
+        <div class="spec-row"><span class="sk">Опрема</span><span class="sv">Обезбедена</span></div>
+      </div>
+      <div class="spec-sub">Internet по потреба</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">3 дена / 50 GB</span><span class="sv accent">149 ден.</span></div>
+        <div class="spec-row"><span class="sk">10 дена / 100 GB</span><span class="sv accent">299 ден.</span></div>
+        <div class="spec-row"><span class="sk">30 дена / 250 GB</span><span class="sv accent">599 ден.</span></div>
+      </div>
+      <div class="spec-note">Активација онлајн преку Click&Connect. Договор 24 месеци.</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-hd" style="color:var(--m)">📡 Internet & TV линија — само Internet по потреба</div>
+      <div class="spec-sub">Цена по времетраење</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">3 дена / 50 GB</span><span class="sv accent">149 ден.</span></div>
+        <div class="spec-row"><span class="sk">10 дена / 100 GB</span><span class="sv accent">299 ден.</span></div>
+        <div class="spec-row"><span class="sk">30 дена / 250 GB</span><span class="sv accent">599 ден.</span></div>
+      </div>
+      <div class="spec-note">За корисници на Викенд Internet & TV линија. Активација онлајн.</div>
+    </div>
+  </div>
+  <div class="note-box">* Месечниот надоместок за викенд линијата не обезбедува активна услуга. Договор 24 месеци без еднократен надоместок.</div>
+</div>
+
+<!-- ══ FLEXI & ПО ПОТРЕБА ══ -->
+<div class="sec" id="sec-flexi">
+  <div class="sec-h">Internet Flexi & По потреба</div>
+  <div class="sec-s">Плаќате само колку ќе искористите</div>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-hd" style="color:var(--m)">⚡ Internet Flexi</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">Само активна опрема</span><span class="sv accent">99 ден/мес.</span></div>
+        <div class="spec-row"><span class="sk">Опрема + до 100 GB</span><span class="sv accent">799 ден/мес.</span></div>
+        <div class="spec-row"><span class="sk">Опрема + над 100 GB</span><span class="sv accent">1.199 ден/мес.</span></div>
+        <div class="spec-row"><span class="sk">Максимум</span><span class="sv">1 TB</span></div>
+        <div class="spec-row"><span class="sk">Брзина</span><span class="sv">до 10/1 Mbps</span></div>
+      </div>
+      <div class="spec-sub">Еднократен надоместок — Договор</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">2 години</span><span class="sv"><span class="badge-green">Без еднократен</span></span></div>
+        <div class="spec-row"><span class="sk">1 година</span><span class="sv">1.499 ден.</span></div>
+        <div class="spec-row"><span class="sk">Неопределено</span><span class="sv">1.999 ден.</span></div>
+      </div>
+      <div class="spec-note">Plug & play. Без активирање/деактивирање. Се плаќа само еден надоместок во месецот.</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-hd" style="color:#0ea5e9">📶 Internet по потреба</div>
+      <div class="spec-sub">Цена по времетраење</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">3 дена / 50 GB</span><span class="sv accent">149 ден.</span></div>
+        <div class="spec-row"><span class="sk">10 дена / 100 GB</span><span class="sv accent">299 ден.</span></div>
+        <div class="spec-row"><span class="sk">30 дена / 250 GB</span><span class="sv accent">599 ден.</span></div>
+      </div>
+      <div class="spec-note">Активација онлајн преку Click&Connect страница. Достапно за постоечки корисници.</div>
+    </div>
+  </div>
+  <div class="note-box">* Internet Flexi — се плаќа само еден надоместок во еден календарски месец во зависност од користењето.</div>
+</div>
+
+<!-- ══ ПЕНЗИОНЕРИ ══ -->
+<div class="sec" id="sec-penz">
+  <div class="sec-h">Специјална понуда за Пензионери</div>
+  <div class="sec-s">Најдобрата понуда со вклучен интернет за дома</div>
+  <div class="spec-grid" style="max-width:380px">
+    <div class="spec-card">
+      <div class="spec-hd" style="color:var(--m)">👴 Пакет за Пензионери</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">Разговори</span><span class="sv">Неограничени во Телеком</span></div>
+        <div class="spec-row"><span class="sk">Интернет</span><span class="sv">5 GB (8/0.7 Mbps)</span></div>
+        <div class="spec-row"><span class="sk">Месечна цена</span><span class="sv accent" style="font-size:22px;font-weight:900">499 ден.</span></div>
+      </div>
+      <div class="spec-sub">Еднократен надоместок</div>
+      <div class="spec-rows">
+        <div class="spec-row"><span class="sk">24 месеци</span><span class="sv"><span class="badge-green">Без еднократен</span></span></div>
+        <div class="spec-row"><span class="sk">12 месеци</span><span class="sv">1.499 ден.</span></div>
+        <div class="spec-row"><span class="sk">Неопределено</span><span class="sv">1.999 ден.</span></div>
+      </div>
+      <div class="spec-note">При склучување договор потребен е пензионерски чек и лична карта. Еден корисник — еден пакет.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ТВ КАНАЛИ ══ -->
+<div class="sec" id="sec-kanali">
+  <div class="sec-h">ТВ Канали по Пакет</div>
+  <div class="sec-s">Кликни на пакет за да ги видиш каналите — пребарувај и филтрирај по категорија</div>
+
+  <div class="ch-controls">
+    <input class="ch-search" type="text" id="chSearch" placeholder="🔍 Пребарај канал..." oninput="renderChannels()">
+    <div class="filter-row" id="catFilter">
+      <button class="fb on" onclick="setCat('sve',this)">Сите</button>
+      <button class="fb" onclick="setCat('nat',this)">🇲🇰 Национални МК</button>
+      <button class="fb" onclick="setCat('reg',this)">📺 Регионални/Странски</button>
+      <button class="fb" onclick="setCat('sport',this)">⚽ Спорт</button>
+      <button class="fb" onclick="setCat('film',this)">🎬 Филм/Серии</button>
+      <button class="fb" onclick="setCat('info',this)">📰 Инфо/Вести</button>
+      <button class="fb" onclick="setCat('zab',this)">🎭 Забава</button>
+      <button class="fb" onclick="setCat('muz',this)">🎵 Музика</button>
+      <button class="fb" onclick="setCat('det',this)">👦 Детски</button>
+      <button class="fb" onclick="setCat('doc',this)">🔭 Документарни</button>
+      <button class="fb" onclick="setCat('etno',this)">🌍 Етнички заедници</button>
+      <button class="fb" onclick="setCat('adult',this)">🔞 Возрасни</button>
+    </div>
+  </div>
+
+  <div class="cat-legend">
+    <div class="cl-item"><div class="cl-dot" style="background:#e2007a"></div>Национален МК/АЛ</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#0ea5e9"></div>Регионални/Странски</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#2563eb"></div>Спорт</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#7c3aed"></div>Филм/Серии</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#059669"></div>Инфо/Вести</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#f97316"></div>Забава</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#db2777"></div>Музика</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#22c55e"></div>Детски</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#f59e0b"></div>Документарни</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#6366f1"></div>Етнички заедници</div>
+    <div class="cl-item"><div class="cl-dot" style="background:#94a3b8"></div>Возрасни</div>
+  </div>
+
+  <div class="tv-stats">
+    <div class="tv-stat"><span id="chTotalCount">0</span>вкупно прикажани</div>
+  </div>
+
+  <div id="chSections"></div>
+
+  <div class="note-box" style="margin-top:16px">
+    * Листата на канали е составена врз основа на официјалниот документ на Македонски Телеком.
+    Basic/S, Start/M, Extra/L, Premium/XL-XXL се основните пакети. Дополнителни пакети:
+    <strong>Alb Kolaz / Alb Kolaz+ / Alb Kolaz Extra</strong> (албански содржини),
+    <strong>Max Alb</strong> (бесплатни), <strong>Sport HD</strong>, <strong>Arena Premium</strong>,
+    <strong>Extreme</strong>, <strong>Cinemax</strong>, <strong>HBO</strong>,
+    <strong>Pink&Grand / Pink&Grand+</strong>, <strong>Max Balkan</strong>,
+    <strong>Prva Miks / Prva Miks+</strong>, <strong>Discovery/Max</strong>.
+    За ажурирана официјална листа: <a href="https://www.telekom.mk/tv-kanali" target="_blank">telekom.mk/tv-kanali</a>.
+  </div>
+</div>
+
+<script>
+/* =============== DATA =============== */
+const TV_PKGS = [
+  {id:'premium',name:'Premium',col:'#7c3aed',gr:'linear-gradient(90deg,#5b21b6,#8b5cf6)',price:2299,best:false,
+   feats:['∞ интернет и разговори','до 1/1 Gbps','WiFi 6 + Wi-Fi Booster','500 мин. меѓународни'],
+   tv:'110+ ТВ канали',tvNote:'Sport HD, HBO, Balkan, Alb Kolaz или Pink&Grand+'},
+  {id:'extra',name:'Extra',col:'#2563eb',gr:'linear-gradient(90deg,#1d4ed8,#60a5fa)',price:1899,best:true,
+   feats:['∞ интернет и разговори','до 400/200 Mbps','WiFi 6'],
+   tv:'110+ ТВ канали',tvNote:'Прва Микс+'},
+  {id:'start',name:'Start',col:'#059669',gr:'linear-gradient(90deg,#047857,#34d399)',price:1599,best:false,
+   feats:['∞ интернет и разговори','до 150/75 Mbps','WiFi 6'],
+   tv:'110+ ТВ канали',tvNote:''},
+  {id:'basic',name:'Basic',col:'#0ea5e9',gr:'linear-gradient(90deg,#0284c7,#38bdf8)',price:1399,best:false,
+   feats:['∞ разговори во Телеком','300 GB интернет','до 20/20 Mbps','WiFi 6'],
+   tv:'40+ ТВ канали',tvNote:''}
+];
+
+const INT_PKGS = [
+  {sz:'S',price:899,origPrice:899,desc:'300 GB · Неограничени разговори во мрежата на Телеком'},
+  {sz:'M',price:999,origPrice:999,desc:'Неограничен · Неограничени разговори кон сите мрежи'},
+  {sz:'L',price:1199,origPrice:1199,desc:'Неограничен · Разговори кон сите · 500 мин. меѓународни'},
+  {sz:'XL',price:1499,origPrice:1499,desc:'Неограничен до 300 Mbps · Разговори кон сите · 500 мин. меѓун.'},
+  {sz:'XXL',price:3999,origPrice:3999,desc:'Неограничен до 1 Gbps · Разговори кон сите · 500 мин. меѓун.'},
+];
+
+
+
+
+const ALL_CHANNELS = [
+  {n:'MRT 1',c:'nat',p:['basic','start','extra','premium']},
+  {n:'MRT 2',c:'nat',p:['basic','start','extra','premium']},
+  {n:'MRT 3',c:'nat',p:['basic','start','extra','premium']},
+  {n:'Kanal 5',c:'nat',p:['basic','start','extra','premium']},
+  {n:'Sitel',c:'nat',p:['basic','start','extra','premium']},
+  {n:'Alfa TV',c:'nat',p:['basic','start','extra','premium']},
+  {n:'Telma',c:'nat',p:['basic','start','extra','premium']},
+  {n:'24 Vesti',c:'nat',p:['basic','start','extra','premium']},
+  {n:'Nasha TV',c:'nat',p:['basic','start','extra','premium']},
+  {n:'TV Kanal 77',c:'nat',p:['basic','start','extra','premium']},
+  {n:'TV Iris',c:'nat',p:['basic','start','extra','premium']},
+
+  /* == ЕТНИЧКИ ЗАЕДНИЦИ (канали за јазиците) == */
+  /* — директно вклучени во пакети — */
+  {n:'RTSH Lajme',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Top Channel',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Klan TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Klan Plus',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Vizion Plus',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Action',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Film Aksion HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Super',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Prime 1',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Film Comedy',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Comedy',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Comedy',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Film Thriller',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Family HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Family',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Drama',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Film Drama',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Life',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Fantasy',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Shop',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Max HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Teve 1',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTV 21',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Dukagjini TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Klan Kosova',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTK 1',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTSH',c:'etno',p:['basic','start','extra','premium']},
+  {n:'KTV HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTK 2',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTK 3',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTK 4',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T7',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Dasma TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Alb-Kuk HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'IN TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Premium Channel',c:'etno',p:['basic','start','extra','premium']},
+  {n:'TV Festina',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Ziko TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'TV Liria',c:'etno',p:['basic','start','extra','premium']},
+  {n:'TV Prizren',c:'etno',p:['basic','start','extra','premium']},
+  {n:'TV Delli',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTSH Plus',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTSH 3 HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Gold HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Classic',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Collection',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Fluro Film',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Film Altor',c:'etno',p:['basic','start','extra','premium']},
+  {n:'3 Plus',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Turkish Stories',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Kanal D Drama',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Originals',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Series',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Art Episode',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Series',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Novelas',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Teve Novela',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Teve Fantasy',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Teve Drama',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Zjarr TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Smile',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Bang Bang',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Cupid TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Junior TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Tring',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Bubbles TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Kids',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tip TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Clover',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tong Dong',c:'etno',p:['basic','start','extra','premium']},
+  {n:'2! Junior',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Art Prince Kids',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Teve Kids 1',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Teve Kids 2',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Experience',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Exp History',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Exp Natyra',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring History',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring Planet',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Tring World',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Doc 1',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Doc 2',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Art Doku 1',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Art Gurmania',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Art Prime',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Living',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Muse',c:'etno',p:['basic','start','extra','premium']},
+  {n:'My Music',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Klan Music',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Folk+',c:'etno',p:['basic','start','extra','premium']},
+  {n:'AMCL',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Art Beat Music',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Melody TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'2! Populore',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTSH Muzik',c:'etno',p:['basic','start','extra','premium']},
+  {n:'MTV Kosova',c:'etno',p:['basic','start','extra','premium']},
+  {n:'BBI',c:'etno',p:['basic','start','extra','premium']},
+  {n:'EuroSoi',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Click TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'21 Plus',c:'etno',p:['basic','start','extra','premium']},
+  {n:'First Channel',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Top News HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Kanal 7',c:'etno',p:['basic','start','extra','premium']},
+  {n:'News 24',c:'etno',p:['basic','start','extra','premium']},
+  {n:'RTSH 24 Lajme',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Klan News',c:'etno',p:['basic','start','extra','premium']},
+  {n:'ABC HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'ORA News',c:'etno',p:['basic','start','extra','premium']},
+  {n:'A2 CNN HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Report TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Scan TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Euronews Albania HD',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Fox News',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Star Plus TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Arta TV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'NTV Shendeti',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Kanal 10',c:'etno',p:['basic','start','extra','premium']},
+  {n:'TV Besa',c:'etno',p:['basic','start','extra','premium']},
+  {n:'ATV',c:'etno',p:['basic','start','extra','premium']},
+  {n:'XI',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Desire',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Bunga Bunga',c:'etno',p:['basic','start','extra','premium']},
+  {n:'Belarrs',c:'etno',p:['basic','start','extra','premium']},
+  {n:'T Prime 2',c:'etno',p:['start','extra','premium']},
+  {n:'Film Hits HD',c:'etno',p:['start','extra','premium']},
+  {n:'Art Kino 1',c:'etno',p:['start','extra','premium']},
+  {n:'Art Kino 2',c:'etno',p:['start','extra','premium']},
+  {n:'Art Kino 3',c:'etno',p:['start','extra','premium']},
+  {n:'Teve Action',c:'etno',p:['start','extra','premium']},
+  {n:'RTSH Shqip',c:'etno',p:['start','extra','premium']},
+  {n:'Stinet',c:'etno',p:['start','extra','premium']},
+  {n:'TBD News',c:'etno',p:['premium']},
+  {n:'SYR TV',c:'etno',p:['start','extra','premium']},
+
+  /* == РЕГИОНАЛНИ КАНАЛИ == */
+  {n:'Prva HD',c:'reg',p:['start','extra','premium']},
+  {n:'B92 HD',c:'reg',p:['start','extra','premium']},
+  {n:'Happy HD',c:'reg',p:['start','extra','premium']},
+  {n:'KCN 1',c:'reg',p:['start','extra','premium']},
+  {n:'Nova S HD',c:'reg',p:['start','extra','premium']},
+  {n:'Hype',c:'reg',p:['start','extra','premium']},
+  {n:'PTC Cibit HD',c:'reg',p:['basic','start','extra','premium']},
+  {n:'Hype 2',c:'reg',p:['start','extra','premium']},
+  {n:'N1 HD',c:'reg',p:['basic','start','extra','premium']},
+  {n:'Hayat 2',c:'reg',p:['basic','start','extra','premium']},
+  {n:'Newsmax Balkans',c:'reg',p:['basic','start','extra','premium']},
+  {n:'Bloomberg Adria',c:'reg',p:['start','extra','premium']},
+  {n:'RTL',c:'reg',p:['start','extra','premium']},
+  {n:'RTL 2',c:'reg',p:['start','extra','premium']},
+  {n:'RTL Living',c:'reg',p:['start','extra','premium']},
+  {n:'RTL Kockica',c:'reg',p:['start','extra','premium']},
+  {n:'Pink World',c:'reg',p:['start','extra','premium']},
+  {n:'Pink Extra',c:'reg',p:['start','extra','premium']},
+  {n:'Pink Show',c:'reg',p:['start','extra','premium']},
+  {n:'Pink Zabava',c:'reg',p:['start','extra','premium']},
+  {n:'Pink Reality',c:'reg',p:['start','extra','premium']},
+  {n:'Elta HD',c:'reg',p:['start','extra','premium']},
+  {n:'O Kanal',c:'reg',p:['start','extra','premium']},
+  {n:'RTRS',c:'reg',p:['start','extra','premium']},
+  {n:'Slon TV',c:'reg',p:['start','extra','premium']},
+  {n:'Jugoton TV',c:'reg',p:['start','extra','premium']},
+  {n:'CMC',c:'reg',p:['start','extra','premium']},
+  {n:'Nonstop',c:'reg',p:['start','extra','premium']},
+  {n:'OTV Valentino',c:'reg',p:['start','extra','premium']},
+  {n:'Valentino Music',c:'reg',p:['start','extra','premium']},
+  {n:'Pink Plus',c:'reg',p:['basic','start','extra','premium']},
+
+  /* == ДОКУМЕНТАРНИ КАНАЛИ == */
+  {n:'National Geographic HD',c:'doc',p:['basic','start','extra','premium']},
+  {n:'BBC Earth HD',c:'doc',p:['start','extra','premium']},
+  {n:'Discovery HD',c:'doc',p:['start','extra','premium']},
+  {n:'Viasat Nature HD',c:'doc',p:['basic','start','extra','premium']},
+  {n:'Viasat History HD',c:'doc',p:['basic','start','extra','premium']},
+  {n:'Viasat Explorer HD',c:'doc',p:['basic','start','extra','premium']},
+  {n:'Da Vinci',c:'doc',p:['start','extra','premium']},
+  {n:'Brainz HD',c:'doc',p:['start','extra','premium']},
+  {n:'Travel Channel HD',c:'doc',p:['start','extra','premium']},
+  {n:'TLC HD',c:'doc',p:['start','extra','premium']},
+  {n:'Natgeo Wild HD',c:'doc',p:['start','extra','premium']},
+  {n:'E! Entertainment',c:'doc',p:['start','extra','premium']},
+  {n:'24 Kitchen HD',c:'doc',p:['start','extra','premium']},
+  {n:'Kitchen TV HD',c:'doc',p:['start','extra','premium']},
+  {n:'HGTV',c:'doc',p:['start','extra','premium']},
+  {n:'Agro TV HD',c:'doc',p:['start','extra','premium']},
+  {n:'Luxe TV HD',c:'doc',p:['start','extra','premium']},
+  {n:'Balkan Trip',c:'doc',p:['start','extra','premium']},
+  {n:'Travel XP HD',c:'doc',p:['start','extra','premium']},
+  {n:'Animal Planet HD',c:'doc',p:['start','extra','premium']},
+  {n:'Discovery ID HD',c:'doc',p:['start','extra','premium']},
+  {n:'Food Network HD',c:'doc',p:['start','extra','premium']},
+  {n:'Travel XP 4K',c:'doc',p:['start','extra','premium']},
+
+  /* == ДЕТСКИ КАНАЛИ == */
+  {n:'Edu Kids',c:'det',p:['basic','start','extra','premium']},
+  {n:'Nickelodeon HD',c:'det',p:['basic','start','extra','premium']},
+  {n:'Cartoon Network HD',c:'det',p:['start','extra','premium']},
+  {n:'Cartoonito',c:'det',p:['start','extra','premium']},
+  {n:'Baby TV',c:'det',p:['start','extra','premium']},
+  {n:'Minimax',c:'det',p:['basic','start','extra','premium']},
+  {n:'Hasbro',c:'det',p:['start','extra','premium']},
+  {n:'Nick Jr.',c:'det',p:['start','extra','premium']},
+  {n:'Paw Patrol HD',c:'det',p:['start','extra','premium']},
+  {n:'Disney Channel',c:'det',p:['basic','start','extra','premium']},
+  {n:'Disney Junior',c:'det',p:['start','extra','premium']},
+  {n:'Nicktoons',c:'det',p:['start','extra','premium']},
+
+  /* == СПОРТСКИ КАНАЛИ == */
+  {n:'Arena Sport 1 HD',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena Sport 2 HD',c:'sport',p:['start','extra','premium']},
+  {n:'Arena Sport 3 HD',c:'sport',p:['start','extra','premium']},
+  {n:'Arena Sport 4 HD',c:'sport',p:['start','extra','premium']},
+  {n:'Arena Sport 5 HD',c:'sport',p:['start','extra','premium']},
+  {n:'Arena Premium 1 HD',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena Premium 2 HD',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena Premium 3 HD',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena 4 Premium',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena 5 Premium',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena Fight HD',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Arena Esport',c:'sport',p:['start','extra','premium']},
+  {n:'Arena Tenis',c:'sport',p:['start','extra','premium']},
+  {n:'Adrenalin',c:'sport',p:['start','extra','premium']},
+  {n:'Eurosport HD',c:'sport',p:['start','extra','premium']},
+  {n:'Eurosport 2 HD',c:'sport',p:['start','extra','premium']},
+  {n:'Eurosport 4K',c:'sport',p:['basic','start','extra','premium']},
+  {n:'Extreme Sports',c:'sport',p:['start','extra','premium']},
+  {n:'Luv I Ribolov',c:'sport',p:['basic','start','extra','premium']},
+
+  /* == МУЗИЧКИ КАНАЛИ == */
+  {n:'Idj TV HD',c:'muz',p:['basic','start','extra','premium']},
+  {n:'Balkan Music HD',c:'muz',p:['basic','start','extra','premium']},
+  {n:'Flashback',c:'muz',p:['start','extra','premium']},
+  {n:'Pop Stars',c:'muz',p:['start','extra','premium']},
+  {n:'Deluxe Music',c:'muz',p:['start','extra','premium']},
+  {n:'MTV Europe',c:'muz',p:['start','extra','premium']},
+  {n:'Balkanika',c:'muz',p:['basic','start','extra','premium']},
+  {n:'Hayat Music Box',c:'muz',p:['basic','start','extra','premium']},
+  {n:'DM Sat',c:'muz',p:['basic','start','extra','premium']},
+  {n:'KOV 2',c:'muz',p:['start','extra','premium']},
+  {n:'KOV 3',c:'muz',p:['start','extra','premium']},
+  {n:'BG Melody',c:'muz',p:['start','extra','premium']},
+  {n:'EXYU Melody',c:'muz',p:['start','extra','premium']},
+  {n:'Pop Melody',c:'muz',p:['start','extra','premium']},
+  {n:'Folk Melody',c:'muz',p:['start','extra','premium']},
+  {n:'Hits Melody',c:'muz',p:['start','extra','premium']},
+  {n:'Muzok',c:'muz',p:['start','extra','premium']},
+  {n:'Nova',c:'muz',p:['start','extra','premium']},
+  {n:'ZZ TV',c:'muz',p:['start','extra','premium']},
+  {n:'Rock',c:'muz',p:['start','extra','premium']},
+  {n:'WWM',c:'muz',p:['start','extra','premium']},
+  {n:'Jeka',c:'muz',p:['start','extra','premium']},
+  {n:'Planeta HD',c:'muz',p:['basic','start','extra','premium']},
+  {n:'Toxic TV',c:'muz',p:['start','extra','premium']},
+  {n:'Toxic Folk',c:'muz',p:['start','extra','premium']},
+  {n:'Toxic Rap',c:'muz',p:['start','extra','premium']},
+  {n:'Mezzo',c:'muz',p:['start','extra','premium']},
+  {n:'Mezzo Live',c:'muz',p:['start','extra','premium']},
+
+  /* == ФИЛМСКИ КАНАЛИ == */
+  {n:'Star Life',c:'film',p:['basic','start','extra','premium']},
+  {n:'Star Channel',c:'film',p:['basic','start','extra','premium']},
+  {n:'Viasat Kino HD',c:'film',p:['basic','start','extra','premium']},
+  {n:'M1',c:'film',p:['basic','start','extra','premium']},
+  {n:'M1 Gold',c:'film',p:['start','extra','premium']},
+  {n:'Star Movies',c:'film',p:['start','extra','premium']},
+  {n:'Star Crime',c:'film',p:['basic','start','extra','premium']},
+  {n:'Cinemania HD',c:'film',p:['start','extra','premium']},
+  {n:'Action M',c:'film',p:['start','extra','premium']},
+  {n:'Prime 2 M',c:'film',p:['start','extra','premium']},
+  {n:'AXN',c:'film',p:['start','extra','premium']},
+  {n:'AXN Spin',c:'film',p:['start','extra','premium']},
+  {n:'Epic Drama HD',c:'film',p:['start','extra','premium']},
+  {n:'SciFi',c:'film',p:['start','extra','premium']},
+  {n:'Diva',c:'film',p:['start','extra','premium']},
+  {n:'MT Family',c:'film',p:['start','extra','premium']},
+  {n:'Prime 1 M',c:'film',p:['start','extra','premium']},
+  {n:'Superstar',c:'film',p:['start','extra','premium']},
+  {n:'Superstar 2',c:'film',p:['start','extra','premium']},
+  {n:'BBC First',c:'film',p:['start','extra','premium']},
+  {n:'Pickbox 1',c:'film',p:['start','extra','premium']},
+  {n:'Cinemax 1 HD',c:'film',p:['start','extra','premium']},
+  {n:'Cinemax 2 HD',c:'film',p:['start','extra','premium']},
+  {n:'HBO HD',c:'film',p:['basic','start','extra','premium']},
+  {n:'HBO 2 HD',c:'film',p:['basic','start','extra','premium']},
+  {n:'HBO 3 HD',c:'film',p:['basic','start','extra','premium']},
+  {n:'Pink Film',c:'film',p:['start','extra','premium']},
+  {n:'Pink Serije',c:'film',p:['start','extra','premium']},
+  {n:'Priva Plus HD',c:'film',p:['start','extra','premium']},
+  {n:'Priva World HD',c:'film',p:['start','extra','premium']},
+  {n:'Priva Max HD',c:'film',p:['start','extra','premium']},
+  {n:'Priva Rules HD',c:'film',p:['start','extra','premium']},
+  {n:'Priva Kick HD',c:'film',p:['start','extra','premium']},
+  {n:'Priva Life HD',c:'film',p:['start','extra','premium']},
+
+  /* == ЗАБАВА / LIFESTYLE == */
+  {n:'Happy Reality 1',c:'zab',p:['start','extra','premium']},
+  {n:'Happy Reality 2',c:'zab',p:['start','extra','premium']},
+  {n:'TV5 Monde HD',c:'zab',p:['start','extra','premium']},
+  {n:'Zdrava Televizija',c:'zab',p:['start','extra','premium']},
+  {n:'Fashion TV HD',c:'zab',p:['start','extra','premium']},
+  {n:'Wness TV',c:'zab',p:['start','extra','premium']},
+
+  /* == ИНФОРМАТИВНИ КАНАЛИ == */
+  {n:'CNN',c:'info',p:['start','extra','premium']},
+  {n:'CGTN',c:'info',p:['start','extra','premium']},
+  {n:'Deutsche Welle HD',c:'info',p:['basic','start','extra','premium']},
+  {n:'France 24 HD',c:'info',p:['basic','start','extra','premium']},
+  {n:'Euronews HD',c:'info',p:['start','extra','premium']},
+  /* == КАНАЛИ ЗА ВОЗРАСНИ == */
+  {n:'Playboy TV',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Brazzers HD',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Red Light HD',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Hustler TV',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Private TV',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 2',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 3',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 4',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 5',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 6',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 7',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Erotic 8',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 1',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 2',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 3',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 4',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 5',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 6',c:'adult',p:['basic','start','extra','premium']},
+  {n:'Adult 7',c:'adult',p:['basic','start','extra','premium']},
+];
+
+const CAT_COLS = {
+  nat:'#e2007a',reg:'#0ea5e9',sport:'#2563eb',film:'#7c3aed',
+  info:'#059669',zab:'#f97316',muz:'#db2777',det:'#22c55e',doc:'#f59e0b',
+  etno:'#6366f1',adult:'#94a3b8'
+};
+const CAT_LBL = {
+  nat:'Национален',reg:'Регионален',sport:'Спорт',film:'Филм',
+  info:'Инфо',zab:'Забава',muz:'Музика',det:'Детски',doc:'Документарен',
+  etno:'Етнички',adult:'Возрасни'
+};
+const PKG_DEFS = [
+  {id:'basic', lbl:'Basic/S', col:'#0ea5e9', bg:'rgba(14,165,233,.1)'},
+  {id:'start', lbl:'Start/M', col:'#059669', bg:'rgba(5,150,105,.1)'},
+  {id:'extra', lbl:'Extra/L', col:'#2563eb', bg:'rgba(37,99,235,.1)'},
+  {id:'premium',lbl:'Premium/XL, XXL', col:'#7c3aed', bg:'rgba(124,58,237,.1)'},
+];
+
+/* =============== STATE =============== */
+let discOn = false;
+let curCat = 'sve';
+let openPkgs = {basic:true,start:true,extra:true,premium:true};
+
+/* =============== HELPERS =============== */
+function fmtN(n){ return n.toLocaleString('mk-MK'); }
+
+/* =============== RENDER TV+INTERNET =============== */
+function renderTvPkgs(){
+  document.getElementById('tvPkgGrid').innerHTML = TV_PKGS.map(p=>{
+    const disp = discOn ? Math.round(p.price*0.92) : p.price;
+    const wasHtml = discOn
+      ? `<div class="price-was">${fmtN(p.price)} ден.</div>`
+      : `<div class="price-was"></div>`;
+    const nc = discOn ? ' disc-on' : '';
+    return `<div class="pkg-card${p.best?' best-pkg':''}">
+      <div class="pkg-top-stripe" style="background:${p.gr}"></div>
+      ${p.best?'<div class="best-ribbon">Најдобра понуда</div>':''}
+      <div class="pkg-nm" style="color:${p.col}">${p.name}</div>
+      <div class="pkg-feats">
+        ${p.feats.map(f=>`<div class="pf-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${p.col}" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          ${f}
+        </div>`).join('')}
+      </div>
+      <div class="pkg-tv-line">
+        <strong>MagentaTV — ${p.tv}</strong>
+        ${p.tvNote?`<span style="font-size:11px;color:var(--txt2)">${p.tvNote}</span>`:''}
+      </div>
+      <div class="price-area">
+        ${wasHtml}
+        <div class="price-row">
+          <span class="price-num${nc}">${fmtN(disp)}</span>
+          <span class="price-unit">ден. / месечно</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* =============== RENDER INTERNET ONLY =============== */
+function renderInt(){
+  document.getElementById('intGrid').innerHTML = INT_PKGS.map(p=>{
+    const disp = discOn ? Math.round(p.price*(1-0.187)) : p.price;
+    const wasHtml = discOn
+      ? `<div class="int-was">${fmtN(p.price)} ден.</div>`
+      : `<div class="int-was"></div>`;
+    const nc = discOn ? ' disc-on' : '';
+    return `<div class="int-card">
+      <div class="int-sz">${p.sz}</div>
+      <div class="int-desc">${p.desc}</div>
+      <div class="int-esm">E-СМЕТКА ВКЛУЧЕНА</div>
+      <div class="int-price${nc}">${fmtN(disp)}</div>
+      <div style="font-size:11px;color:var(--txt2);margin-top:2px">ден. / месечно</div>
+      ${wasHtml}
+    </div>`;
+  }).join('');
+}
+
+/* =============== DISCOUNT TOGGLE =============== */
+function applyDiscount(){
+  discOn = document.getElementById('discToggle').checked;
+  const curTab = document.querySelector('.sec.act').id;
+  if(curTab === 'sec-tvint') renderTvPkgs();
+  if(curTab === 'sec-int') renderInt();
+}
+
+/* =============== CHANNEL RENDER =============== */
+function setCat(cat, btn){
+  curCat = cat;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderChannels();
+}
+
+function renderChannels(){
+  const q = document.getElementById('chSearch').value.toLowerCase().trim();
+  const container = document.getElementById('chSections');
+  let totalShown = 0;
+  let html = '';
+
+  PKG_DEFS.forEach(pkg => {
+    const filtered = ALL_CHANNELS.filter(ch => {
+      const inPkg = ch.p.includes(pkg.id);
+      const matchCat = curCat==='sve' || ch.c===curCat;
+      const matchQ = !q || ch.n.toLowerCase().includes(q);
+      return inPkg && matchCat && matchQ;
+    });
+
+    const isOpen = openPkgs[pkg.id];
+    const arrowClass = isOpen ? 'open' : '';
+    const bodyClass = isOpen ? 'open' : '';
+    totalShown += filtered.length;
+
+    html += `<div class="ch-pkg-section">
+      <div class="ch-pkg-hdr ${arrowClass}" onclick="togglePkg('${pkg.id}')">
+        <div class="ch-pkg-title" style="color:${pkg.col}">${pkg.lbl}</div>
+        <div class="ch-pkg-count" style="background:${pkg.bg};color:${pkg.col}">${filtered.length} канали</div>
+        <div class="ch-pkg-arrow ${arrowClass}">▼</div>
+      </div>
+      <div class="ch-pkg-body ${bodyClass}" id="pkgBody_${pkg.id}">
+        <div class="ch-grid">
+          ${filtered.length === 0
+            ? `<div style="grid-column:1/-1;font-size:12px;color:var(--txt3);padding:10px 0">Нема канали за овој филтер.</div>`
+            : filtered.map(ch=>`
+              <div class="ch-card">
+                <div class="ch-cat-dot" style="background:${CAT_COLS[ch.c]}"></div>
+                <span class="ch-name">${ch.n}</span>
+                <span class="ch-cat-lbl">${CAT_LBL[ch.c]}</span>
+              </div>`).join('')
+          }
+        </div>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+  document.getElementById('chTotalCount').textContent = totalShown;
+}
+
+function togglePkg(id){
+  openPkgs[id] = !openPkgs[id];
+  renderChannels();
+}
+
+/* =============== TAB SWITCH =============== */
+function goTab(id, btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('act'));
+  document.getElementById('sec-'+id).classList.add('act');
+  btn.classList.add('act');
+
+  // Show discount bar only on tvint and int tabs
+  const discBar = document.getElementById('discBar');
+  const discBadge = document.getElementById('discBadge');
+  const discLbl = document.getElementById('discLblLeft');
+
+  if(id === 'tvint'){
+    discBar.classList.remove('hidden');
+    discBadge.className = 'disc-badge-tv';
+    discBadge.textContent = '8% попуст';
+    discLbl.textContent = 'Редовна цена';
+    renderTvPkgs();
+  } else if(id === 'int'){
+    discBar.classList.remove('hidden');
+    discBadge.className = 'disc-badge-int';
+    discBadge.textContent = '18,7% попуст';
+    discLbl.textContent = 'Редовна цена';
+    renderInt();
+  } else {
+    discBar.classList.add('hidden');
+    // reset toggle when leaving those tabs
+    document.getElementById('discToggle').checked = false;
+    discOn = false;
+  }
+
+  if(id === 'kanali') renderChannels();
+}
+
+/* =============== INIT =============== */
+renderTvPkgs();
+renderInt();
+renderChannels();
+</script>
+</body>
+</html>
