@@ -699,7 +699,10 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
     <div><div style="font-size:14px;font-weight:700">📦 Инвентар OFI</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
-    <button class="btn bmg" style="margin-left:auto" onclick="showAddProduct()">+ Додај производ</button>
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <button class="btn bmg" onclick="showAddProduct()">+ Додај производ</button>
+      <button class="btn" style="background:var(--sur);border:1px solid var(--brd)" onclick="showBulkImport(1)">📋 Увези лагер листа</button>
+    </div>
   </div>
   <!-- Add product form -->
   <div id="addProdForm" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">
@@ -714,6 +717,35 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
       <button class="btn bmg" onclick="saveProduct()">💾 Зачувај</button>
       <button class="btn" onclick="document.getElementById('addProdForm').style.display='none'">✕</button>
     </div>
+  </div>
+  <!-- Bulk import panel -->
+  <div id="bulkPanel1" style="display:none;background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:14px;border:1px solid var(--brd)">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="font-size:13px;font-weight:700">📋 Увези лагер листа — Доп.Опрема</div>
+      <button class="btn" style="margin-left:auto;padding:2px 8px;font-size:11px" onclick="document.getElementById('bulkPanel1').style.display='none'">✕</button>
+    </div>
+    <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.5">
+      Копирај колони од Excel и залепи тука. Очекуван редослед: <strong>OFI шифра · Назив · Цена · Количина</strong><br>
+      Доколку имаш само OFI и Количина — тоа исто работи (2 колони).
+    </div>
+    <textarea id="bulkText1" class="fi" rows="7" style="width:100%;font-size:11px;font-family:monospace;resize:vertical;white-space:pre" placeholder="42513654	Samsung полнач бел	250	10&#10;42513655	USB кабел тип-C	150	25&#10;42513656	Заштитно стакло	80	30"></textarea>
+    <div style="display:flex;gap:14px;margin:9px 0 6px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:11px;font-weight:700;color:var(--t2)">Режим на увоз:</div>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode1" value="add" checked>
+        <span><strong>Додај кон постојни</strong> — примање нова стока</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode1" value="set">
+        <span><strong>Постави точни количини</strong> — синц со тековен лагер</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;margin-left:auto">
+        <input type="checkbox" id="bulkSkipHeader1">
+        <span>Прескокни прв ред (наслов)</span>
+      </label>
+    </div>
+    <button class="btn bmg" onclick="previewBulk(1)">👁 Прегледај увоз</button>
+    <div id="bulkPreview1" style="margin-top:10px"></div>
   </div>
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid"></div>
@@ -762,7 +794,10 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
     <div><div style="font-size:14px;font-weight:700">📱 Моб.&amp;Друго — Лагер</div><div style="font-size:11px;color:var(--t2)">Само менаџерот управува · Вработените продаваат по OFI шифра</div></div>
-    <button class="btn bmg" style="margin-left:auto" onclick="showAddProduct2()">+ Додај производ</button>
+    <div style="display:flex;gap:6px;margin-left:auto;flex-wrap:wrap">
+      <button class="btn bmg" onclick="showAddProduct2()">+ Додај производ</button>
+      <button class="btn" style="background:var(--sur);border:1px solid var(--brd)" onclick="showBulkImport(2)">📋 Увези лагер листа</button>
+    </div>
   </div>
   <!-- Add product form -->
   <div id="addProdForm2" style="display:none;background:var(--s2);border-radius:var(--rs);padding:12px;margin-bottom:14px">
@@ -777,6 +812,35 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
       <button class="btn bmg" onclick="saveProduct2()">💾 Зачувај</button>
       <button class="btn" onclick="document.getElementById('addProdForm2').style.display='none'">✕</button>
     </div>
+  </div>
+  <!-- Bulk import panel -->
+  <div id="bulkPanel2" style="display:none;background:var(--s2);border-radius:var(--rs);padding:14px;margin-bottom:14px;border:1px solid var(--brd)">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="font-size:13px;font-weight:700">📋 Увези лагер листа — Моб.&amp;Друго</div>
+      <button class="btn" style="margin-left:auto;padding:2px 8px;font-size:11px" onclick="document.getElementById('bulkPanel2').style.display='none'">✕</button>
+    </div>
+    <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.5">
+      Копирај колони од Excel и залепи тука. Очекуван редослед: <strong>OFI шифра · Назив · Цена · Количина</strong><br>
+      Доколку имаш само OFI и Количина — тоа исто работи (2 колони).
+    </div>
+    <textarea id="bulkText2" class="fi" rows="7" style="width:100%;font-size:11px;font-family:monospace;resize:vertical;white-space:pre" placeholder="42513700	Samsung Galaxy A55	35000	5&#10;42513701	iPhone 15 128GB	75000	3&#10;42513702	Power bank 20000mAh	2500	8"></textarea>
+    <div style="display:flex;gap:14px;margin:9px 0 6px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:11px;font-weight:700;color:var(--t2)">Режим на увоз:</div>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode2" value="add" checked>
+        <span><strong>Додај кон постојни</strong> — примање нова стока</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer">
+        <input type="radio" name="bulkMode2" value="set">
+        <span><strong>Постави точни количини</strong> — синц со тековен лагер</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;margin-left:auto">
+        <input type="checkbox" id="bulkSkipHeader2">
+        <span>Прескокни прв ред (наслов)</span>
+      </label>
+    </div>
+    <button class="btn bmg" onclick="previewBulk(2)">👁 Прегледај увоз</button>
+    <div id="bulkPreview2" style="margin-top:10px"></div>
   </div>
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid2"></div>
@@ -3693,6 +3757,120 @@ window.adjustProductQty2=async(ofi,delta)=>{
   if(span){span.textContent=OFI_PRODUCTS2[ofi].qty;const warn=OFI_PRODUCTS2[ofi].qty<=2;span.style.color=warn?'var(--rd)':'var(--txt)';}
   else rndInv2();
   calcAlerts();
+};
+
+// ── BULK IMPORT (Увези лагер листа) ──
+window.showBulkImport=(cat)=>{
+  const el=document.getElementById('bulkPanel'+cat);
+  if(!el)return;
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  // Close the other add-product form to avoid confusion
+  if(!isOpen){
+    const f=document.getElementById(cat===1?'addProdForm':'addProdForm2');
+    if(f)f.style.display='none';
+  }
+};
+
+function parseBulkRows(text,skipHeader){
+  const lines=text.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim());
+  if(!lines.length)return[];
+  // Auto-detect separator: tab (Excel paste) → semicolon → comma
+  const sample=lines[0];
+  const sep=sample.includes('\t')?'\t':sample.includes(';')?';':',';
+  let rows=lines;
+  if(skipHeader&&rows.length>1)rows=rows.slice(1);
+  return rows.map(line=>{
+    const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith(‘”’)&&v.endsWith(‘”’))v=v.slice(1,-1);return v;});
+    const ofi=(cols[0]||'').trim();
+    if(!ofi)return null;
+    // Handle 2-column (OFI,Qty), 3-column (OFI,Name,Qty), 4-column (OFI,Name,Price,Qty)
+    let name='',price=0,qty=0;
+    if(cols.length>=4){name=cols[1];price=parseFloat(cols[2].replace(',','.'))||0;qty=parseInt(cols[3])||0;}
+    else if(cols.length===3){name=cols[1];qty=parseInt(cols[2])||0;}
+    else if(cols.length===2){qty=parseInt(cols[1])||0;}
+    return {ofi,name,price,qty};
+  }).filter(Boolean);
+}
+
+window.previewBulk=(cat)=>{
+  const ta=document.getElementById('bulkText'+cat);
+  const pv=document.getElementById('bulkPreview'+cat);
+  if(!ta||!pv)return;
+  const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
+  const rows=parseBulkRows(ta.value,skipHeader);
+  if(!rows.length){pv.innerHTML='<div style="padding:10px;color:var(--t3);text-align:center">Нема валидни редови. Провери форматот.</div>';return;}
+  const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
+  let newCount=0,updCount=0;
+  const rows2=rows.map(r=>{
+    const exists=!!products[r.ofi];
+    const curQty=exists?(products[r.ofi].qty||0):0;
+    const finalQty=mode==='set'?r.qty:curQty+r.qty;
+    const nameShow=r.name||(exists?products[r.ofi].name:'—');
+    if(exists)updCount++;else newCount++;
+    return {ofi:r.ofi,name:nameShow,price:r.price,qty:r.qty,curQty,finalQty,exists};
+  });
+  pv.innerHTML=`
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px">
+      Преглед — ${rows2.length} производи
+      <span style="margin-left:8px;background:var(--grl);color:var(--gr);padding:1px 7px;border-radius:10px">${updCount} ажурирање</span>
+      <span style="margin-left:4px;background:#ede9fe;color:#7c3aed;padding:1px 7px;border-radius:10px">${newCount} нови</span>
+    </div>
+    <div class="tw" style="max-height:240px;overflow-y:auto;margin-bottom:8px">
+      <table style="min-width:520px;font-size:11px">
+        <thead><tr><th style="text-align:left;padding-left:8px">OFI</th><th style="text-align:left">Назив</th><th>Цена</th><th>${mode==='set'?'Се поставува':'Тековно → Ново'}</th><th>Статус</th></tr></thead>
+        <tbody>${rows2.map(r=>`<tr>
+          <td style="text-align:left;padding-left:8px;font-family:monospace;font-size:10px">${r.ofi}</td>
+          <td style="text-align:left;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.name}</td>
+          <td>${r.price?r.price.toLocaleString()+' ден.':'—'}</td>
+          <td style="font-weight:700;color:var(--mg)">${mode==='set'?r.qty:(r.curQty+' → '+r.finalQty)}</td>
+          <td>${r.exists
+            ?'<span style="background:var(--grl);color:var(--gr);padding:1px 6px;border-radius:10px;font-size:10px">постои</span>'
+            :'<span style="background:#ede9fe;color:#7c3aed;padding:1px 6px;border-radius:10px;font-size:10px">+ ново</span>'
+          }</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <button class="btn bmg" onclick="executeBulkImport(${cat})">✅ Потврди увоз на ${rows2.length} производи</button>
+    <button class="btn" style="margin-left:6px" onclick="document.getElementById('bulkPreview${cat}').innerHTML=''">✕ Откажи</button>
+  `;
+};
+
+window.executeBulkImport=async(cat)=>{
+  const ta=document.getElementById('bulkText'+cat);
+  const pv=document.getElementById('bulkPreview'+cat);
+  if(!ta)return;
+  const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
+  const rows=parseBulkRows(ta.value,skipHeader);
+  if(!rows.length)return;
+  const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
+  let added=0,updated=0;
+  rows.forEach(r=>{
+    if(!r.ofi)return;
+    if(products[r.ofi]){
+      if(mode==='set')products[r.ofi].qty=r.qty;
+      else products[r.ofi].qty=(products[r.ofi].qty||0)+r.qty;
+      if(r.name)products[r.ofi].name=r.name;
+      if(r.price)products[r.ofi].price=r.price;
+      updated++;
+    }else{
+      products[r.ofi]={ofi:r.ofi,name:r.name||r.ofi,price:r.price||0,qty:r.qty};
+      added++;
+    }
+  });
+  const cfgKey=cat===1?'ofi_products':'ofi_products2';
+  await svCfg(cfgKey,products);
+  if(cat===1){rndInv();calcAlerts();}else{rndInv2();calcAlerts();}
+  ta.value='';
+  if(pv)pv.innerHTML=`<div style="background:var(--grl);color:var(--gr);padding:12px;border-radius:var(--rs);text-align:center;font-weight:700;font-size:13px">
+    ✅ Успешно увезено!&nbsp;&nbsp;${added>0?added+' нови производи':''}${added>0&&updated>0?' · ':''}${updated>0?updated+' ажурирани':''}
+  </div>`;
+  setTimeout(()=>{
+    document.getElementById('bulkPanel'+cat).style.display='none';
+    if(pv)pv.innerHTML='';
+  },3500);
 };
 
 function getOfiSoldToday(ofi){
