@@ -64,8 +64,16 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .lwrap-pro{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0a0a1a 0%,#12022e 40%,#001a12 70%,#0a0a1a 100%);position:relative;overflow:hidden}
 #loginCanvas{position:absolute;inset:0;z-index:0;opacity:.45;pointer-events:none}
 .lcard-pro{background:rgba(255,255,255,.04);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(179,136,255,.28);border-radius:22px;padding:40px 38px;width:100%;max-width:420px;box-shadow:0 0 70px rgba(179,136,255,.18),inset 0 1px 0 rgba(255,255,255,.1);position:relative;z-index:10}
-.llogo-pro{width:70px;height:70px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;animation:holo-pulse 3s ease-in-out infinite;position:relative}
+.llogo-pro{margin:0 auto 14px;display:flex;align-items:center;justify-content:center;animation:holo-pulse 3s ease-in-out infinite;position:relative}
 .holo-t{font-size:52px;font-weight:900;background:linear-gradient(135deg,#b388ff,#80deea,#ff7043,#b388ff);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:holo-shift 4s linear infinite;line-height:1}
+/* Chalice logo */
+@keyframes cup-glow{0%,100%{filter:drop-shadow(0 0 6px rgba(255,0,200,.55))}50%{filter:drop-shadow(0 0 20px rgba(255,0,200,.95))}}
+.lcup-wrap{display:flex;flex-direction:column;align-items:center;animation:cup-glow 3s ease-in-out infinite}
+.lcup-bowl{width:80px;height:58px;border:2.5px solid rgba(255,0,200,.7);border-top:none;border-radius:0 0 40px 40px;background:linear-gradient(to bottom,rgba(255,0,200,.06),rgba(255,0,200,.14));display:flex;align-items:center;justify-content:center;position:relative}
+.lcup-bowl::before{content:'';position:absolute;top:-2px;left:-8px;right:-8px;height:2.5px;background:rgba(255,0,200,.7);border-radius:2px}
+.lcup-stem{width:5px;height:26px;background:linear-gradient(to bottom,rgba(255,0,200,.7),rgba(255,0,200,.35))}
+.lcup-base{width:56px;height:6px;background:rgba(255,0,200,.6);border-radius:4px}
+.lcup-t{font-size:2.4rem;font-weight:900;font-family:'Playfair Display',serif;color:#ff00cc;text-shadow:0 0 10px rgba(255,0,200,.9),0 0 28px rgba(255,0,200,.45);line-height:1}
 .lt-pro{text-align:center;font-size:23px;font-weight:800;color:#fff;margin-bottom:2px;letter-spacing:.3px}
 .ls-pro{text-align:center;font-size:11px;color:rgba(255,255,255,.45);margin-bottom:8px}
 .ent-badge{display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:linear-gradient(90deg,rgba(179,136,255,.15),rgba(128,222,234,.12));border:1px solid rgba(179,136,255,.4);border-radius:20px;padding:3px 14px;font-size:10px;font-weight:800;color:#b388ff;letter-spacing:1.8px;text-transform:uppercase;position:relative;overflow:hidden;width:fit-content}
@@ -483,7 +491,13 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   </div>
 </div>
 <div class="lcard-pro">
-  <div class="llogo-pro"><span class="holo-t">T</span></div>
+  <div class="llogo-pro">
+    <div class="lcup-wrap">
+      <div class="lcup-bowl"><span class="lcup-t">T</span></div>
+      <div class="lcup-stem"></div>
+      <div class="lcup-base"></div>
+    </div>
+  </div>
   <div class="lt-pro">MKT Sales Pro</div>
   <div class="ls-pro">Македонски Телеком · Продажен Салон Кичево</div>
   <div class="ent-badge">⚡ ENTERPRISE EDITION</div>
