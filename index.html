@@ -90,6 +90,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .lbtn-pro:hover{background:linear-gradient(135deg,#ce93d8,#9575cd);box-shadow:0 6px 32px rgba(179,136,255,.7);transform:translateY(-2px)}
 .lbtn-pro:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .lerr-pro{background:rgba(198,40,40,.14);color:#ef9a9a;border-radius:8px;padding:9px 12px;font-size:12px;margin-top:10px;display:none;border:1px solid rgba(198,40,40,.32)}
+.ldisclaimer{margin-top:14px;font-size:10.5px;color:rgba(255,255,255,.32);text-align:center;line-height:1.5;padding:0 4px}
 /* 3D CUBES */
 .cube-wrap{position:absolute;perspective:180px;z-index:1;pointer-events:none}
 .cube{transform-style:preserve-3d}
@@ -506,6 +507,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="fg-pro"><label>Лозинка</label><input class="fi-pro" type="password" id="lPs" placeholder="••••••••"></div>
   <button class="lbtn-pro" id="lBtn" onclick="doLogin()">⚡ Најави се</button>
   <div class="lerr-pro" id="lErr"></div>
+  <div class="ldisclaimer">⚠ Интерна алатка за ПОС Кичево — не е официјален систем на МКТ.<br>Официјален систем за резултати е SIA.</div>
 </div>
 </div>
 
