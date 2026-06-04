@@ -5663,7 +5663,10 @@ window.toggleAI=function(){
   if(!panel||!toggle)return;
   const open=panel.classList.toggle('open');
   toggle.classList.toggle('shifted',open);
-  if(open&&document.getElementById('aiMsgs').children.length===0)seedAIMsgs();
+  if(open){
+    if(document.getElementById('aiMsgs').children.length===0)seedAIMsgs();
+    else addAIMsg();
+  }
 };
 
 /* ── helpers ── */
