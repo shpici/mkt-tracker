@@ -759,10 +759,19 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   </div>
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid"></div>
+  <!-- Manager quick OFI lookup (same as employee search, no selling) -->
+  <div style="position:relative;margin-bottom:10px">
+    <input id="mgrQuickSearch1" class="fi" type="text"
+      placeholder="🔍 Брзо барање — назив или OFI шифра..."
+      style="width:100%;max-width:440px;padding:7px 11px;font-size:12px"
+      oninput="mgrQuickSearch(1,this.value)"
+      onblur="setTimeout(()=>{const r=document.getElementById('mgrQuickRes1');if(r)r.style.display='none';},200)">
+    <div id="mgrQuickRes1" style="display:none;position:absolute;z-index:30;width:100%;max-width:440px;max-height:260px;overflow-y:auto;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rs);box-shadow:0 6px 18px rgba(0,0,0,.13);top:calc(100% + 4px)"></div>
+  </div>
   <!-- OFI product table -->
   <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px;margin-top:4px;flex-wrap:wrap">
     <div style="font-size:11px;font-weight:700;color:var(--t2)">Лагер листа</div>
-    <input id="mgrOfiSearch1" class="fi" type="text" placeholder="🔍 Барај производ / OFI шифра..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(1,this.value)">
+    <input id="mgrOfiSearch1" class="fi" type="text" placeholder="🔍 Филтрирај табела..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(1,this.value)">
   </div>
   <div class="tw ofi-table">
     <table style="min-width:650px">
@@ -863,10 +872,19 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   </div>
   <!-- Summary cards -->
   <div class="ig" id="invSumGrid2"></div>
+  <!-- Manager quick OFI lookup -->
+  <div style="position:relative;margin-bottom:10px">
+    <input id="mgrQuickSearch2" class="fi" type="text"
+      placeholder="🔍 Брзо барање — назив или OFI шифра..."
+      style="width:100%;max-width:440px;padding:7px 11px;font-size:12px"
+      oninput="mgrQuickSearch(2,this.value)"
+      onblur="setTimeout(()=>{const r=document.getElementById('mgrQuickRes2');if(r)r.style.display='none';},200)">
+    <div id="mgrQuickRes2" style="display:none;position:absolute;z-index:30;width:100%;max-width:440px;max-height:260px;overflow-y:auto;background:var(--sur);border:1px solid var(--brd);border-radius:var(--rs);box-shadow:0 6px 18px rgba(0,0,0,.13);top:calc(100% + 4px)"></div>
+  </div>
   <!-- Product table -->
   <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px;margin-top:4px;flex-wrap:wrap">
     <div style="font-size:11px;font-weight:700;color:var(--t2)">Лагер листа — Мобилни &amp; Друго</div>
-    <input id="mgrOfiSearch2" class="fi" type="text" placeholder="🔍 Барај производ / OFI шифра..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(2,this.value)">
+    <input id="mgrOfiSearch2" class="fi" type="text" placeholder="🔍 Филтрирај табела..." style="flex:1;max-width:300px;padding:5px 9px;font-size:11px" oninput="mgrOfiFilter(2,this.value)">
   </div>
   <div class="tw ofi-table">
     <table style="min-width:650px">
@@ -3776,6 +3794,65 @@ window.adjustProductQty2=async(ofi,delta)=>{
   if(span){span.textContent=OFI_PRODUCTS2[ofi].qty;const warn=OFI_PRODUCTS2[ofi].qty<=2;span.style.color=warn?'var(--rd)':'var(--txt)';}
   else rndInv2();
   calcAlerts();
+};
+
+// ── MANAGER QUICK OFI SEARCH ──
+window.mgrQuickSearch=(cat,query)=>{
+  const resEl=document.getElementById('mgrQuickRes'+cat);
+  if(!resEl)return;
+  const q=query.trim().toLowerCase();
+  if(!q){resEl.style.display='none';resEl.innerHTML='';return;}
+
+  const thisCat =cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  const otherCat=cat===1?OFI_PRODUCTS2:OFI_PRODUCTS;
+  const otherLabel=cat===1?'🏬 Маг. Моб.&Др.':'🏬 Маг. Доп.Оп.';
+
+  const hits=Object.values(thisCat).filter(p=>
+    p.ofi.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)
+  ).slice(0,10);
+
+  const crossHits=Object.values(otherCat).filter(p=>
+    p.ofi.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)
+  ).slice(0,5);
+
+  let html='';
+
+  if(hits.length){
+    html+=hits.map(p=>{
+      const qty=p.qty||0;
+      const outOfStock=qty<=0;
+      const low=qty>0&&qty<=2;
+      const qtyColor=outOfStock?'var(--rd)':low?'var(--am)':'var(--gr)';
+      const qtyBadge=outOfStock
+        ?'<span style="background:var(--rdl);color:var(--rd);padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700">⚠ НЕМА</span>'
+        :low
+          ?'<span style="background:var(--aml);color:var(--am);padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700">⚡ '+qty+' бр.</span>'
+          :'<span style="background:var(--grl);color:var(--gr);padding:1px 6px;border-radius:10px;font-size:10px;font-weight:700">✓ '+qty+' бр.</span>';
+      return '<div style="padding:8px 11px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:8px">'
+        +'<div style="flex:1;min-width:0">'
+          +'<div style="font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.name+'</div>'
+          +'<div style="font-size:9px;color:var(--t3);font-family:monospace;margin-top:1px">'+p.ofi
+            +(p.price?' · '+(p.price.toLocaleString())+' ден.':'')+'</div>'
+        +'</div>'
+        +qtyBadge
+      +'</div>';
+    }).join('');
+  }else{
+    html='<div style="padding:9px 11px;font-size:11px;color:var(--t3)">Нема резултати во оваа категорија.</div>';
+  }
+
+  // Cross-category warning: RED if found in the other category
+  if(crossHits.length){
+    html+='<div style="background:var(--rdl);border-top:2px solid var(--rd);padding:8px 11px">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:4px">⚠ Овој производ е во '+otherLabel+'!</div>'
+      +crossHits.map(p=>'<div style="font-size:10px;color:var(--rd);padding:2px 0;font-family:monospace">'
+        +p.ofi+' — '+p.name+' <span style="font-weight:700">('+( p.qty||0)+' бр.)</span>'
+      +'</div>').join('')
+    +'</div>';
+  }
+
+  resEl.innerHTML=html;
+  resEl.style.display='block';
 };
 
 // ── BULK IMPORT (Увези лагер листа) ──
