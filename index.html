@@ -965,13 +965,14 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 #tp-calc .rc-prev-lbl::after{content:'';flex:1;height:1px;background:var(--brd)}
 #tp-calc .rc-a4{background:white;border:1px solid var(--brd);width:100%;max-width:660px;aspect-ratio:210/297;padding:3.5% 3%;overflow:hidden;display:flex;flex-direction:column}
 #tp-calc .rc-a4-grid{display:grid;grid-template-columns:repeat(var(--rc-cols,3),1fr);gap:5px;flex:1;align-content:start}
-#tp-calc .rc-a4-item{border:0.5px solid #d8d4ce;border-radius:3px;padding:6px 7px;display:flex;flex-direction:column;gap:2px}
+#tp-calc .rc-a4-item{border:0.5px solid #d8d4ce;border-radius:3px;padding:6px 7px;display:flex;flex-direction:column;gap:1px}
 #tp-calc .rc-a4-nm{font-size:7.5px;font-weight:500;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #tp-calc .rc-a4-pl{font-size:6.5px;color:#888}
-#tp-calc .rc-a4-rl{display:flex;align-items:baseline;gap:3px;margin-top:1px}
-#tp-calc .rc-a4-mo{font-size:6px;color:#aaa;font-weight:600;margin-bottom:1px}
-#tp-calc .rc-a4-am{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#111;line-height:1}
-#tp-calc .rc-a4-cu{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#111;align-self:flex-end;padding-bottom:2px}
+#tp-calc .rc-a4-rl{display:flex;flex-direction:column;margin-top:2px}
+#tp-calc .rc-a4-mo{font-size:6px;color:#aaa;font-weight:600;line-height:1}
+#tp-calc .rc-a4-bot{display:flex;align-items:baseline;gap:2px}
+#tp-calc .rc-a4-am{font-family:'Playfair Display',serif;font-size:clamp(22px,5.5cqw,38px);font-weight:900;color:#111;line-height:1}
+#tp-calc .rc-a4-cu{font-family:'Playfair Display',serif;font-size:clamp(13px,3cqw,22px);font-weight:700;color:#333;padding-bottom:1px}
 #tp-calc .rc-a4-empty{border:0.5px dashed #eae6e0;border-radius:3px}
 #tp-calc .rc-print-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;background:var(--mgl);color:var(--mg);border:1px solid var(--mg);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;width:100%;max-width:660px;transition:all .15s}
 #tp-calc .rc-print-btn:hover{background:var(--mg);color:#fff}
@@ -979,7 +980,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   #tp-calc .rc-wrap>*:not(.rc-a4){display:none!important}
   #tp-calc .rc-a4{border:none;width:210mm;height:297mm;max-width:210mm;aspect-ratio:unset;padding:14mm 12mm}
   #tp-calc .rc-a4-grid{gap:4mm}
-  #tp-calc .rc-a4-item{padding:3mm 3.5mm;border:0.3mm solid #d0ccc6}
+  #tp-calc .rc-a4-item{padding:3mm 3.5mm;border:0.3mm solid #d0ccc6;container-type:inline-size}
 }
 </style>
 <div class="card">
@@ -1101,7 +1102,8 @@ function rcRenderPreview(){
   rcProds.forEach(p=>{
     const rate=rcCalcRate(p.price);
     const div=document.createElement('div');div.className='rc-a4-item';
-    div.innerHTML='<div class="rc-a4-nm">'+(p.name||'—')+'</div>'+'<div class="rc-a4-pl">Цена '+p.price+'ден</div>'+'<div class="rc-a4-rl"><span class="rc-a4-mo">'+m+'x</span><span class="rc-a4-am">'+rate+'</span><span class="rc-a4-cu">ден</span></div>';
+    div.style.containerType='inline-size';
+    div.innerHTML='<div class="rc-a4-nm">'+(p.name||'—')+'</div>'+'<div class="rc-a4-pl">Цена '+p.price+' ден.</div>'+'<div class="rc-a4-rl"><span class="rc-a4-mo">'+m+'x месечно</span><div class="rc-a4-bot"><span class="rc-a4-am">'+rate+'</span><span class="rc-a4-cu">ден</span></div></div>';
     grid.appendChild(div);
   });
   for(let i=rcProds.length;i<total;i++){const e=document.createElement('div');e.className='rc-a4-empty';grid.appendChild(e);}
