@@ -2255,7 +2255,7 @@ function toggleKpiScore(k){
   if(SCORE_EXCLUDED.has(k))SCORE_EXCLUDED.delete(k);else SCORE_EXCLUDED.add(k);
   saveScoreExcl();rndKpiToggles();rndTbl();
   if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
-  if(document.getElementById('tp-ranking')?.classList.contains('act'))rndRanking();
+  if(document.getElementById('tp-executive')?.classList.contains('act')&&_execSt==='rk')rndExecRanking();
   calcAlerts();
 }
 window.toggleKpiScore=toggleKpiScore;
@@ -3722,10 +3722,12 @@ document.addEventListener('click',e=>{
 
 // ══ EXEC SUB-TAB STATE ══
 let _execRkPeriod='month';
+let _execSt='ov';
 window._execRkDay=null;
 window._execRkWeek=0;
 
 function execSt(st){
+  _execSt=st;
   ['ov','rk','cmp'].forEach(s=>{
     const sub=document.getElementById('exec-sub-'+s);
     const btn=document.getElementById('est-'+s);
@@ -5011,7 +5013,6 @@ window.gotoTab=(name,el)=>{
     rndMgrWeekly();
   }
   else if(name==='monthly')rndMonthly();
-  else if(name==='ranking')rndRanking();
   else if(name==='alerts')calcAlerts();
   else if(name==='inventory')rndInv();
   else if(name==='inventory2')rndInv2();
