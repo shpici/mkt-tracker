@@ -1867,6 +1867,10 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
     <div class="game-btn" onclick="gSel('flappy',this)"><span class="gico">🐦</span>Flappy</div>
   </div>
   <div class="game-area" id="gArea"></div>
+  <div style="margin-top:14px;background:var(--sur);border:1px solid var(--brd);border-radius:14px;overflow:hidden">
+    <div style="padding:10px 14px;border-bottom:1px solid var(--brd);font-size:12px;font-weight:800">🏆 Ранг листа — Игри</div>
+    <div id="gLeaderboard" style="padding:10px 10px 6px"></div>
+  </div>
 </div>
 
 <div id="etp-pro" class="tp">
@@ -2089,7 +2093,7 @@ const DEFAULT_EXCLUDED=new Set(["prep", "addser", "fmcbus", "postbus", "bbbus", 
 // ── STATE ──
 let curUsr=null,isMgr=false,mID=null;
 let cY=new Date().getFullYear(),cM=new Date().getMonth()+1,cW=0,cD=0;
-let AS={},TS={},CS={},OFI_PRODUCTS={},OFI_PRODUCTS2={};
+let AS={},TS={},CS={},OFI_PRODUCTS={},OFI_PRODUCTS2={},GAME_SCORES={};
 let ORDERS=[],MGR_ORDER_NOTES='';
 let SCORE_EXCLUDED=new Set(DEFAULT_EXCLUDED);
 let svTmr=null,tgY=cY,tgM=cM;
@@ -2709,6 +2713,7 @@ async function postLogin(){
   subToMonth(cY,cM);
   subToOrders();
   subToOfi();
+  subToGameScores();
   if(isMgr){
     document.getElementById('mgrNav').style.display='flex';
     document.getElementById('mgrTabs').style.display='flex';
@@ -4921,7 +4926,7 @@ window.empTab=(name,el)=>{
   else if(name==='history')rndEmpHistory();
   else if(name==='empschedule')empScInit();
   else if(name==='pro')rndEmpPro();
-  else if(name==='games'){gSel(gCurGame,document.querySelector('.game-btn.gact'));}
+  else if(name==='games'){gSel(gCurGame,document.querySelector('.game-btn.gact'));rndGameLeaderboard();}
   else if(name==='empinfo'){/* rendered by listener */}
 };
 function rndEmpDyBtns(){
@@ -6721,6 +6726,70 @@ window.updateOfiPrices=async()=>{
 // ══════════════════════════════════════════════════════════════════
 let gCurGame='snake';
 
+// ── Firestore sync for game scores ──
+let _unsubGameScores=null;
+function subToGameScores(){
+  if(_unsubGameScores){_unsubGameScores();_unsubGameScores=null;}
+  _unsubGameScores=onSnapshot(doc(db,'config','game_scores'),snap=>{
+    GAME_SCORES=snap.exists()?(snap.data().data||{}):{};
+    rndGameLeaderboard();
+  });
+}
+
+async function saveGameScore(game,val){
+  const isMemory=(game==='memory');
+  const old=gHS(game);
+  const better=isMemory?(old===0||val<old):(val>old);
+  if(!better)return;
+  localStorage.setItem('gs_'+game,String(val));
+  if(!mID)return;
+  if(!GAME_SCORES[mID])GAME_SCORES[mID]={};
+  GAME_SCORES[mID][game]=val;
+  await svCfg('game_scores',GAME_SCORES);
+}
+
+function rndGameLeaderboard(){
+  const c=document.getElementById('gLeaderboard');if(!c)return;
+  const GAMES=[
+    {k:'snake',  lbl:'🐍',  hi:true},
+    {k:'flappy', lbl:'🐦',  hi:true},
+    {k:'g2048',  lbl:'🔢',  hi:true},
+    {k:'memory', lbl:'🧠',  hi:false},// lower=better
+  ];
+  // Build ranking: sum of normalized scores
+  const ranked=MEMBERS.map(mem=>{
+    const s=GAME_SCORES[mem.id]||{};
+    const pts=(s.snake||0)+(s.flappy||0)+Math.round((s.g2048||0)/10)+Math.max(0,50-(s.memory||50))*2;
+    return{...mem,s,pts};
+  }).sort((a,b)=>b.pts-a.pts);
+
+  const medals=['🥇','🥈','🥉'];
+  c.innerHTML=ranked.map((mem,i)=>{
+    const s=mem.s;
+    const isMe=mem.id===mID;
+    const vals=GAMES.map(g=>{
+      const v=s[g.k];
+      if(!v&&v!==0)return`<td style="text-align:center;color:var(--t3);font-size:11px">–</td>`;
+      return`<td style="text-align:center;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums">${g.k==='g2048'?v.toLocaleString():v}${g.k==='memory'?'<span style="font-size:9px;color:var(--t2)"> пот.</span>':''}</td>`;
+    }).join('');
+    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:8px;margin-bottom:4px;${isMe?'background:rgba(99,102,241,.08);border:1px solid var(--acc)':'border:1px solid transparent'}">
+      <div style="width:20px;font-size:13px;text-align:center;flex-shrink:0">${medals[i]||'#'+(i+1)}</div>
+      <div style="width:28px;height:28px;border-radius:50%;background:${mem.bg};color:${mem.tc};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">${mem.ini}</div>
+      <div style="flex:1;font-size:11px;font-weight:700">${mem.name.split(' ')[0]}${isMe?' (Ти)':''}</div>
+      <table style="border-collapse:collapse"><tr>
+        ${vals}
+        <td style="text-align:center;font-size:13px;font-weight:900;color:var(--acc);font-variant-numeric:tabular-nums;padding-left:8px">${mem.pts}</td>
+      </tr></table>
+    </div>`;
+  }).join('');
+
+  // Column headers (once, at top)
+  c.insertAdjacentHTML('afterbegin',`<div style="display:flex;justify-content:flex-end;gap:0;padding:0 6px 4px;margin-left:56px">
+    ${GAMES.map(g=>`<div style="width:44px;text-align:center;font-size:11px;color:var(--t2)">${g.lbl}</div>`).join('')}
+    <div style="width:36px;text-align:center;font-size:11px;color:var(--acc);font-weight:700">Σ</div>
+  </div>`);
+}
+
 window.gSel=function(game,btn){
   gCurGame=game;
   document.querySelectorAll('.game-btn').forEach(b=>b.classList.remove('gact'));
@@ -6778,7 +6847,7 @@ function gSnakeInit(area){
     if(!alive)return;
     dir={...nextDir};
     const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
-    if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)){alive=false;gSHS('snake',score);draw();return;}
+    if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)){alive=false;saveGameScore('snake',score);draw();return;}
     snake.unshift(head);
     if(head.x===food.x&&head.y===food.y){score++;placeFood();document.getElementById('snScore').textContent=score;if(score>best){best=score;document.getElementById('snBest').textContent=best;}}
     else snake.pop();
@@ -6814,7 +6883,7 @@ function g2048Init(area){
     if(dir==='l')grid=grid.map(r=>{const n=slide(r);if(n.join()!==r.join())moved=true;return n;});
     else if(dir==='r')grid=grid.map(r=>{const n=slide([...r].reverse()).reverse();if(n.join()!==r.join())moved=true;return n;});
     else{for(let c=0;c<4;c++){let col=grid.map(r=>r[c]);if(dir==='d')col.reverse();const nc=slide(col);if(dir==='d')nc.reverse();if(nc.join()!==col.join())moved=true;grid.forEach((r,i)=>r[c]=nc[i]);}}
-    if(moved){addTile();if(score>best){best=score;gSHS('g2048',best);}render();}
+    if(moved){addTile();if(score>best){best=score;saveGameScore('g2048',best);}render();}
   }
   area.innerHTML=`
     <div class="game-hdr">
@@ -6862,7 +6931,7 @@ function gMemInit(area){
       moves++;const[a,b]=flipped;
       if(cards[a].emoji===cards[b].emoji){
         cards[a].isMatched=cards[b].isMatched=true;matched++;flipped=[];
-        if(matched===8){clearInterval(timerID);const best=gHS('memory');if(!best||moves<best)gSHS('memory',moves);setTimeout(()=>{const bd=document.getElementById('memBoard');if(bd)bd.insertAdjacentHTML('afterend',`<div style="text-align:center;padding:12px;font-size:14px;font-weight:700;color:#22c55e">🎉 Браво! ${moves} потези / ${secs}s</div>`);},400);}
+        if(matched===8){clearInterval(timerID);const best=gHS('memory');if(!best||moves<best)saveGameScore('memory',moves);setTimeout(()=>{const bd=document.getElementById('memBoard');if(bd)bd.insertAdjacentHTML('afterend',`<div style="text-align:center;padding:12px;font-size:14px;font-weight:700;color:#22c55e">🎉 Браво! ${moves} потези / ${secs}s</div>`);},400);}
         render();
       }else{setTimeout(()=>{cards[a].isFlipped=cards[b].isFlipped=false;flipped=[];render();},900);}
     }
@@ -6925,7 +6994,7 @@ function gFlappyInit(area){
     pipeTimer++;if(pipeTimer%72===0){const top=50+Math.random()*(H-GAP-100);pipes.push({x:W,top,scored:false});}
     pipes.forEach(p=>p.x-=2.4);
     pipes=pipes.filter(p=>p.x>-PIPE_W);
-    pipes.forEach(p=>{if(!p.scored&&p.x+PIPE_W<bird.x){p.scored=true;score++;const el=document.getElementById('flScore');if(el)el.textContent=score;if(score>best){best=score;gSHS('flappy',best);const be=document.getElementById('flBest');if(be)be.textContent=best;}}});
+    pipes.forEach(p=>{if(!p.scored&&p.x+PIPE_W<bird.x){p.scored=true;score++;const el=document.getElementById('flScore');if(el)el.textContent=score;if(score>best){best=score;saveGameScore('flappy',best);const be=document.getElementById('flBest');if(be)be.textContent=best;}}});
 
     const R=12;
     const dead=bird.y-R<0||bird.y+R>H||pipes.some(p=>bird.x+R-4>p.x&&bird.x-R+4<p.x+PIPE_W&&(bird.y-R<p.top||bird.y+R>p.top+GAP));
