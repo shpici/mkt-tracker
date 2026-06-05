@@ -5029,9 +5029,9 @@ window.gotoTab=(name,el)=>{
     setTimeout(()=>{ loadInfoMsgs(); updateStorageMeter(); }, 50);
   }
   else if(name==='fullreport')rndFullReport();
-  else if(name==='compare'){execSt('cmp');return;}
-  else if(name==='ranking'){execSt('rk');return;}
-  else if(name==='executive')rndExecutive();
+  else if(name==='compare'){execSt('cmp');}
+  else if(name==='ranking'){execSt('rk');}
+  else if(name==='executive'){if(_execSt==='ov')rndExecutive();else execSt(_execSt);}
   else if(name==='tarif'||name==='roaming'||name==='tvint'){}
 };
 
