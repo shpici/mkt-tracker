@@ -3731,12 +3731,18 @@ function execSt(st){
   ['ov','rk','cmp'].forEach(s=>{
     const sub=document.getElementById('exec-sub-'+s);
     const btn=document.getElementById('est-'+s);
-    if(sub)sub.style.display=s===st?'':'none';
+    if(sub)sub.style.display=s===st?'block':'none';
     if(btn)btn.classList.toggle('act',s===st);
   });
-  if(st==='rk')rndExecRanking();
-  else if(st==='cmp')window.rndCmpTab();
-  else rndExecutive();
+  try{
+    if(st==='rk')rndExecRanking();
+    else if(st==='cmp')window.rndCmpTab();
+    else rndExecutive();
+  }catch(e){
+    console.error('execSt error:',e);
+    const errEl=document.getElementById(st==='rk'?'exec-rk-content':'cmp-tab-content');
+    if(errEl)errEl.innerHTML=`<div style="color:var(--rd);padding:20px;font-size:12px">⚠️ Грешка: ${e.message}</div>`;
+  }
 }
 
 function execRkPeriod(p){
