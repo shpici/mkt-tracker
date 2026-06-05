@@ -665,14 +665,14 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <!-- AI CHATBOT PANEL -->
 <div id="aiPanel">
   <div class="ai-hdr">
-    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Gemini 2.0</div>
+    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Llama 3.3</div>
     <div style="display:flex;gap:4px;align-items:center">
       <button class="ai-close" onclick="toggleAIKey()" title="API клуч">⚙️</button>
       <button class="ai-close" onclick="toggleAI()">✕</button>
     </div>
   </div>
   <div class="ai-key-wrap" id="aiKeyWrap">
-    <input class="ai-key-inp" id="aiKeyInp" type="password" placeholder="Внеси Gemini API Key...">
+    <input class="ai-key-inp" id="aiKeyInp" type="password" placeholder="Внеси Groq API Key (gsk_...)...">
     <button class="ai-key-save" onclick="saveAIKey()">Зачувај</button>
   </div>
   <div class="ai-msgs" id="aiMsgs"></div>
@@ -6260,7 +6260,7 @@ window.toggleAIKey=function(){
   const w=document.getElementById('aiKeyWrap');
   w.style.display=w.style.display==='flex'?'none':'flex';
   if(w.style.display==='flex'){
-    const k=localStorage.getItem('mkt_gemini_key')||'';
+    const k=localStorage.getItem('mkt_groq_key')||'';
     document.getElementById('aiKeyInp').value=k;
     document.getElementById('aiKeyInp').focus();
   }
@@ -6268,7 +6268,7 @@ window.toggleAIKey=function(){
 window.saveAIKey=function(){
   const k=(document.getElementById('aiKeyInp').value||'').trim();
   if(!k)return;
-  localStorage.setItem('mkt_gemini_key',k);
+  localStorage.setItem('mkt_groq_key',k);
   document.getElementById('aiKeyWrap').style.display='none';
   aiAddMsg('bot','✅ API клуч зачуван! Сега можам да одговарам на прашања.');
 };
@@ -6346,12 +6346,12 @@ function aiAddTyping(){
 
 function aiWelcome(){
   const d=_aiData();
-  const key=localStorage.getItem('mkt_gemini_key');
+  const key=localStorage.getItem('mkt_groq_key');
   if(!key){
-    aiAddMsg('bot','👋 Здраво! Јас сум вашиот AI аналитичар.\n\n⚙️ За да започнам, внесете **Gemini API клуч** со кликање на ⚙️ горе десно.\n\nКлучот е **бесплатен** — добијте го на aistudio.google.com');
+    aiAddMsg('bot','👋 Здраво! Јас сум вашиот AI аналитичар.\n\n⚙️ За да започнам, внесете **Groq API клуч** со кликање на ⚙️ горе десно.\n\nКлучот е **целосно бесплатен** — добијте го на console.groq.com (без кредитна картичка).');
   } else {
     const hour=new Date().getHours();
-    const greet=hour<12?'Добро утро':'hour<18'?'Добар ден':'Добра вечер';
+    const greet=hour<12?'Добро утро':hour<18?'Добар ден':'Добра вечер';
     aiAddMsg('bot',`👋 ${greet}! Јас сум вашиот AI аналитичар за МКТ Кичево.\n\nДенес е ден **${d.today}** од месецот. Постави ми прашање — за тарифи, продажба, роаминг, или сèшто друго! 🚀`);
   }
 }
@@ -6362,33 +6362,34 @@ window.aiSend=async function(){
   const msg=(inp.value||'').trim();
   if(!msg)return;
 
-  const key=localStorage.getItem('mkt_gemini_key');
+  const key=localStorage.getItem('mkt_groq_key');
   if(!key){
     document.getElementById('aiKeyWrap').style.display='flex';
-    aiAddMsg('bot','⚠️ Прво внесете Gemini API клуч со кликање на ⚙️ горе.');
+    aiAddMsg('bot','⚠️ Прво внесете Groq API клуч со кликање на ⚙️ горе.');
     return;
   }
 
   inp.value='';
   btn.disabled=true;
   aiAddMsg('user',msg);
-  _aiHistory.push({role:'user',parts:[{text:msg}]});
+  _aiHistory.push({role:'user',content:msg});
 
   const typing=aiAddTyping();
 
-  const contents=[
-    {role:'user',parts:[{text:_aiSystemPrompt()}]},
-    {role:'model',parts:[{text:'Разбрав! Готов сум да помогнам.'}]},
+  const messages=[
+    {role:'system',content:_aiSystemPrompt()},
     ..._aiHistory
   ];
 
   try{
-    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`,{
+    const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
       body:JSON.stringify({
-        contents,
-        generationConfig:{temperature:0.72,maxOutputTokens:600,topP:0.9}
+        model:'llama-3.3-70b-versatile',
+        messages,
+        temperature:0.72,
+        max_tokens:600
       })
     });
     if(!resp.ok){
@@ -6396,10 +6397,10 @@ window.aiSend=async function(){
       throw new Error(err.error?.message||`HTTP ${resp.status}`);
     }
     const data=await resp.json();
-    const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||'Немам одговор, обиди се повторно.';
+    const reply=data.choices?.[0]?.message?.content||'Немам одговор, обиди се повторно.';
     if(typing)typing.remove();
     aiAddMsg('bot',reply);
-    _aiHistory.push({role:'model',parts:[{text:reply}]});
+    _aiHistory.push({role:'assistant',content:reply});
     if(_aiHistory.length>24)_aiHistory.splice(0,2);
   }catch(e){
     if(typing)typing.remove();
