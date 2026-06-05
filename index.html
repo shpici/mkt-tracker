@@ -438,6 +438,67 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .xvfill{height:100%;border-radius:4px;transition:width 1.3s cubic-bezier(.22,1,.36,1)}
 .xtag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
 .xnum{font-variant-numeric:tabular-nums}
+
+/* ── PRO TAB ── */
+#etp-pro{padding:0 14px 20px}
+.pro-section{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.pro-section-title{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t2);margin-bottom:12px}
+
+/* Level badge */
+.lvl-wrap{display:flex;align-items:center;gap:14px;padding:4px 0}
+.lvl-badge{width:72px;height:72px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:3px solid;flex-shrink:0;position:relative;box-shadow:0 0 18px var(--lvl-glow,transparent)}
+.lvl-bronze{background:linear-gradient(135deg,#cd7f32,#a0522d);border-color:#a0522d;--lvl-glow:#a0522d66}
+.lvl-silver{background:linear-gradient(135deg,#c0c0c0,#808080);border-color:#808080;--lvl-glow:#80808066}
+.lvl-gold{background:linear-gradient(135deg,#ffd700,#b8860b);border-color:#b8860b;--lvl-glow:#ffd70066}
+.lvl-plat{background:linear-gradient(135deg,#e5e4e2,#9da6b7);border-color:#9da6b7;--lvl-glow:#9da6b766}
+.lvl-legend{background:linear-gradient(135deg,#ff6b6b,#9b59b6,#3498db);border-color:#9b59b6;--lvl-glow:#9b59b666;animation:legendPulse 2.4s ease-in-out infinite}
+@keyframes legendPulse{0%,100%{box-shadow:0 0 18px #9b59b6aa}50%{box-shadow:0 0 32px #ff6b6bcc,0 0 50px #3498dbaa}}
+.lvl-info{flex:1}
+.lvl-name{font-size:18px;font-weight:800;line-height:1}
+.lvl-sub{font-size:11px;color:var(--t2);margin-top:3px}
+.lvl-bar-wrap{height:6px;background:var(--brd);border-radius:3px;margin-top:8px;overflow:hidden}
+.lvl-bar{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+
+/* KPI Rings */
+.rings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:4px}
+.ring-svg{overflow:visible}
+.ring-bg{fill:none;stroke:var(--brd);stroke-width:7}
+.ring-fg{fill:none;stroke-width:7;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1),stroke .4s}
+.ring-lbl{font-size:10px;color:var(--t2);text-align:center;font-weight:600}
+.ring-pct{font-size:13px;font-weight:800;text-anchor:middle;dominant-baseline:central}
+
+/* Streak */
+.streak-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.streak-fire{font-size:44px;line-height:1;filter:drop-shadow(0 2px 8px #ff6b0088)}
+.streak-nums{flex:1}
+.streak-big{font-size:32px;font-weight:900;line-height:1}
+.streak-sub{font-size:11px;color:var(--t2);margin-top:2px}
+.pr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.pr-item{background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:8px 10px;text-align:center}
+.pr-val{font-size:18px;font-weight:800}
+.pr-lbl{font-size:10px;color:var(--t2);margin-top:2px}
+
+/* Mission board */
+.mission-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:7px;transition:background .3s}
+.mission-item.done{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3)}
+.mission-item.open{background:var(--bg);border:1px solid var(--brd)}
+.mission-check{width:26px;height:26px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:all .4s}
+.mission-item.done .mission-check{background:#22c55e;border-color:#22c55e;color:#fff;animation:checkPop .4s cubic-bezier(.22,1,.36,1)}
+.mission-item.open .mission-check{border-color:var(--brd);color:var(--t3)}
+@keyframes checkPop{0%{transform:scale(.5)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.mission-text{flex:1;font-size:12px;font-weight:600}
+.mission-prog{font-size:11px;color:var(--t2);font-variant-numeric:tabular-nums}
+
+/* Leaderboard */
+.lb-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:6px;border:1px solid var(--brd);background:var(--bg);transition:border-color .3s}
+.lb-item.lb-me{border-color:var(--acc);background:rgba(var(--acc-rgb,.5,.7,1),.06)}
+.lb-rank{width:24px;font-size:14px;font-weight:900;text-align:center;flex-shrink:0}
+.lb-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.lb-name{flex:1;font-size:12px;font-weight:600}
+.lb-score{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.lb-bar-wrap{width:60px;height:5px;background:var(--brd);border-radius:3px;overflow:hidden}
+.lb-bar{height:100%;border-radius:3px}
 </style>
 </head>
 <body>
@@ -1558,6 +1619,7 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
   <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
   <div class="tab" onclick="empTab('empschedule',this)">🕐 Распоред</div>
+  <div class="tab" onclick="empTab('pro',this)">⚡ Pro</div>
 </div>
 <!-- EMP DAILY -->
 
@@ -1760,6 +1822,59 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 
 <div id="etp-tvint" class="tp" style="padding:0;margin:0">
   <iframe src="internet-tv.html" style="width:100%;height:calc(100vh - 130px);min-height:600px;border:none;display:block" loading="lazy"></iframe>
+</div>
+
+<div id="etp-pro" class="tp">
+  <!-- LEVEL -->
+  <div class="pro-section">
+    <div class="pro-section-title">🏆 Ниво</div>
+    <div class="lvl-wrap">
+      <div id="pro-badge" class="lvl-badge lvl-bronze">🥉</div>
+      <div class="lvl-info">
+        <div id="pro-lvl-name" class="lvl-name">Bronze</div>
+        <div id="pro-lvl-sub" class="lvl-sub">0% овој месец</div>
+        <div class="lvl-bar-wrap"><div id="pro-lvl-bar" class="lvl-bar" style="width:0%;background:#a0522d"></div></div>
+        <div id="pro-lvl-next" style="font-size:10px;color:var(--t2);margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI RINGS -->
+  <div class="pro-section">
+    <div class="pro-section-title">💫 KPI Прогрес</div>
+    <div class="rings-grid" id="pro-rings"></div>
+  </div>
+
+  <!-- STREAK -->
+  <div class="pro-section">
+    <div class="pro-section-title">🔥 Streak & Рекорди</div>
+    <div class="streak-wrap">
+      <div class="streak-fire" id="pro-streak-icon">🔥</div>
+      <div class="streak-nums">
+        <div class="streak-big"><span id="pro-streak">0</span> дена</div>
+        <div class="streak-sub" id="pro-streak-sub">Тековен streak</div>
+      </div>
+    </div>
+    <div class="pr-grid">
+      <div class="pr-item"><div class="pr-val" id="pro-pr-streak">0</div><div class="pr-lbl">Мак. streak</div></div>
+      <div class="pr-item"><div class="pr-val" id="pro-pr-score">0%</div><div class="pr-lbl">Мак. мес. %</div></div>
+      <div class="pr-item"><div class="pr-val" id="pro-pr-fmc">0</div><div class="pr-lbl">Мак. FMC/ден</div></div>
+      <div class="pr-item"><div class="pr-val" id="pro-pr-equip">0</div><div class="pr-lbl">Мак. Oprema/ден</div></div>
+    </div>
+  </div>
+
+  <!-- MISSIONS -->
+  <div class="pro-section">
+    <div class="pro-section-title">🎯 Дневни Мисии</div>
+    <div id="pro-missions"></div>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div class="pro-section">
+    <div class="pro-section-title">🌐 Тим Ранглиста</div>
+    <div id="pro-leaderboard"></div>
+    <div style="font-size:10px;color:var(--t2);text-align:center;margin-top:6px" id="pro-lb-time"></div>
+  </div>
 </div>
 
 </div><!-- end empView -->
@@ -4759,6 +4874,7 @@ window.empTab=(name,el)=>{
   else if(name==='emporders')rndEmpOrders();
   else if(name==='history')rndEmpHistory();
   else if(name==='empschedule')empScInit();
+  else if(name==='pro')rndEmpPro();
   else if(name==='empinfo'){/* rendered by listener */}
 };
 function rndEmpDyBtns(){
@@ -6198,6 +6314,182 @@ if(_origRnd){
     });
   };
 }
+
+// ══════════════════════════════════════════════════════════════════
+// ⚡ PRO TAB — Level, Rings, Streak, Missions, Leaderboard
+// ══════════════════════════════════════════════════════════════════
+
+const LEVELS=[
+  {key:'bronze',cls:'lvl-bronze',icon:'🥉',name:'Bronze',min:0,  max:39, color:'#a0522d'},
+  {key:'silver',cls:'lvl-silver',icon:'🥈',name:'Silver',min:40, max:69, color:'#808080'},
+  {key:'gold',  cls:'lvl-gold',  icon:'🥇',name:'Gold',  min:70, max:89, color:'#b8860b'},
+  {key:'plat',  cls:'lvl-plat',  icon:'💎',name:'Platinum',min:90,max:99,color:'#9da6b7'},
+  {key:'legend',cls:'lvl-legend',icon:'👑',name:'Legend', min:100,max:999,color:'#9b59b6'},
+];
+
+function calcLevel(score){
+  return LEVELS.find(l=>score>=l.min&&score<=l.max)||LEVELS[0];
+}
+
+function calcStreak(){
+  if(!mID)return{cur:0,max:0};
+  const wds=getWDs(cY,cM);
+  const today=new Date();
+  const todayKey=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const keys=wds.map(d=>dK(cY,cM,d)).filter(k=>k<=todayKey);
+  let cur=0,max=0,run=0,counting=true;
+  for(let i=keys.length-1;i>=0;i--){
+    const ms=AS[cY]?.[cM]?.[keys[i]]?.[mID];
+    const active=ms&&KKEYS.some(k=>ms[k]>0||(ms.equip_log?.length||ms.mob_log?.length));
+    if(active){run++;if(run>max)max=run;if(counting)cur=run;}
+    else{counting=false;}
+  }
+  return{cur,max};
+}
+
+function calcPersonalRecords(){
+  if(!mID)return{maxStreak:0,maxScore:0,maxFmc:0,maxEquip:0};
+  let maxStreak=0,maxScore=0,maxFmc=0,maxEquip=0,run=0;
+  const allMonths=[];
+  for(const y in AS)for(const m in AS[y])allMonths.push([+y,+m]);
+  allMonths.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  allMonths.forEach(([y,m])=>{
+    getWDs(y,m).forEach(d=>{
+      const ms=AS[y]?.[m]?.[dK(y,m,d)]?.[mID];
+      const active=ms&&KKEYS.some(k=>ms[k]>0||(ms.equip_log?.length||ms.mob_log?.length));
+      if(active){run++;if(run>maxStreak)maxStreak=run;}else run=0;
+      if(ms){if((ms.fmc||0)>maxFmc)maxFmc=ms.fmc||0;if((ms.equip||0)>maxEquip)maxEquip=ms.equip||0;}
+    });
+    const s=perfScore(mID,y,m);if(s>maxScore)maxScore=s;
+  });
+  return{maxStreak,maxScore,maxFmc,maxEquip};
+}
+
+function calcMissions(){
+  if(!mID)return[];
+  const wks=gWks(getWDs(cY,cM));const wk=wks[cW]||[];const dO=wk[cD];
+  if(!dO)return[];
+  const ms=AS[cY]?.[cM]?.[dK(cY,cM,dO)]?.[mID]||{};
+  const t=getMT(cY,cM);const wds=getWDs(cY,cM);
+  const dl=wds.length||1;
+  const mkM=(icon,text,target,actual,unit='')=>({icon,text,target,actual,unit});
+  return[
+    mkM('📶','FMC Консуматив денес',Math.max(1,Math.ceil((t.fmc||1)/dl)),ms.fmc||0),
+    mkM('📱','Постпејд денес',Math.max(1,Math.ceil((t.post||1)/dl)),ms.post||0),
+    mkM('💻','BB денес',Math.max(1,Math.ceil((t.bb||1)/dl)),ms.bb||0),
+    mkM('🛍','Доп. Опрема денес',Math.max(1,Math.ceil((t.equip||1)/dl)),ms.equip||0),
+    mkM('📊','Месечен скор ≥ 70%',70,perfScore(mID,cY,cM),'%'),
+    mkM('🔥','Активен ден (≥1 KPI)',1,KKEYS.some(k=>ms[k]>0)?1:0),
+  ];
+}
+
+const PRO_RING_KEYS=[
+  {k:'fmc', lbl:'FMC',    color:'#3b82f6'},
+  {k:'post',lbl:'Post',   color:'#8b5cf6'},
+  {k:'loy', lbl:'Loyalty',color:'#ec4899'},
+  {k:'bb',  lbl:'BB',     color:'#06b6d4'},
+  {k:'equip',lbl:'Oprema',color:'#f59e0b'},
+  {k:'cc',  lbl:'C&C',    color:'#10b981'},
+];
+
+function rndProRings(){
+  const c=document.getElementById('pro-rings');if(!c||!mID)return;
+  const t=getMT(cY,cM);const R=32,CIR=2*Math.PI*R;
+  c.innerHTML=PRO_RING_KEYS.map(({k,lbl,color})=>{
+    const a=mMoSum(mID,k,cY,cM),tgt=t[k]||0;
+    const p=tgt?Math.min(100,Math.round(a/tgt*100)):0;
+    return `<div class="ring-item">
+      <svg class="ring-svg" width="${R*2+14}" height="${R*2+14}" viewBox="0 0 ${R*2+14} ${R*2+14}">
+        <circle class="ring-bg" cx="${R+7}" cy="${R+7}" r="${R}"/>
+        <circle id="proring_${k}" class="ring-fg" cx="${R+7}" cy="${R+7}" r="${R}"
+          stroke="${color}" stroke-dasharray="${CIR.toFixed(2)}" stroke-dashoffset="${CIR.toFixed(2)}" />
+        <text class="ring-pct" x="${R+7}" y="${R+7}" fill="${color}" style="font-size:11px;font-weight:800;font-variant-numeric:tabular-nums">${p}%</text>
+      </svg>
+      <div class="ring-lbl">${lbl}<br><span style="color:var(--t3);font-weight:400">${a}/${tgt}</span></div>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const t2=getMT(cY,cM);
+    PRO_RING_KEYS.forEach(({k})=>{
+      const el=document.getElementById('proring_'+k);if(!el)return;
+      const a=mMoSum(mID,k,cY,cM),tgt=t2[k]||0;
+      const p=tgt?Math.min(100,Math.round(a/tgt*100)):0;
+      el.style.strokeDashoffset=String((CIR*(1-p/100)).toFixed(2));
+    });
+  }));
+}
+
+function rndProLevel(){
+  if(!mID)return;
+  const score=perfScore(mID,cY,cM);
+  const lvl=calcLevel(score);
+  const badge=document.getElementById('pro-badge');if(!badge)return;
+  badge.className='lvl-badge '+lvl.cls;
+  badge.textContent=lvl.icon;
+  document.getElementById('pro-lvl-name').textContent=lvl.name;
+  document.getElementById('pro-lvl-sub').textContent=score+'% овој месец';
+  const bar=document.getElementById('pro-lvl-bar');
+  const range=lvl.key==='legend'?1:(lvl.max-lvl.min+1);
+  bar.style.width=(lvl.key==='legend'?100:Math.round((score-lvl.min)/range*100))+'%';
+  bar.style.background=lvl.color;
+  const ni=LEVELS.indexOf(lvl)+1;
+  document.getElementById('pro-lvl-next').textContent=ni<LEVELS.length?`До ${LEVELS[ni].name}: уште ${LEVELS[ni].min-score}%`:'Максимално ниво! 🎉';
+}
+
+function rndProStreak(){
+  if(!mID)return;
+  const {cur,max}=calcStreak();
+  const pr=calcPersonalRecords();
+  const streakEl=document.getElementById('pro-streak');if(!streakEl)return;
+  streakEl.textContent=cur;
+  document.getElementById('pro-streak-sub').textContent=cur>=5?'🔥 Одлична форма!':cur>=2?'Продолжи напред!':'Започни streak денес!';
+  document.getElementById('pro-streak-icon').textContent=cur>=7?'🌟':cur>=3?'🔥':'💪';
+  document.getElementById('pro-pr-streak').textContent=Math.max(cur,max,pr.maxStreak);
+  document.getElementById('pro-pr-score').textContent=Math.max(perfScore(mID,cY,cM),pr.maxScore)+'%';
+  document.getElementById('pro-pr-fmc').textContent=pr.maxFmc;
+  document.getElementById('pro-pr-equip').textContent=pr.maxEquip;
+}
+
+function rndProMissions(){
+  const c=document.getElementById('pro-missions');if(!c||!mID)return;
+  const missions=calcMissions();
+  if(!missions.length){c.innerHTML='<div style="color:var(--t2);font-size:12px;text-align:center;padding:10px">Нема активни мисии</div>';return;}
+  c.innerHTML=missions.map(m=>{
+    const done=m.actual>=m.target;
+    const p=m.target?Math.min(100,Math.round(m.actual/m.target*100)):0;
+    return `<div class="mission-item ${done?'done':'open'}">
+      <div class="mission-check">${done?'✓':'○'}</div>
+      <div style="flex:1">
+        <div class="mission-text">${m.icon} ${m.text}</div>
+        <div class="mission-prog">${m.actual}${m.unit} / ${m.target}${m.unit} (${p}%)</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function rndProLeaderboard(){
+  const c=document.getElementById('pro-leaderboard');if(!c)return;
+  const ranked=MEMBERS.map(mem=>({...mem,score:perfScore(mem.id,cY,cM)})).sort((a,b)=>b.score-a.score);
+  const max=ranked[0]?.score||1;
+  const medals=['🥇','🥈','🥉'];
+  c.innerHTML=ranked.map((mem,i)=>{
+    const isMe=mem.id===mID;
+    return `<div class="lb-item${isMe?' lb-me':''}">
+      <div class="lb-rank">${medals[i]||'#'+(i+1)}</div>
+      <div class="lb-avatar" style="background:${mem.bg};color:${mem.tc}">${mem.ini}</div>
+      <div class="lb-name">${mem.name.split(' ')[0]}${isMe?' (Ти)':''}</div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:${Math.round(mem.score/max*100)}%;background:${pc(mem.score)}"></div></div>
+      <div class="lb-score" style="color:${pc(mem.score)}">${mem.score}%</div>
+    </div>`;
+  }).join('');
+  const te=document.getElementById('pro-lb-time');
+  if(te)te.textContent='Ажурирано: '+new Date().toLocaleTimeString('mk-MK',{hour:'2-digit',minute:'2-digit'});
+}
+
+window.rndEmpPro=function(){
+  if(!document.getElementById('etp-pro')?.classList.contains('act'))return;
+  rndProLevel();rndProRings();rndProStreak();rndProMissions();rndProLeaderboard();
+};
 
 // One-time bulk price update — call from console: updateOfiPrices()
 window.updateOfiPrices=async()=>{
