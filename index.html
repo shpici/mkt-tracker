@@ -665,7 +665,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <!-- AI CHATBOT PANEL -->
 <div id="aiPanel">
   <div class="ai-hdr">
-    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Gemini</div>
+    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Gemini 1.5</div>
     <div style="display:flex;gap:4px;align-items:center">
       <button class="ai-close" onclick="toggleAIKey()" title="API клуч">⚙️</button>
       <button class="ai-close" onclick="toggleAI()">✕</button>
@@ -6383,7 +6383,7 @@ window.aiSend=async function(){
   ];
 
   try{
-    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
