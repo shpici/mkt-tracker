@@ -1583,7 +1583,7 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
       <!-- DOП OPREMA BOX -->
       <div style="background:var(--aml);border:1px solid #ffcc80;border-radius:var(--r);padding:10px" id="equipBox">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
-          <span style="font-size:11px;font-weight:700;color:var(--am)">📦 Доп.Опрема</span>
+          <span style="font-size:11px;font-weight:700;color:var(--am)">🏬 Маг. Доп.Оп.</span>
           <span id="equipOnOff" style="font-size:9px;padding:2px 6px;border-radius:20px;cursor:pointer;background:var(--grl);color:var(--gr);font-weight:700;border:1px solid #a5d6a7" onclick="toggleOfiBox('equip')">ON</span>
         </div>
         <input id="empEquipOfi" class="fi" type="text" placeholder="OFI шифра → Enter" style="padding:5px 7px;font-size:11px;font-family:monospace;margin-bottom:4px" onkeydown="empOfiKeydown(event,'equip')">
@@ -1594,7 +1594,7 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
       <!-- MOB & DRUGO BOX -->
       <div style="background:var(--bll);border:1px solid #90caf9;border-radius:var(--r);padding:10px" id="mobBox">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
-          <span style="font-size:11px;font-weight:700;color:var(--bl)">📱 Моб.&amp;Друго</span>
+          <span style="font-size:11px;font-weight:700;color:var(--bl)">🏬 Маг. Моб.&amp;Др.</span>
           <span id="mobOnOff" style="font-size:9px;padding:2px 6px;border-radius:20px;cursor:pointer;background:var(--grl);color:var(--gr);font-weight:700;border:1px solid #a5d6a7" onclick="toggleOfiBox('mob')">ON</span>
         </div>
         <input id="empMobOfi" class="fi" type="text" placeholder="OFI шифра → Enter" style="padding:5px 7px;font-size:11px;font-family:monospace;margin-bottom:4px" onkeydown="empOfiKeydown(event,'mob')">
@@ -3736,8 +3736,8 @@ function calcAlerts(){
     if(sc<60)als.push({type:'acr',ico:'🚨',txt:mb.name+' — score под 60%',sub:`Score: ${sc}%`});
     KKEYS.forEach((k,i)=>{if(!isInScore(k))return;const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);if(p<50)als.push({type:'aw',ico:'❗',txt:`${mb.name} — ${KLBLS[i]} под 50%`,sub:`${s}/${t} (${p}%)`});});
   });
-  Object.values(OFI_PRODUCTS).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'📦',txt:`Доп.Опрема: ${p.name} — критично`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
-  Object.values(OFI_PRODUCTS2).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'📱',txt:`Моб.Друго: ${p.name} — критично`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
+  Object.values(OFI_PRODUCTS).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'🏬',txt:`Маг. Доп.Оп.: ${p.name} — критично`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
+  Object.values(OFI_PRODUCTS2).forEach(p=>{if((p.qty||0)<=2)als.push({type:'aw',ico:'🏬',txt:`Маг. Моб.&Др.: ${p.name} — критично`,sub:`OFI: ${p.ofi} · Остаток: ${p.qty||0}`});});
   // No badge in DOM anymore — silently ignore
 }
 
