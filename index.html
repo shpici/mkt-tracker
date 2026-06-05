@@ -4287,7 +4287,7 @@ window.empOfiKeydown=async(e,type)=>{
   
   const prods=type==='equip'?OFI_PRODUCTS:OFI_PRODUCTS2;
   const wrongProds=type==='equip'?OFI_PRODUCTS2:OFI_PRODUCTS;
-  if(wrongProds[val]){const wn=type==='equip'?'Моб.&Друго':'Доп.Опрема';inp.style.borderColor='var(--rd)';inp.placeholder='⚠ Оваа OFI е во '+wn+'!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра → Enter';},2500);return;}
+  if(wrongProds[val]){const wn=type==='equip'?'Маг. Моб.&Др.':'Маг. Доп.Оп.';inp.style.borderColor='var(--rd)';inp.placeholder='⚠ Оваа OFI е во '+wn+'!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра → Enter';},2500);return;}
   if(!prods[val]){inp.style.borderColor='var(--rd)';inp.placeholder='⚠ OFI не постои!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра → Enter';},2500);return;}
   if((prods[val].qty||0)<1){inp.style.borderColor='var(--am)';inp.placeholder='⚠ Нема на лагер!';setTimeout(()=>{inp.style.borderColor='';inp.placeholder='OFI шифра → Enter';},2500);return;}
   const logKey=type==='equip'?'equip_log':'mob_log';
