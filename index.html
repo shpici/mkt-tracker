@@ -502,7 +502,7 @@ body.dark-mode .llogo{background:var(--mg)!important}
 
 /* ── GAMES TAB ── */
 #etp-games{padding:0 14px 20px}
-.game-sel{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.game-sel{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
 .game-btn{background:var(--sur);border:2px solid var(--brd);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;font-size:10px;font-weight:700;color:var(--t1);transition:border-color .2s,background .2s;user-select:none}
 .game-btn:hover,.game-btn.gact{border-color:var(--acc);background:rgba(99,102,241,.08);color:var(--acc)}
 .game-btn .gico{font-size:22px;display:block;margin-bottom:3px}
@@ -533,6 +533,30 @@ canvas.gc{display:block;border-radius:8px;image-rendering:pixelated}
 .mem-card.matched .mem-front{background:#22c55e}
 /* Flappy */
 .flappy-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+/* Crossword */
+.cw-lang-btns{display:flex;gap:6px;padding:10px 14px 0}
+.cw-lang-btn{padding:4px 14px;border-radius:20px;border:1px solid var(--brd);background:var(--bg);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.cw-lang-btn.act{background:var(--acc);color:#fff;border-color:var(--acc)}
+.cw-wrap{display:flex;gap:10px;padding:10px;overflow-x:auto}
+.cw-grid-wrap{flex-shrink:0}
+.cw-grid{display:inline-grid;gap:2px;padding:6px;background:var(--sur);border-radius:8px}
+.cw-cell{width:30px;height:30px;position:relative}
+.cw-cell.blocked{background:var(--bg);border-radius:2px}
+.cw-cell.open{background:#fff;border:1.5px solid #bbb;border-radius:3px}
+.cw-cell.selected{border-color:var(--acc);border-width:2px;background:#eff6ff}
+.cw-cell.word-sel{background:#dbeafe}
+.cw-cell.correct{background:#dcfce7;border-color:#22c55e}
+.cw-cell.wrong{background:#fee2e2;border-color:#ef4444}
+.cw-cell input{position:absolute;inset:0;border:none;background:transparent;text-align:center;font-size:13px;font-weight:800;text-transform:uppercase;outline:none;caret-color:transparent;color:#1e293b;cursor:pointer}
+.cw-num{position:absolute;top:1px;left:2px;font-size:7px;font-weight:700;color:#64748b;line-height:1;pointer-events:none;z-index:1}
+.cw-clues{flex:1;min-width:130px;font-size:11px}
+.cw-clue-section{margin-bottom:8px}
+.cw-clue-title{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--t2);margin-bottom:4px}
+.cw-clue{padding:3px 6px;border-radius:5px;margin-bottom:2px;cursor:pointer;line-height:1.3}
+.cw-clue:hover,.cw-clue.active{background:var(--acc);color:#fff;border-radius:5px}
+.cw-clue b{font-weight:800}
+.game-howto{padding:10px 14px;border-top:1px solid var(--brd);font-size:11px;color:var(--t2);line-height:1.6}
+.game-howto b{color:var(--t1);font-weight:700}
 </style>
 </head>
 <body>
@@ -1865,6 +1889,9 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
     <div class="game-btn" onclick="gSel('2048',this)"><span class="gico">🔢</span>2048</div>
     <div class="game-btn" onclick="gSel('memory',this)"><span class="gico">🧠</span>Memory</div>
     <div class="game-btn" onclick="gSel('flappy',this)"><span class="gico">🐦</span>Flappy</div>
+    <div class="game-btn" onclick="gSel('summer',this)"><span class="gico">🏄</span>Summer</div>
+    <div class="game-btn" onclick="gSel('snowboard',this)"><span class="gico">🏔</span>Snowboard</div>
+    <div class="game-btn" onclick="gSel('crossword',this)"><span class="gico">📝</span>Крстозбор</div>
   </div>
   <div class="game-area" id="gArea"></div>
   <div style="margin-top:14px;background:var(--sur);border:1px solid var(--brd);border-radius:14px;overflow:hidden">
@@ -6800,6 +6827,9 @@ window.gSel=function(game,btn){
   else if(game==='2048')g2048Init(area);
   else if(game==='memory')gMemInit(area);
   else if(game==='flappy')gFlappyInit(area);
+  else if(game==='summer')gSummerInit(area);
+  else if(game==='snowboard')gSnowInit(area);
+  else if(game==='crossword')gCrosswordInit(area);
 };
 
 const gHS=k=>{try{return parseInt(localStorage.getItem('gs_'+k)||'0');}catch{return 0;}};
@@ -6810,8 +6840,8 @@ function gStop(){if(_gStopFn){_gStopFn();_gStopFn=null;}}
 
 // ── 🐍 SNAKE ──
 function gSnakeInit(area){
-  const SZ=16,COLS=18,ROWS=18,W=COLS*SZ,H=ROWS*SZ;
-  let snake=[{x:9,y:9},{x:8,y:9},{x:7,y:9}],dir={x:1,y:0},nextDir={x:1,y:0};
+  const SZ=17,COLS=20,ROWS=20,W=COLS*SZ,H=ROWS*SZ;
+  let snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}],dir={x:1,y:0},nextDir={x:1,y:0};
   let food={x:3,y:3},score=0,best=gHS('snake'),alive=true,loop=null;
 
   area.innerHTML=`
@@ -6829,7 +6859,8 @@ function gSnakeInit(area){
       <button onpointerdown="snRestart()" style="font-size:12px;font-weight:700">RESET</button>
       <button onpointerdown="snDir(1,0)">&#x25B6;</button>
       <div></div><button onpointerdown="snDir(0,1)">&#x25BC;</button><div></div>
-    </div>`;
+    </div>
+    <div class="game-howto"><b>Цел:</b> Јади ги јаболката 🔴, расти и не удри во ѕид или во себе.<br><b>Контроли:</b> D-pad копчиња, стрелки на тастатура или свај по екранот.</div>`;
 
   const cv=document.getElementById('snCv');const ctx=cv.getContext('2d');
 
@@ -6895,7 +6926,7 @@ function g2048Init(area){
       </div>
     </div>
     <div class="g2048-board" id="g2kBoard"></div>
-    <div style="font-size:11px;color:var(--t2);text-align:center;padding:8px 0 14px">Стрелки или свај за движење</div>`;
+    <div class="game-howto"><b>Цел:</b> Споји плочките за да стигнеш до <b>2048</b>. Две исти плочки = двојна вредност.<br><b>Контроли:</b> Свај лево/десно/горе/долу или стрелки. По секој потег се додава нова плочка.</div>`;
   newGrid();render();
   window.g2048Restart=()=>{newGrid();render();};
   const kh=e=>{const m={ArrowLeft:'l',ArrowRight:'r',ArrowUp:'u',ArrowDown:'d'};if(m[e.key]){e.preventDefault();move(m[e.key]);}};
@@ -6946,14 +6977,15 @@ function gMemInit(area){
         <button onclick="gMemInit(document.getElementById('gArea'))" style="font-size:11px;padding:4px 10px;border-radius:8px;border:1px solid var(--brd);background:var(--sur);cursor:pointer;font-weight:700">Ново</button>
       </div>
     </div>
-    <div class="mem-board" id="memBoard"></div>`;
+    <div class="mem-board" id="memBoard"></div>
+    <div class="game-howto"><b>Цел:</b> Пронајди ги сите 8 пара картички со исти емоџи.<br><b>Контроли:</b> Тапни картичка за да ја превртиш. Ако две превртени се исти — остануваат отворени. Победуваш кога ќе ги отвориш сите.</div>`;
   newGame();
   _gStopFn=()=>{clearInterval(timerID);};
 }
 
 // ── 🐦 FLAPPY BIRD ──
 function gFlappyInit(area){
-  const W=280,H=380,GAP=90,PIPE_W=42,GRAV=0.38,FLAP=-6.5;
+  const W=310,H=430,GAP=95,PIPE_W=46,GRAV=0.38,FLAP=-6.5;
   let bird,pipes,score,best=gHS('flappy'),raf=null,state='idle',pipeTimer=0;
 
   function reset(){bird={x:70,y:H/2,vy:0};pipes=[];score=0;pipeTimer=0;const el=document.getElementById('flScore');if(el)el.textContent=0;}
@@ -6967,7 +6999,7 @@ function gFlappyInit(area){
       </div>
     </div>
     <div class="game-canvas-wrap"><canvas id="flCv" class="gc" width="${W}" height="${H}" style="background:#87ceeb;cursor:pointer"></canvas></div>
-    <div style="font-size:11px;color:var(--t2);text-align:center;padding:8px 0 14px">Тап на екранот или Спејс — лета!</div>`;
+    <div class="game-howto"><b>Цел:</b> Лети низ цевките без да удриш во нив или во земјата.<br><b>Контроли:</b> Тап на екранот или Спејс = лета нагоре. Секоја цевка = +1 поен.</div>`;
 
   const cv=document.getElementById('flCv');const ctx=cv.getContext('2d');
   reset();
@@ -7015,6 +7047,336 @@ function gFlappyInit(area){
   document.addEventListener('keydown',kh);
   loop();
   _gStopFn=()=>{if(raf){cancelAnimationFrame(raf);raf=null;}document.removeEventListener('keydown',kh);};
+}
+
+// ── ☀️ SUMMER BOARD (3-lane surfer) ──
+function gSummerInit(area){
+  const W=310,H=300,LANES=[80,150,220],SPEED_START=2.5;
+  let lane=1,score=0,best=gHS('summer'),raf=null,state='idle';
+  let obstacles=[],obstTimer=0,speed=SPEED_START,frames=0;
+
+  area.innerHTML=`
+    <div class="game-hdr">
+      <div class="game-hdr-title">🏄 Summer Board</div>
+      <div class="game-score-box">
+        <div class="gscore"><div class="gscore-val" id="sbScore">0</div><div class="gscore-lbl">Поени</div></div>
+        <div class="gscore"><div class="gscore-val" id="sbBest">${best}</div><div class="gscore-lbl">Рекорд</div></div>
+      </div>
+    </div>
+    <div class="game-canvas-wrap"><canvas id="sbCv" class="gc" width="${W}" height="${H}" style="cursor:pointer"></canvas></div>
+    <div class="game-howto"><b>Цел:</b> Избегни ги бранови 🌊 и ајкули 🦈 колку можеш подолго.<br><b>Контроли:</b> Тап горна/долна половина за промена на патека. Стрелки горе/долу исто.</div>`;
+
+  const cv=document.getElementById('sbCv');const ctx=cv.getContext('2d');
+
+  function drawBg(){
+    const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#87ceeb');sky.addColorStop(0.45,'#87ceeb');sky.addColorStop(0.45,'#1a6fa8');sky.addColorStop(1,'#0d4a7a');
+    ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+    // Lane lines (waves)
+    ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
+    [115,185].forEach(y=>{ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();});
+  }
+
+  function draw(){
+    drawBg();
+    // Obstacles
+    obstacles.forEach(o=>{ctx.font='26px sans-serif';ctx.textAlign='center';ctx.fillText(o.icon,o.x,LANES[o.lane]+8);});
+    // Player
+    ctx.save();ctx.translate(70,LANES[lane]);ctx.font='28px sans-serif';ctx.textAlign='center';ctx.fillText('🏄',0,8);ctx.restore();
+    // Score
+    ctx.fillStyle='rgba(255,255,255,0.8)';ctx.font='bold 14px sans-serif';ctx.textAlign='left';ctx.fillText('⭐ '+score,10,22);
+    if(state==='idle'){ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.fillText('🏄 Тап за почеток',W/2,H/2);}
+    if(state==='dead'){ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText('💥 Крај!',W/2,H/2-16);ctx.font='13px sans-serif';ctx.fillText('Поени: '+score+'  Рекорд: '+best,W/2,H/2+8);ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='11px sans-serif';ctx.fillText('Тап за рестарт',W/2,H/2+28);}
+  }
+
+  function tick(){
+    raf=requestAnimationFrame(tick);frames++;
+    if(state!=='play'){draw();return;}
+    speed=SPEED_START+frames/600;
+    obstTimer++;
+    if(obstTimer>Math.max(40,80-frames/80)){obstTimer=0;obstacles.push({x:W+20,lane:Math.floor(Math.random()*3),icon:Math.random()<0.6?'🌊':'🦈'});}
+    obstacles.forEach(o=>o.x-=speed);
+    obstacles=obstacles.filter(o=>o.x>-40);
+    // Score = frames survived
+    if(frames%30===0){score++;document.getElementById('sbScore').textContent=score;if(score>best){best=score;gSHS('sbScore',best);saveGameScore('summer',best);const b=document.getElementById('sbBest');if(b)b.textContent=best;}}
+    // Collision
+    const px=70,py=LANES[lane];
+    const hit=obstacles.some(o=>Math.abs(o.x-px)<22&&o.lane===lane);
+    if(hit){state='dead';gSHS('summer',score);saveGameScore('summer',score);if(raf){cancelAnimationFrame(raf);raf=null;}draw();return;}
+    draw();
+  }
+
+  function tap(y){
+    if(state==='idle'){state='play';frames=0;score=0;obstacles=[];speed=SPEED_START;obstTimer=0;if(!raf)tick();return;}
+    if(state==='dead'){state='play';frames=0;score=0;obstacles=[];speed=SPEED_START;obstTimer=0;lane=1;if(!raf)tick();return;}
+    if(y<H/2)lane=Math.max(0,lane-1);else lane=Math.min(2,lane+1);
+  }
+
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();tap(e.clientY-r.top);});
+  const kh=e=>{if(e.key==='ArrowUp'){e.preventDefault();lane=Math.max(0,lane-1);}else if(e.key==='ArrowDown'){e.preventDefault();lane=Math.min(2,lane+1);}};
+  document.addEventListener('keydown',kh);
+  tick();
+  _gStopFn=()=>{if(raf){cancelAnimationFrame(raf);raf=null;}document.removeEventListener('keydown',kh);};
+}
+
+// ── 🏔 SNOWBOARD ──
+function gSnowInit(area){
+  const W=310,H=420;
+  let px=W/2,score=0,best=gHS('snowboard'),raf=null,state='idle';
+  let trees=[],speed=2.5,frames=0,targetX=W/2;
+
+  area.innerHTML=`
+    <div class="game-hdr">
+      <div class="game-hdr-title">🏔 Snowboard</div>
+      <div class="game-score-box">
+        <div class="gscore"><div class="gscore-val" id="swScore">0</div><div class="gscore-lbl">Поени</div></div>
+        <div class="gscore"><div class="gscore-val" id="swBest">${best}</div><div class="gscore-lbl">Рекорд</div></div>
+      </div>
+    </div>
+    <div class="game-canvas-wrap"><canvas id="swCv" class="gc" width="${W}" height="${H}" style="cursor:pointer"></canvas></div>
+    <div class="game-howto"><b>Цел:</b> Скијај надолу и избегни ги дрвјата 🌲 и карпите 🪨.<br><b>Контроли:</b> Тап лево/десно (или стрелки) за промена на насока.</div>`;
+
+  const cv=document.getElementById('swCv');const ctx=cv.getContext('2d');
+
+  function drawBg(){
+    ctx.fillStyle='#e8f4f8';ctx.fillRect(0,0,W,H);
+    // Slope lines
+    ctx.strokeStyle='rgba(150,200,220,.4)';ctx.lineWidth=1.5;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x-(frames%40),0);ctx.lineTo(x-(frames%40)+20,H);ctx.stroke();}
+  }
+
+  function draw(){
+    drawBg();
+    trees.forEach(t=>{ctx.font='22px sans-serif';ctx.textAlign='center';ctx.fillText(t.icon,t.x,t.y);});
+    // Player
+    ctx.save();ctx.translate(px,H-70);const lean=(targetX-px)*0.04;ctx.rotate(lean);ctx.font='28px sans-serif';ctx.textAlign='center';ctx.fillText('🏂',0,8);ctx.restore();
+    // Vignette
+    const grad=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.8);grad.addColorStop(0,'transparent');grad.addColorStop(1,'rgba(0,0,0,.08)');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(W/2-28,8,56,24);ctx.fillStyle='#fff';ctx.font='bold 13px sans-serif';ctx.textAlign='center';ctx.fillText('🏔 '+score,W/2,24);
+    if(state==='idle'){ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#1e293b';ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.fillText('🏂 Тап за почеток',W/2,H/2);}
+    if(state==='dead'){ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText('💥 Крај!',W/2,H/2-16);ctx.font='13px sans-serif';ctx.fillText('Поени: '+score+'  Рекорд: '+best,W/2,H/2+6);ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='11px sans-serif';ctx.fillText('Тап за рестарт',W/2,H/2+28);}
+  }
+
+  function tick(){
+    raf=requestAnimationFrame(tick);frames++;
+    if(state!=='play'){draw();return;}
+    speed=2.5+frames/400;
+    px+=(targetX-px)*0.1;
+    if(frames%Math.max(20,50-Math.floor(frames/200))===0){trees.push({x:20+Math.random()*(W-40),y:-10,icon:Math.random()<0.7?'🌲':'🪨'});}
+    trees.forEach(t=>t.y+=speed);
+    trees=trees.filter(t=>t.y<H+20);
+    if(frames%20===0){score++;document.getElementById('swScore').textContent=score;if(score>best){best=score;saveGameScore('snowboard',best);const b=document.getElementById('swBest');if(b)b.textContent=best;}}
+    const hit=trees.some(t=>Math.abs(t.x-px)<20&&t.y>H-100&&t.y<H-50);
+    if(hit){state='dead';saveGameScore('snowboard',score);if(raf){cancelAnimationFrame(raf);raf=null;}draw();return;}
+    draw();
+  }
+
+  function tap(x){
+    if(state!=='play'){state='play';frames=0;score=0;trees=[];speed=2.5;px=W/2;targetX=W/2;if(!raf)tick();return;}
+    targetX=x<W/2?Math.max(30,px-55):Math.min(W-30,px+55);
+  }
+
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();tap(e.clientX-r.left);});
+  let swTx=0;
+  cv.addEventListener('touchstart',e=>{swTx=e.touches[0].clientX;},{passive:true});
+  cv.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-swTx;if(Math.abs(dx)>20)targetX=dx>0?Math.min(W-30,px+60):Math.max(30,px-60);},{passive:true});
+  const kh=e=>{if(e.key==='ArrowLeft'){e.preventDefault();targetX=Math.max(30,px-55);}else if(e.key==='ArrowRight'){e.preventDefault();targetX=Math.min(W-30,px+55);}};
+  document.addEventListener('keydown',kh);
+  tick();
+  _gStopFn=()=>{if(raf){cancelAnimationFrame(raf);raf=null;}document.removeEventListener('keydown',kh);};
+}
+
+// ── 📝 CROSSWORD ──
+const CW={
+  mk:{
+    lang:'mk',title:'Крстозбор — Македонски',
+    rows:5,cols:8,
+    // answer grid (null=blocked)
+    ans:[
+      ['П','Р','О','Д','А','Ж','Б','А'],
+      ['А',null,null,null,'К',null,null,null],
+      ['Р','А','Б','О','Т','А',null,null],
+      ['И','М','А',null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+    ],
+    words:[
+      {num:1,dir:'a',r:0,c:0,len:8,clue:'Главната активност во нашата работа (8)'},
+      {num:2,dir:'d',r:0,c:0,len:4,clue:'Монети и банкноти (4)'},
+      {num:3,dir:'a',r:2,c:0,len:6,clue:'Она што го правиме секој ден (6)'},
+      {num:4,dir:'a',r:3,c:0,len:3,clue:'Постои, е присутно (3)'},
+      {num:5,dir:'d',r:0,c:4,len:3,clue:'Документ или официјална постапка (3)'},
+    ]
+  },
+  al:{
+    lang:'al',title:'Fjalëkryq — Shqip',
+    rows:4,cols:4,
+    ans:[
+      ['P','U','N','Ë'],
+      ['A',null,'A',null],
+      ['R','A','S','T'],
+      ['A','K','T',null],
+    ],
+    words:[
+      {num:1,dir:'a',r:0,c:0,len:4,clue:'Aktiviteti i përditshëm (4)'},
+      {num:2,dir:'d',r:0,c:0,len:4,clue:'Monedha dhe kartëmonedha (4)'},
+      {num:3,dir:'a',r:2,c:0,len:4,clue:'Situatë ose rrethanë (4)'},
+      {num:4,dir:'a',r:3,c:0,len:3,clue:'Dokument zyrtar (3)'},
+      {num:5,dir:'d',r:0,c:2,len:3,clue:'Forma e parë shumës (3)'},
+    ]
+  }
+};
+
+let _cwLang='mk',_cwSel=null,_cwDir='a',_cwUserGrid={};
+
+function gCrosswordInit(area,lang){
+  lang=lang||_cwLang;_cwLang=lang;
+  const cw=CW[lang];
+  // Init user grid
+  _cwUserGrid={};
+  _cwSel=null;
+
+  // Build cell map: which cells belong to which words
+  const cellMap={};// key="r,c" → {num,dirs:[]}
+  cw.words.forEach(w=>{
+    for(let i=0;i<w.len;i++){
+      const r=w.dir==='a'?w.r:w.r+i,c=w.dir==='a'?w.c+i:w.c;
+      const key=r+','+c;
+      if(!cellMap[key])cellMap[key]={num:null,dirs:[]};
+      if(i===0)cellMap[key].num=w.num;
+      cellMap[key].dirs.push(w.num+w.dir);
+    }
+  });
+
+  // Determine cell numbers (first cell of word)
+  const cellNums={};
+  cw.words.forEach(w=>{cellNums[w.r+','+w.c]=(cellNums[w.r+','+w.c]||[]); cellNums[w.r+','+w.c].push(w.num);});
+
+  function renderGrid(){
+    const gridEl=document.getElementById('cwGrid');if(!gridEl)return;
+    gridEl.style.gridTemplateColumns=`repeat(${cw.cols},30px)`;
+    gridEl.innerHTML='';
+    for(let r=0;r<cw.rows;r++){
+      for(let c=0;c<cw.cols;c++){
+        const ans=cw.ans[r]?.[c];
+        const cell=document.createElement('div');
+        cell.className='cw-cell '+(ans===null||ans===undefined?'blocked':'open');
+        if(ans!==null&&ans!==undefined){
+          const key=r+','+c;
+          const userVal=_cwUserGrid[key]||'';
+          const checked=_cwUserGrid[key+'_checked'];
+          if(checked==='ok')cell.classList.add('correct');
+          else if(checked==='bad')cell.classList.add('wrong');
+          if(_cwSel&&_cwSel.r===r&&_cwSel.c===c)cell.classList.add('selected');
+          else if(_cwSel){
+            // Highlight word cells
+            const selWord=getSelWord();
+            if(selWord){const inWord=selWord.dir==='a'?(r===selWord.r&&c>=selWord.c&&c<selWord.c+selWord.len):(c===selWord.c&&r>=selWord.r&&r<selWord.r+selWord.len);if(inWord)cell.classList.add('word-sel');}
+          }
+          const nums=cellNums[key];
+          if(nums){const n=document.createElement('div');n.className='cw-num';n.textContent=nums[0];cell.appendChild(n);}
+          const inp=document.createElement('input');
+          inp.maxLength=1;inp.value=userVal;inp.readOnly=true;
+          inp.addEventListener('pointerdown',()=>cwClick(r,c));
+          cell.appendChild(inp);
+        }
+        gridEl.appendChild(cell);
+      }
+    }
+  }
+
+  function getSelWord(){
+    if(!_cwSel)return null;
+    return cw.words.find(w=>{
+      if(w.dir!==_cwDir)return false;
+      if(w.dir==='a')return w.r===_cwSel.r&&_cwSel.c>=w.c&&_cwSel.c<w.c+w.len;
+      return w.c===_cwSel.c&&_cwSel.r>=w.r&&_cwSel.r<w.r+w.len;
+    })||cw.words.find(w=>{
+      if(w.dir==='a')return w.r===_cwSel.r&&_cwSel.c>=w.c&&_cwSel.c<w.c+w.len;
+      return w.c===_cwSel.c&&_cwSel.r>=w.r&&_cwSel.r<w.r+w.len;
+    });
+  }
+
+  window.cwClick=(r,c)=>{
+    if(_cwSel&&_cwSel.r===r&&_cwSel.c===c){_cwDir=_cwDir==='a'?'d':'a';}
+    else{_cwSel={r,c};_cwDir='a';}
+    // Check if selected dir has a word here; if not, flip
+    if(!getSelWord())_cwDir=_cwDir==='a'?'d':'a';
+    renderGrid();renderClues();
+    document.getElementById('cwInput')?.focus();
+  };
+
+  window.cwType=e=>{
+    if(!_cwSel)return;
+    const key=_cwSel.r+','+_cwSel.c;
+    if(e.key==='Backspace'){
+      if(_cwUserGrid[key]){delete _cwUserGrid[key];delete _cwUserGrid[key+'_checked'];}
+      else{moveSel(-1);}
+      renderGrid();return;
+    }
+    if(e.key.length===1&&/[a-zA-ZА-Яа-яЀ-ӿёЁ]/u.test(e.key)){
+      _cwUserGrid[key]=e.key.toUpperCase();delete _cwUserGrid[key+'_checked'];
+      moveSel(1);renderGrid();
+    }
+  };
+
+  function moveSel(dir){
+    if(!_cwSel)return;
+    const w=getSelWord();if(!w)return;
+    const nr=_cwDir==='a'?_cwSel.r:_cwSel.r+dir;
+    const nc=_cwDir==='a'?_cwSel.c+dir:_cwSel.c;
+    if(nr>=0&&nr<cw.rows&&nc>=0&&nc<cw.cols&&cw.ans[nr]?.[nc]!==null&&cw.ans[nr]?.[nc]!==undefined){_cwSel={r:nr,c:nc};}
+  }
+
+  window.cwCheck=()=>{
+    for(let r=0;r<cw.rows;r++){for(let c=0;c<cw.cols;c++){const ans=cw.ans[r]?.[c];if(ans===null||ans===undefined)continue;const key=r+','+c;const uv=_cwUserGrid[key]||'';_cwUserGrid[key+'_checked']=uv===ans.toUpperCase()?'ok':'bad';}}
+    renderGrid();
+    const allCells=[];for(let r=0;r<cw.rows;r++)for(let c=0;c<cw.cols;c++){const ans=cw.ans[r]?.[c];if(ans!==null&&ans!==undefined)allCells.push(r+','+c);}
+    const correct=allCells.every(k=>_cwUserGrid[k+'_checked']==='ok');
+    if(correct){launchConfetti();playSuccessSound();showToast('🎉 Точно! Браво!','ok',3000);}
+  };
+
+  window.cwClear=()=>{_cwUserGrid={};_cwSel=null;renderGrid();renderClues();};
+
+  function renderClues(){
+    const across=document.getElementById('cwAcross');
+    const down=document.getElementById('cwDown');
+    if(!across||!down)return;
+    const selW=getSelWord();
+    const mkClue=(w)=>{const active=selW&&selW.num===w.num&&selW.dir===w.dir;return`<div class="cw-clue${active?' active':''}" onclick="cwClickClue(${w.num},'${w.dir}')"><b>${w.num}.</b> ${w.clue}</div>`;};
+    across.innerHTML=cw.words.filter(w=>w.dir==='a').map(mkClue).join('');
+    down.innerHTML=cw.words.filter(w=>w.dir==='d').map(mkClue).join('');
+  }
+
+  window.cwClickClue=(num,dir)=>{
+    const w=cw.words.find(x=>x.num===num&&x.dir===dir);if(!w)return;
+    _cwSel={r:w.r,c:w.c};_cwDir=dir;renderGrid();renderClues();
+    document.getElementById('cwInput')?.focus();
+  };
+
+  // Build HTML
+  area.innerHTML=`
+    <div class="cw-lang-btns">
+      <div class="cw-lang-btn${lang==='mk'?' act':''}" onclick="gCrosswordInit(document.getElementById('gArea'),'mk')">🇲🇰 Македонски</div>
+      <div class="cw-lang-btn${lang==='al'?' act':''}" onclick="gCrosswordInit(document.getElementById('gArea'),'al')">🦅 Shqip</div>
+    </div>
+    <div style="display:flex;gap:8px;padding:8px 14px 4px">
+      <button onclick="cwCheck()" style="flex:1;padding:7px;border-radius:8px;border:none;background:#3b82f6;color:#fff;font-weight:700;font-size:12px;cursor:pointer">✓ Провери</button>
+      <button onclick="cwClear()" style="padding:7px 14px;border-radius:8px;border:1px solid var(--brd);background:var(--sur);font-weight:700;font-size:12px;cursor:pointer">↺ Ресет</button>
+    </div>
+    <div class="cw-wrap">
+      <div class="cw-grid-wrap">
+        <div class="cw-grid" id="cwGrid" style="grid-template-columns:repeat(${cw.cols},30px)"></div>
+      </div>
+      <div class="cw-clues">
+        <div class="cw-clue-section"><div class="cw-clue-title">→ Хоризонтално</div><div id="cwAcross"></div></div>
+        <div class="cw-clue-section"><div class="cw-clue-title">↓ Вертикално</div><div id="cwDown"></div></div>
+      </div>
+    </div>
+    <input id="cwInput" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px" />
+    <div class="game-howto"><b>Играње:</b> Тапни ќелија → пишувај буква. Тапни пак за промена на насока (→↓). Кликни зборот во листата за да го изберат. Притисни <b>✓ Провери</b> за да видиш резултатот.</div>`;
+
+  document.addEventListener('keydown',window.cwType);
+  renderGrid();renderClues();
+  _gStopFn=()=>{document.removeEventListener('keydown',window.cwType);};
 }
 
 </script>
