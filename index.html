@@ -2052,7 +2052,7 @@ function subToMonth(y,m){
         if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
         if(mID&&document.getElementById('etp-pro')?.classList.contains('act'))window.rndEmpPro?.();
         if(document.getElementById('tp-fullreport')?.classList.contains('act'))rndFullReport();
-        if(document.getElementById('tp-executive')?.classList.contains('act'))rndExecutive();
+        if(document.getElementById('tp-executive')?.classList.contains('act')){if(_execSt==='rk')rndExecRanking();else if(_execSt==='cmp')window.rndCmpTab?.();else rndExecutive();}
         if(_profileEmpId&&document.getElementById('emp-profile-overlay')?.classList.contains('open'))rndEmpProfile();
       }
     },err=>console.error('onSnapshot day',dk,err));
@@ -3726,7 +3726,7 @@ let _execSt='ov';
 window._execRkDay=null;
 window._execRkWeek=0;
 
-function execSt(st){
+window.execSt=function(st){
   _execSt=st;
   ['ov','rk','cmp'].forEach(s=>{
     const sub=document.getElementById('exec-sub-'+s);
@@ -3743,13 +3743,13 @@ function execSt(st){
     const errEl=document.getElementById(st==='rk'?'exec-rk-content':'cmp-tab-content');
     if(errEl)errEl.innerHTML=`<div style="color:var(--rd);padding:20px;font-size:12px">⚠️ Грешка: ${e.message}</div>`;
   }
-}
+};
 
-function execRkPeriod(p){
+window.execRkPeriod=function(p){
   _execRkPeriod=p;
   ['day','week','month','year'].forEach(pp=>document.getElementById('rkp-'+pp)?.classList.toggle('act',pp===p));
   rndExecRanking();
-}
+};
 
 function perfScoreDay(mid,y,m,dayObj){
   const t=getMT(y,m);const wd=getWDs(y,m).length;
