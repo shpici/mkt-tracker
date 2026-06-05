@@ -1,24 +1,35 @@
-const CACHE = 'mkt-kicevo-v9';
-const SHELL = ['./index.html', './manifest.json'];
+const CACHE = 'mkt-kicevo-v10';
 
+// On install: skip waiting immediately, don't pre-cache anything
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())
-  );
+  self.skipWaiting();
 });
+
+// On activate: delete ALL old caches, claim all clients immediately
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(keys.map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
+
+// Fetch: ALWAYS go to network for HTML, cache everything else
 self.addEventListener('fetch', e => {
-  if (e.request.url.includes('firestore') ||
-      e.request.url.includes('firebase') ||
-      e.request.url.includes('googleapis') ||
-      e.request.url.includes('gstatic')) return;
-  // Network first — секогаш земи нов фајл
+  const url = e.request.url;
+
+  // Never intercept Firebase/Google requests
+  if (url.includes('firestore') || url.includes('firebase') ||
+      url.includes('googleapis') || url.includes('gstatic')) return;
+
+  // For HTML files: always fetch from network (never serve from cache)
+  if (e.request.headers.get('accept')?.includes('text/html') ||
+      url.endsWith('.html') || url.endsWith('/')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+
+  // For everything else: network first, cache fallback
   e.respondWith(
     fetch(e.request).catch(() => caches.match(e.request))
   );
