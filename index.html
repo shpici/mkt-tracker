@@ -62,7 +62,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 @keyframes badge-shim{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
 @keyframes count-blink{0%,100%{color:inherit}50%{color:var(--mg)}}
 .lwrap-pro{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#fdf4f9 0%,#f8f0ff 40%,#f0f8f4 70%,#fdf4f9 100%);position:relative;overflow:hidden}
-#loginCanvas{display:none}
+#loginCanvas{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0}
 .lcard-pro{background:#fff;border:1px solid #e8ddf2;border-radius:22px;padding:40px 38px;width:100%;max-width:420px;box-shadow:0 4px 40px rgba(200,0,110,.1),0 1px 0 rgba(255,255,255,.8);position:relative;z-index:10}
 .llogo-pro{margin:0 auto 14px;display:flex;align-items:center;justify-content:center;position:relative}
 .holo-t{font-size:52px;font-weight:900;background:linear-gradient(135deg,var(--mg),#ff6eb0,var(--mg));background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:holo-shift 4s linear infinite;line-height:1}
@@ -118,7 +118,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .c3 .cf-tp{transform:rotateX(90deg) translateZ(32px);background:rgba(46,125,50,.04);border:1px solid rgba(46,125,50,.12)}
 .c3 .cf-bt{transform:rotateX(-90deg) translateZ(32px);background:rgba(46,125,50,.04);border:1px solid rgba(46,125,50,.12)}
 /* NEURAL CANVAS (app background) */
-#neuralCanvas{display:none}
+#neuralCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0}
 /* AI CHATBOT PANEL */
 #aiPanel{position:fixed;right:0;top:0;width:310px;height:100vh;background:#fff;border-left:1px solid var(--brd);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.1)}
 #aiPanel.open{transform:translateX(0)}

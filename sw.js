@@ -1,4 +1,4 @@
-const CACHE = 'mkt-kicevo-v7';
+const CACHE = 'mkt-kicevo-v8';
 const SHELL = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
