@@ -439,7 +439,6 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .xtag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
 .xnum{font-variant-numeric:tabular-nums}
 </style>
-<script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -3881,7 +3880,14 @@ window.handleBulkFile=async(cat,input)=>{
       const text=await file.text();
       if(ta)ta.value=text;
     }else{
-      if(typeof XLSX==='undefined'){alert('SheetJS не е вчитан. Освежи ја страницата.');return;}
+      if(typeof XLSX==='undefined'){
+        await new Promise((res,rej)=>{
+          const s=document.createElement('script');
+          s.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
+          s.onload=res;s.onerror=rej;
+          document.head.appendChild(s);
+        });
+      }
       const buf=await file.arrayBuffer();
       const wb=XLSX.read(buf,{type:'array'});
       const ws=wb.Sheets[wb.SheetNames[0]];
