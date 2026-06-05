@@ -3912,7 +3912,7 @@ function parseBulkRows(text,skipHeader){
   let rows=lines;
   if(skipHeader&&rows.length>1)rows=rows.slice(1);
   return rows.map(line=>{
-    const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith(‘”’)&&v.endsWith(‘”’))v=v.slice(1,-1);return v;});
+    const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith('"')&&v.endsWith('"'))v=v.slice(1,-1);return v;});
     const ofi=(cols[0]||'').trim();
     if(!ofi)return null;
     // Handle 2-column (OFI,Qty), 3-column (OFI,Name,Qty), 4-column (OFI,Name,Price,Qty)
