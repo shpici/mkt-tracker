@@ -441,6 +441,10 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .cmp-toggle-btn{padding:7px 18px;border-radius:calc(var(--rs) + 1px);border:none;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
 .cmp-toggle-btn.act{background:var(--mg);color:#fff}
 .cmp-toggle-btn:not(.act){background:transparent;color:var(--t2)}
+/* ══ EXEC SUB-TABS ══ */
+.exec-st{padding:6px 14px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--sur);font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s}
+.exec-st.act{background:var(--mgl);color:var(--mg);border-color:var(--mg)}
+.exec-st:hover:not(.act){background:var(--s2);color:var(--txt)}
 /* ══ EXECUTIVE DASHBOARD ══ */
 @keyframes xPulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}}
 @keyframes xFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -589,7 +593,7 @@ canvas.gc{display:block;border-radius:8px;image-rendering:pixelated}
 
 <style>
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
-body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
+body.emp-mode #tp-daily,body.emp-mode #tp-monthly,
 body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,body.emp-mode #tp-weekly,
 body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
@@ -745,7 +749,6 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="tab" onclick="gotoTab('weekly',this)">🗓 Неделен</div>
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
   <div class="tab" onclick="gotoTab('yearly',this)">📈 Годишен</div>
-  <div class="tab" onclick="gotoTab('ranking',this)">🥇 Ранкинг</div>
   <div class="tab" onclick="gotoTab('inventory',this)">📦 Маг. Доп.Оп.</div>
   <div class="tab" onclick="gotoTab('inventory2',this)">🔧 Маг. Моб.&amp;Др.</div>
   <div class="tab" onclick="gotoTab('calc',this)">🧮 Калк</div>
@@ -753,7 +756,6 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="tab" onclick="gotoTab('orders',this)">🛒 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">📅 Распоред</div>
   <div class="tab" onclick="gotoTab('fullreport',this)">📋 Целосен</div>
-  <div class="tab" onclick="gotoTab('compare',this)">⚖️ Споредба</div>
   <div class="tab" onclick="gotoTab('executive',this)">👑 Executive</div>
 </div>
 
@@ -828,25 +830,6 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="mcg" id="mcGrid"></div>
   <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px">Детална табела</div>
   <div class="tw"><table id="moTable"><thead><tr id="moHead"></tr></thead><tbody id="mTb"></tbody><tfoot><tr id="mFt"></tr></tfoot></table></div>
-</div>
-</div>
-
-<!-- ═══ RANKING ═══ -->
-<div id="tp-ranking" class="tp">
-<div class="card">
-  <div style="font-size:14px;font-weight:700;margin-bottom:3px">🏆 Ранкинг — <span id="rkTit"></span></div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Performance Score = просек % по активни KPI</div>
-  <div class="rg" id="rkGrid"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-    <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:12px;text-align:center">
-      <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px">🥇 TOP</div>
-      <div style="font-size:14px;font-weight:700;color:var(--gr)" id="topP">—</div>
-    </div>
-    <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:12px;text-align:center">
-      <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">📈 NEEDS BOOST</div>
-      <div style="font-size:14px;font-weight:700;color:var(--rd)" id="lowP">—</div>
-    </div>
-  </div>
 </div>
 </div>
 
@@ -1629,20 +1612,46 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 </div>
 </div>
 
-<div id="tp-compare" class="tp">
-<div class="card">
-  <div id="cmp-tab-content">
-    <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
-  </div>
-</div>
+<div id="tp-executive" class="tp">
+<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 0 10px;border-bottom:1px solid var(--brd);margin-bottom:12px">
+  <button class="exec-st act" id="est-ov" onclick="execSt('ov')">📊 Преглед</button>
+  <button class="exec-st" id="est-rk" onclick="execSt('rk')">🏆 Ранкинг</button>
+  <button class="exec-st" id="est-cmp" onclick="execSt('cmp')">⚖️ Споредба</button>
 </div>
 
-<div id="tp-executive" class="tp">
-<div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
-  <div id="exec-content">
-    <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
+<!-- Overview sub-panel -->
+<div id="exec-sub-ov">
+  <div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
+    <div id="exec-content">
+      <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
+    </div>
   </div>
 </div>
+
+<!-- Ranking sub-panel -->
+<div id="exec-sub-rk" style="display:none">
+  <div class="card">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="exec-st" id="rkp-day" onclick="execRkPeriod('day')">📅 По Ден</button>
+      <button class="exec-st" id="rkp-week" onclick="execRkPeriod('week')">📆 По Недела</button>
+      <button class="exec-st act" id="rkp-month" onclick="execRkPeriod('month')">🗓 По Месец</button>
+      <button class="exec-st" id="rkp-year" onclick="execRkPeriod('year')">📊 По Година</button>
+    </div>
+    <div id="exec-rk-content">
+      <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Compare sub-panel -->
+<div id="exec-sub-cmp" style="display:none">
+  <div class="card">
+    <div id="cmp-tab-content">
+      <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div id="tp-tarif" class="tp">
@@ -2037,7 +2046,7 @@ function subToMonth(y,m){
         rndTbl();
         if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
         buildTickerAndRisk();
-        if(document.getElementById('tp-ranking')?.classList.contains('act'))rndRanking();
+        if(document.getElementById('tp-executive')?.classList.contains('act')&&_execSt==='rk')rndExecRanking();
         calcAlerts();
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
         if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
@@ -3711,6 +3720,121 @@ document.addEventListener('click',e=>{
   }
 });
 
+// ══ EXEC SUB-TAB STATE ══
+let _execRkPeriod='month';
+window._execRkDay=null;
+window._execRkWeek=0;
+
+function execSt(st){
+  ['ov','rk','cmp'].forEach(s=>{
+    const sub=document.getElementById('exec-sub-'+s);
+    const btn=document.getElementById('est-'+s);
+    if(sub)sub.style.display=s===st?'':'none';
+    if(btn)btn.classList.toggle('act',s===st);
+  });
+  if(st==='rk')rndExecRanking();
+  else if(st==='cmp')window.rndCmpTab();
+  else rndExecutive();
+}
+
+function execRkPeriod(p){
+  _execRkPeriod=p;
+  ['day','week','month','year'].forEach(pp=>document.getElementById('rkp-'+pp)?.classList.toggle('act',pp===p));
+  rndExecRanking();
+}
+
+function perfScoreDay(mid,y,m,dayObj){
+  const t=getMT(y,m);const wd=getWDs(y,m).length;
+  let s=0,cnt=0;
+  KKEYS.forEach(k=>{
+    if(!isInScore(k))return;
+    const v=AS[y]?.[m]?.[dK(y,m,dayObj)]?.[mid]?.[k]||0;
+    const dtgt=(t[k]||0)/(wd||1);
+    s+=pct(v,dtgt||1);cnt++;
+  });
+  return cnt>0?Math.round(s/cnt):0;
+}
+
+function perfScoreWeek(mid,y,m,weekDays){
+  const t=getMT(y,m);const wd=getWDs(y,m).length;
+  let s=0,cnt=0;
+  KKEYS.forEach(k=>{
+    if(!isInScore(k))return;
+    const wkTgt=(t[k]||0)*weekDays.length/(wd||1);
+    const wkSum=weekDays.reduce((acc,d)=>acc+(AS[y]?.[m]?.[dK(y,m,d)]?.[mid]?.[k]||0),0);
+    s+=pct(wkSum,wkTgt||1);cnt++;
+  });
+  return cnt>0?Math.round(s/cnt):0;
+}
+
+function perfScoreYear(mid,y){
+  let tot=0,cnt=0;
+  for(let m=1;m<=12;m++){
+    const t=getMT(y,m);
+    KKEYS.forEach(k=>{
+      if(!isInScore(k))return;
+      tot+=pct(mMoSum(mid,k,y,m),t[k]||1);cnt++;
+    });
+  }
+  return cnt>0?Math.round(tot/cnt):0;
+}
+
+function rndExecRanking(){
+  const el=document.getElementById('exec-rk-content');if(!el)return;
+  const p=_execRkPeriod,y=cY,m=cM;
+  let title,scores,subCtrl='';
+
+  if(p==='month'){
+    title=MKM[m-1]+' '+y;
+    scores=MEMBERS.map(mb=>({...mb,score:perfScore(mb.id,y,m)})).sort((a,b)=>b.score-a.score);
+  } else if(p==='year'){
+    title='Цела '+y+' год.';
+    scores=MEMBERS.map(mb=>({...mb,score:perfScoreYear(mb.id,y)})).sort((a,b)=>b.score-a.score);
+  } else if(p==='day'){
+    const wds=getWDs(y,m);
+    const now=new Date();
+    const todayD=now.getFullYear()===y&&now.getMonth()+1===m?now.getDate():wds[wds.length-1]?.date;
+    if(window._execRkDay===null)window._execRkDay=todayD;
+    const dayObj=wds.find(d=>d.date===window._execRkDay)||wds[wds.length-1];
+    title=dayObj?dayObj.label:'Ден';
+    scores=MEMBERS.map(mb=>({...mb,score:perfScoreDay(mb.id,y,m,dayObj)})).sort((a,b)=>b.score-a.score);
+    const opts=wds.map(d=>`<option value="${d.date}"${d.date===window._execRkDay?' selected':''}>${d.label}</option>`).join('');
+    subCtrl=`<select class="fi" style="font-size:11px;padding:3px 8px;margin-bottom:12px;width:auto" onchange="window._execRkDay=+this.value;rndExecRanking()">${opts}</select>`;
+  } else if(p==='week'){
+    const wds=getWDs(y,m);const weeks=gWks(wds);
+    if(window._execRkWeek>=weeks.length)window._execRkWeek=weeks.length-1;
+    const wk=weeks[window._execRkWeek];
+    title='Недела '+(window._execRkWeek+1)+' · '+MKM[m-1];
+    scores=MEMBERS.map(mb=>({...mb,score:perfScoreWeek(mb.id,y,m,wk)})).sort((a,b)=>b.score-a.score);
+    const opts=weeks.map((w,i)=>`<option value="${i}"${i===window._execRkWeek?' selected':''}>Нед. ${i+1} (${w[0]?.date}–${w[w.length-1]?.date}/${m})</option>`).join('');
+    subCtrl=`<select class="fi" style="font-size:11px;padding:3px 8px;margin-bottom:12px;width:auto" onchange="window._execRkWeek=+this.value;rndExecRanking()">${opts}</select>`;
+  }
+
+  const top=scores[0],bot=scores[scores.length-1];
+  const grid=scores.map((mb,i)=>{
+    const pm=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    const bdg=`<span class="rbadge ${pbc(mb.score)}">${pem(mb.score)} ${mb.score<70?'Needs boost':mb.score<100?'On track':'🎯 Target!'}</span>`;
+    return `<div class="rr"><div class="rpos ${pm}">${md}</div><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px;flex-shrink:0">${mb.ini}</div><div class="rname">${mb.name}</div>${bdg}<div class="rbar"><div class="rbf" style="width:${Math.min(100,mb.score)}%;${barcl(mb.score)}"></div></div><div class="rscore ${mb.score>=100?'score-100':''}" style="color:${pc(mb.score)}">${mb.score}%</div></div>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div style="font-size:14px;font-weight:700;margin-bottom:3px">🏆 Ранкинг — ${title}</div>
+    <div style="font-size:11px;color:var(--t2);margin-bottom:10px">Performance Score = просек % по активни KPI</div>
+    ${subCtrl}
+    <div class="rg">${grid}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:12px;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px">🥇 TOP</div>
+        <div style="font-size:14px;font-weight:700;color:var(--gr)">${top?.name} — ${top?.score}%</div>
+      </div>
+      <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:12px;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">📈 NEEDS BOOST</div>
+        <div style="font-size:14px;font-weight:700;color:var(--rd)">${bot?.name} — ${bot?.score}%</div>
+      </div>
+    </div>`;
+}
+
 // ══════════════════════════════════════════════════════
 // ── EXECUTIVE DASHBOARD ──
 // ══════════════════════════════════════════════════════
@@ -4904,7 +5028,8 @@ window.gotoTab=(name,el)=>{
     setTimeout(()=>{ loadInfoMsgs(); updateStorageMeter(); }, 50);
   }
   else if(name==='fullreport')rndFullReport();
-  else if(name==='compare')window.rndCmpTab();
+  else if(name==='compare'){execSt('cmp');return;}
+  else if(name==='ranking'){execSt('rk');return;}
   else if(name==='executive')rndExecutive();
   else if(name==='tarif'||name==='roaming'||name==='tvint'){}
 };
