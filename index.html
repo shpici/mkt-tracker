@@ -174,11 +174,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .nsep{width:1px;height:20px;background:var(--brd);margin:0 2px}
 .nl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
 /* TABS */
-.tabs{display:flex;gap:2px;padding:10px 16px 0;background:var(--bg);flex-wrap:wrap}
-.tab{padding:6px 12px;font-size:11px;font-weight:600;border-radius:var(--rs) var(--rs) 0 0;border:1px solid transparent;cursor:pointer;color:var(--t2);background:var(--s3);border-bottom:none;transition:all .15s;white-space:nowrap}
-.tab.act{background:var(--sur);border-color:var(--brd);color:var(--mg);border-bottom:1px solid var(--sur);margin-bottom:-1px}
+.tabs{display:flex;gap:3px;padding:8px 12px;background:linear-gradient(135deg,#1a0810 0%,#2a0d1c 50%,#1a0810 100%);overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;border-bottom:2px solid var(--mg);box-shadow:0 4px 24px rgba(200,0,110,.22),inset 0 1px 0 rgba(255,255,255,.06);scrollbar-width:none;-ms-overflow-style:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:5px 11px;font-size:10.5px;font-weight:700;border-radius:20px;border:1px solid rgba(255,255,255,.09);cursor:pointer;color:rgba(255,255,255,.52);background:rgba(255,255,255,.05);transition:all .22s cubic-bezier(.4,0,.2,1);white-space:nowrap;display:inline-flex;align-items:center;gap:4px;letter-spacing:.15px;flex-shrink:0;position:relative;overflow:hidden}
+.tab::before{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,rgba(200,0,110,.0),transparent 70%);transition:all .22s;pointer-events:none}
+.tab:hover{color:rgba(255,255,255,.9);background:rgba(200,0,110,.18);border-color:rgba(200,0,110,.4);box-shadow:0 0 12px rgba(200,0,110,.28);transform:translateY(-1px)}
+.tab:hover::before{background:radial-gradient(ellipse at 50% 0%,rgba(200,0,110,.25),transparent 70%)}
+.tab:active{transform:scale(.96)!important}
+.tab.act{background:linear-gradient(135deg,#C8006E 0%,#8a004c 100%);color:#fff;border-color:rgba(255,100,180,.35);box-shadow:0 0 20px rgba(200,0,110,.7),0 2px 12px rgba(200,0,110,.45),inset 0 1px 0 rgba(255,255,255,.15);transform:translateY(-1px)}
+.tab.act::before{background:radial-gradient(ellipse at 50% 0%,rgba(255,150,200,.2),transparent 60%)}
+@keyframes tab-flash{0%{transform:translateY(0);box-shadow:none}40%{background:linear-gradient(135deg,#e91e63,#C8006E);color:#fff;transform:translateY(-2px);box-shadow:0 0 28px rgba(200,0,110,1),0 0 8px rgba(255,100,180,.8)}100%{background:linear-gradient(135deg,#C8006E,#8a004c);color:#fff;transform:translateY(-1px);box-shadow:0 0 20px rgba(200,0,110,.7)}}
+.tab-flashing{animation:tab-flash .5s cubic-bezier(.4,0,.2,1) forwards!important}
 .tp{display:none}.tp.act{display:block}
-.card{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--brd);border-radius:0 var(--r) var(--r) var(--r);margin:0 16px 16px;padding:14px;transition:box-shadow .2s,transform .15s}
+.card{background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--brd);border-radius:var(--r);margin:0 16px 16px;padding:14px;transition:box-shadow .2s,transform .15s}
 /* BUTTONS */
 .btn{padding:5px 11px;border-radius:var(--rs);border:1px solid var(--brd);background:var(--sur);color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s,transform .1s;position:relative;overflow:hidden}
 .btn:hover{background:var(--s2);transform:scale(1.03)}
@@ -392,9 +400,9 @@ tfoot td:last-child{border-radius:0 0 var(--rs) 0}
 /* DARK MODE */
 body.dark-mode{--bg:#0f0f1a;--sur:#1a1a2e;--s2:#1f2038;--s3:#252545;--brd:#2e2e50;--txt:#e0e0f0;--t2:#9090b8;--t3:#5050a0;--sh:0 2px 8px rgba(0,0,0,.5)}
 body.dark-mode .fi,body.dark-mode .ki,body.dark-mode input:not(.lbtn):not([type=range]),body.dark-mode textarea,body.dark-mode select{background:var(--s2)!important;color:var(--txt)!important;border-color:var(--brd)!important}
-body.dark-mode .hdr,body.dark-mode .nav,body.dark-mode .tabs,body.dark-mode .card{background:var(--sur)!important;border-color:var(--brd)!important}
-body.dark-mode .tab{background:var(--s3)!important;color:var(--t2)!important}
-body.dark-mode .tab.act{background:var(--sur)!important;color:var(--mg)!important}
+body.dark-mode .hdr,body.dark-mode .nav,body.dark-mode .card{background:var(--sur)!important;border-color:var(--brd)!important}
+body.dark-mode .tab{background:rgba(255,255,255,.06)!important;color:rgba(255,255,255,.5)!important;border-color:rgba(255,255,255,.1)!important}
+body.dark-mode .tab.act{background:linear-gradient(135deg,#C8006E,#8a004c)!important;color:#fff!important;border-color:rgba(255,100,180,.35)!important}
 body.dark-mode thead th,body.dark-mode tfoot td{background:var(--s3)!important}
 body.dark-mode .nb{background:var(--s3)!important;color:var(--t2)!important;border-color:var(--brd)!important}
 body.dark-mode .nb.act{background:var(--mg)!important;color:#fff!important;border-color:var(--mg)!important}
@@ -700,24 +708,24 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 
 <!-- MANAGER TABS -->
 <div class="tabs" id="mgrTabs" style="display:none">
-  <div class="tab" onclick="gotoTab('info',this)" id="mgrInfoTab" style="position:relative">📢 Инфо<span id="mgrInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;display:none;align-items:center;justify-content:center"></span></div>
-  <div class="tab" onclick="gotoTab('tarif',this)">💼 Тарифа</div>
-  <div class="tab" onclick="gotoTab('tvint',this)">📺 INT+TV</div>
-  <div class="tab" onclick="gotoTab('roaming',this)">🌍 Роаминг</div>
-  <div class="tab act" onclick="gotoTab('daily',this)">📅 Дневен</div>
-  <div class="tab" onclick="gotoTab('weekly',this)">📆 Неделен</div>
+  <div class="tab" onclick="gotoTab('info',this)" id="mgrInfoTab" style="position:relative">💬 Инфо<span id="mgrInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;display:none;align-items:center;justify-content:center"></span></div>
+  <div class="tab" onclick="gotoTab('tarif',this)">💳 Тарифа</div>
+  <div class="tab" onclick="gotoTab('tvint',this)">📡 INT+TV</div>
+  <div class="tab" onclick="gotoTab('roaming',this)">✈️ Роаминг</div>
+  <div class="tab act" onclick="gotoTab('daily',this)">☀️ Дневен</div>
+  <div class="tab" onclick="gotoTab('weekly',this)">🗓 Неделен</div>
   <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
-  <div class="tab" onclick="gotoTab('yearly',this)">📅 Годишен</div>
-  <div class="tab" onclick="gotoTab('ranking',this)">🏆 Ранкинг</div>
-  <div class="tab" onclick="gotoTab('inventory',this)">🏬 Маг. Доп.Оп.</div>
-  <div class="tab" onclick="gotoTab('inventory2',this)">🏬 Маг. Моб.&amp;Др.</div>
+  <div class="tab" onclick="gotoTab('yearly',this)">📈 Годишен</div>
+  <div class="tab" onclick="gotoTab('ranking',this)">🥇 Ранкинг</div>
+  <div class="tab" onclick="gotoTab('inventory',this)">📦 Маг. Доп.Оп.</div>
+  <div class="tab" onclick="gotoTab('inventory2',this)">🔧 Маг. Моб.&amp;Др.</div>
   <div class="tab" onclick="gotoTab('calc',this)">🧮 Калк</div>
-  <div class="tab" onclick="gotoTab('targets',this)">⚙️ Таргети</div>
-  <div class="tab" onclick="gotoTab('orders',this)">📱 Нарачки</div>
-  <div class="tab" onclick="gotoTab('schedule',this)">🕐 Распоред</div>
+  <div class="tab" onclick="gotoTab('targets',this)">🎯 Таргети</div>
+  <div class="tab" onclick="gotoTab('orders',this)">🛒 Нарачки</div>
+  <div class="tab" onclick="gotoTab('schedule',this)">📅 Распоред</div>
   <div class="tab" onclick="gotoTab('fullreport',this)">📋 Целосен</div>
   <div class="tab" onclick="gotoTab('compare',this)">⚖️ Споредба</div>
-  <div class="tab" onclick="gotoTab('executive',this)">🏆 Executive</div>
+  <div class="tab" onclick="gotoTab('executive',this)">👑 Executive</div>
 </div>
 
 <!-- ═══ DAILY ═══ -->
@@ -1665,18 +1673,18 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
     <button class="btn" onclick="window.print()">🖨 PDF</button>
   </div>
 </div>
-<div class="tabs" style="margin:0 16px">
-  <div class="tab" onclick="empTab('empinfo',this)" id="empInfoTab" style="position:relative">📢 Инфо<span id="empInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;align-items:center;justify-content:center"></span></div>
-  <div class="tab" onclick="empTab('tarif',this)">💼 Тарифа</div>
-  <div class="tab" onclick="empTab('tvint',this)">📺 INT+TV</div>
-  <div class="tab" onclick="empTab('roaming',this)">🌍 Роаминг</div>
-  <div class="tab act" onclick="empTab('daily',this)">📅 Дневен</div>
-  <div class="tab" onclick="empTab('weekly',this)">📆 Неделен</div>
+<div class="tabs" style="margin:0 16px;border-radius:10px 10px 0 0">
+  <div class="tab" onclick="empTab('empinfo',this)" id="empInfoTab" style="position:relative">💬 Инфо<span id="empInfoBadge" style="display:none;background:var(--rd);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;position:absolute;top:2px;right:2px;align-items:center;justify-content:center"></span></div>
+  <div class="tab" onclick="empTab('tarif',this)">💳 Тарифа</div>
+  <div class="tab" onclick="empTab('tvint',this)">📡 INT+TV</div>
+  <div class="tab" onclick="empTab('roaming',this)">✈️ Роаминг</div>
+  <div class="tab act" onclick="empTab('daily',this)">☀️ Дневен</div>
+  <div class="tab" onclick="empTab('weekly',this)">🗓 Неделен</div>
   <div class="tab" onclick="empTab('monthly',this)">📊 Месечен</div>
-  <div class="tab" onclick="empTab('history',this)">🗑 Историја</div>
+  <div class="tab" onclick="empTab('history',this)">📜 Историја</div>
   <div class="tab" onclick="empTab('yearly',this)">📈 Годишен</div>
-  <div class="tab" onclick="empTab('emporders',this)">📱 Нарачки</div>
-  <div class="tab" onclick="empTab('empschedule',this)">🕐 Распоред</div>
+  <div class="tab" onclick="empTab('emporders',this)">🛒 Нарачки</div>
+  <div class="tab" onclick="empTab('empschedule',this)">📅 Распоред</div>
   <div class="tab" onclick="empTab('pro',this)">⚡ Pro</div>
   <div class="tab" onclick="empTab('games',this)">🎮 Игри</div>
 </div>
