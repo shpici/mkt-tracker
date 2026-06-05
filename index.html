@@ -540,7 +540,7 @@ canvas.gc{display:block;border-radius:8px;image-rendering:pixelated}
 .cw-wrap{display:flex;gap:10px;padding:10px;overflow-x:auto}
 .cw-grid-wrap{flex-shrink:0}
 .cw-grid{display:inline-grid;gap:2px;padding:6px;background:var(--sur);border-radius:8px}
-.cw-cell{width:30px;height:30px;position:relative}
+.cw-cell{width:28px;height:28px;position:relative}
 .cw-cell.blocked{background:var(--bg);border-radius:2px}
 .cw-cell.open{background:#fff;border:1.5px solid #bbb;border-radius:3px}
 .cw-cell.selected{border-color:var(--acc);border-width:2px;background:#eff6ff}
@@ -2004,6 +2004,7 @@ function subToMonth(y,m){
         calcAlerts();
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
         if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
+        if(mID&&document.getElementById('etp-pro')?.classList.contains('act'))window.rndEmpPro?.();
         if(document.getElementById('tp-fullreport')?.classList.contains('act'))rndFullReport();
         if(document.getElementById('tp-executive')?.classList.contains('act'))rndExecutive();
         if(_profileEmpId&&document.getElementById('emp-profile-overlay')?.classList.contains('open'))rndEmpProfile();
@@ -6500,13 +6501,22 @@ function rndProRings(){
 
 function rndProLevel(){
   if(!mID)return;
-  const score=perfScore(mID,cY,cM);
+  // Use current month; fall back to previous month if no targets set yet
+  let score=perfScore(mID,cY,cM);
+  let displayM=cM,displayY=cY,fallback=false;
+  const t=getMT(cY,cM);
+  const hasTargets=KKEYS.some(k=>isInScore(k)&&(t[k]||0)>0);
+  if(!hasTargets){
+    let pm=cM-1,py=cY;if(pm<1){pm=12;py--;}
+    const ps=perfScore(mID,py,pm);
+    if(ps>0){score=ps;displayM=pm;displayY=py;fallback=true;}
+  }
   const lvl=calcLevel(score);
   const badge=document.getElementById('pro-badge');if(!badge)return;
   badge.className='lvl-badge '+lvl.cls;
   badge.textContent=lvl.icon;
   document.getElementById('pro-lvl-name').textContent=lvl.name;
-  document.getElementById('pro-lvl-sub').textContent=score+'% овој месец';
+  document.getElementById('pro-lvl-sub').textContent=score+'%'+(fallback?` (${displayM}/${displayY})`:'  овој месец');
   const bar=document.getElementById('pro-lvl-bar');
   const range=lvl.key==='legend'?1:(lvl.max-lvl.min+1);
   bar.style.width=(lvl.key==='legend'?100:Math.round((score-lvl.min)/range*100))+'%';
@@ -7186,51 +7196,197 @@ function gSnowInit(area){
 }
 
 // ── 📝 CROSSWORD ──
-const CW={
-  mk:{
-    lang:'mk',title:'Крстозбор — Македонски',
-    rows:5,cols:8,
-    // answer grid (null=blocked)
-    ans:[
-      ['П','Р','О','Д','А','Ж','Б','А'],
-      ['А',null,null,null,'К',null,null,null],
-      ['Р','А','Б','О','Т','А',null,null],
-      ['И','М','А',null,null,null,null,null],
-      [null,null,null,null,null,null,null,null],
-    ],
-    words:[
-      {num:1,dir:'a',r:0,c:0,len:8,clue:'Главната активност во нашата работа (8)'},
-      {num:2,dir:'d',r:0,c:0,len:4,clue:'Монети и банкноти (4)'},
-      {num:3,dir:'a',r:2,c:0,len:6,clue:'Она што го правиме секој ден (6)'},
-      {num:4,dir:'a',r:3,c:0,len:3,clue:'Постои, е присутно (3)'},
-      {num:5,dir:'d',r:0,c:4,len:3,clue:'Документ или официјална постапка (3)'},
-    ]
-  },
-  al:{
-    lang:'al',title:'Fjalëkryq — Shqip',
-    rows:4,cols:4,
-    ans:[
-      ['P','U','N','Ë'],
-      ['A',null,'A',null],
-      ['R','A','S','T'],
-      ['A','K','T',null],
-    ],
-    words:[
-      {num:1,dir:'a',r:0,c:0,len:4,clue:'Aktiviteti i përditshëm (4)'},
-      {num:2,dir:'d',r:0,c:0,len:4,clue:'Monedha dhe kartëmonedha (4)'},
-      {num:3,dir:'a',r:2,c:0,len:4,clue:'Situatë ose rrethanë (4)'},
-      {num:4,dir:'a',r:3,c:0,len:3,clue:'Dokument zyrtar (3)'},
-      {num:5,dir:'d',r:0,c:2,len:3,clue:'Forma e parë shumës (3)'},
-    ]
-  }
+// Word pool (w=word uppercase, c=clue)
+const CW_POOL={
+  mk:[
+    {w:'ТЕЛЕФОН',c:'Уред за говорна комуникација'},
+    {w:'ИНТЕРНЕТ',c:'Глобалната дигитална мрежа'},
+    {w:'МОБИЛЕН',c:'Тип телефон без жица'},
+    {w:'ТАРИФА',c:'Ценовен план за услуги'},
+    {w:'МРЕЖА',c:'Поврзани уреди за комуникација'},
+    {w:'СИГНАЛ',c:'Јачина на поврзаност'},
+    {w:'ПОВИК',c:'Телефонски разговор'},
+    {w:'РОУМИНГ',c:'Услуга надвор од државата'},
+    {w:'ПРОДАЖБА',c:'Трансфер на производ за пари'},
+    {w:'КЛИЕНТ',c:'Купувач на услуга'},
+    {w:'ДОГОВОР',c:'Правен документ за услуга'},
+    {w:'ПОПУСТ',c:'Намалена цена'},
+    {w:'ТАБЛЕТ',c:'Екранен уред без тастатура'},
+    {w:'ТЕЛЕВИЗОР',c:'Уред за гледање слики'},
+    {w:'РУТЕР',c:'Уред за дистрибуција на интернет'},
+    {w:'БАТЕРИЈА',c:'Извор на електрична енергија'},
+    {w:'КАМЕРА',c:'Уред за снимање слики'},
+    {w:'ЕКРАН',c:'Дисплеј на уред'},
+    {w:'ПРОЦЕСОР',c:'Мозокот на компјутерот'},
+    {w:'ПОЛНАЧ',c:'Уред за полнење батерија'},
+    {w:'МАКЕДОНИЈА',c:'Нашата татковина'},
+    {w:'СКОПЈЕ',c:'Главниот град на Македонија'},
+    {w:'ЕВРОПА',c:'Континентот каде живееме'},
+    {w:'ОХРИД',c:'Македонски град крај езеро'},
+    {w:'ФУДБАЛ',c:'Спорт со 11 играчи'},
+    {w:'КОШАРКА',c:'Спорт со кош'},
+    {w:'ТЕНИС',c:'Спорт со рекет и топче'},
+    {w:'МОДА',c:'Трендови во облекување'},
+    {w:'СТИЛ',c:'Начин на облекување'},
+    {w:'БРОЕВИ',c:'Математички симболи'},
+    {w:'НОРМА',c:'Месечен таргет за продажба'},
+    {w:'ПОНУДА',c:'Она што го нудиме на клиент'},
+    {w:'УРЕД',c:'Технолошки предмет'},
+    {w:'ЛАПТОП',c:'Преносен компјутер'},
+    {w:'ОПТИКА',c:'Технологија за пренос на светлина'},
+    {w:'КАБЕЛ',c:'Жица за пренос на сигнал'},
+    {w:'МОДЕМ',c:'Уред за конекција кон интернет'},
+    {w:'ИСТОРИЈА',c:'Наука за минатото'},
+    {w:'ГЕОГРАФИЈА',c:'Наука за земјата и просторот'},
+    {w:'МАТЕМАТИКА',c:'Наука за броеви и форми'},
+  ],
+  al:[
+    {w:'INTERNET',c:'Rrjeti global dixhital'},
+    {w:'TELEFON',c:'Pajisje per komunikim zanor'},
+    {w:'SIGNAL',c:'Fuqia e lidhjes'},
+    {w:'KLIENT',c:'Bleresit e sherbimeve'},
+    {w:'TABLET',c:'Pajisje me ekran pa tastiere'},
+    {w:'KAMERA',c:'Pajisje per xhirim'},
+    {w:'EKRAN',c:'Ekrani i pajisjes'},
+    {w:'ROUTER',c:'Pajisje per shperndarje interneti'},
+    {w:'TARIFE',c:'Plan cmimesh per sherbime'},
+    {w:'RRJET',c:'Pajisje te lidhura'},
+    {w:'BATERI',c:'Burim i energjise'},
+    {w:'KONTRAT',c:'Dokument ligjor'},
+    {w:'FUTBOLL',c:'Sport me 11 lojtare'},
+    {w:'SHKUP',c:'Kryeqyteti i Maqedonise'},
+    {w:'EVROPA',c:'Kontinenti ku jetojme'},
+    {w:'SHITJE',c:'Transferimi i produktit per para'},
+    {w:'SPORT',c:'Aktivitet fizik i organizuar'},
+    {w:'MODA',c:'Trendet e veshjes'},
+    {w:'STIL',c:'Menyre e veshjes'},
+    {w:'PLUS',c:'Shenja e mbledhjes'},
+    {w:'OFERTE',c:'Propozim cmimi per klient'},
+    {w:'PROJEKT',c:'Plan i organizuar pune'},
+    {w:'HISTORI',c:'Shkenca e ngjarjeve te kaluara'},
+    {w:'SHKENCE',c:'Studimi i natyres'},
+    {w:'LAJM',c:'Informacion i ri'},
+    {w:'LAPTOP',c:'Kompjuter portativ'},
+    {w:'OPTIKE',c:'Teknologji per transmetim drite'},
+    {w:'KABEL',c:'Tela per transmetim sinjali'},
+    {w:'MODEM',c:'Pajisje per lidhje interneti'},
+    {w:'SHITJET',c:'Aktiviteti kryesor i punes'},
+    {w:'KLIENT',c:'Bleresi i sherbimit tone'},
+    {w:'RAJON',c:'Zone gjeografike'},
+    {w:'SPORT',c:'Aktivitet fizik'},
+    {w:'FILM',c:'Arte vizuale per ekran'},
+    {w:'MUZIK',c:'Arte e tingujve'},
+  ]
 };
+
+// Crossword generator (15x15 grid, greedy placement)
+function cwGenerate(wordClues){
+  const SIZE=15;
+  const G=Array.from({length:SIZE},()=>Array(SIZE).fill(null));
+  const placed=[];
+
+  function canPlace(word,r,c,dir){
+    const len=word.length;
+    if(dir==='a'){
+      if(r<0||r>=SIZE||c<0||c+len>SIZE)return false;
+      if(c>0&&G[r][c-1]!==null)return false;
+      if(c+len<SIZE&&G[r][c+len]!==null)return false;
+      let crosses=0;
+      for(let i=0;i<len;i++){
+        const cv=G[r][c+i];
+        if(cv!==null){if(cv!==word[i])return false;crosses++;}
+        else{if(r>0&&G[r-1][c+i]!==null)return false;if(r<SIZE-1&&G[r+1][c+i]!==null)return false;}
+      }
+      return placed.length===0||crosses>0;
+    }else{
+      if(c<0||c>=SIZE||r<0||r+len>SIZE)return false;
+      if(r>0&&G[r-1][c]!==null)return false;
+      if(r+len<SIZE&&G[r+len][c]!==null)return false;
+      let crosses=0;
+      for(let i=0;i<len;i++){
+        const cv=G[r+i][c];
+        if(cv!==null){if(cv!==word[i])return false;crosses++;}
+        else{if(c>0&&G[r+i][c-1]!==null)return false;if(c<SIZE-1&&G[r+i][c+1]!==null)return false;}
+      }
+      return placed.length===0||crosses>0;
+    }
+  }
+
+  function doPlace(item,r,c,dir){
+    for(let i=0;i<item.w.length;i++){if(dir==='a')G[r][c+i]=item.w[i];else G[r+i][c]=item.w[i];}
+    placed.push({...item,r,c,dir});
+  }
+
+  const sorted=[...wordClues].sort((a,b)=>b.w.length-a.w.length);
+  if(!sorted.length)return null;
+
+  // Place first word across center
+  const first=sorted[0];
+  doPlace(first,Math.floor(SIZE/2),Math.floor((SIZE-first.w.length)/2),'a');
+
+  for(let i=1;i<sorted.length;i++){
+    const item=sorted[i];
+    let ok=false;
+    // Shuffle placed order for variety
+    const ord=[...placed].sort(()=>Math.random()-.5);
+    for(const p of ord){
+      if(ok)break;
+      const ndir=p.dir==='a'?'d':'a';
+      for(let pi=0;pi<p.w.length&&!ok;pi++){
+        for(let wi=0;wi<item.w.length&&!ok;wi++){
+          if(p.w[pi]!==item.w[wi])continue;
+          const pr=p.dir==='a'?p.r:p.r+pi;
+          const pc2=p.dir==='a'?p.c+pi:p.c;
+          const nr=ndir==='a'?pr:pr-wi;
+          const nc=ndir==='a'?pc2-wi:pc2;
+          if(canPlace(item.w,nr,nc,ndir)){doPlace(item,nr,nc,ndir);ok=true;}
+        }
+      }
+    }
+  }
+
+  if(placed.length<5)return null;
+
+  // Trim to bounding box
+  let minR=SIZE,maxR=0,minC=SIZE,maxC=0;
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)if(G[r][c]!==null){minR=Math.min(minR,r);maxR=Math.max(maxR,r);minC=Math.min(minC,c);maxC=Math.max(maxC,c);}
+  const rows=maxR-minR+1,cols=maxC-minC+1;
+  const ans=Array.from({length:rows},(_,ri)=>Array.from({length:cols},(_,ci)=>G[ri+minR]?.[ci+minC]??null));
+  const adj=placed.map(p=>({...p,r:p.r-minR,c:p.c-minC}));
+
+  // Number word starts in reading order
+  const starts={};
+  adj.forEach(p=>{const k=p.r+','+p.c;if(!starts[k])starts[k]=[];starts[k].push(p);});
+  let num=1;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const k=r+','+c;if(starts[k]){starts[k].forEach(p=>p.num=num);num++;}}
+
+  const words=adj.map(p=>({num:p.num,dir:p.dir,r:p.r,c:p.c,len:p.w.length,clue:p.c}));
+  return{ans,words,rows,cols};
+}
+
+// Pick random subset and generate; retry up to 8 times
+function cwBuildRandom(lang){
+  const pool=[...CW_POOL[lang]].sort(()=>Math.random()-.5);
+  for(let attempt=0;attempt<8;attempt++){
+    // Each attempt picks a different random 12-word subset
+    const subset=pool.slice(attempt%3*4, attempt%3*4+12).concat(pool.slice(12,16)).slice(0,12);
+    // Shuffle subset
+    subset.sort(()=>Math.random()-.5);
+    const result=cwGenerate(subset);
+    if(result&&result.words.length>=5)return result;
+  }
+  return cwGenerate(pool.slice(0,10));
+}
+
+let _cwLang='mk',_cwSel=null,_cwDir='a',_cwUserGrid={};
+let _cwData=null; // current generated crossword
 
 let _cwLang='mk',_cwSel=null,_cwDir='a',_cwUserGrid={};
 
-function gCrosswordInit(area,lang){
+function gCrosswordInit(area,lang,forceNew){
   lang=lang||_cwLang;_cwLang=lang;
-  const cw=CW[lang];
-  // Init user grid
+  if(forceNew||!_cwData||_cwData.lang!==lang){_cwData=cwBuildRandom(lang);_cwData.lang=lang;}
+  const cw=_cwData;
   _cwUserGrid={};
   _cwSel=null;
 
@@ -7312,7 +7468,7 @@ function gCrosswordInit(area,lang){
       else{moveSel(-1);}
       renderGrid();return;
     }
-    if(e.key.length===1&&/[a-zA-ZА-Яа-яЀ-ӿёЁ]/u.test(e.key)){
+    if(e.key.length===1&&/[\p{L}]/u.test(e.key)){
       _cwUserGrid[key]=e.key.toUpperCase();delete _cwUserGrid[key+'_checked'];
       moveSel(1);renderGrid();
     }
@@ -7355,16 +7511,18 @@ function gCrosswordInit(area,lang){
   // Build HTML
   area.innerHTML=`
     <div class="cw-lang-btns">
-      <div class="cw-lang-btn${lang==='mk'?' act':''}" onclick="gCrosswordInit(document.getElementById('gArea'),'mk')">🇲🇰 Македонски</div>
-      <div class="cw-lang-btn${lang==='al'?' act':''}" onclick="gCrosswordInit(document.getElementById('gArea'),'al')">🦅 Shqip</div>
+      <div class="cw-lang-btn${lang==='mk'?' act':''}" onclick="gCrosswordInit(document.getElementById('gArea'),'mk',true)">🇲🇰 Македонски</div>
+      <div class="cw-lang-btn${lang==='al'?' act':''}" onclick="gCrosswordInit(document.getElementById('gArea'),'al',true)">🦅 Shqip</div>
+      <div class="cw-lang-btn" onclick="gCrosswordInit(document.getElementById('gArea'),'${lang}',true)" style="margin-left:auto">🔀 Нов</div>
     </div>
     <div style="display:flex;gap:8px;padding:8px 14px 4px">
       <button onclick="cwCheck()" style="flex:1;padding:7px;border-radius:8px;border:none;background:#3b82f6;color:#fff;font-weight:700;font-size:12px;cursor:pointer">✓ Провери</button>
       <button onclick="cwClear()" style="padding:7px 14px;border-radius:8px;border:1px solid var(--brd);background:var(--sur);font-weight:700;font-size:12px;cursor:pointer">↺ Ресет</button>
     </div>
+    <div style="font-size:10px;color:var(--t2);padding:2px 14px 6px">${cw.words.length} зборови • ${cw.rows}×${cw.cols} решетка</div>
     <div class="cw-wrap">
-      <div class="cw-grid-wrap">
-        <div class="cw-grid" id="cwGrid" style="grid-template-columns:repeat(${cw.cols},30px)"></div>
+      <div class="cw-grid-wrap" style="overflow-x:auto">
+        <div class="cw-grid" id="cwGrid" style="grid-template-columns:repeat(${cw.cols},28px)"></div>
       </div>
       <div class="cw-clues">
         <div class="cw-clue-section"><div class="cw-clue-title">→ Хоризонтално</div><div id="cwAcross"></div></div>
@@ -7372,7 +7530,7 @@ function gCrosswordInit(area,lang){
       </div>
     </div>
     <input id="cwInput" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px" />
-    <div class="game-howto"><b>Играње:</b> Тапни ќелија → пишувај буква. Тапни пак за промена на насока (→↓). Кликни зборот во листата за да го изберат. Притисни <b>✓ Провери</b> за да видиш резултатот.</div>`;
+    <div class="game-howto"><b>Играње:</b> Тапни ќелија → пишувај буква. Тапни пак за смена на насока (→↓). Тапни збор во листата за да го избереш. <b>🔀 Нов</b> = нов случаен крстозбор. <b>✓ Провери</b> = зелено/црвено.</div>`;
 
   document.addEventListener('keydown',window.cwType);
   renderGrid();renderClues();
