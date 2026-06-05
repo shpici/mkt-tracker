@@ -120,20 +120,38 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 /* NEURAL CANVAS (app background) */
 #neuralCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.18}
 /* AI CHATBOT PANEL */
-#aiPanel{position:fixed;right:0;top:0;width:310px;height:100vh;background:rgba(10,10,26,.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid rgba(179,136,255,.22);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+#aiPanel{position:fixed;right:0;top:0;width:320px;height:100vh;background:rgba(10,10,26,.97);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid rgba(179,136,255,.22);z-index:400;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
 #aiPanel.open{transform:translateX(0)}
 #aiToggle{position:fixed;right:0;top:50%;transform:translateY(-50%);background:linear-gradient(180deg,#b388ff,#7c4dff);color:#fff;border:none;border-radius:8px 0 0 8px;padding:13px 7px;cursor:pointer;z-index:401;font-size:10px;font-weight:800;writing-mode:vertical-rl;letter-spacing:1.5px;transition:right .35s cubic-bezier(.4,0,.2,1);box-shadow:-3px 0 22px rgba(179,136,255,.45);line-height:1}
 #aiToggle:hover{box-shadow:-5px 0 30px rgba(179,136,255,.75)}
-#aiToggle.shifted{right:310px}
-.ai-hdr{padding:14px 13px 10px;border-bottom:1px solid rgba(179,136,255,.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#aiToggle.shifted{right:320px}
+.ai-hdr{padding:12px 13px 10px;border-bottom:1px solid rgba(179,136,255,.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .ai-hdr-t{font-size:11.5px;font-weight:800;color:#b388ff;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
 .ai-online{width:7px;height:7px;border-radius:50%;background:#69f0ae;animation:pulse 1.5s infinite;flex-shrink:0}
 .ai-close{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:16px;padding:2px;line-height:1;transition:color .15s}
 .ai-close:hover{color:#fff}
 .ai-msgs{flex:1;overflow-y:auto;padding:10px 11px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(179,136,255,.28) transparent}
-.ai-msg{background:rgba(179,136,255,.08);border:1px solid rgba(179,136,255,.16);border-radius:10px;padding:9px 10px;font-size:10px;color:rgba(255,255,255,.8);line-height:1.5;animation:toast-in .32s ease both}
+.ai-msg{background:rgba(179,136,255,.08);border:1px solid rgba(179,136,255,.16);border-radius:10px;padding:9px 10px;font-size:10.5px;color:rgba(255,255,255,.85);line-height:1.55;animation:toast-in .32s ease both}
+.ai-msg.ai-usr{background:rgba(105,240,174,.07);border-color:rgba(105,240,174,.2)}
 .ai-msg-lbl{font-size:8.5px;font-weight:800;color:#b388ff;margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
+.ai-msg.ai-usr .ai-msg-lbl{color:#69f0ae}
 .ai-msg-time{font-size:8px;color:rgba(255,255,255,.28);float:right;margin-top:4px}
+.ai-typing-dots{display:inline-flex;gap:3px;align-items:center;height:14px}
+.ai-typing-dots span{width:5px;height:5px;border-radius:50%;background:#b388ff;animation:ai-dot .9s infinite}
+.ai-typing-dots span:nth-child(2){animation-delay:.2s}
+.ai-typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes ai-dot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.ai-key-wrap{padding:8px 11px;background:rgba(105,240,174,.05);border-bottom:1px solid rgba(105,240,174,.15);display:none;gap:6px;align-items:center;flex-shrink:0}
+.ai-key-inp{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(179,136,255,.3);border-radius:6px;color:#fff;padding:6px 8px;font-size:11px;outline:none}
+.ai-key-inp::placeholder{color:rgba(255,255,255,.28)}
+.ai-key-save{background:linear-gradient(135deg,#69f0ae,#00c853);border:none;border-radius:6px;color:#000;font-size:11px;font-weight:700;padding:6px 10px;cursor:pointer;flex-shrink:0}
+.ai-input-wrap{padding:8px 11px;border-top:1px solid rgba(179,136,255,.15);display:flex;gap:6px;align-items:center;flex-shrink:0}
+.ai-input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(179,136,255,.25);border-radius:20px;color:#fff;padding:8px 12px;font-size:11px;outline:none;transition:border-color .2s}
+.ai-input:focus{border-color:rgba(179,136,255,.6)}
+.ai-input::placeholder{color:rgba(255,255,255,.3)}
+.ai-send{background:linear-gradient(135deg,#b388ff,#7c4dff);border:none;border-radius:50%;color:#fff;width:34px;height:34px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .15s}
+.ai-send:hover{opacity:.8}
+.ai-send:disabled{opacity:.4;cursor:not-allowed}
 /* ROLE BADGE */
 .role-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:linear-gradient(135deg,rgba(179,136,255,.2),rgba(128,222,234,.15));border:1px solid rgba(179,136,255,.35);color:#b388ff;white-space:nowrap}
 /* HEADER */
@@ -647,10 +665,21 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <!-- AI CHATBOT PANEL -->
 <div id="aiPanel">
   <div class="ai-hdr">
-    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар</div>
-    <button class="ai-close" onclick="toggleAI()">✕</button>
+    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Gemini</div>
+    <div style="display:flex;gap:4px;align-items:center">
+      <button class="ai-close" onclick="toggleAIKey()" title="API клуч">⚙️</button>
+      <button class="ai-close" onclick="toggleAI()">✕</button>
+    </div>
+  </div>
+  <div class="ai-key-wrap" id="aiKeyWrap">
+    <input class="ai-key-inp" id="aiKeyInp" type="password" placeholder="Внеси Gemini API Key...">
+    <button class="ai-key-save" onclick="saveAIKey()">Зачувај</button>
   </div>
   <div class="ai-msgs" id="aiMsgs"></div>
+  <div class="ai-input-wrap">
+    <input class="ai-input" id="aiInput" type="text" placeholder="Постави прашање..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();aiSend();}">
+    <button class="ai-send" id="aiSendBtn" onclick="aiSend()" title="Испрати">➤</button>
+  </div>
 </div>
 <button id="aiToggle" onclick="toggleAI()" title="AI Аналитичар">AI</button>
 
@@ -6225,13 +6254,26 @@ window.toggleAI=function(){
   if(!panel||!toggle)return;
   const open=panel.classList.toggle('open');
   toggle.classList.toggle('shifted',open);
-  if(open){
-    if(document.getElementById('aiMsgs').children.length===0)seedAIMsgs();
-    else addAIMsg();
+  if(open&&document.getElementById('aiMsgs').children.length===0)aiWelcome();
+};
+window.toggleAIKey=function(){
+  const w=document.getElementById('aiKeyWrap');
+  w.style.display=w.style.display==='flex'?'none':'flex';
+  if(w.style.display==='flex'){
+    const k=localStorage.getItem('mkt_gemini_key')||'';
+    document.getElementById('aiKeyInp').value=k;
+    document.getElementById('aiKeyInp').focus();
   }
 };
+window.saveAIKey=function(){
+  const k=(document.getElementById('aiKeyInp').value||'').trim();
+  if(!k)return;
+  localStorage.setItem('mkt_gemini_key',k);
+  document.getElementById('aiKeyWrap').style.display='none';
+  aiAddMsg('bot','✅ API клуч зачуван! Сега можам да одговарам на прашања.');
+};
 
-/* ── helpers ── */
+/* ── AI helpers ── */
 function _aiData(){
   const Y=cY,M=cM;
   const mems=MEMBERS||[];
@@ -6241,140 +6283,136 @@ function _aiData(){
   const ratio=Math.max(today/dInM,0.01);
   const SHLBL={fmc:'FMC',post:'Post',bb:'BB',iptv:'IPTV',loy:'Loy',prep:'Prep',cc:'C&C',equip:'Опр.',loybus:'LoyB',ict:'ICT',fmcbus:'FMCB',postbus:'PostB',bbbus:'BBB'};
   const MAIN=['fmc','post','bb','iptv','prep'];
-  const perf=id=>perfScore(id,Y,M);
-  const sum=(id,k)=>mMoSum(id,k,Y,M);
+  const perf=id=>typeof perfScore==='function'?perfScore(id,Y,M):0;
+  const sum=(id,k)=>typeof mMoSum==='function'?mMoSum(id,k,Y,M):0;
   return {Y,M,mems,t,today,dInM,ratio,SHLBL,MAIN,perf,sum};
 }
 
-const AI_TEMPLATES=[
-  // Т1 — Тимски резултат + проекција
-  ()=>{
-    const {mems,perf,today,dInM,ratio}=_aiData();
-    if(!mems.length)return null;
-    const scores=mems.map(m=>perf(m.id));
-    const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
-    const proj=ratio>0.08?Math.min(Math.round(avg/ratio),135):null;
-    const icon=avg>=85?'✅':avg>=70?'⚠️':'⛔';
-    const projTxt=proj?` Проекција до крај на месецот: <b>~${proj}%</b>.`:'';
-    return `📊 ${icon} <b>Тим — ${avg}% реализација</b> (ден ${today}/${dInM}).${projTxt}`;
-  },
-  // Т2 — Лидер vs потребна поддршка
-  ()=>{
-    const {mems,perf}=_aiData();if(!mems.length)return null;
-    const sc=mems.map(m=>({n:m.name.split(' ')[0],s:perf(m.id)})).sort((a,b)=>b.s-a.s);
-    const top=sc[0],bot=sc[sc.length-1];
-    return `🏆 Лидер: <b>${top.n} ${top.s}%</b> | Треба поддршка: <b>${bot.n} ${bot.s}%</b> — разлика ${top.s-bot.s}пп. Фокусирај се на ${bot.n}.`;
-  },
-  // Т3 — FMC статус по вработен (реални бројки)
-  ()=>{
-    const {mems,t,sum}=_aiData();if(!mems.length)return null;
-    const tgt=t.fmc||0;
-    const lines=mems.map(m=>{const a=sum(m.id,'fmc');const g=Math.max(0,tgt-a);return `${m.name.split(' ')[0]}: ${a}/${tgt}${g>0?` ⚠️(-${g})`:' ✅'}`;});
-    return `💼 <b>FMC по вработен:</b><br>${lines.join('<br>')}`;
-  },
-  // Т4 — Postpaid + BB статус
-  ()=>{
-    const {mems,t,sum}=_aiData();if(!mems.length)return null;
-    const lines=mems.map(m=>{
-      const pa=sum(m.id,'post'),pt=t.post||0,pg=Math.max(0,pt-pa);
-      const ba=sum(m.id,'bb'),bt=t.bb||0,bg=Math.max(0,bt-ba);
-      return `${m.name.split(' ')[0]}: Post ${pa}/${pt}${pg>0?`(-${pg})`:'✅'} | BB ${ba}/${bt}${bg>0?`(-${bg})`:'✅'}`;
-    });
-    return `📱 <b>Postpaid / BB по вработен:</b><br>${lines.join('<br>')}`;
-  },
-  // Т5 — Слаба точка по вработен (кој KPI е најлош)
-  ()=>{
-    const {mems,t,sum,SHLBL}=_aiData();if(!mems.length)return null;
-    const SCORE_KS=['fmc','post','bb','iptv','prep'];
-    const lines=mems.map(m=>{
-      let wk=null,wkPct=999;
-      SCORE_KS.forEach(k=>{const tgt=t[k]||0;if(!tgt)return;const pct=Math.round(sum(m.id,k)/tgt*100);if(pct<wkPct){wkPct=pct;wk=k;}});
-      if(!wk)return null;
-      const icon=wkPct>=90?'✅':wkPct>=70?'⚠️':'⛔';
-      return `${m.name.split(' ')[0]}: ${icon} <b>${SHLBL[wk]} ${wkPct}%</b>`;
-    }).filter(Boolean);
-    return `🎯 <b>Слаби точки по вработен:</b><br>${lines.join('<br>')}`;
-  },
-  // Т6 — Темпо анализа (пред/зад план)
-  ()=>{
-    const {mems,perf,today,dInM,ratio}=_aiData();if(!mems.length)return null;
-    const expected=Math.round(ratio*100);
-    const ahead=[],ontrack=[],behind=[];
-    mems.forEach(m=>{const s=perf(m.id);const diff=s-expected;if(diff>=8)ahead.push(`${m.name.split(' ')[0]} ${s}%`);else if(diff<-12)behind.push(`${m.name.split(' ')[0]} ${s}%`);else ontrack.push(`${m.name.split(' ')[0]} ${s}%`);});
-    let txt=`📅 <b>Темпо — ден ${today}/${dInM}, план ~${expected}%:</b><br>`;
-    if(ahead.length)txt+=`⬆️ Пред план: ${ahead.join(', ')}<br>`;
-    if(ontrack.length)txt+=`➡️ На план: ${ontrack.join(', ')}<br>`;
-    if(behind.length)txt+=`⬇️ Зад план: ${behind.join(', ')}`;
-    return txt;
-  },
-  // Т7 — Уште колку за 100% (главни KPI тимски)
-  ()=>{
-    const {mems,t,sum,dInM,today}=_aiData();if(!mems.length)return null;
-    const dLeft=dInM-today;const wdLeft=Math.max(1,Math.round(dLeft*5/7));
-    const KS=['fmc','post','bb','iptv'];
-    const SHLBL={fmc:'FMC',post:'Post',bb:'BB',iptv:'IPTV'};
-    const gaps=KS.map(k=>{
-      const totalA=mems.reduce((s,m)=>s+sum(m.id,k),0);
-      const totalT=mems.length*(t[k]||0);
-      const g=Math.max(0,totalT-totalA);
-      const pct=totalT>0?Math.round(totalA/totalT*100):0;
-      return `${SHLBL[k]}: ${totalA}/${totalT} (${pct}%)${g>0?` — уште <b>${g}</b>`:'✅'}`;
-    });
-    return `⏰ <b>Остануваат ~${wdLeft} работни дена:</b><br>${gaps.join('<br>')}`;
-  },
-  // Т8 — Вработени под 60% (ризик)
-  ()=>{
-    const {mems,perf,t,sum}=_aiData();if(!mems.length)return null;
-    const risk=mems.filter(m=>perf(m.id)<60);
-    if(!risk.length)return `✅ <b>Нема вработени во критичен ризик.</b> Сите се над 60%. Одржете го темпото!`;
-    const lines=risk.map(m=>{
-      const s=perf(m.id);
-      const fmcG=Math.max(0,(t.fmc||0)-sum(m.id,'fmc'));
-      const postG=Math.max(0,(t.post||0)-sum(m.id,'post'));
-      return `⛔ <b>${m.name.split(' ')[0]} ${s}%</b> — FMC уште ${fmcG}, Post уште ${postG}`;
-    });
-    return `🚨 <b>РИЗИК — под 60%:</b><br>${lines.join('<br>')}`;
-  },
-  // Т9 — Детален резиме по вработен (цикличен)
-  (()=>{let _i=0;return ()=>{
-    const {mems,perf,t,sum,SHLBL}=_aiData();if(!mems.length)return null;
-    const m=mems[_i%mems.length];_i++;
-    const s=perf(m.id);
-    const icon=s>=90?'✅':s>=75?'⚠️':s>=60?'⚠️':'⛔';
-    const KS=['fmc','post','bb','iptv','prep'];
-    const kpis=KS.map(k=>{const a=sum(m.id,k);const tgt=t[k]||0;if(!tgt)return null;const p=Math.round(a/tgt*100);return `${SHLBL[k]}: ${a}/${tgt}(${p}%)`;}).filter(Boolean);
-    return `👤 <b>${m.name.split(' ')[0]} — ${icon} ${s}%</b><br>${kpis.join(' · ')}`;
-  };})(),
-  // Т10 — Препеид / Лојалност статус
-  ()=>{
-    const {mems,t,sum}=_aiData();if(!mems.length)return null;
-    const lines=mems.map(m=>{
-      const pa=sum(m.id,'prep'),pt=t.prep||0,la=sum(m.id,'loy'),lt=t.loy||0;
-      return `${m.name.split(' ')[0]}: Prep ${pa}/${pt} | Loy ${la}/${lt}`;
-    });
-    return `🔄 <b>Prepaid / Loyalty:</b><br>${lines.join('<br>')}`;
-  },
-];
+function _aiSystemPrompt(){
+  const d=_aiData();
+  const names=d.mems.map(m=>m.name).join(', ')||'нема податоци';
+  const scores=d.mems.length?d.mems.map(m=>`${m.name.split(' ')[0]}: ${d.perf(m.id)}%`).join(', '):'нема';
+  const t=d.t||{};
+  const targStr=Object.entries(t).map(([k,v])=>`${k}:${v}`).join(', ')||'нема';
+  return `Ти си AI аналитичар и асистент за МКТ (Македонски Телеком) продавница во Кичево, Македонија.
+Помагаш на менаџерот и тимот со: анализа на продажни резултати, тарифи и нивни цени, роаминг услуги, интернет и ТВ пакети, бизнис совети и секоe друго прашање.
 
-let _aiIdx=0;
-function seedAIMsgs(){
-  const wrap=document.getElementById('aiMsgs');if(!wrap)return;
-  wrap.innerHTML='';
-  addAIMsg();
-  if(window._aiInterval)clearInterval(window._aiInterval);
-  window._aiInterval=setInterval(addAIMsg,300000);
+=== ТЕКОВНИ ПОДАТОЦИ (${d.M}/${d.Y}) ===
+Ден: ${d.today} од ${d.dInM} | Напредок: ${Math.round(d.today/d.dInM*100)}%
+Членови: ${names}
+Перформанси: ${scores}
+Месечни таргети: ${targStr}
+
+=== ТАРИФИ НА МКТ (физички лица) ===
+Basic: 699/649ден, 10GB | Basic+: 899/849ден, 20GB
+Unlimited Start: 1199/1099ден, ∞ | Unlimited Extra: 1399/1299ден, ∞+20GB роаминг
+Unlimited Extra+: 1599/1499ден | Unlimited Premium: 1999/1799ден
+Special XS: 199ден, 1GB, ∞ Телеком повици
+Special S: 499/449ден, 10GB+10GB MM | Special L: 649/549ден, 20GB+20GB MM
+Special XL: 849/749ден, 30GB+30GB MM | W тарифа: 50GB+5G, ∞ сите
+Пензионер: 299ден, 200мин+∞P2P, 1GB
+Припеид: 499ден/7дена | 1399ден/30дена+10GB Балкан роаминг
+
+=== ПРАВИЛА ===
+Секогаш одговарај на МАКЕДОНСКИ јазик.
+Биди концизен, корисен и пријателски.
+Ако не знаеш нешто точно, кажи тоа отворено.`;
 }
-function addAIMsg(){
+
+let _aiHistory=[];
+
+function aiNow(){return new Date().toLocaleTimeString('mk-MK',{hour:'2-digit',minute:'2-digit'});}
+
+function aiAddMsg(role,text){
   const wrap=document.getElementById('aiMsgs');if(!wrap)return;
-  const fn=AI_TEMPLATES[_aiIdx%AI_TEMPLATES.length];_aiIdx++;
-  const text=fn();if(!text)return;
-  const now=new Date().toLocaleTimeString('mk-MK',{hour:'2-digit',minute:'2-digit'});
-  const div=document.createElement('div');div.className='ai-msg';
-  div.innerHTML=`<div class="ai-msg-lbl">🤖 AI Анализа</div>${text}<div class="ai-msg-time">${now}</div>`;
+  const div=document.createElement('div');
+  div.className='ai-msg'+(role==='user'?' ai-usr':'');
+  const lbl=role==='user'?'<div class="ai-msg-lbl">👤 Ти</div>':'<div class="ai-msg-lbl">🤖 AI Аналитичар</div>';
+  const html=text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\*(.*?)\*/g,'<i>$1</i>').replace(/\n/g,'<br>');
+  div.innerHTML=`${lbl}${html}<div class="ai-msg-time">${aiNow()}</div>`;
   wrap.appendChild(div);
   div.scrollIntoView({behavior:'smooth',block:'end'});
-  if(wrap.children.length>18){wrap.removeChild(wrap.firstChild);}
+  if(wrap.children.length>40)wrap.removeChild(wrap.firstChild);
+  return div;
 }
+
+function aiAddTyping(){
+  const wrap=document.getElementById('aiMsgs');if(!wrap)return null;
+  const div=document.createElement('div');div.className='ai-msg';
+  div.innerHTML='<div class="ai-msg-lbl">🤖 AI Аналитичар</div><div class="ai-typing-dots"><span></span><span></span><span></span></div>';
+  wrap.appendChild(div);div.scrollIntoView({behavior:'smooth',block:'end'});
+  return div;
+}
+
+function aiWelcome(){
+  const d=_aiData();
+  const key=localStorage.getItem('mkt_gemini_key');
+  if(!key){
+    aiAddMsg('bot','👋 Здраво! Јас сум вашиот AI аналитичар.\n\n⚙️ За да започнам, внесете **Gemini API клуч** со кликање на ⚙️ горе десно.\n\nКлучот е **бесплатен** — добијте го на aistudio.google.com');
+  } else {
+    const hour=new Date().getHours();
+    const greet=hour<12?'Добро утро':'hour<18'?'Добар ден':'Добра вечер';
+    aiAddMsg('bot',`👋 ${greet}! Јас сум вашиот AI аналитичар за МКТ Кичево.\n\nДенес е ден **${d.today}** од месецот. Постави ми прашање — за тарифи, продажба, роаминг, или сèшто друго! 🚀`);
+  }
+}
+
+window.aiSend=async function(){
+  const inp=document.getElementById('aiInput');
+  const btn=document.getElementById('aiSendBtn');
+  const msg=(inp.value||'').trim();
+  if(!msg)return;
+
+  const key=localStorage.getItem('mkt_gemini_key');
+  if(!key){
+    document.getElementById('aiKeyWrap').style.display='flex';
+    aiAddMsg('bot','⚠️ Прво внесете Gemini API клуч со кликање на ⚙️ горе.');
+    return;
+  }
+
+  inp.value='';
+  btn.disabled=true;
+  aiAddMsg('user',msg);
+  _aiHistory.push({role:'user',parts:[{text:msg}]});
+
+  const typing=aiAddTyping();
+
+  const contents=[
+    {role:'user',parts:[{text:_aiSystemPrompt()}]},
+    {role:'model',parts:[{text:'Разбрав! Готов сум да помогнам.'}]},
+    ..._aiHistory
+  ];
+
+  try{
+    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents,
+        generationConfig:{temperature:0.72,maxOutputTokens:600,topP:0.9}
+      })
+    });
+    if(!resp.ok){
+      const err=await resp.json().catch(()=>({}));
+      throw new Error(err.error?.message||`HTTP ${resp.status}`);
+    }
+    const data=await resp.json();
+    const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||'Немам одговор, обиди се повторно.';
+    if(typing)typing.remove();
+    aiAddMsg('bot',reply);
+    _aiHistory.push({role:'model',parts:[{text:reply}]});
+    if(_aiHistory.length>24)_aiHistory.splice(0,2);
+  }catch(e){
+    if(typing)typing.remove();
+    aiAddMsg('bot',`⚠️ Грешка: ${e.message}\n\nПровери дали API клучот е точен и дали има интернет.`);
+  }
+  btn.disabled=false;
+  inp.focus();
+};
+
+// AI_TEMPLATES kept for reference only — chatbot replaces auto-messages
+const AI_TEMPLATES=[
+  ()=>null,
+];
 
 // ── Count-up animation for numbers ──────────────────
 window.countUp=function(el,target,dur=900){
