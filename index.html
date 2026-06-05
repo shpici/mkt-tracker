@@ -4851,6 +4851,7 @@ function initEmp(){initOfiBoxState();
   const today=new Date();
   if(today.getFullYear()===cY&&today.getMonth()+1===cM){const wks2=gWks(getWDs(cY,cM));const td=today.getDate();wks2.forEach((wk,wi)=>{wk.forEach((d,di)=>{if(d.date===td){cW=wi;cD=di;}});});}
   empBuildNav();rndEmpDyBtns();rndEmpSt();rndEmpKpi();rndEmpMo();rndEmpYr();
+  setTimeout(showMorningBriefing, 800);
   const cmt=CS[mID];
   if(cmt){const box=document.getElementById('empCmtBox');const txt=document.getElementById('empCmtTxt');if(box&&txt){box.style.display='block';txt.textContent=cmt;}}
 }
@@ -6491,7 +6492,163 @@ window.rndEmpPro=function(){
   rndProLevel();rndProRings();rndProStreak();rndProMissions();rndProLeaderboard();
 };
 
-// One-time bulk price update — call from console: updateOfiPrices()
+// ── 🎉 CONFETTI + SOUND ──
+function playSuccessSound(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const notes=[523,659,784,1047];
+    notes.forEach((freq,i)=>{
+      const o=ac.createOscillator();const g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type='sine';o.frequency.value=freq;
+      const t=ac.currentTime+i*0.12;
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.18,t+0.04);
+      g.gain.linearRampToValueAtTime(0,t+0.18);
+      o.start(t);o.stop(t+0.2);
+    });
+  }catch(e){}
+}
+
+function launchConfetti(){
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99999';
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  const colors=['#ff6b6b','#ffd700','#3b82f6','#22c55e','#ec4899','#8b5cf6','#f59e0b'];
+  const particles=Array.from({length:90},()=>({
+    x:Math.random()*canvas.width,y:-10-Math.random()*80,
+    vx:(Math.random()-0.5)*4,vy:2+Math.random()*4,
+    r:4+Math.random()*6,color:colors[Math.floor(Math.random()*colors.length)],
+    spin:Math.random()*Math.PI*2,spinV:(Math.random()-0.5)*0.2,
+    shape:Math.random()>.5?'rect':'circle'
+  }));
+  let frame=0;
+  function tick(){
+    frame++;ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.07;p.spin+=p.spinV;
+      if(p.y<canvas.height+20)alive=true;
+      const alpha=Math.max(0,1-(frame/120));
+      ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=p.color;ctx.translate(p.x,p.y);ctx.rotate(p.spin);
+      if(p.shape==='rect'){ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);}
+      else{ctx.beginPath();ctx.arc(0,0,p.r/2,0,Math.PI*2);ctx.fill();}
+      ctx.restore();
+    });
+    if(alive&&frame<150)requestAnimationFrame(tick);
+    else canvas.remove();
+  }
+  requestAnimationFrame(tick);
+}
+
+function celebrateMission(missionText){
+  launchConfetti();
+  playSuccessSound();
+  const b=document.createElement('div');
+  b.style.cssText='position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99998;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-radius:16px;padding:12px 22px;box-shadow:0 8px 28px rgba(34,197,94,.5);font-size:13px;font-weight:700;text-align:center;animation:celebIn .4s ease;white-space:nowrap';
+  b.innerHTML='🎉 Мисија завршена! '+missionText;
+  document.body.appendChild(b);
+  setTimeout(()=>{b.style.animation='celebOut .4s ease forwards';setTimeout(()=>b.remove(),400);},3200);
+}
+
+function celebrateLevel(lvlName){
+  launchConfetti();playSuccessSound();
+  const b=document.createElement('div');
+  b.style.cssText='position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99998;background:linear-gradient(135deg,#9b59b6,#e91e63);color:#fff;border-radius:16px;padding:12px 22px;box-shadow:0 8px 28px rgba(155,89,182,.5);font-size:13px;font-weight:700;text-align:center;animation:celebIn .4s ease;white-space:nowrap';
+  b.innerHTML='🏆 Ново ниво: '+lvlName+'!';
+  document.body.appendChild(b);
+  setTimeout(()=>{b.style.animation='celebOut .4s ease forwards';setTimeout(()=>b.remove(),400);},3200);
+}
+
+// Track mission & level state for change detection
+let _lastMissionDone=new Set();
+let _lastLevel='';
+let _missionsInited=false;
+
+const _origRndProMissions=rndProMissions;
+rndProMissions=function(){
+  _origRndProMissions();
+  if(!mID)return;
+  const missions=calcMissions();
+  missions.forEach((m,i)=>{
+    const key=i+':'+m.text;
+    const done=m.actual>=m.target;
+    // Only celebrate if state changed from open → done (not on initial render)
+    if(done&&_missionsInited&&!_lastMissionDone.has(key)){celebrateMission(m.icon+' '+m.text);}
+    if(done)_lastMissionDone.add(key);else _lastMissionDone.delete(key);
+  });
+  _missionsInited=true;
+};
+
+const _origRndProLevel=rndProLevel;
+rndProLevel=function(){
+  _origRndProLevel();
+  if(!mID)return;
+  const score=perfScore(mID,cY,cM);
+  const lvl=calcLevel(score);
+  if(_lastLevel&&_lastLevel!==lvl.key)celebrateLevel(lvl.name);
+  _lastLevel=lvl.key;
+};
+
+// ── ☀️ MORNING BRIEFING ──
+function showMorningBriefing(){
+  if(!mID)return;
+  const today=new Date().toISOString().slice(0,10);
+  const key='briefing_'+mID+'_'+today;
+  if(localStorage.getItem(key))return;
+  localStorage.setItem(key,'1');
+
+  const mb=MEMBERS.find(x=>x.id===mID);
+  const firstName=mb?.name.split(' ')[0]||'';
+  const t=getMT(cY,cM);
+  const wds=getWDs(cY,cM);
+  const dl=wds.length||1;
+  const score=perfScore(mID,cY,cM);
+  const lvl=calcLevel(score);
+  const {cur}=calcStreak();
+
+  const fmcNeed=Math.max(1,Math.ceil((t.fmc||0)/dl));
+  const postNeed=Math.max(1,Math.ceil((t.post||0)/dl));
+  const equipNeed=Math.max(1,Math.ceil((t.equip||0)/dl));
+
+  const hour=new Date().getHours();
+  const greet=hour<12?'☀️ Добро утро':'🌤 Добар ден';
+
+  const streakMsg=cur>=3?`🔥 Streak: <b>${cur} дена</b> — не прекини!`:cur===1?`🔥 Streak стартуван!`:`💪 Започни streak денес!`;
+
+  const overlay=document.createElement('div');
+  overlay.id='briefingOverlay';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99990;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)';
+  overlay.innerHTML=`
+    <div style="background:var(--sur);border:1px solid var(--brd);border-radius:20px;padding:24px;max-width:340px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:celebIn .4s ease">
+      <div style="font-size:22px;font-weight:900;margin-bottom:4px">${greet}, ${firstName}!</div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:16px">${new Date().toLocaleDateString('mk-MK',{weekday:'long',day:'numeric',month:'long'})}</div>
+
+      <div style="background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🎯 Дневен план</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+          <div><div style="font-size:20px;font-weight:900;color:#3b82f6">${fmcNeed}</div><div style="font-size:10px;color:var(--t2)">FMC</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#8b5cf6">${postNeed}</div><div style="font-size:10px;color:var(--t2)">Постпеjд</div></div>
+          <div><div style="font-size:20px;font-weight:900;color:#f59e0b">${equipNeed}</div><div style="font-size:10px;color:var(--t2)">Опрема</div></div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg);border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <div class="lvl-badge ${lvl.cls}" style="width:40px;height:40px;font-size:16px;border-width:2px">${lvl.icon}</div>
+        <div>
+          <div style="font-size:13px;font-weight:800">${lvl.name} · ${score}%</div>
+          <div style="font-size:11px;color:var(--t2)">${streakMsg}</div>
+        </div>
+      </div>
+
+      <button onclick="document.getElementById('briefingOverlay').remove()" style="width:100%;padding:12px;background:var(--acc);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px">💪 Да работиме!</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove();});
+}
+
+
 window.updateOfiPrices=async()=>{
   const UP={'47351101':299,'47229061':690,'47229062':690,'40968100':1680,'47223549':690,
     '47350779':399,'47350780':399,'47350781':399,'47350782':399,'47350783':399,
