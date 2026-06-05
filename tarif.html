@@ -207,6 +207,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 <div class="main-tabs">
   <button class="main-tab on" id="mtab-fiz" onclick="switchMain('fiz')">👤 Физички лица</button>
   <button class="main-tab" id="mtab-biz" onclick="switchMain('biz')">💼 Деловни корисници</button>
+  <button class="main-tab" id="mtab-prepaid" onclick="switchMain('prepaid')">💳 Припеид &amp; eSIM</button>
 </div>
 
 <!-- ФИЗИЧКИ ЛИЦА -->
@@ -216,6 +217,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <button class="sec-tab on" id="ftab-mob" onclick="switchFiz('mob')">📱 Mobile</button>
     <button class="sec-tab" id="ftab-m1ex" onclick="switchFiz('m1ex')">🏠 Magenta 1 (постојни)</button>
     <button class="sec-tab" id="ftab-m1new" onclick="switchFiz('m1new')">✨ Magenta 1 Unlimited</button>
+    <button class="sec-tab" id="ftab-special" onclick="switchFiz('special')">🌟 Special</button>
+    <button class="sec-tab" id="ftab-wtarif" onclick="switchFiz('wtarif')">⚡ W тарифа</button>
+    <button class="sec-tab" id="ftab-penz" onclick="switchFiz('penz')">👴 Пензионер</button>
   </div>
   <div class="panel on" id="fpanel-mob">
     <div class="pill-label">Договор</div>
@@ -246,6 +250,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="tgrid" id="g-fm1new-mob"></div>
     <div class="divider"><span>Фиксен пакет</span></div>
     <div class="fgrid" id="g-fm1new-fix"></div>
+  </div>
+  <div class="panel" id="fpanel-special">
+    <div class="pill-label">Договор</div>
+    <div class="pills">
+      <button class="pill on" data-grp="special" data-val="red" onclick="setPill(this,'special')">Редовна</button>
+      <button class="pill" data-grp="special" data-val="d12" onclick="setPill(this,'special')">Доверба 12 (без уред)</button>
+    </div>
+    <div class="tgrid" id="g-special"></div>
+  </div>
+  <div class="panel" id="fpanel-wtarif">
+    <div class="divider"><span>Дигитална тарифа за млади — Gen Z</span></div>
+    <div class="tgrid" id="g-wtarif"></div>
+  </div>
+  <div class="panel" id="fpanel-penz">
+    <div class="divider"><span>Постпејд за пензионери (потребен пензиски чек)</span></div>
+    <div class="tgrid" id="g-penz"></div>
   </div>
   <div class="rbox" id="rbox-fiz">
     <div class="rbox-title">Пресметка</div>
@@ -310,6 +330,45 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 </div>
 </div>
 
+<!-- ПРИПЕИД & eSIM -->
+<div class="panel" id="main-prepaid">
+<div class="container">
+  <div class="divider"><span>Стартер пакети</span></div>
+  <div class="tgrid">
+    <div class="card">
+      <div class="cname">💳 Стандарден стартер</div>
+      <div class="cprice">499 <small>ден</small></div>
+      <div class="cdet">📅 Важност: 7 дена од активација<br>📶 Вклучен сообраќај<br>📱 SIM картичка или eSIM<br>✅ 5G поддршка</div>
+    </div>
+    <div class="card">
+      <div class="cname">💎 Стартер + Роаминг</div>
+      <div class="cprice">1,299 <small>ден</small></div>
+      <div class="cdet">📅 Важност: 30 дена од активација<br>🌍 5 GB Балкан роаминг вклучено<br>📱 SIM картичка или eSIM<br>✅ 5G поддршка</div>
+    </div>
+    <div class="card">
+      <div class="cname">📲 eSIM активација</div>
+      <div class="cprice" style="font-size:14px;color:var(--text2)">Онлајн или во продавница</div>
+      <div class="cdet">🌐 eshop.telekom.mk<br>📱 My Telekom апликација<br>🏪 Во Телеком продавница<br>⚡ Моментална активација</div>
+    </div>
+  </div>
+  <div class="divider"><span>Cool+ тарифирање (надвор од пакет)</span></div>
+  <div class="rbox" style="margin-top:0">
+    <div class="rrow"><span class="rl">📞 Повик кон друга мрежа</span><span class="rv">1.9 ден/мин + 4.9 ден врска</span></div>
+    <div class="rrow"><span class="rl">📞 Повик кон Телеком</span><span class="rv">∞ бесплатно</span></div>
+    <div class="rrow"><span class="rl">✉️ SMS порака</span><span class="rv">4.9 ден</span></div>
+    <div class="rrow"><span class="rl">📶 Мобилен интернет</span><span class="rv">4.9 ден/MB</span></div>
+    <div class="rrow"><span class="rl">🌍 Роаминг (ЗБ)</span><span class="rv">Magenta Moments пакети</span></div>
+  </div>
+  <div class="divider"><span>Информации</span></div>
+  <div class="rbox" style="margin-top:0">
+    <div class="rrow"><span class="rl">💰 Активациски кредит</span><span class="rv">295 ден</span></div>
+    <div class="rrow"><span class="rl">📱 Поддржани уреди за eSIM</span><span class="rv">iPhone XS+, Samsung S21+, и др.</span></div>
+    <div class="rrow"><span class="rl">🔄 Пренос на број (MNP)</span><span class="rv">Достапно</span></div>
+    <div class="rrow"><span class="rl">👤 Еден корисник може</span><span class="rv">Неограничен број на SIM/eSIM</span></div>
+  </div>
+</div>
+</div>
+
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -330,8 +389,8 @@ var auth = firebase.auth();
 
 // ─── STATE ──────────────────────────────
 var MAIN='fiz', FIZ_TAB='mob', BIZ_TAB='bizmob';
-var CONTRACT={fmob:'red', fm1ex:'fam', fm1new:'fam'};
-var QTY={fmob:{}, fm1ex:{}, fm1new:{}, biz_new:{}, biz_old:{}, m1b_new:{}, m1b_old:{}};
+var CONTRACT={fmob:'red', fm1ex:'fam', fm1new:'fam', special:'red'};
+var QTY={fmob:{}, fm1ex:{}, fm1new:{}, special:{}, wtarif:{}, penz:{}, biz_new:{}, biz_old:{}, m1b_new:{}, m1b_old:{}};
 var FIX={fm1ex:null, fm1new:null, m1b_new:null, m1b_old:null};
 var CMP={old:null, nw:null};
 
@@ -378,6 +437,21 @@ var FM1NEW_FIX=[
   {id:'fus',name:'Fix Unlim. Start',   price:1399,spd:'150/75 Mbps',  tv:'110+ канали'},
   {id:'fue',name:'Fix Unlim. Extra',   price:1599,spd:'400/200 Mbps', tv:'110+ канали'},
   {id:'fup',name:'Fix Unlim. Premium', price:1999,spd:'1 Gbps',       tv:'110+ канали'}
+];
+// ─── SPECIAL XS/S/L/XL ──────────────────
+var SPECIAL=[
+  {id:'xs', name:'Special XS', red:199, d12:199, net:'1 GB',  calls:'∞ Телеком', sms:'5.9 ден/SMS', bud:0},
+  {id:'s',  name:'Special S',  red:499, d12:449, net:'10 GB', calls:'∞ сите',    sms:'∞ SMS',       bud:1500, moments:'10 GB'},
+  {id:'l',  name:'Special L',  red:649, d12:549, net:'20 GB', calls:'∞ сите',    sms:'∞ SMS',       bud:3000, moments:'20 GB'},
+  {id:'xl', name:'Special XL', red:849, d12:749, net:'30 GB', calls:'∞ сите',    sms:'∞ SMS',       bud:6000, moments:'30 GB'},
+];
+// W тарифа — дигитална за млади Gen Z (провери цена на telekom.mk/w-tarifa)
+var WTARIF=[
+  {id:'w', name:'W', price:899, net:'50 GB + 5G', calls:'∞ сите', roam:'Magenta Moments', bud:5000}
+];
+// Тарифа Пензионер (провери детали на telekom.mk/tarifi-penzioner)
+var PENZIONER=[
+  {id:'penz', name:'Пензионер', price:299, net:'1 GB', calls:'200 мин + ∞ P2P', roam:'500 MB ЗБ', bud:0}
 ];
 
 // ─── ДЕЛОВНИ DATA ───────────────────────
@@ -441,14 +515,14 @@ var CMP_NEW_ALL=[
 // ─── NAVIGATION ─────────────────────────
 function switchMain(m){
   MAIN=m;
-  ['fiz','biz'].forEach(function(id){
+  ['fiz','biz','prepaid'].forEach(function(id){
     document.getElementById('mtab-'+id).className='main-tab'+(id===m?' on':'');
     document.getElementById('main-'+id).className='panel'+(id===m?' on':'');
   });
 }
 function switchFiz(t){
   FIZ_TAB=t;
-  ['mob','m1ex','m1new'].forEach(function(id){
+  ['mob','m1ex','m1new','special','wtarif','penz'].forEach(function(id){
     document.getElementById('ftab-'+id).className='sec-tab'+(id===t?' on':'');
     document.getElementById('fpanel-'+id).className='panel'+(id===t?' on':'');
   });
@@ -554,6 +628,36 @@ function makeBizCard(t, grp, isOld){
   return div;
 }
 
+function makeSpecialCard(t){
+  var q=QTY.special[t.id]||0;
+  var c=CONTRACT.special;
+  var price=c==='d12'?t.d12:t.red;
+  var div=document.createElement('div');
+  div.className='card'+(q>0?' sel':'');
+  var priceRows='<div class="pr"><span class="prl">Редовна</span><span class="prv'+(c==='red'?' act':'')+'">'+t.red+'</span></div>';
+  if(t.d12!==t.red) priceRows+='<div class="pr"><span class="prl">Д12 без уред</span><span class="prv'+(c==='d12'?' act':'')+'">'+t.d12+'</span></div>';
+  var det='📶 '+t.net+' · 📞 '+t.calls+'<br>✉️ '+t.sms;
+  if(t.moments) det+='<br>🎁 Magenta Moments: +'+t.moments;
+  det+='<br>🖼 MMS: 17.7 ден';
+  div.innerHTML='<div class="cname">'+t.name+'<span class="ctag ctag-new" style="margin-left:4px">SPECIAL</span></div>'+
+    '<div class="price-rows">'+priceRows+'</div>'+
+    '<div class="cdet">'+det+'</div>'+
+    budCell(t,'updateFizResult')+
+    '<div class="qrow"><button class="qbtn" onclick="changeQty(\'special\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\'special\',\''+t.id+'\',1)">+</button></div>';
+  return div;
+}
+function makeInfoCard(t, grp, updateFn){
+  var q=QTY[grp][t.id]||0;
+  var div=document.createElement('div');
+  div.className='card'+(q>0?' sel':'');
+  div.innerHTML='<div class="cname">'+t.name+'</div>'+
+    '<div class="cprice">'+t.price+' <small>ден/мес</small></div>'+
+    '<div class="cdet">📶 '+t.net+'<br>📞 '+t.calls+'<br>🌍 '+t.roam+'</div>'+
+    budCell(t,updateFn)+
+    '<div class="qrow"><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',1)">+</button></div>';
+  return div;
+}
+
 // ─── RENDER ALL ─────────────────────────
 function renderAll(){
   var gfm=document.getElementById('g-fmob'); gfm.innerHTML='';
@@ -585,6 +689,10 @@ function renderAll(){
   var gmof=document.getElementById('g-m1b-old-fix'); gmof.innerHTML='';
   M1B_OLD_FIX.forEach(function(f){gmof.appendChild(makeFixCard(f,'m1b_old',true));});
 
+  var gsp=document.getElementById('g-special'); if(gsp){gsp.innerHTML='';SPECIAL.forEach(function(t){gsp.appendChild(makeSpecialCard(t));});}
+  var gwt=document.getElementById('g-wtarif'); if(gwt){gwt.innerHTML='';WTARIF.forEach(function(t){gwt.appendChild(makeInfoCard(t,'wtarif','updateFizResult'));});}
+  var gpz=document.getElementById('g-penz'); if(gpz){gpz.innerHTML='';PENZIONER.forEach(function(t){gpz.appendChild(makeInfoCard(t,'penz','updateFizResult'));});}
+
   updateFizResult();
   updateBizResult();
 }
@@ -599,10 +707,17 @@ function updateFizResult(){
     var isD12=CONTRACT.fm1ex==='d12'; var tot=sumQty(QTY.fm1ex);
     FM1EX_MOB.forEach(function(t){var q=QTY.fm1ex[t.id]||0;if(q>0){var p=isD12?(tot>=3?t.d3:tot>=2?t.d2:t.d1):(tot>=3?t.f3:tot>=2?t.f2:t.f1);lines.push({l:'M1 '+t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
     if(FIX.fm1ex){var f=FM1EX_FIX.find(function(x){return x.id===FIX.fm1ex;});if(f){lines.push({l:f.name,v:f.price});total+=f.price;}}
-  } else {
+  } else if(FIZ_TAB==='m1new'){
     var isD12n=CONTRACT.fm1new==='d12'; var totn=sumQty(QTY.fm1new);
     FM1NEW_MOB.forEach(function(t){var q=QTY.fm1new[t.id]||0;if(q>0){var p=isD12n?(totn>=3?t.d3:totn>=2?t.d2:t.d1):(totn>=3?t.p3:totn>=2?t.p2:t.p1);lines.push({l:t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
     if(FIX.fm1new){var f2=FM1NEW_FIX.find(function(x){return x.id===FIX.fm1new;});if(f2){lines.push({l:f2.name,v:f2.price});total+=f2.price;}}
+  } else if(FIZ_TAB==='special'){
+    var cs=CONTRACT.special;
+    SPECIAL.forEach(function(t){var q=QTY.special[t.id]||0;if(q>0){var p=cs==='d12'?t.d12:t.red;lines.push({l:t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
+  } else if(FIZ_TAB==='wtarif'){
+    WTARIF.forEach(function(t){var q=QTY.wtarif[t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q});total+=t.price*q;bud+=getBud(t)*q;}});
+  } else if(FIZ_TAB==='penz'){
+    PENZIONER.forEach(function(t){var q=QTY.penz[t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q});total+=t.price*q;bud+=getBud(t)*q;}});
   }
   var has=lines.length>0;
   document.getElementById('fiz-empty').style.display=has?'none':'block';
