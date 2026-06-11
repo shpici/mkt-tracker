@@ -4228,11 +4228,10 @@ window.handleBulkFile=async(cat,input)=>{
 function parseBulkRows(text,skipHeader){
   const lines=text.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim());
   if(!lines.length)return[];
-  // Auto-detect separator: tab (Excel paste) → semicolon → comma
   const sample=lines[0];
   const sep=sample.includes('\t')?'\t':sample.includes(';')?';':',';
 
-  // Auto-detect Telekom lager lista format by finding header row with ofi_mat_id
+  // Auto-detect Telekom lager lista format (header row contains ofi_mat_id)
   const hdrIdx=lines.findIndex(l=>l.toLowerCase().includes('ofi_mat_id'));
   if(hdrIdx!==-1){
     const hdrCols=lines[hdrIdx].split(sep).map(c=>c.trim().toLowerCase());
@@ -4240,6 +4239,7 @@ function parseBulkRows(text,skipHeader){
     const iName=hdrCols.findIndex(c=>c==='ime_artik'||c==='ime artik');
     const iQty=hdrCols.findIndex(c=>c==='kolicina_na_lager'||c==='kolicina na lager'||c==='qty');
     const iPrice=hdrCols.findIndex(c=>c==='cena'||c==='price');
+    const iCpis=hdrCols.findIndex(c=>c==='cpis');
     if(iOfi!==-1){
       return lines.slice(hdrIdx+1).map(line=>{
         const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith('"')&&v.endsWith('"'))v=v.slice(1,-1);return v;});
@@ -4248,7 +4248,8 @@ function parseBulkRows(text,skipHeader){
         const name=iName!==-1?(cols[iName]||'').trim():'';
         const qty=iQty!==-1?parseInt(cols[iQty])||0:0;
         const price=iPrice!==-1?parseFloat((cols[iPrice]||'').replace(',','.'))||0:0;
-        return {ofi,name,price,qty};
+        const cpis=iCpis!==-1?(cols[iCpis]||'').trim().toUpperCase():'';
+        return {ofi,name,price,qty,cpis};
       }).filter(Boolean);
     }
   }
@@ -4259,13 +4260,24 @@ function parseBulkRows(text,skipHeader){
     const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith('"')&&v.endsWith('"'))v=v.slice(1,-1);return v;});
     const ofi=(cols[0]||'').trim();
     if(!ofi)return null;
-    // Handle 2-column (OFI,Qty), 3-column (OFI,Name,Qty), 4-column (OFI,Name,Price,Qty)
     let name='',price=0,qty=0;
     if(cols.length>=4){name=cols[1];price=parseFloat(cols[2].replace(',','.'))||0;qty=parseInt(cols[3])||0;}
     else if(cols.length===3){name=cols[1];qty=parseInt(cols[2])||0;}
     else if(cols.length===2){qty=parseInt(cols[1])||0;}
-    return {ofi,name,price,qty};
+    return {ofi,name,price,qty,cpis:''};
   }).filter(Boolean);
+}
+
+// Filter parsed rows by warehouse category (uses cpis column from Telekom lager format)
+// cat=1 (Доп.Опрема): only rows where cpis contains 'ДОП' or 'ОПРЕМ'
+// cat=2 (Моб & Други): rows where cpis does NOT match Доп.Опрема
+function filterByCat(rows,cat){
+  const hasCpis=rows.some(r=>r.cpis);
+  if(!hasCpis)return rows; // manual format — no filtering
+  const isDop=c=>c.includes('ДОП')||c.includes('ОПРЕМ')||c.includes('OPREMA')||c.includes('DOD');
+  if(cat===1)return rows.filter(r=>isDop(r.cpis));
+  if(cat===2)return rows.filter(r=>!isDop(r.cpis));
+  return rows;
 }
 
 window.previewBulk=(cat)=>{
@@ -4273,8 +4285,10 @@ window.previewBulk=(cat)=>{
   const pv=document.getElementById('bulkPreview'+cat);
   if(!ta||!pv)return;
   const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
-  const rows=parseBulkRows(ta.value,skipHeader);
-  if(!rows.length){pv.innerHTML='<div style="padding:10px;color:var(--t3);text-align:center">Нема валидни редови. Провери форматот.</div>';return;}
+  const allRows=parseBulkRows(ta.value,skipHeader);
+  const rows=filterByCat(allRows,cat);
+  const filteredOut=allRows.length-rows.length;
+  if(!rows.length){pv.innerHTML=`<div style="padding:10px;color:var(--t3);text-align:center">${allRows.length?'Нема производи за овој магацин во лагер листата ('+allRows.length+' ставки се филтрирани за другиот магацин).':'Нема валидни редови. Провери форматот.'}</div>`;return;}
   const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
   const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
   let newCount=0,updCount=0;
@@ -4291,6 +4305,7 @@ window.previewBulk=(cat)=>{
       Преглед — ${rows2.length} производи
       <span style="margin-left:8px;background:var(--grl);color:var(--gr);padding:1px 7px;border-radius:10px">${updCount} ажурирање</span>
       <span style="margin-left:4px;background:#ede9fe;color:#7c3aed;padding:1px 7px;border-radius:10px">${newCount} нови</span>
+      ${filteredOut>0?`<span style="margin-left:4px;background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:10px">${filteredOut} прескокнати (др.магацин)</span>`:''}
     </div>
     <div class="tw" style="max-height:240px;overflow-y:auto;margin-bottom:8px">
       <table style="min-width:520px;font-size:11px">
@@ -4317,7 +4332,7 @@ window.executeBulkImport=async(cat)=>{
   const pv=document.getElementById('bulkPreview'+cat);
   if(!ta)return;
   const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
-  const rows=parseBulkRows(ta.value,skipHeader);
+  const rows=filterByCat(parseBulkRows(ta.value,skipHeader),cat);
   if(!rows.length)return;
   const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
   const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
