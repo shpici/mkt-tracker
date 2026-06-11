@@ -1630,20 +1630,46 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 <!-- ═══ END MANAGER INFO TAB ═══ -->
 
 
-<div id="tp-compare" class="tp">
-<div class="card">
-  <div id="cmp-tab-content">
-    <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
-  </div>
-</div>
+<div id="tp-executive" class="tp">
+<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 0 10px;border-bottom:1px solid var(--brd);margin-bottom:12px">
+  <button class="exec-st act" id="est-ov" onclick="window.execSt('ov')">📊 Преглед</button>
+  <button class="exec-st" id="est-rk" onclick="window.execSt('rk')">🏆 Ранкинг</button>
+  <button class="exec-st" id="est-cmp" onclick="window.execSt('cmp')">⚖️ Споредба</button>
 </div>
 
-<div id="tp-executive" class="tp">
-<div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
-  <div id="exec-content">
-    <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
+<!-- Overview sub-panel -->
+<div id="exec-sub-ov">
+  <div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
+    <div id="exec-content">
+      <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
+    </div>
   </div>
 </div>
+
+<!-- Ranking sub-panel -->
+<div id="exec-sub-rk" style="display:none">
+  <div class="card">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="exec-st" id="rkp-day" onclick="window.execRkPeriod('day')">📅 По Ден</button>
+      <button class="exec-st" id="rkp-week" onclick="window.execRkPeriod('week')">📆 По Недела</button>
+      <button class="exec-st act" id="rkp-month" onclick="window.execRkPeriod('month')">🗓 По Месец</button>
+      <button class="exec-st" id="rkp-year" onclick="window.execRkPeriod('year')">📊 По Година</button>
+    </div>
+    <div id="exec-rk-content">
+      <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
+    </div>
+  </div>
+</div>
+
+<!-- Compare sub-panel -->
+<div id="exec-sub-cmp" style="display:none">
+  <div class="card">
+    <div id="cmp-tab-content">
+      <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div id="tp-tarif" class="tp">
