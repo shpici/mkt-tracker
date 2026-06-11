@@ -4356,7 +4356,13 @@ window.executeBulkImport=async(cat)=>{
   const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
   const isTelekom=allRows.some(r=>r._telekomFmt);
   const mode=isTelekom?'set':(document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add');
-  let added=0,updated=0;
+  let added=0,updated=0,cleaned=0;
+  // For Telekom format importing into Моб (cat=2): auto-remove any Доп.Опрема
+  // OFI codes that were previously wrongly added to this warehouse
+  if(isTelekom&&cat===2){
+    const dopOfis=new Set(filterByCat(allRows,1).map(r=>r.ofi));
+    dopOfis.forEach(ofi=>{if(OFI_PRODUCTS2[ofi]){delete OFI_PRODUCTS2[ofi];cleaned++;}});
+  }
   rows.forEach(r=>{
     if(!r.ofi)return;
     if(products[r.ofi]){
@@ -4375,7 +4381,7 @@ window.executeBulkImport=async(cat)=>{
   if(cat===1){rndInv();calcAlerts();}else{rndInv2();calcAlerts();}
   ta.value='';
   if(pv)pv.innerHTML=`<div style="background:var(--grl);color:var(--gr);padding:12px;border-radius:var(--rs);text-align:center;font-weight:700;font-size:13px">
-    ✅ Успешно увезено!&nbsp;&nbsp;${added>0?added+' нови производи':''}${added>0&&updated>0?' · ':''}${updated>0?updated+' ажурирани':''}
+    ✅ Успешно увезено!&nbsp;&nbsp;${added>0?added+' нови':''}${added>0&&updated>0?' · ':''}${updated>0?updated+' ажурирани':''}${cleaned>0?' · '+cleaned+' доп.опрема очистени':''}
   </div>`;
   setTimeout(()=>{
     document.getElementById('bulkPanel'+cat).style.display='none';
