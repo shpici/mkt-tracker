@@ -204,6 +204,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 @keyframes tab-flash{0%{transform:translateY(0);box-shadow:none}40%{background:linear-gradient(135deg,#e91e63,#C8006E);color:#fff;transform:translateY(-2px);box-shadow:0 0 28px rgba(200,0,110,1),0 0 8px rgba(255,100,180,.8)}100%{background:linear-gradient(135deg,#C8006E,#8a004c);color:#fff;transform:translateY(-1px);box-shadow:0 0 20px rgba(200,0,110,.7)}}
 .tab-flashing{animation:tab-flash .5s cubic-bezier(.4,0,.2,1) forwards!important}
 .tp{display:none}.tp.act{display:block}
+.rlz-sub{display:none}
+#tp-realizacija.act~.rlz-sub.act{display:block}
 .card{background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--brd);border-radius:var(--r);margin:0 16px 16px;padding:14px;transition:box-shadow .2s,transform .15s}
 /* BUTTONS */
 .btn{padding:5px 11px;border-radius:var(--rs);border:1px solid var(--brd);background:var(--sur);color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s,transform .1s;position:relative;overflow:hidden}
@@ -441,10 +443,6 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .cmp-toggle-btn{padding:7px 18px;border-radius:calc(var(--rs) + 1px);border:none;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
 .cmp-toggle-btn.act{background:var(--mg);color:#fff}
 .cmp-toggle-btn:not(.act){background:transparent;color:var(--t2)}
-/* ══ EXEC SUB-TABS ══ */
-.exec-st{padding:6px 14px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--sur);font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s}
-.exec-st.act{background:var(--mgl);color:var(--mg);border-color:var(--mg)}
-.exec-st:hover:not(.act){background:var(--s2);color:var(--txt)}
 /* ══ EXECUTIVE DASHBOARD ══ */
 @keyframes xPulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}}
 @keyframes xFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -593,7 +591,7 @@ canvas.gc{display:block;border-radius:8px;image-rendering:pixelated}
 
 <style>
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
-body.emp-mode #tp-daily,body.emp-mode #tp-monthly,
+body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
 body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,body.emp-mode #tp-weekly,
 body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
@@ -669,14 +667,14 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 <!-- AI CHATBOT PANEL -->
 <div id="aiPanel">
   <div class="ai-hdr">
-    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Llama 3.3</div>
+    <div class="ai-hdr-t"><span class="ai-online"></span>AI Аналитичар · Gemini 1.5</div>
     <div style="display:flex;gap:4px;align-items:center">
       <button class="ai-close" onclick="toggleAIKey()" title="API клуч">⚙️</button>
       <button class="ai-close" onclick="toggleAI()">✕</button>
     </div>
   </div>
   <div class="ai-key-wrap" id="aiKeyWrap">
-    <input class="ai-key-inp" id="aiKeyInp" type="password" placeholder="Внеси Groq API Key (gsk_...)...">
+    <input class="ai-key-inp" id="aiKeyInp" type="password" placeholder="Внеси Gemini API Key...">
     <button class="ai-key-save" onclick="saveAIKey()">Зачувај</button>
   </div>
   <div class="ai-msgs" id="aiMsgs"></div>
@@ -745,22 +743,31 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="tab" onclick="gotoTab('tarif',this)">💳 Тарифа</div>
   <div class="tab" onclick="gotoTab('tvint',this)">📡 INT+TV</div>
   <div class="tab" onclick="gotoTab('roaming',this)">✈️ Роаминг</div>
-  <div class="tab act" onclick="gotoTab('daily',this)">☀️ Дневен</div>
-  <div class="tab" onclick="gotoTab('weekly',this)">🗓 Неделен</div>
-  <div class="tab" onclick="gotoTab('monthly',this)">📊 Месечен</div>
-  <div class="tab" onclick="gotoTab('yearly',this)">📈 Годишен</div>
+  <div class="tab act" onclick="gotoTab('realizacija',this)">📊 Реализација</div>
+  <div class="tab" onclick="gotoTab('ranking',this)">🥇 Ранкинг</div>
   <div class="tab" onclick="gotoTab('inventory',this)">📦 Маг. Доп.Оп.</div>
   <div class="tab" onclick="gotoTab('inventory2',this)">🔧 Маг. Моб.&amp;Др.</div>
   <div class="tab" onclick="gotoTab('calc',this)">🧮 Калк</div>
   <div class="tab" onclick="gotoTab('targets',this)">🎯 Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">🛒 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">📅 Распоред</div>
-  <div class="tab" onclick="gotoTab('fullreport',this)">📋 Целосен</div>
+  <div class="tab" onclick="gotoTab('compare',this)">⚖️ Споредба</div>
   <div class="tab" onclick="gotoTab('executive',this)">👑 Executive</div>
 </div>
 
+<!-- ═══ РЕАЛИЗАЦИЈА ═══ -->
+<div id="tp-realizacija" class="tp act">
+<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 12px 10px;border-bottom:1px solid var(--brd);margin-bottom:4px;background:var(--sur);position:sticky;top:0;z-index:10">
+  <button class="exec-st act" id="rlzt-daily" onclick="window.rlzSt('daily')">☀️ Дневен</button>
+  <button class="exec-st" id="rlzt-weekly" onclick="window.rlzSt('weekly')">🗓 Неделен</button>
+  <button class="exec-st" id="rlzt-monthly" onclick="window.rlzSt('monthly')">📊 Месечен</button>
+  <button class="exec-st" id="rlzt-yearly" onclick="window.rlzSt('yearly')">📈 Годишен</button>
+  <button class="exec-st" id="rlzt-ranking" onclick="window.rlzSt('ranking')">🏆 Ранкинг</button>
+</div>
+</div>
+
 <!-- ═══ DAILY ═══ -->
-<div id="tp-daily" class="tp act">
+<div id="tp-daily" class="rlz-sub act">
 <div class="card">
   <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:9px">
     <div id="dyBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
@@ -797,7 +804,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   </div>
 </div>
 </div>
-<div id="tp-weekly" class="tp">
+<div id="tp-weekly" class="rlz-sub">
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
     <div style="font-size:14px;font-weight:700" id="wkMgrTit">📆 Неделен извештај</div>
@@ -822,7 +829,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 </div>
 
 <!-- ═══ MONTHLY ═══ -->
-<div id="tp-monthly" class="tp">
+<div id="tp-monthly" class="rlz-sub">
 <div class="card">
   <div style="font-size:14px;font-weight:700;margin-bottom:3px" id="mTit"></div>
   <div style="font-size:11px;color:var(--t2);margin-bottom:12px">Реал-тајм</div>
@@ -830,6 +837,25 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="mcg" id="mcGrid"></div>
   <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:7px">Детална табела</div>
   <div class="tw"><table id="moTable"><thead><tr id="moHead"></tr></thead><tbody id="mTb"></tbody><tfoot><tr id="mFt"></tr></tfoot></table></div>
+</div>
+</div>
+
+<!-- ═══ RANKING ═══ -->
+<div id="tp-ranking" class="rlz-sub">
+<div class="card">
+  <div style="font-size:14px;font-weight:700;margin-bottom:3px">🏆 Ранкинг — <span id="rkTit"></span></div>
+  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Performance Score = просек % по активни KPI</div>
+  <div class="rg" id="rkGrid"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+    <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px">🥇 TOP</div>
+      <div style="font-size:14px;font-weight:700;color:var(--gr)" id="topP">—</div>
+    </div>
+    <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:12px;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">📈 NEEDS BOOST</div>
+      <div style="font-size:14px;font-weight:700;color:var(--rd)" id="lowP">—</div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -1136,7 +1162,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 </div>
 
 <!-- ═══ YEARLY (MANAGER) ═══ -->
-<div id="tp-yearly" class="tp">
+<div id="tp-yearly" class="rlz-sub">
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
     <div>
@@ -1604,54 +1630,21 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
 </div>
 <!-- ═══ END MANAGER INFO TAB ═══ -->
 
-<div id="tp-fullreport" class="tp">
+
+<div id="tp-compare" class="tp">
 <div class="card">
-  <div id="fr-content">
+  <div id="cmp-tab-content">
     <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
   </div>
 </div>
 </div>
 
 <div id="tp-executive" class="tp">
-<div style="display:flex;gap:4px;flex-wrap:wrap;padding:0 0 10px;border-bottom:1px solid var(--brd);margin-bottom:12px">
-  <button class="exec-st act" id="est-ov" onclick="execSt('ov')">📊 Преглед</button>
-  <button class="exec-st" id="est-rk" onclick="execSt('rk')">🏆 Ранкинг</button>
-  <button class="exec-st" id="est-cmp" onclick="execSt('cmp')">⚖️ Споредба</button>
-</div>
-
-<!-- Overview sub-panel -->
-<div id="exec-sub-ov">
-  <div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
-    <div id="exec-content">
-      <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
-    </div>
+<div class="card" style="padding:0;background:transparent;box-shadow:none;border:none">
+  <div id="exec-content">
+    <div style="text-align:center;color:var(--t2);padding:40px;font-size:13px">Вчитување...</div>
   </div>
 </div>
-
-<!-- Ranking sub-panel -->
-<div id="exec-sub-rk" style="display:none">
-  <div class="card">
-    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">
-      <button class="exec-st" id="rkp-day" onclick="execRkPeriod('day')">📅 По Ден</button>
-      <button class="exec-st" id="rkp-week" onclick="execRkPeriod('week')">📆 По Недела</button>
-      <button class="exec-st act" id="rkp-month" onclick="execRkPeriod('month')">🗓 По Месец</button>
-      <button class="exec-st" id="rkp-year" onclick="execRkPeriod('year')">📊 По Година</button>
-    </div>
-    <div id="exec-rk-content">
-      <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
-    </div>
-  </div>
-</div>
-
-<!-- Compare sub-panel -->
-<div id="exec-sub-cmp" style="display:none">
-  <div class="card">
-    <div id="cmp-tab-content">
-      <div style="text-align:center;color:var(--t2);padding:30px;font-size:13px">Вчитување...</div>
-    </div>
-  </div>
-</div>
-
 </div>
 
 <div id="tp-tarif" class="tp">
@@ -2043,15 +2036,14 @@ function subToMonth(y,m){
       if(snap.exists())AS[dy][dm][dk]={...snap.data()};
       else ensD(dy,dm,dk);
       if(cY===dy&&cM===dm){
-        rndTbl();
-        if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
+        if(_rlzSt==='daily'||!_rlzSt)rndTbl();
+        if(_rlzSt==='monthly')rndMonthly();
+        if(_rlzSt==='ranking')rndRanking();
         buildTickerAndRisk();
-        if(document.getElementById('tp-executive')?.classList.contains('act')&&_execSt==='rk')rndExecRanking();
         calcAlerts();
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
         if(mID&&document.getElementById('etp-monthly')?.classList.contains('act'))rndEmpMo();
         if(mID&&document.getElementById('etp-pro')?.classList.contains('act'))window.rndEmpPro?.();
-        if(document.getElementById('tp-fullreport')?.classList.contains('act'))rndFullReport();
         if(document.getElementById('tp-executive')?.classList.contains('act')){if(_execSt==='rk')rndExecRanking();else if(_execSt==='cmp')window.rndCmpTab?.();else rndExecutive();}
         if(_profileEmpId&&document.getElementById('emp-profile-overlay')?.classList.contains('open'))rndEmpProfile();
       }
@@ -2253,9 +2245,10 @@ function loadScoreExcl(){const s=localStorage.getItem('kpi_excl_v2');if(s)SCORE_
 function saveScoreExcl(){localStorage.setItem('kpi_excl_v2',JSON.stringify([...SCORE_EXCLUDED]));}
 function toggleKpiScore(k){
   if(SCORE_EXCLUDED.has(k))SCORE_EXCLUDED.delete(k);else SCORE_EXCLUDED.add(k);
-  saveScoreExcl();rndKpiToggles();rndTbl();
-  if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
-  if(document.getElementById('tp-executive')?.classList.contains('act')&&_execSt==='rk')rndExecRanking();
+  saveScoreExcl();rndKpiToggles();
+  if(_rlzSt==='daily'||!_rlzSt)rndTbl();
+  if(_rlzSt==='monthly')rndMonthly();
+  if(_rlzSt==='ranking')rndRanking();
   calcAlerts();
 }
 window.toggleKpiScore=toggleKpiScore;
@@ -2870,12 +2863,12 @@ window.loadBackup=async(input)=>{
 function rndNav(){
   document.getElementById('yrDisp').textContent=cY;
   const mb=document.getElementById('moBtns');mb.innerHTML='';
-  MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();};mb.appendChild(b);});
+  MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===cM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=async()=>{cM=i+1;cW=0;cD=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(_rlzSt==='monthly')rndMonthly();};mb.appendChild(b);});
   const wks=gWks(getWDs(cY,cM));const wb=document.getElementById('wkBtns');wb.innerHTML='';
   wks.forEach((w,i)=>{const b=document.createElement('button');b.className='nb'+(i===cW?' act':'');b.textContent='Нед '+(i+1)+' ('+w[0].date+'–'+w[w.length-1].date+')';b.onclick=()=>{cW=i;cD=0;mgrWkIdx=i;document.querySelectorAll('#wkBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndDailyView();if(document.getElementById('tp-weekly')?.classList.contains('act'))rndMgrWeekly();};wb.appendChild(b);});
 }
 window.chgYr=async d=>{cY+=d;cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();};
-window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();if(document.getElementById('tp-weekly')?.classList.contains('act'))rndMgrWeekly();};
+window.chgMo=async d=>{cM+=d;if(cM<1){cM=12;cY--;}if(cM>12){cM=1;cY++;}cW=0;cD=0;mgrWkIdx=0;await ldMonth(cY,cM);subToMonth(cY,cM);rndNav();rndDailyView();if(_rlzSt==='monthly')rndMonthly();if(_rlzSt==='weekly')rndMgrWeekly();};
 
 // ── BUILD TABLE HEADER ──
 function buildTableHeaders(){
@@ -3719,129 +3712,6 @@ document.addEventListener('click',e=>{
     _riskOpen=false;const p=document.getElementById('riskPanel');if(p)p.className='rpanel';
   }
 });
-
-// ══ EXEC SUB-TAB STATE ══
-let _execRkPeriod='month';
-let _execSt='ov';
-window._execRkDay=null;
-window._execRkWeek=0;
-
-window.execSt=function(st){
-  _execSt=st;
-  ['ov','rk','cmp'].forEach(s=>{
-    const sub=document.getElementById('exec-sub-'+s);
-    const btn=document.getElementById('est-'+s);
-    if(sub)sub.style.display=s===st?'block':'none';
-    if(btn)btn.classList.toggle('act',s===st);
-  });
-  try{
-    if(st==='rk')rndExecRanking();
-    else if(st==='cmp')window.rndCmpTab();
-    else rndExecutive();
-  }catch(e){
-    console.error('execSt error:',e);
-    const errEl=document.getElementById(st==='rk'?'exec-rk-content':'cmp-tab-content');
-    if(errEl)errEl.innerHTML=`<div style="color:var(--rd);padding:20px;font-size:12px">⚠️ Грешка: ${e.message}</div>`;
-  }
-};
-
-window.execRkPeriod=function(p){
-  _execRkPeriod=p;
-  ['day','week','month','year'].forEach(pp=>document.getElementById('rkp-'+pp)?.classList.toggle('act',pp===p));
-  rndExecRanking();
-};
-
-function perfScoreDay(mid,y,m,dayObj){
-  const t=getMT(y,m);const wd=getWDs(y,m).length;
-  let s=0,cnt=0;
-  KKEYS.forEach(k=>{
-    if(!isInScore(k))return;
-    const v=AS[y]?.[m]?.[dK(y,m,dayObj)]?.[mid]?.[k]||0;
-    const dtgt=(t[k]||0)/(wd||1);
-    s+=pct(v,dtgt||1);cnt++;
-  });
-  return cnt>0?Math.round(s/cnt):0;
-}
-
-function perfScoreWeek(mid,y,m,weekDays){
-  const t=getMT(y,m);const wd=getWDs(y,m).length;
-  let s=0,cnt=0;
-  KKEYS.forEach(k=>{
-    if(!isInScore(k))return;
-    const wkTgt=(t[k]||0)*weekDays.length/(wd||1);
-    const wkSum=weekDays.reduce((acc,d)=>acc+(AS[y]?.[m]?.[dK(y,m,d)]?.[mid]?.[k]||0),0);
-    s+=pct(wkSum,wkTgt||1);cnt++;
-  });
-  return cnt>0?Math.round(s/cnt):0;
-}
-
-function perfScoreYear(mid,y){
-  let tot=0,cnt=0;
-  for(let m=1;m<=12;m++){
-    const t=getMT(y,m);
-    KKEYS.forEach(k=>{
-      if(!isInScore(k))return;
-      tot+=pct(mMoSum(mid,k,y,m),t[k]||1);cnt++;
-    });
-  }
-  return cnt>0?Math.round(tot/cnt):0;
-}
-
-function rndExecRanking(){
-  const el=document.getElementById('exec-rk-content');if(!el)return;
-  const p=_execRkPeriod,y=cY,m=cM;
-  let title,scores,subCtrl='';
-
-  if(p==='month'){
-    title=MKM[m-1]+' '+y;
-    scores=MEMBERS.map(mb=>({...mb,score:perfScore(mb.id,y,m)})).sort((a,b)=>b.score-a.score);
-  } else if(p==='year'){
-    title='Цела '+y+' год.';
-    scores=MEMBERS.map(mb=>({...mb,score:perfScoreYear(mb.id,y)})).sort((a,b)=>b.score-a.score);
-  } else if(p==='day'){
-    const wds=getWDs(y,m);
-    const now=new Date();
-    const todayD=now.getFullYear()===y&&now.getMonth()+1===m?now.getDate():wds[wds.length-1]?.date;
-    if(window._execRkDay===null)window._execRkDay=todayD;
-    const dayObj=wds.find(d=>d.date===window._execRkDay)||wds[wds.length-1];
-    title=dayObj?dayObj.label:'Ден';
-    scores=MEMBERS.map(mb=>({...mb,score:perfScoreDay(mb.id,y,m,dayObj)})).sort((a,b)=>b.score-a.score);
-    const opts=wds.map(d=>`<option value="${d.date}"${d.date===window._execRkDay?' selected':''}>${d.label}</option>`).join('');
-    subCtrl=`<select class="fi" style="font-size:11px;padding:3px 8px;margin-bottom:12px;width:auto" onchange="window._execRkDay=+this.value;rndExecRanking()">${opts}</select>`;
-  } else if(p==='week'){
-    const wds=getWDs(y,m);const weeks=gWks(wds);
-    if(window._execRkWeek>=weeks.length)window._execRkWeek=weeks.length-1;
-    const wk=weeks[window._execRkWeek];
-    title='Недела '+(window._execRkWeek+1)+' · '+MKM[m-1];
-    scores=MEMBERS.map(mb=>({...mb,score:perfScoreWeek(mb.id,y,m,wk)})).sort((a,b)=>b.score-a.score);
-    const opts=weeks.map((w,i)=>`<option value="${i}"${i===window._execRkWeek?' selected':''}>Нед. ${i+1} (${w[0]?.date}–${w[w.length-1]?.date}/${m})</option>`).join('');
-    subCtrl=`<select class="fi" style="font-size:11px;padding:3px 8px;margin-bottom:12px;width:auto" onchange="window._execRkWeek=+this.value;rndExecRanking()">${opts}</select>`;
-  }
-
-  const top=scores[0],bot=scores[scores.length-1];
-  const grid=scores.map((mb,i)=>{
-    const pm=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
-    const md=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
-    const bdg=`<span class="rbadge ${pbc(mb.score)}">${pem(mb.score)} ${mb.score<70?'Needs boost':mb.score<100?'On track':'🎯 Target!'}</span>`;
-    return `<div class="rr"><div class="rpos ${pm}">${md}</div><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px;flex-shrink:0">${mb.ini}</div><div class="rname">${mb.name}</div>${bdg}<div class="rbar"><div class="rbf" style="width:${Math.min(100,mb.score)}%;${barcl(mb.score)}"></div></div><div class="rscore ${mb.score>=100?'score-100':''}" style="color:${pc(mb.score)}">${mb.score}%</div></div>`;
-  }).join('');
-
-  el.innerHTML=`
-    <div style="font-size:14px;font-weight:700;margin-bottom:3px">🏆 Ранкинг — ${title}</div>
-    <div style="font-size:11px;color:var(--t2);margin-bottom:10px">Performance Score = просек % по активни KPI</div>
-    ${subCtrl}
-    <div class="rg">${grid}</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-      <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:12px;text-align:center">
-        <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px">🥇 TOP</div>
-        <div style="font-size:14px;font-weight:700;color:var(--gr)">${top?.name} — ${top?.score}%</div>
-      </div>
-      <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:12px;text-align:center">
-        <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">📈 NEEDS BOOST</div>
-        <div style="font-size:14px;font-weight:700;color:var(--rd)">${bot?.name} — ${bot?.score}%</div>
-      </div>
-    </div>`;
-}
 
 // ══════════════════════════════════════════════════════
 // ── EXECUTIVE DASHBOARD ──
@@ -5003,28 +4873,40 @@ function rndEmpOrders(){
   tb.innerHTML=mine.map(o=>`<tr><td style="font-size:11px;font-weight:700">${o.model||'—'}</td><td style="font-size:10px">${o.tel||'—'}</td><td style="font-size:10px">${o.odate||'—'}</td><td style="font-size:10px">${o.rdate||'—'}</td><td><button class="ord-status" onclick="cycleOrderStatus('${o.id}')" style="${ordStyle(o.status)}">${o.status}</button></td><td style="font-size:10px;max-width:130px;white-space:pre-wrap">${o.notes||'—'}</td><td><button class="btn" style="padding:2px 5px;font-size:10px;color:var(--rd)" onclick="deleteOrder('${o.id}')">🗑</button></td></tr>`).join('');
 }
 
+// ── РЕАЛИЗАЦИЈА SUB-TABS ──
+let _rlzSt='daily';
+const _rlzInits={
+  daily:()=>rndDailyView(),
+  weekly:()=>{const today=new Date();if(today.getFullYear()===cY&&today.getMonth()+1===cM){const wks=gWks(getWDs(cY,cM));const td=today.getDate();wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.date===td)mgrWkIdx=wi;});});}rndMgrWeekly();},
+  monthly:()=>rndMonthly(),
+  yearly:()=>rndMgrYearly(),
+  ranking:()=>{document.getElementById('rkTit').textContent=MKM[cM-1]+' '+cY;rndRanking();}
+};
+window.rlzSt=function(name){
+  _rlzSt=name;
+  ['daily','weekly','monthly','yearly','ranking'].forEach(s=>{
+    document.getElementById('tp-'+s)?.classList.toggle('act',s===name);
+    document.getElementById('rlzt-'+s)?.classList.toggle('act',s===name);
+  });
+  try{_rlzInits[name]?.();}catch(e){console.error('rlzSt',e);}
+};
+
 // ── TAB ──
 window.gotoTab=(name,el)=>{
   document.querySelectorAll('#mgrTabs .tab').forEach(t=>t.classList.remove('act','tab-flashing'));
   document.querySelectorAll('.tp').forEach(t=>t.classList.remove('act'));
   if(el){el.classList.add('act','tab-flashing');setTimeout(()=>el.classList.remove('tab-flashing'),450);}
   const tpEl=document.getElementById('tp-'+name);if(tpEl)tpEl.classList.add('act');
-  if(name==='weekly'){
-    // Set to current week on first open
-    const today=new Date();
-    if(today.getFullYear()===cY&&today.getMonth()+1===cM){
-      const wks=gWks(getWDs(cY,cM));const td=today.getDate();
-      wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.date===td)mgrWkIdx=wi;});});
-    }
-    rndMgrWeekly();
+  if(name==='realizacija'){window.rlzSt(_rlzSt);}
+  else if(name==='daily'||name==='weekly'||name==='monthly'||name==='yearly'||name==='ranking'){
+    document.getElementById('tp-realizacija')?.classList.add('act');
+    window.rlzSt(name);return;
   }
-  else if(name==='monthly')rndMonthly();
   else if(name==='alerts')calcAlerts();
   else if(name==='inventory')rndInv();
   else if(name==='inventory2')rndInv2();
   else if(name==='targets')rndTgts();
   else if(name==='orders')rndOrders();
-  else if(name==='yearly')rndMgrYearly();
   else if(name==='calc'){if(window.rcInit)window.rcInit();}
   else if(name==='boost')rndBoostBoard();
   else if(name==='schedule')scInit();
@@ -5035,9 +4917,8 @@ window.gotoTab=(name,el)=>{
     setTimeout(()=>{ loadInfoMsgs(); updateStorageMeter(); }, 50);
   }
   else if(name==='fullreport')rndFullReport();
-  else if(name==='compare'){execSt('cmp');}
-  else if(name==='ranking'){execSt('rk');}
-  else if(name==='executive'){if(_execSt==='ov')rndExecutive();else execSt(_execSt);}
+  else if(name==='compare')window.rndCmpTab();
+  else if(name==='executive')rndExecutive();
   else if(name==='tarif'||name==='roaming'||name==='tvint'){}
 };
 
@@ -6392,7 +6273,7 @@ window.toggleAIKey=function(){
   const w=document.getElementById('aiKeyWrap');
   w.style.display=w.style.display==='flex'?'none':'flex';
   if(w.style.display==='flex'){
-    const k=localStorage.getItem('mkt_groq_key')||'';
+    const k=localStorage.getItem('mkt_gemini_key')||'';
     document.getElementById('aiKeyInp').value=k;
     document.getElementById('aiKeyInp').focus();
   }
@@ -6400,7 +6281,7 @@ window.toggleAIKey=function(){
 window.saveAIKey=function(){
   const k=(document.getElementById('aiKeyInp').value||'').trim();
   if(!k)return;
-  localStorage.setItem('mkt_groq_key',k);
+  localStorage.setItem('mkt_gemini_key',k);
   document.getElementById('aiKeyWrap').style.display='none';
   aiAddMsg('bot','✅ API клуч зачуван! Сега можам да одговарам на прашања.');
 };
@@ -6478,12 +6359,12 @@ function aiAddTyping(){
 
 function aiWelcome(){
   const d=_aiData();
-  const key=localStorage.getItem('mkt_groq_key');
+  const key=localStorage.getItem('mkt_gemini_key');
   if(!key){
-    aiAddMsg('bot','👋 Здраво! Јас сум вашиот AI аналитичар.\n\n⚙️ За да започнам, внесете **Groq API клуч** со кликање на ⚙️ горе десно.\n\nКлучот е **целосно бесплатен** — добијте го на console.groq.com (без кредитна картичка).');
+    aiAddMsg('bot','👋 Здраво! Јас сум вашиот AI аналитичар.\n\n⚙️ За да започнам, внесете **Gemini API клуч** со кликање на ⚙️ горе десно.\n\nКлучот е **бесплатен** — добијте го на aistudio.google.com');
   } else {
     const hour=new Date().getHours();
-    const greet=hour<12?'Добро утро':hour<18?'Добар ден':'Добра вечер';
+    const greet=hour<12?'Добро утро':'hour<18'?'Добар ден':'Добра вечер';
     aiAddMsg('bot',`👋 ${greet}! Јас сум вашиот AI аналитичар за МКТ Кичево.\n\nДенес е ден **${d.today}** од месецот. Постави ми прашање — за тарифи, продажба, роаминг, или сèшто друго! 🚀`);
   }
 }
@@ -6494,46 +6375,44 @@ window.aiSend=async function(){
   const msg=(inp.value||'').trim();
   if(!msg)return;
 
-  const key=localStorage.getItem('mkt_groq_key');
+  const key=localStorage.getItem('mkt_gemini_key');
   if(!key){
     document.getElementById('aiKeyWrap').style.display='flex';
-    aiAddMsg('bot','⚠️ Прво внесете Groq API клуч со кликање на ⚙️ горе.');
+    aiAddMsg('bot','⚠️ Прво внесете Gemini API клуч со кликање на ⚙️ горе.');
     return;
   }
 
   inp.value='';
   btn.disabled=true;
   aiAddMsg('user',msg);
-  _aiHistory.push({role:'user',content:msg});
+  _aiHistory.push({role:'user',parts:[{text:msg}]});
 
   const typing=aiAddTyping();
 
-  const messages=[
-    {role:'system',content:_aiSystemPrompt()},
+  const contents=[
+    {role:'user',parts:[{text:_aiSystemPrompt()}]},
+    {role:'model',parts:[{text:'Разбрав! Готов сум да помогнам.'}]},
     ..._aiHistory
   ];
 
   try{
-    const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'llama3-70b-8192',
-        messages,
-        temperature:0.72,
-        max_tokens:600
+        contents,
+        generationConfig:{temperature:0.72,maxOutputTokens:600,topP:0.9}
       })
     });
     if(!resp.ok){
       const err=await resp.json().catch(()=>({}));
-      const detail=err.error?.message||JSON.stringify(err)||`HTTP ${resp.status}`;
-      throw new Error(detail);
+      throw new Error(err.error?.message||`HTTP ${resp.status}`);
     }
     const data=await resp.json();
-    const reply=data.choices?.[0]?.message?.content||'Немам одговор, обиди се повторно.';
+    const reply=data.candidates?.[0]?.content?.parts?.[0]?.text||'Немам одговор, обиди се повторно.';
     if(typing)typing.remove();
     aiAddMsg('bot',reply);
-    _aiHistory.push({role:'assistant',content:reply});
+    _aiHistory.push({role:'model',parts:[{text:reply}]});
     if(_aiHistory.length>24)_aiHistory.splice(0,2);
   }catch(e){
     if(typing)typing.remove();
