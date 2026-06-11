@@ -4306,9 +4306,12 @@ window.previewBulk=(cat)=>{
     return;
   }
   const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
+  // Count how many bad (non-numeric) keys will be cleaned on import
+  const badKeys=isTelekom?Object.keys(products).filter(k=>isNaN(Number(k))).length:0;
   let newCount=0,updCount=0;
   const rows2=rows.map(r=>{
-    const exists=!!products[r.ofi];
+    // Treat as "exists" only if key is numeric-valid (ignore old bad-keyed entries)
+    const exists=!!products[r.ofi]&&!isNaN(Number(r.ofi));
     const curQty=exists?(products[r.ofi].qty||0):0;
     const finalQty=mode==='set'?r.qty:curQty+r.qty;
     const nameShow=r.name||(exists?products[r.ofi].name:'—');
@@ -4323,6 +4326,7 @@ window.previewBulk=(cat)=>{
       <span style="margin-left:8px;background:var(--grl);color:var(--gr);padding:1px 7px;border-radius:10px">${updCount} ажурирање</span>
       <span style="margin-left:4px;background:#ede9fe;color:#7c3aed;padding:1px 7px;border-radius:10px">${newCount} нови</span>
       ${filteredOut>0?`<span style="margin-left:4px;background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:10px">${filteredOut} прескокнати (др.магацин)</span>`:''}
+      ${badKeys>0?`<span style="margin-left:4px;background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:10px">⚠ ${badKeys} стари погрешни записи ќе се избришат</span>`:''}
     </div>
     ${cpisInSet?`<div style="font-size:10px;color:var(--t2);margin-bottom:6px">Категории: <b>${cpisInSet}</b>${isTelekom?' · Режим: <b>Постави точен лагер</b>':''}</div>`:''}
     <div class="tw" style="max-height:240px;overflow-y:auto;margin-bottom:8px">
@@ -4357,11 +4361,14 @@ window.executeBulkImport=async(cat)=>{
   const isTelekom=allRows.some(r=>r._telekomFmt);
   const mode=isTelekom?'set':(document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add');
   let added=0,updated=0,cleaned=0;
-  // For Telekom format importing into Моб (cat=2): auto-remove any Доп.Опрема
-  // OFI codes that were previously wrongly added to this warehouse
-  if(isTelekom&&cat===2){
-    const dopOfis=new Set(filterByCat(allRows,1).map(r=>r.ofi));
-    dopOfis.forEach(ofi=>{if(OFI_PRODUCTS2[ofi]){delete OFI_PRODUCTS2[ofi];cleaned++;}});
+  if(isTelekom){
+    // Remove all wrongly-keyed entries (OFI keys must be numeric — old broken imports stored "028М- КИЧЕВО" etc.)
+    Object.keys(products).forEach(k=>{if(isNaN(Number(k))){delete products[k];cleaned++;}});
+    // For Моб (cat=2): also remove any Доп.Опрема OFI codes wrongly imported earlier
+    if(cat===2){
+      const dopOfis=new Set(filterByCat(allRows,1).map(r=>r.ofi));
+      dopOfis.forEach(ofi=>{if(products[ofi]){delete products[ofi];cleaned++;}});
+    }
   }
   rows.forEach(r=>{
     if(!r.ofi)return;
@@ -4381,7 +4388,7 @@ window.executeBulkImport=async(cat)=>{
   if(cat===1){rndInv();calcAlerts();}else{rndInv2();calcAlerts();}
   ta.value='';
   if(pv)pv.innerHTML=`<div style="background:var(--grl);color:var(--gr);padding:12px;border-radius:var(--rs);text-align:center;font-weight:700;font-size:13px">
-    ✅ Успешно увезено!&nbsp;&nbsp;${added>0?added+' нови':''}${added>0&&updated>0?' · ':''}${updated>0?updated+' ажурирани':''}${cleaned>0?' · '+cleaned+' доп.опрема очистени':''}
+    ✅ Успешно увезено!&nbsp;&nbsp;${added>0?added+' нови':''}${added>0&&updated>0?' · ':''}${updated>0?updated+' ажурирани':''}${cleaned>0?' · '+cleaned+' погрешни записи избришани':''}
   </div>`;
   setTimeout(()=>{
     document.getElementById('bulkPanel'+cat).style.display='none';
