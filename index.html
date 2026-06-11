@@ -4237,10 +4237,12 @@ function parseBulkRows(text,skipHeader){
     const sep=hdrLine.includes('\t')?'\t':hdrLine.includes(';')?';':',';
     const hdrCols=hdrLine.split(sep).map(c=>c.trim().toLowerCase());
     const iOfi=hdrCols.findIndex(c=>c==='ofi_mat_id');
-    const iName=hdrCols.findIndex(c=>c==='ime_artik'||c==='ime artik');
+    // Product name: 'opis' (Telekom actual) or 'ime_artik'/'ime_artikl' fallback
+    const iName=hdrCols.findIndex(c=>c==='opis'||c==='ime_artik'||c==='ime_artikl');
+    // Category for filtering: 'ime_artikl' (Telekom actual) or 'cpis' fallback
+    const iCat=hdrCols.findIndex(c=>c==='ime_artikl'||c==='ime_artik'||c==='cpis');
     const iQty=hdrCols.findIndex(c=>c==='kolicina_na_lager'||c==='kolicina na lager'||c==='qty');
     const iPrice=hdrCols.findIndex(c=>c==='cena'||c==='price');
-    const iCpis=hdrCols.findIndex(c=>c==='cpis');
     if(iOfi!==-1){
       return lines.slice(hdrIdx+1).map(line=>{
         const cols=line.split(sep).map(c=>{let v=c.trim();if(v.startsWith('"')&&v.endsWith('"'))v=v.slice(1,-1);return v;});
@@ -4249,7 +4251,7 @@ function parseBulkRows(text,skipHeader){
         const name=iName!==-1?(cols[iName]||'').trim():'';
         const qty=iQty!==-1?parseInt(cols[iQty])||0:0;
         const price=iPrice!==-1?parseFloat((cols[iPrice]||'').replace(',','.'))||0:0;
-        const cpis=iCpis!==-1?(cols[iCpis]||'').trim().toUpperCase():'';
+        const cpis=iCat!==-1?(cols[iCat]||'').trim().toUpperCase():'';
         return {ofi,name,price,qty,cpis,_telekomFmt:true};
       }).filter(Boolean);
     }
