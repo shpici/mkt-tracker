@@ -2237,7 +2237,16 @@ function mMoSum(mid,k,y,m){
   let s=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms){const v=ms[k];s+=(v!==undefined&&v!==null?v:0);}});
   return s;
 }
-function mWDs(mid,y,m){let c=0;getWDs(y,m).forEach(d=>{const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms)c++;});return c;}
+function mWDs(mid,y,m){
+  const tod=new Date();const ty=tod.getFullYear(),tm=tod.getMonth()+1,td=tod.getDate();
+  const isCur=(y===ty&&m===tm);
+  let c=0;
+  getWDs(y,m).forEach(d=>{
+    if(isCur&&d.date>td)return;
+    const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms)c++;
+  });
+  return c;
+}
 // CORRECT perfScore — only ON KPIs, no excluded
 function perfScore(mid,y,m){
   const t=getMT(y,m);let s=0;let cnt=0;
