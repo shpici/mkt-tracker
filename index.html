@@ -4228,13 +4228,14 @@ window.handleBulkFile=async(cat,input)=>{
 function parseBulkRows(text,skipHeader){
   const lines=text.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim());
   if(!lines.length)return[];
-  const sample=lines[0];
-  const sep=sample.includes('\t')?'\t':sample.includes(';')?';':',';
 
-  // Auto-detect Telekom lager lista format (header row contains ofi_mat_id)
+  // Auto-detect Telekom lager lista format (find header row containing ofi_mat_id)
   const hdrIdx=lines.findIndex(l=>l.toLowerCase().includes('ofi_mat_id'));
   if(hdrIdx!==-1){
-    const hdrCols=lines[hdrIdx].split(sep).map(c=>c.trim().toLowerCase());
+    // Detect separator FROM the header row (not metadata row)
+    const hdrLine=lines[hdrIdx];
+    const sep=hdrLine.includes('\t')?'\t':hdrLine.includes(';')?';':',';
+    const hdrCols=hdrLine.split(sep).map(c=>c.trim().toLowerCase());
     const iOfi=hdrCols.findIndex(c=>c==='ofi_mat_id');
     const iName=hdrCols.findIndex(c=>c==='ime_artik'||c==='ime artik');
     const iQty=hdrCols.findIndex(c=>c==='kolicina_na_lager'||c==='kolicina na lager'||c==='qty');
@@ -4249,11 +4250,14 @@ function parseBulkRows(text,skipHeader){
         const qty=iQty!==-1?parseInt(cols[iQty])||0:0;
         const price=iPrice!==-1?parseFloat((cols[iPrice]||'').replace(',','.'))||0:0;
         const cpis=iCpis!==-1?(cols[iCpis]||'').trim().toUpperCase():'';
-        return {ofi,name,price,qty,cpis};
+        return {ofi,name,price,qty,cpis,_telekomFmt:true};
       }).filter(Boolean);
     }
   }
 
+  // Manual format fallback
+  const sample=lines[0];
+  const sep=sample.includes('\t')?'\t':sample.includes(';')?';':',';
   let rows=lines;
   if(skipHeader&&rows.length>1)rows=rows.slice(1);
   return rows.map(line=>{
@@ -4264,17 +4268,21 @@ function parseBulkRows(text,skipHeader){
     if(cols.length>=4){name=cols[1];price=parseFloat(cols[2].replace(',','.'))||0;qty=parseInt(cols[3])||0;}
     else if(cols.length===3){name=cols[1];qty=parseInt(cols[2])||0;}
     else if(cols.length===2){qty=parseInt(cols[1])||0;}
-    return {ofi,name,price,qty,cpis:''};
+    return {ofi,name,price,qty,cpis:'',_telekomFmt:false};
   }).filter(Boolean);
 }
 
-// Filter parsed rows by warehouse category (uses cpis column from Telekom lager format)
-// cat=1 (Доп.Опрема): only rows where cpis contains 'ДОП' or 'ОПРЕМ'
-// cat=2 (Моб & Други): rows where cpis does NOT match Доп.Опрема
+// Filter rows by warehouse. For Telekom format uses cpis column.
+// cat=1 (Доп.Опрема): cpis matches дополнителна опрема keywords
+// cat=2 (Моб & Други): everything else
 function filterByCat(rows,cat){
-  const hasCpis=rows.some(r=>r.cpis);
-  if(!hasCpis)return rows; // manual format — no filtering
-  const isDop=c=>c.includes('ДОП')||c.includes('ОПРЕМ')||c.includes('OPREMA')||c.includes('DOD');
+  const isTelekom=rows.some(r=>r._telekomFmt);
+  if(!isTelekom)return rows; // manual format — no filtering
+  const isDop=c=>{
+    const u=c.toUpperCase();
+    return u.includes('ДОП')||u.includes('ОПРЕМ')||u.includes('OPREMA')||u.includes('DOD')||
+           u.includes('ДОДАТН')||u.includes('ДОДАТ');
+  };
   if(cat===1)return rows.filter(r=>isDop(r.cpis));
   if(cat===2)return rows.filter(r=>!isDop(r.cpis));
   return rows;
@@ -4286,11 +4294,18 @@ window.previewBulk=(cat)=>{
   if(!ta||!pv)return;
   const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
   const allRows=parseBulkRows(ta.value,skipHeader);
+  const isTelekom=allRows.some(r=>r._telekomFmt);
   const rows=filterByCat(allRows,cat);
   const filteredOut=allRows.length-rows.length;
-  if(!rows.length){pv.innerHTML=`<div style="padding:10px;color:var(--t3);text-align:center">${allRows.length?'Нема производи за овој магацин во лагер листата ('+allRows.length+' ставки се филтрирани за другиот магацин).':'Нема валидни редови. Провери форматот.'}</div>`;return;}
+  // Telekom lager lista = exact stock → always "set"; manual = honour radio button
+  const mode=isTelekom?'set':(document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add');
+  if(!rows.length){
+    // Show which cpis categories were found so user can debug
+    const cpisFound=[...new Set(allRows.map(r=>r.cpis).filter(Boolean))].join(', ')||'(нема cpis)';
+    pv.innerHTML=`<div style="padding:10px;color:var(--t3);text-align:center">${allRows.length?`Нема производи за овој магацин (${allRows.length} ставки со категории: <b>${cpisFound}</b>)`:'Нема валидни редови. Провери форматот.'}</div>`;
+    return;
+  }
   const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
-  const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
   let newCount=0,updCount=0;
   const rows2=rows.map(r=>{
     const exists=!!products[r.ofi];
@@ -4298,22 +4313,25 @@ window.previewBulk=(cat)=>{
     const finalQty=mode==='set'?r.qty:curQty+r.qty;
     const nameShow=r.name||(exists?products[r.ofi].name:'—');
     if(exists)updCount++;else newCount++;
-    return {ofi:r.ofi,name:nameShow,price:r.price,qty:r.qty,curQty,finalQty,exists};
+    return {ofi:r.ofi,name:nameShow,price:r.price,qty:r.qty,curQty,finalQty,exists,cpis:r.cpis||''};
   });
+  // Unique cpis categories in this filtered set
+  const cpisInSet=[...new Set(rows2.map(r=>r.cpis).filter(Boolean))].join(', ');
   pv.innerHTML=`
-    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px">
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:4px">
       Преглед — ${rows2.length} производи
       <span style="margin-left:8px;background:var(--grl);color:var(--gr);padding:1px 7px;border-radius:10px">${updCount} ажурирање</span>
       <span style="margin-left:4px;background:#ede9fe;color:#7c3aed;padding:1px 7px;border-radius:10px">${newCount} нови</span>
       ${filteredOut>0?`<span style="margin-left:4px;background:#f3f4f6;color:#6b7280;padding:1px 7px;border-radius:10px">${filteredOut} прескокнати (др.магацин)</span>`:''}
     </div>
+    ${cpisInSet?`<div style="font-size:10px;color:var(--t2);margin-bottom:6px">Категории: <b>${cpisInSet}</b>${isTelekom?' · Режим: <b>Постави точен лагер</b>':''}</div>`:''}
     <div class="tw" style="max-height:240px;overflow-y:auto;margin-bottom:8px">
       <table style="min-width:520px;font-size:11px">
-        <thead><tr><th style="text-align:left;padding-left:8px">OFI</th><th style="text-align:left">Назив</th><th>Цена</th><th>${mode==='set'?'Се поставува':'Тековно → Ново'}</th><th>Статус</th></tr></thead>
+        <thead><tr><th style="text-align:left;padding-left:8px">OFI</th><th style="text-align:left">Назив</th><th>Категорија</th><th>${mode==='set'?'Се поставува':'Тековно → Ново'}</th><th>Статус</th></tr></thead>
         <tbody>${rows2.map(r=>`<tr>
           <td style="text-align:left;padding-left:8px;font-family:monospace;font-size:10px">${r.ofi}</td>
-          <td style="text-align:left;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.name}</td>
-          <td>${r.price?r.price.toLocaleString()+' ден.':'—'}</td>
+          <td style="text-align:left;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.name}</td>
+          <td style="font-size:10px;color:var(--t2)">${r.cpis||'—'}</td>
           <td style="font-weight:700;color:var(--mg)">${mode==='set'?r.qty:(r.curQty+' → '+r.finalQty)}</td>
           <td>${r.exists
             ?'<span style="background:var(--grl);color:var(--gr);padding:1px 6px;border-radius:10px;font-size:10px">постои</span>'
@@ -4332,10 +4350,12 @@ window.executeBulkImport=async(cat)=>{
   const pv=document.getElementById('bulkPreview'+cat);
   if(!ta)return;
   const skipHeader=document.getElementById('bulkSkipHeader'+cat)?.checked||false;
-  const rows=filterByCat(parseBulkRows(ta.value,skipHeader),cat);
+  const allRows=parseBulkRows(ta.value,skipHeader);
+  const rows=filterByCat(allRows,cat);
   if(!rows.length)return;
   const products=cat===1?OFI_PRODUCTS:OFI_PRODUCTS2;
-  const mode=document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add';
+  const isTelekom=allRows.some(r=>r._telekomFmt);
+  const mode=isTelekom?'set':(document.querySelector('input[name="bulkMode'+cat+'"]:checked')?.value||'add');
   let added=0,updated=0;
   rows.forEach(r=>{
     if(!r.ofi)return;
