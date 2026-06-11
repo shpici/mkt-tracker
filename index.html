@@ -591,7 +591,7 @@ canvas.gc{display:block;border-radius:8px;image-rendering:pixelated}
 
 <style>
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
-body.emp-mode #tp-daily,body.emp-mode #tp-monthly,body.emp-mode #tp-ranking,
+body.emp-mode #tp-daily,body.emp-mode #tp-monthly,
 body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,body.emp-mode #tp-weekly,
 body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
@@ -761,7 +761,6 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <button class="exec-st" id="rlzt-weekly" onclick="window.rlzSt('weekly')">🗓 Неделен</button>
   <button class="exec-st" id="rlzt-monthly" onclick="window.rlzSt('monthly')">📊 Месечен</button>
   <button class="exec-st" id="rlzt-yearly" onclick="window.rlzSt('yearly')">📈 Годишен</button>
-  <button class="exec-st" id="rlzt-ranking" onclick="window.rlzSt('ranking')">🏆 Ранкинг</button>
 </div>
 </div>
 
@@ -840,23 +839,6 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 </div>
 
 <!-- ═══ RANKING ═══ -->
-<div id="tp-ranking" class="rlz-sub">
-<div class="card">
-  <div style="font-size:14px;font-weight:700;margin-bottom:3px">🏆 Ранкинг — <span id="rkTit"></span></div>
-  <div style="font-size:11px;color:var(--t2);margin-bottom:14px">Performance Score = просек % по активни KPI</div>
-  <div class="rg" id="rkGrid"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-    <div style="background:var(--grl);border:1px solid #a5d6a7;border-radius:var(--r);padding:12px;text-align:center">
-      <div style="font-size:11px;font-weight:700;color:var(--gr);margin-bottom:3px">🥇 TOP</div>
-      <div style="font-size:14px;font-weight:700;color:var(--gr)" id="topP">—</div>
-    </div>
-    <div style="background:var(--rdl);border:1px solid #ef9a9a;border-radius:var(--r);padding:12px;text-align:center">
-      <div style="font-size:11px;font-weight:700;color:var(--rd);margin-bottom:3px">📈 NEEDS BOOST</div>
-      <div style="font-size:14px;font-weight:700;color:var(--rd)" id="lowP">—</div>
-    </div>
-  </div>
-</div>
-</div>
 
 <!-- ═══ INVENTORY (OFI) ═══ -->
 <div id="tp-inventory" class="tp">
@@ -2063,7 +2045,6 @@ function subToMonth(y,m){
       if(cY===dy&&cM===dm){
         if(_rlzSt==='daily'||!_rlzSt)rndTbl();
         if(_rlzSt==='monthly')rndMonthly();
-        if(_rlzSt==='ranking')rndRanking();
         buildTickerAndRisk();
         calcAlerts();
         if(mID&&document.getElementById('etp-daily')?.classList.contains('act'))rndEmpKpi();
@@ -2273,7 +2254,6 @@ function toggleKpiScore(k){
   saveScoreExcl();rndKpiToggles();
   if(_rlzSt==='daily'||!_rlzSt)rndTbl();
   if(_rlzSt==='monthly')rndMonthly();
-  if(_rlzSt==='ranking')rndRanking();
   calcAlerts();
 }
 window.toggleKpiScore=toggleKpiScore;
@@ -4990,11 +4970,10 @@ const _rlzInits={
   weekly:()=>{const today=new Date();if(today.getFullYear()===cY&&today.getMonth()+1===cM){const wks=gWks(getWDs(cY,cM));const td=today.getDate();wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.date===td)mgrWkIdx=wi;});});}rndMgrWeekly();},
   monthly:()=>rndMonthly(),
   yearly:()=>rndMgrYearly(),
-  ranking:()=>{document.getElementById('rkTit').textContent=MKM[cM-1]+' '+cY;rndRanking();}
 };
 window.rlzSt=function(name){
   _rlzSt=name;
-  ['daily','weekly','monthly','yearly','ranking'].forEach(s=>{
+  ['daily','weekly','monthly','yearly'].forEach(s=>{
     document.getElementById('tp-'+s)?.classList.toggle('act',s===name);
     document.getElementById('rlzt-'+s)?.classList.toggle('act',s===name);
   });
