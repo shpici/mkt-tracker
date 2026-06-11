@@ -593,7 +593,7 @@ canvas.gc{display:block;border-radius:8px;image-rendering:pixelated}
 body.emp-mode #mgrNav,body.emp-mode #mgrTabs,
 body.emp-mode #tp-daily,body.emp-mode #tp-monthly,
 body.emp-mode #tp-inventory,body.emp-mode #tp-inventory2,body.emp-mode #tp-comments,body.emp-mode #tp-weekly,
-body.emp-mode #tp-targets,body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
+body.emp-mode #tp-orders,body.emp-mode #tp-weekly{display:none!important;visibility:hidden!important}
 body.emp-mode #empView{display:block!important}
 body.emp-mode #riskBell,body.emp-mode #riskPanel{display:none!important}
 body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
@@ -747,7 +747,6 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div class="tab" onclick="gotoTab('inventory',this)">📦 Маг. Доп.Оп.</div>
   <div class="tab" onclick="gotoTab('inventory2',this)">🔧 Маг. Моб.&amp;Др.</div>
   <div class="tab" onclick="gotoTab('calc',this)">🧮 Калк</div>
-  <div class="tab" onclick="gotoTab('targets',this)">🎯 Таргети</div>
   <div class="tab" onclick="gotoTab('orders',this)">🛒 Нарачки</div>
   <div class="tab" onclick="gotoTab('schedule',this)">📅 Распоред</div>
   <div class="tab" onclick="gotoTab('compare',this)">⚖️ Споредба</div>
@@ -761,6 +760,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <button class="exec-st" id="rlzt-weekly" onclick="window.rlzSt('weekly')">🗓 Неделен</button>
   <button class="exec-st" id="rlzt-monthly" onclick="window.rlzSt('monthly')">📊 Месечен</button>
   <button class="exec-st" id="rlzt-yearly" onclick="window.rlzSt('yearly')">📈 Годишен</button>
+  <button class="exec-st" id="rlzt-targets" onclick="window.rlzSt('targets')">🎯 Таргети</button>
 </div>
 </div>
 
@@ -1069,7 +1069,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 </div>
 
 <!-- ═══ TARGETS ═══ -->
-<div id="tp-targets" class="tp">
+<div id="tp-targets" class="rlz-sub">
 <div class="card">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
     <div><div style="font-size:14px;font-weight:700">⚙️ Месечни таргети</div></div>
@@ -5042,10 +5042,11 @@ const _rlzInits={
   weekly:()=>{const today=new Date();if(today.getFullYear()===cY&&today.getMonth()+1===cM){const wks=gWks(getWDs(cY,cM));const td=today.getDate();wks.forEach((wk,wi)=>{wk.forEach(d=>{if(d.date===td)mgrWkIdx=wi;});});}rndMgrWeekly();},
   monthly:()=>rndMonthly(),
   yearly:()=>rndMgrYearly(),
+  targets:()=>rndTgts(),
 };
 window.rlzSt=function(name){
   _rlzSt=name;
-  ['daily','weekly','monthly','yearly'].forEach(s=>{
+  ['daily','weekly','monthly','yearly','targets'].forEach(s=>{
     document.getElementById('tp-'+s)?.classList.toggle('act',s===name);
     document.getElementById('rlzt-'+s)?.classList.toggle('act',s===name);
   });
@@ -5059,14 +5060,13 @@ window.gotoTab=(name,el)=>{
   if(el){el.classList.add('act','tab-flashing');setTimeout(()=>el.classList.remove('tab-flashing'),450);}
   const tpEl=document.getElementById('tp-'+name);if(tpEl)tpEl.classList.add('act');
   if(name==='realizacija'){window.rlzSt(_rlzSt);}
-  else if(name==='daily'||name==='weekly'||name==='monthly'||name==='yearly'||name==='ranking'){
+  else if(name==='daily'||name==='weekly'||name==='monthly'||name==='yearly'||name==='targets'){
     document.getElementById('tp-realizacija')?.classList.add('act');
     window.rlzSt(name);return;
   }
   else if(name==='alerts')calcAlerts();
   else if(name==='inventory')rndInv();
   else if(name==='inventory2')rndInv2();
-  else if(name==='targets')rndTgts();
   else if(name==='orders')rndOrders();
   else if(name==='calc'){if(window.rcInit)window.rcInit();}
   else if(name==='boost')rndBoostBoard();
