@@ -2250,7 +2250,7 @@ function mWDs(mid,y,m){
   });
   return c;
 }
-function isVacDay(mid,dk){return Array.isArray(VAC[mid])&&VAC[mid].includes(dk);}
+function isVacDay(mid,dk){const v=VAC[mid];if(!v||!v.from||!v.to)return false;return dk>=v.from&&dk<=v.to;}
 function vacWDs(mid,y,m){let c=0;getWDs(y,m).forEach(d=>{if(isVacDay(mid,dK(y,m,d)))c++;});return c;}
 function adjMT(mid,y,m){
   const mt=getMT(y,m);const wd=getWDs(y,m).length;const vd=vacWDs(mid,y,m);
@@ -2259,14 +2259,50 @@ function adjMT(mid,y,m){
   const adj={};KKEYS.forEach(k=>adj[k]=Math.round((mt[k]||0)*ratio*10)/10);
   return adj;
 }
-window.togVac=async(mid,dk)=>{
-  if(!isMgr)return;
-  if(!VAC[mid])VAC[mid]=[];
-  const i=VAC[mid].indexOf(dk);
-  if(i>=0)VAC[mid].splice(i,1);else VAC[mid].push(dk);
-  await svCfg('vacations',VAC);
-  rndTbl();
+function fmtVacRange(from,to){
+  if(!from||!to)return '';
+  const f=from.split('-'),t=to.split('-');
+  return parseInt(f[2])+'.'+parseInt(f[1])+' — '+parseInt(t[2])+'.'+parseInt(t[1]);
+}
+let _vacMid=null;
+function _ensVacModal(){
+  if(document.getElementById('vacModal'))return;
+  const m=document.createElement('div');
+  m.id='vacModal';
+  m.style.cssText='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center';
+  m.innerHTML=`<div style="background:var(--s1);border-radius:12px;padding:24px;min-width:300px;box-shadow:0 8px 32px rgba(0,0,0,.3);border:1px solid var(--brd)">
+    <div style="font-weight:700;font-size:15px;margin-bottom:16px">🏖️ Одмор — <span id="vacEmpName"></span></div>
+    <div style="margin-bottom:8px"><label style="font-size:12px;color:var(--t2);display:block;margin-bottom:4px">Од датум:</label><input id="vacFrom" type="date" style="width:100%;padding:6px 10px;border:1px solid var(--brd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:13px;box-sizing:border-box"></div>
+    <div style="margin-bottom:16px"><label style="font-size:12px;color:var(--t2);display:block;margin-bottom:4px">До датум:</label><input id="vacTo" type="date" style="width:100%;padding:6px 10px;border:1px solid var(--brd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:13px;box-sizing:border-box"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="saveVac()" style="flex:1;padding:8px;background:var(--mg);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600">Зачувај</button>
+      <button onclick="clearVac()" style="padding:8px 12px;background:#fee2e2;color:#991b1b;border:none;border-radius:6px;cursor:pointer;font-weight:600">Отстрани</button>
+      <button onclick="closeVacModal()" style="padding:8px 12px;background:var(--s3);color:var(--t2);border:none;border-radius:6px;cursor:pointer">Откажи</button>
+    </div>
+  </div>`;
+  document.body.appendChild(m);
+}
+window.openVacModal=mid=>{
+  if(!isMgr)return;_ensVacModal();_vacMid=mid;
+  const mb=MEMBERS.find(m=>m.id===mid);
+  document.getElementById('vacEmpName').textContent=mb?.name||mid;
+  const v=VAC[mid]||{};
+  document.getElementById('vacFrom').value=v.from||'';
+  document.getElementById('vacTo').value=v.to||'';
+  document.getElementById('vacModal').style.display='flex';
 };
+window.saveVac=async()=>{
+  const from=document.getElementById('vacFrom').value,to=document.getElementById('vacTo').value;
+  if(!from||!to){alert('Внеси ги двата датуми!');return;}
+  if(from>to){alert('„Од" мора да е пред „До"!');return;}
+  VAC[_vacMid]={from,to};await svCfg('vacations',VAC);closeVacModal();rndTbl();
+  if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
+};
+window.clearVac=async()=>{
+  delete VAC[_vacMid];await svCfg('vacations',VAC);closeVacModal();rndTbl();
+  if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
+};
+window.closeVacModal=()=>{const m=document.getElementById('vacModal');if(m)m.style.display='none';_vacMid=null;};
 // CORRECT perfScore — only ON KPIs, no excluded
 function perfScore(mid,y,m){
   const t=adjMT(mid,y,m);let s=0;let cnt=0;
@@ -2940,8 +2976,9 @@ function rndTbl(){
   MEMBERS.forEach(mb=>{
     const ms=dd[mb.id]||{status:0};const isAbs=isVacDay(mb.id,dk);
     const tr=document.createElement('tr');if(isAbs)tr.className='abs';
-    const vacBtn=isMgr?`<button onclick="togVac('${mb.id}','${dk}')" title="${isAbs?'Отстрани одмор':'Постави одмор'}" style="margin-left:4px;background:${isAbs?'#f59e0b':'var(--s3)'};border:none;border-radius:4px;padding:1px 5px;cursor:pointer;font-size:11px">🏖️</button>`:'';
-    let h=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div><div class="nm">${mb.name}${isAbs?'<span style="margin-left:4px">🏖️</span>':''}</div>${isAbs?`<span class="abbg">Одмор</span>`:''}</div>${vacBtn}</div></td>`;
+    const vRng=isMgr&&VAC[mb.id]?.from?`<span style="font-size:9px;color:#f59e0b;margin-left:3px">${fmtVacRange(VAC[mb.id].from,VAC[mb.id].to)}</span>`:'';
+    const vacBtn=isMgr?`<button onclick="openVacModal('${mb.id}')" title="Постави одмор" style="margin-left:4px;background:${isAbs?'#f59e0b':'var(--s3)'};border:none;border-radius:4px;padding:1px 5px;cursor:pointer;font-size:11px;flex-shrink:0">🏖️</button>${vRng}`:'';
+    let h=`<td><div class="nc" style="flex-wrap:wrap"><div class="av" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div style="flex:1;min-width:0"><div class="nm">${mb.name}${isMgr&&isAbs?'<span style="margin-left:4px">🏖️</span>':''}</div>${isMgr&&isAbs?`<span class="abbg">Одмор</span>`:''}</div>${vacBtn}</div></td>`;
     
     KKEYS.forEach(k=>{
       const v=ms[k]||0;const t=dtg[k];const p=pct(v,t);const w=Math.min(100,p);
@@ -3026,7 +3063,9 @@ function rndMonthly(){
     aP=aCnt>0?Math.round(aP/aCnt):0;
     const bdg=`<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700" class="${pbc(aP)}">${aP}% ${pem(aP)}</span>`;
     const vdMo=vacWDs(mb.id,cY,cM);
-    mg.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px">${mb.ini}</div><div><div class="mcn">${mb.name}${vdMo?'<span style="margin-left:4px">🏖️</span>':''}</div><div class="mci">Раб. денови: ${mWDs(mb.id,cY,cM)}${vdMo?' · <span style="color:#f59e0b">Одмор: '+vdMo+'</span>':''}</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;
+    const vacMoLbl=isMgr&&vdMo?` · <span style="color:#f59e0b">Одмор: ${vdMo}</span>`:'';
+    const vacMoNm=isMgr&&vdMo?'<span style="margin-left:4px">🏖️</span>':'';
+    mg.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px">${mb.ini}</div><div><div class="mcn">${mb.name}${vacMoNm}</div><div class="mci">Раб. денови: ${mWDs(mb.id,cY,cM)}${vacMoLbl}</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;
   });
   // Detail table
   const moH=document.getElementById('moHead');const mtb=document.getElementById('mTb');const mft=document.getElementById('mFt');
@@ -3035,11 +3074,12 @@ function rndMonthly(){
   MEMBERS.forEach(mb=>{
     let aP=0;let aCnt=0;
     const amt2=adjMT(mb.id,cY,cM);const vdT=vacWDs(mb.id,cY,cM);
-    let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}${vdT?'<span style="margin-left:3px">🏖️</span>':''}</span></div></td>`;
+    const vacTNm=isMgr&&vdT?'<span style="margin-left:3px">🏖️</span>':'';
+    const vacTDays=isMgr&&vdT?`<span style="color:#f59e0b;font-size:9px"> +${vdT}🏖️</span>`:'';
+    let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}${vacTNm}</span></div></td>`;
     KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=amt2[k]||1;const p=pct(s,t);tS[k]+=s;if(isInScore(k)){aP+=p;aCnt++;}row+=`<td style="opacity:${isInScore(k)?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${s}/${Number.isInteger(t)?t:t.toFixed(1)}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});
     aP=aCnt>0?Math.round(aP/aCnt):0;
-    row+=`<td>${mWDs(mb.id,cY,cM)}${vdT?`<span style="color:#f59e0b;font-size:9px"> +${vdT}🏖️</span>`:''}
-</td><td><div style="font-size:13px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;
+    row+=`<td>${mWDs(mb.id,cY,cM)}${vacTDays}</td><td><div style="font-size:13px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;
     const tr=document.createElement('tr');tr.innerHTML=row;mtb.appendChild(tr);
   });
   let fh='<td>Тим вкупно</td>';KKEYS.forEach(k=>{const t=(mt[k]||1)*MEMBERS.length;const p=pct(tS[k],t);fh+=`<td style="opacity:${isInScore(k)?1:.45}">${tS[k]}/${t}<br><span style="font-size:8px">${p}%</span></td>`;});
