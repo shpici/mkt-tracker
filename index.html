@@ -2120,10 +2120,10 @@ async function ldMonth(y,m,force=false){
   await Promise.all(fetches);
 }
 async function ldAllCfg(){
-  const [t,co,se,mn,ofi,ofi2]=await Promise.all([
+  const [t,co,se,mn,ofi,ofi2,vac]=await Promise.all([
     ldCfg('targets'),ldCfg('comments'),ldCfg('scoreExcl'),
     isMgr?ldCfg('mgrOrderNotes'):Promise.resolve(null),
-    ldCfg('ofi_products'),ldCfg('ofi_products2')
+    ldCfg('ofi_products'),ldCfg('ofi_products2'),ldCfg('vacations')
   ]);
   if(t){
     // Normalize all keys to strings after Firebase load
@@ -2134,6 +2134,7 @@ async function ldAllCfg(){
   if(mn&&isMgr)MGR_ORDER_NOTES=mn;
   if(ofi)OFI_PRODUCTS=ofi;
   if(ofi2)OFI_PRODUCTS2=ofi2;
+  if(vac)VAC=vac;
   loadScoreExcl();
   if(se&&!localStorage.getItem('kpi_excl_v2'))SCORE_EXCLUDED=new Set(se);
 }
@@ -2164,7 +2165,7 @@ const DEFAULT_EXCLUDED=new Set(["prep", "addser", "fmcbus", "postbus", "bbbus", 
 // ── STATE ──
 let curUsr=null,isMgr=false,mID=null;
 let cY=new Date().getFullYear(),cM=new Date().getMonth()+1,cW=0,cD=0;
-let AS={},TS={},CS={},OFI_PRODUCTS={},OFI_PRODUCTS2={},GAME_SCORES={};
+let AS={},TS={},CS={},OFI_PRODUCTS={},OFI_PRODUCTS2={},GAME_SCORES={},VAC={};
 let ORDERS=[],MGR_ORDER_NOTES='';
 let SCORE_EXCLUDED=new Set(DEFAULT_EXCLUDED);
 let svTmr=null,tgY=cY,tgM=cM;
@@ -2243,13 +2244,32 @@ function mWDs(mid,y,m){
   let c=0;
   getWDs(y,m).forEach(d=>{
     if(isCur&&d.date>td)return;
-    const dk=dK(y,m,d);const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms)c++;
+    const dk=dK(y,m,d);
+    if(isVacDay(mid,dk))return;
+    const ms=AS[y]?.[m]?.[dk]?.[mid];if(ms)c++;
   });
   return c;
 }
+function isVacDay(mid,dk){return Array.isArray(VAC[mid])&&VAC[mid].includes(dk);}
+function vacWDs(mid,y,m){let c=0;getWDs(y,m).forEach(d=>{if(isVacDay(mid,dK(y,m,d)))c++;});return c;}
+function adjMT(mid,y,m){
+  const mt=getMT(y,m);const wd=getWDs(y,m).length;const vd=vacWDs(mid,y,m);
+  if(!vd||!wd)return mt;
+  const ratio=(wd-vd)/wd;
+  const adj={};KKEYS.forEach(k=>adj[k]=Math.round((mt[k]||0)*ratio*10)/10);
+  return adj;
+}
+window.togVac=async(mid,dk)=>{
+  if(!isMgr)return;
+  if(!VAC[mid])VAC[mid]=[];
+  const i=VAC[mid].indexOf(dk);
+  if(i>=0)VAC[mid].splice(i,1);else VAC[mid].push(dk);
+  await svCfg('vacations',VAC);
+  rndTbl();
+};
 // CORRECT perfScore — only ON KPIs, no excluded
 function perfScore(mid,y,m){
-  const t=getMT(y,m);let s=0;let cnt=0;
+  const t=adjMT(mid,y,m);let s=0;let cnt=0;
   KKEYS.forEach(k=>{if(isInScore(k)){const v=mMoSum(mid,k,y,m);const tgt=t[k]||1;s+=pct(v,tgt);cnt++;}});
   return cnt>0?Math.round(s/cnt):0;
 }
@@ -2918,9 +2938,10 @@ function rndTbl(){
   const tots={};const ttgs={};KKEYS.forEach(k=>{tots[k]=0;ttgs[k]=0;});
   tb.innerHTML='';
   MEMBERS.forEach(mb=>{
-    const ms=dd[mb.id]||{status:mb.da?3:0};const isAbs=false;
+    const ms=dd[mb.id]||{status:0};const isAbs=isVacDay(mb.id,dk);
     const tr=document.createElement('tr');if(isAbs)tr.className='abs';
-    let h=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div><div class="nm">${mb.name}</div>${isAbs?`<span class="abbg">${SLBL[ms.status]}</span>`:''}</div></div></td>`;
+    const vacBtn=isMgr?`<button onclick="togVac('${mb.id}','${dk}')" title="${isAbs?'Отстрани одмор':'Постави одмор'}" style="margin-left:4px;background:${isAbs?'#f59e0b':'var(--s3)'};border:none;border-radius:4px;padding:1px 5px;cursor:pointer;font-size:11px">🏖️</button>`:'';
+    let h=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc}">${mb.ini}</div><div><div class="nm">${mb.name}${isAbs?'<span style="margin-left:4px">🏖️</span>':''}</div>${isAbs?`<span class="abbg">Одмор</span>`:''}</div>${vacBtn}</div></td>`;
     
     KKEYS.forEach(k=>{
       const v=ms[k]||0;const t=dtg[k];const p=pct(v,t);const w=Math.min(100,p);
@@ -2992,8 +3013,9 @@ function rndMonthly(){
   const mg=document.getElementById('mcGrid');mg.innerHTML='';
   MEMBERS.forEach(mb=>{
     let aP=0;let aCnt=0;
+    const amt=adjMT(mb.id,cY,cM);
     const kh=KKEYS.map((k,i)=>{
-      const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);const on=isInScore(k);
+      const s=mMoSum(mb.id,k,cY,cM);const t=amt[k]||1;const p=pct(s,t);const on=isInScore(k);
       if(on){aP+=p;aCnt++;}if(!on)return '';
       // Trend vs prev month
       let pm=cM-1,py=cY;if(pm<1){pm=12;py--;}
@@ -3003,7 +3025,8 @@ function rndMonthly(){
     }).join('');
     aP=aCnt>0?Math.round(aP/aCnt):0;
     const bdg=`<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700" class="${pbc(aP)}">${aP}% ${pem(aP)}</span>`;
-    mg.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px">${mb.ini}</div><div><div class="mcn">${mb.name}</div><div class="mci">Раб. денови: ${mWDs(mb.id,cY,cM)}</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;
+    const vdMo=vacWDs(mb.id,cY,cM);
+    mg.innerHTML+=`<div class="mc"><div class="mch"><div class="av" style="background:${mb.bg};color:${mb.tc};width:30px;height:30px;font-size:10px">${mb.ini}</div><div><div class="mcn">${mb.name}${vdMo?'<span style="margin-left:4px">🏖️</span>':''}</div><div class="mci">Раб. денови: ${mWDs(mb.id,cY,cM)}${vdMo?' · <span style="color:#f59e0b">Одмор: '+vdMo+'</span>':''}</div></div><div style="margin-left:auto">${bdg}</div></div><div class="mck">${kh}</div></div>`;
   });
   // Detail table
   const moH=document.getElementById('moHead');const mtb=document.getElementById('mTb');const mft=document.getElementById('mFt');
@@ -3011,10 +3034,12 @@ function rndMonthly(){
   mtb.innerHTML='';const tS={};KKEYS.forEach(k=>tS[k]=0);
   MEMBERS.forEach(mb=>{
     let aP=0;let aCnt=0;
-    let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}</span></div></td>`;
-    KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);tS[k]+=s;if(isInScore(k)){aP+=p;aCnt++;}row+=`<td style="opacity:${isInScore(k)?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${s}/${t}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});
+    const amt2=adjMT(mb.id,cY,cM);const vdT=vacWDs(mb.id,cY,cM);
+    let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}${vdT?'<span style="margin-left:3px">🏖️</span>':''}</span></div></td>`;
+    KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=amt2[k]||1;const p=pct(s,t);tS[k]+=s;if(isInScore(k)){aP+=p;aCnt++;}row+=`<td style="opacity:${isInScore(k)?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${s}/${Number.isInteger(t)?t:t.toFixed(1)}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});
     aP=aCnt>0?Math.round(aP/aCnt):0;
-    row+=`<td>${mWDs(mb.id,cY,cM)}</td><td><div style="font-size:13px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;
+    row+=`<td>${mWDs(mb.id,cY,cM)}${vdT?`<span style="color:#f59e0b;font-size:9px"> +${vdT}🏖️</span>`:''}
+</td><td><div style="font-size:13px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;
     const tr=document.createElement('tr');tr.innerHTML=row;mtb.appendChild(tr);
   });
   let fh='<td>Тим вкупно</td>';KKEYS.forEach(k=>{const t=(mt[k]||1)*MEMBERS.length;const p=pct(tS[k],t);fh+=`<td style="opacity:${isInScore(k)?1:.45}">${tS[k]}/${t}<br><span style="font-size:8px">${p}%</span></td>`;});
