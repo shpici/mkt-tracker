@@ -2305,7 +2305,7 @@ window.clearVac=async()=>{
 window.closeVacModal=()=>{const m=document.getElementById('vacModal');if(m)m.style.display='none';_vacMid=null;};
 // CORRECT perfScore — only ON KPIs, no excluded
 function perfScore(mid,y,m){
-  const t=adjMT(mid,y,m);let s=0;let cnt=0;
+  const t=getMT(y,m);let s=0;let cnt=0;
   KKEYS.forEach(k=>{if(isInScore(k)){const v=mMoSum(mid,k,y,m);const tgt=t[k]||1;s+=pct(v,tgt);cnt++;}});
   return cnt>0?Math.round(s/cnt):0;
 }
@@ -3050,9 +3050,8 @@ function rndMonthly(){
   const mg=document.getElementById('mcGrid');mg.innerHTML='';
   MEMBERS.forEach(mb=>{
     let aP=0;let aCnt=0;
-    const amt=adjMT(mb.id,cY,cM);
     const kh=KKEYS.map((k,i)=>{
-      const s=mMoSum(mb.id,k,cY,cM);const t=amt[k]||1;const p=pct(s,t);const on=isInScore(k);
+      const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);const on=isInScore(k);
       if(on){aP+=p;aCnt++;}if(!on)return '';
       // Trend vs prev month
       let pm=cM-1,py=cY;if(pm<1){pm=12;py--;}
@@ -3073,11 +3072,11 @@ function rndMonthly(){
   mtb.innerHTML='';const tS={};KKEYS.forEach(k=>tS[k]=0);
   MEMBERS.forEach(mb=>{
     let aP=0;let aCnt=0;
-    const amt2=adjMT(mb.id,cY,cM);const vdT=vacWDs(mb.id,cY,cM);
+    const vdT=vacWDs(mb.id,cY,cM);
     const vacTNm=isMgr&&vdT?'<span style="margin-left:3px">🏖️</span>':'';
     const vacTDays=isMgr&&vdT?`<span style="color:#f59e0b;font-size:9px"> +${vdT}🏖️</span>`:'';
     let row=`<td><div class="nc"><div class="av" style="background:${mb.bg};color:${mb.tc};width:22px;height:22px;font-size:9px">${mb.ini}</div><span style="font-size:11px;font-weight:600">${mb.name}${vacTNm}</span></div></td>`;
-    KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=amt2[k]||1;const p=pct(s,t);tS[k]+=s;if(isInScore(k)){aP+=p;aCnt++;}row+=`<td style="opacity:${isInScore(k)?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${s}/${Number.isInteger(t)?t:t.toFixed(1)}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});
+    KKEYS.forEach(k=>{const s=mMoSum(mb.id,k,cY,cM);const t=mt[k]||1;const p=pct(s,t);tS[k]+=s;if(isInScore(k)){aP+=p;aCnt++;}row+=`<td style="opacity:${isInScore(k)?1:.45}"><div style="font-size:10px;font-weight:700;color:${pc(p)}">${s}/${Number.isInteger(t)?t:t.toFixed(1)}</div><div style="font-size:8px;color:${pc(p)}">${p}%</div></td>`;});
     aP=aCnt>0?Math.round(aP/aCnt):0;
     row+=`<td>${mWDs(mb.id,cY,cM)}${vacTDays}</td><td><div style="font-size:13px;font-weight:700;color:${pc(aP)};text-align:center">${aP}% ${pem(aP)}</div></td>`;
     const tr=document.createElement('tr');tr.innerHTML=row;mtb.appendChild(tr);
