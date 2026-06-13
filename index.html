@@ -6597,7 +6597,7 @@ function aiWelcome(){
     aiAddMsg('bot','👋 Здраво! Јас сум вашиот AI аналитичар.\n\n⚙️ За да започнам, внесете **Gemini API клуч** со кликање на ⚙️ горе десно.\n\nКлучот е **бесплатен** — добијте го на aistudio.google.com');
   } else {
     const hour=new Date().getHours();
-    const greet=hour<12?'Добро утро':'hour<18'?'Добар ден':'Добра вечер';
+    const greet=hour<12?'Добро утро':hour<18?'Добар ден':'Добра вечер';
     aiAddMsg('bot',`👋 ${greet}! Јас сум вашиот AI аналитичар за МКТ Кичево.\n\nДенес е ден **${d.today}** од месецот. Постави ми прашање — за тарифи, продажба, роаминг, или сèшто друго! 🚀`);
   }
 }
@@ -6649,7 +6649,12 @@ window.aiSend=async function(){
     if(_aiHistory.length>24)_aiHistory.splice(0,2);
   }catch(e){
     if(typing)typing.remove();
-    aiAddMsg('bot',`⚠️ Грешка: ${e.message}\n\nПровери дали API клучот е точен и дали има интернет.`);
+    const isKeyErr=e.message.toLowerCase().includes('api key')||e.message.includes('403')||e.message.includes('invalid');
+    if(isKeyErr){
+      aiAddMsg('bot','❌ **API клучот е невалиден.**\n\nПостапи вака:\n1. Оди на **aistudio.google.com**\n2. Кликни „Get API key"\n3. Копирај го клучот\n4. Кликни ⚙️ горе и залепи го\n\n_Клучот е целосно бесплатен!_');
+    } else {
+      aiAddMsg('bot',`⚠️ Грешка: ${e.message}\n\nПровери дали има интернет.`);
+    }
   }
   btn.disabled=false;
   inp.focus();
