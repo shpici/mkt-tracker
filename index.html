@@ -6627,21 +6627,24 @@ window.aiSend=async function(){
     {role:'user',content:msg}
   ];
 
-  try{
-    const resp=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+  const GROQ_MODELS=['llama-3.3-70b-versatile','llama-3.1-70b-versatile','llama3-70b-8192','llama-3.1-8b-instant'];
+  async function groqCall(model){
+    return fetch('https://api.groq.com/openai/v1/chat/completions',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({
-        model:'llama-3.3-70b-versatile',
-        messages,
-        temperature:0.72,
-        max_tokens:600
-      })
+      body:JSON.stringify({model,messages,temperature:0.72,max_tokens:600})
     });
-    if(!resp.ok){
-      const err=await resp.json().catch(()=>({}));
-      throw new Error(err.error?.message||`HTTP ${resp.status}`);
+  }
+  try{
+    let resp,lastErr;
+    for(const model of GROQ_MODELS){
+      resp=await groqCall(model);
+      if(resp.ok)break;
+      const e=await resp.json().catch(()=>({}));
+      lastErr=e.error?.message||`HTTP ${resp.status}`;
+      if(resp.status===401||resp.status===403)break;
     }
+    if(!resp.ok){throw new Error(lastErr||`HTTP ${resp.status}`);}
     const data=await resp.json();
     const reply=data.choices?.[0]?.message?.content||'Немам одговор, обиди се повторно.';
     if(typing)typing.remove();
@@ -6651,9 +6654,9 @@ window.aiSend=async function(){
     if(_aiHistory.length>24)_aiHistory.splice(0,2);
   }catch(e){
     if(typing)typing.remove();
-    const isKeyErr=e.message.toLowerCase().includes('api key')||e.message.includes('401')||e.message.includes('invalid');
+    const isKeyErr=e.message.includes('401')||e.message.includes('403')||e.message.toLowerCase().includes('api key')||e.message.toLowerCase().includes('invalid');
     if(isKeyErr){
-      aiAddMsg('bot','❌ **Groq клучот е невалиден.**\n\n1. Оди на **console.groq.com**\n2. Кликни „Create API Key"\n3. Копирај го клучот\n4. Кликни ⚙️ горе и залепи го\n\n_Целосно бесплатно, нема картичка!_');
+      aiAddMsg('bot','❌ **Groq клучот е невалиден.**\n\n1. Оди на **console.groq.com**\n2. Кликни „API Keys" → „Create API Key"\n3. Копирај го клучот (почнува со gsk_...)\n4. Кликни ⚙️ горе и залепи го\n\n_Целосно бесплатно!_');
     } else {
       aiAddMsg('bot',`⚠️ Грешка: ${e.message}\n\nПровери дали има интернет.`);
     }
