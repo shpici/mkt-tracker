@@ -300,10 +300,10 @@ const EMPS=[
 ];
 // Vacation — reads from localStorage (synced from main app)
 const EMP_VAC_MAP={Meli:'MS',Fuku:'FM',Kate:'KM',Hane:'HS',Ivona:'IN'};
-let _schedVAC={};
-try{const _v=localStorage.getItem('mkt_vac');if(_v)_schedVAC=JSON.parse(_v);}catch(e){}
+function _getVAC(){try{const v=localStorage.getItem('mkt_vac');return v?JSON.parse(v):{}}catch(e){return {};}}
 function _dKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function _isVacDay(empN,d){const id=EMP_VAC_MAP[empN];const v=_schedVAC[id];if(!v||!v.from||!v.to)return false;const dk=_dKey(d);return dk>=v.from&&dk<=v.to;}
+function _isVacDay(empN,d){const vac=_getVAC();const id=EMP_VAC_MAP[empN];const v=vac[id];if(!v||!v.from||!v.to)return false;const dk=_dKey(d);return dk>=v.from&&dk<=v.to;}
+function _vacRange(empN){const vac=_getVAC();const vv=vac[EMP_VAC_MAP[empN]];if(!vv?.from||!vv?.to)return '';const f=vv.from.split('-'),t=vv.to.split('-');return parseInt(f[2])+'.'+parseInt(f[1])+' — '+parseInt(t[2])+'.'+parseInt(t[1]);}
 
 // Shifts — TM (меѓусмена) е заменета со T2 = 10:00-17:00
 const S={
@@ -518,10 +518,8 @@ function render(){
       const shl=shalterLabel();
 
       if(_isVacDay(emp.n,_)){
-        const vv=_schedVAC[EMP_VAC_MAP[emp.n]];
-        const vf=vv?.from?.split('-'),vt=vv?.to?.split('-');
-        const vrng=vf&&vt?`${parseInt(vf[2])}.${parseInt(vf[1])} — ${parseInt(vt[2])}.${parseInt(vt[1])}`:'';
-        return `<td class="cell" style="${stOp}background:rgba(0,0,0,.07)"><div class="cpill pill-OFF" style="opacity:.85"><span class="cp-top">${lang==='mk'?'🏖️ Одмор':'🏖️ Pushim'}</span><span class="cp-mid" style="font-size:9px">${vrng}</span></div></td>`;
+        const vrng=_vacRange(emp.n);
+        return `<td class="cell" style="${stOp}background:rgba(0,0,0,.09)"><div class="cpill pill-OFF" style="opacity:.9"><span class="cp-top">${lang==='mk'?'🏖️ Одмор':'🏖️ Pushim'}</span><span class="cp-mid" style="font-size:9px">${vrng}</span></div></td>`;
       }
 
       if(sh){
