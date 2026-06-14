@@ -221,7 +221,7 @@ thead th{background:var(--s2);padding:6px 4px;text-align:center;font-size:9px;fo
 thead th:first-child{text-align:left;padding-left:10px;min-width:140px;border-radius:var(--rs) 0 0 0}
 thead th:last-child{border-radius:0 var(--rs) 0 0}
 tbody tr:hover{background:var(--s2)}
-tbody tr.abs td{opacity:.35}
+tbody tr.abs{background:rgba(0,0,0,.06)}tbody tr.abs td{opacity:.5;background:rgba(0,0,0,.04)}
 tbody td{padding:5px 4px;text-align:center;border-bottom:1px solid var(--brd);vertical-align:middle}
 tbody td:first-child{text-align:left;padding-left:10px}
 tfoot td{background:var(--mgl);padding:6px 4px;text-align:center;font-weight:700;font-size:11px;color:var(--mgd);border-top:2px solid var(--mg)}
@@ -2135,6 +2135,7 @@ async function ldAllCfg(){
   if(ofi)OFI_PRODUCTS=ofi;
   if(ofi2)OFI_PRODUCTS2=ofi2;
   if(vac)VAC=vac;
+  try{localStorage.setItem('mkt_vac',JSON.stringify(VAC));}catch(e){}
   loadScoreExcl();
   if(se&&!localStorage.getItem('kpi_excl_v2'))SCORE_EXCLUDED=new Set(se);
 }
@@ -2295,11 +2296,11 @@ window.saveVac=async()=>{
   const from=document.getElementById('vacFrom').value,to=document.getElementById('vacTo').value;
   if(!from||!to){alert('Внеси ги двата датуми!');return;}
   if(from>to){alert('„Од" мора да е пред „До"!');return;}
-  VAC[_vacMid]={from,to};await svCfg('vacations',VAC);closeVacModal();rndTbl();
+  VAC[_vacMid]={from,to};try{localStorage.setItem('mkt_vac',JSON.stringify(VAC));}catch(e){}await svCfg('vacations',VAC);closeVacModal();rndTbl();
   if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
 };
 window.clearVac=async()=>{
-  delete VAC[_vacMid];await svCfg('vacations',VAC);closeVacModal();rndTbl();
+  delete VAC[_vacMid];try{localStorage.setItem('mkt_vac',JSON.stringify(VAC));}catch(e){}await svCfg('vacations',VAC);closeVacModal();rndTbl();
   if(document.getElementById('tp-monthly')?.classList.contains('act'))rndMonthly();
 };
 window.closeVacModal=()=>{const m=document.getElementById('vacModal');if(m)m.style.display='none';_vacMid=null;};
