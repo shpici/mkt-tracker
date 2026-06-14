@@ -812,6 +812,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 render();
+window.render=render;
 
 // ══════════════════════════════════════════
 // НЕДЕЛА / МЕСЕЦ / ГОДИНА + READ-ONLY
@@ -970,6 +971,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+</script>
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,doc,getDoc}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const FB={apiKey:"AIzaSyD2lqOi4rm_7L-C9yO1HTGipaKGPl5UBs8",authDomain:"mkt-kicevo-tracker.firebaseapp.com",projectId:"mkt-kicevo-tracker",storageBucket:"mkt-kicevo-tracker.firebasestorage.app",messagingSenderId:"850383341068",appId:"1:850383341068:web:bf5e71d3a10cb301e9d029"};
+try{
+  const db=getFirestore(initializeApp(FB));
+  const snap=await getDoc(doc(db,'config','vacations'));
+  if(snap.exists()){
+    const vac=snap.data()?.data;
+    if(vac){localStorage.setItem('mkt_vac',JSON.stringify(vac));window.render&&window.render();}
+  }
+}catch(e){console.warn('VAC load:',e);}
 </script>
 </body>
 </html>
