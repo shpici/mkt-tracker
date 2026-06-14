@@ -6171,6 +6171,11 @@ function scRender(){
       const shalBadge=di<5?(shalNum
         ?`<button class="sc-shal" onclick="scOpenShalModal('${emp.n}',${di},event)">${shl} ${shalNum} \u270e</button>`
         :`<button class="sc-shal-empty" onclick="scOpenShalModal('${emp.n}',${di},event)">+ ${shl}</button>`):'';
+      const _dk=_.getFullYear()+'-'+String(_.getMonth()+1).padStart(2,'0')+'-'+String(_.getDate()).padStart(2,'0');
+      if(isVacDay(emp.id,_dk)){
+        const vv=VAC[emp.id];const vrng=vv?.from&&vv?.to?fmtVacRange(vv.from,vv.to):'';
+        return `<td class="sc-cell" style="background:rgba(0,0,0,.08)"><div class="sc-cpill pill-OFF" style="opacity:.9;cursor:default"><span class="sc-cp-top">\ud83c\udfd6\ufe0f ${scLang==='mk'?'\u041e\u0434\u043c\u043e\u0440':'Pushim'}</span>${vrng?`<span class="sc-cp-mid" style="font-size:9px">${vrng}</span>`:''}</div></td>`;
+      }
       if(shift){
         const s=SC_S[shift];
         const lbl=scLang==='mk'?s.mk:s.al;
@@ -6348,6 +6353,10 @@ function empScRender(){
       const shift=d[emp.n]?d[emp.n][di]:null;
       const shalNum=sh[di]?.[emp.n]||null;
       const shalBadge=shalNum?`<div style="font-size:9px;background:var(--mgl);color:var(--mgd);padding:1px 5px;border-radius:10px;margin-top:2px;font-weight:700">Шалт. ${shalNum}</div>`:'';
+      const _dk=_.getFullYear()+'-'+String(_.getMonth()+1).padStart(2,'0')+'-'+String(_.getDate()).padStart(2,'0');
+      if(isVacDay(emp.id,_dk)){
+        return `<td class="sc-cell" style="background:rgba(0,0,0,.08)"><div class="sc-cpill pill-OFF" style="opacity:.9;cursor:default"><span class="sc-cp-top">🏖️ Одмор</span></div></td>`;
+      }
       if(shift){
         const s=SC_S[shift];
         return `<td class="sc-cell" style="${isMe?'background:var(--mgl)':''}"><div class="sc-cpill ${s.css}" style="cursor:default"><span class="sc-cp-top">${s.mk}</span><span class="sc-cp-mid">${s.bot}</span></div>${shalBadge}</td>`;
