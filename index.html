@@ -3895,6 +3895,53 @@ function rndExecRanking(){
 // ══════════════════════════════════════════════════════
 // ── EXECUTIVE DASHBOARD ──
 // ══════════════════════════════════════════════════════
+// ULTRA command card rotation state
+let _cmdKOffset=0,_cmdInterval=null,_cmdTeamTotals={},_cmdMt={};
+
+function _getCmdPool(){
+  return KKEYS.map((k,i)=>({k,lbl:KLBLS[i]})).filter(x=>isInScore(x.k));
+}
+function _cmdPcol(p){return p>=100?'#00d68f':p>=70?'#3b82f6':'#ef4444';}
+function _cmdPgr(p){
+  return p>=100?'linear-gradient(90deg,#00875a,#00d68f)':
+         p>=70 ?'linear-gradient(90deg,#0065ff,#3b82f6)':
+                'linear-gradient(90deg,#b91c1c,#ef4444)';
+}
+function _renderCmdCards(tots,mt){
+  const el=document.getElementById('ucmdCards');if(!el)return;
+  const pool=_getCmdPool();if(!pool.length)return;
+  const items=Array.from({length:4},(_,i)=>pool[(_cmdKOffset+i)%pool.length]);
+  el.innerHTML=items.map(x=>{
+    const v=tots[x.k]||0;const tgt=(mt[x.k]||1)*MEMBERS.length;const p=pct(v,tgt);
+    const vc=_cmdPcol(p);const gr=_cmdPgr(p);
+    return `<div class="ubkpi"><div class="ubkpi-stripe" style="background:${gr}"></div>`+
+      `<div class="ubkpi-lbl">${x.lbl}</div>`+
+      `<div class="ubkpi-val ux-cnt" data-ux-cnt="${v}" style="color:${vc};text-shadow:0 0 22px ${vc}88">0</div>`+
+      `<div class="ubkpi-sub">Тим цел: ${tgt}</div>`+
+      `<div class="ubkpi-bar"><div class="ubkpi-fill ux-fill" data-ux-w="${Math.min(p,100)}" style="width:0%;background:${gr}"></div></div>`+
+      `<div class="ubkpi-pct" style="color:${vc}">${p}%</div></div>`;
+  }).join('');
+  setTimeout(()=>{
+    el.querySelectorAll('.ux-cnt[data-ux-cnt]').forEach(e=>_uxCounter(e,parseInt(e.dataset.uxCnt)));
+    el.querySelectorAll('.ux-fill[data-ux-w]').forEach(e=>{e.style.width=e.dataset.uxW+'%';});
+  },50);
+}
+function _startCmdRotation(){
+  if(_cmdInterval)clearInterval(_cmdInterval);
+  _cmdInterval=setInterval(()=>{
+    const el=document.getElementById('ucmdCards');
+    if(!el){clearInterval(_cmdInterval);_cmdInterval=null;return;}
+    const pool=_getCmdPool();
+    _cmdKOffset=(_cmdKOffset+1)%pool.length;
+    el.style.transition='opacity .35s ease,transform .35s ease';
+    el.style.opacity='0';el.style.transform='translateY(-8px)';
+    setTimeout(()=>{
+      _renderCmdCards(_cmdTeamTotals,_cmdMt);
+      el.style.opacity='1';el.style.transform='translateY(0)';
+    },380);
+  },60000);
+}
+
 function _uxSparkle(e){
   const colors=['#ff2d9f','#00d4ff','#7c3aed','#00d68f','#fbbf24'];
   for(let i=0;i<4;i++){
@@ -3932,21 +3979,9 @@ function rndExecutive(){
   const teamScore=Math.round(memberData.reduce((s,mb)=>s+mb.score,0)/memberData.length);
   const projected=Math.min(999,elapsedWD>0?Math.round(teamScore/elapsedWD*wd):teamScore);
   const teamTotals=Object.fromEntries(KKEYS.map(k=>[k,MEMBERS.reduce((s,mb)=>s+mMoSum(mb.id,k,y,m),0)]));
+  _cmdTeamTotals=teamTotals; _cmdMt=mt;
 
-  // ── ULTRA command KPI cards ──
-  const _cmdKs=[
-    {k:'fmc', lbl:'FMC Cons.',  col:'#00b4d8',gr:'linear-gradient(90deg,#0065ff,#00b4d8)'},
-    {k:'post',lbl:'Postpaid',   col:'#e2007a',gr:'linear-gradient(90deg,#B8005A,#e2007a)'},
-    {k:'bb',  lbl:'Broadband',  col:'#7c3aed',gr:'linear-gradient(90deg,#5b21b6,#7c3aed)'},
-    {k:'cc',  lbl:'C&C',        col:'#00d68f',gr:'linear-gradient(90deg,#00875a,#00d68f)'},
-  ];
-  const cmdCardsHtml='<div class="ucmd-grid">'+_cmdKs.map(x=>{
-    const v=teamTotals[x.k]||0;
-    const tgt=(mt[x.k]||1)*MEMBERS.length;
-    const p=pct(v,tgt);
-    const vc=p>=100?'#00d68f':p>=70?x.col:'#ff7452';
-    return `<div class="ubkpi"><div class="ubkpi-stripe" style="background:${x.gr}"></div><div class="ubkpi-lbl">${x.lbl}</div><div class="ubkpi-val ux-cnt" data-ux-cnt="${v}" style="color:${x.col};text-shadow:0 0 22px ${x.col}99">0</div><div class="ubkpi-sub">Тим цел: ${tgt}</div><div class="ubkpi-bar"><div class="ubkpi-fill ux-fill" data-ux-w="${Math.min(p,100)}" style="width:0%;background:${x.gr}"></div></div><div class="ubkpi-pct" style="color:${vc}">${p}%</div></div>`;
-  }).join('')+'</div>';
+  const cmdCardsHtml='<div class="ucmd-grid" id="ucmdCards"></div>';
 
   // colours
   const col=s=>s>=100?'#22c55e':s>=70?'#3b82f6':'#ef4444';
@@ -4135,12 +4170,10 @@ function rndExecutive(){
     setTimeout(()=>{
       document.querySelectorAll('.xvb').forEach(b=>{b.style.width=b.dataset.p+'%';});
     },200);
-    // ULTRA command card animations
-    setTimeout(()=>{
-      document.querySelectorAll('.ux-cnt[data-ux-cnt]').forEach(el=>_uxCounter(el,parseInt(el.dataset.uxCnt)));
-      document.querySelectorAll('.ux-fill[data-ux-w]').forEach(el=>{el.style.width=el.dataset.uxW+'%';});
-    },80);
   });
+  // Render rotating command cards and start auto-rotation
+  _renderCmdCards(teamTotals,mt);
+  _startCmdRotation();
 }
 
 function _execInsights(memberData,teamScore,projected,elapsed,wd,remaining,mt,teamTotals,y,m){
