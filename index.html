@@ -466,6 +466,22 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .xvfill{height:100%;border-radius:4px;transition:width 1.3s cubic-bezier(.22,1,.36,1)}
 .xtag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
 .xnum{font-variant-numeric:tabular-nums}
+/* ══ ULTRA COMMAND KPI CARDS ══ */
+.ucmd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px}
+.ubkpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:16px 14px;position:relative;overflow:hidden;transition:all .25s;cursor:default}
+.ubkpi::after{content:'';position:absolute;top:-150%;left:-40%;width:50%;height:300%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);transform:rotate(25deg);transition:.9s;pointer-events:none}
+.ubkpi:hover::after{left:140%}
+.ubkpi:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 14px 44px rgba(0,0,0,.55);border-color:rgba(255,255,255,.2)}
+.ubkpi-stripe{position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+.ubkpi-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px}
+.ubkpi-val{font-size:36px;font-weight:900;line-height:1;letter-spacing:-1px;margin-bottom:3px}
+.ubkpi-sub{font-size:9px;color:rgba(255,255,255,.32);margin-bottom:8px}
+.ubkpi-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:5px}
+.ubkpi-fill{height:100%;border-radius:3px;transition:width 1.3s cubic-bezier(.23,1,.32,1)}
+.ubkpi-pct{font-size:12px;font-weight:800}
+.uxspk{position:fixed;pointer-events:none;z-index:9999;width:7px;height:7px;border-radius:50%;animation:uxspkA .9s ease forwards}
+@keyframes uxspkA{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-80px) scale(0);opacity:0}}
+@media(max-width:700px){.ucmd-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* ── PRO TAB ── */
 #etp-pro{padding:0 14px 20px}
@@ -3879,6 +3895,21 @@ function rndExecRanking(){
 // ══════════════════════════════════════════════════════
 // ── EXECUTIVE DASHBOARD ──
 // ══════════════════════════════════════════════════════
+function _uxSparkle(e){
+  const colors=['#ff2d9f','#00d4ff','#7c3aed','#00d68f','#fbbf24'];
+  for(let i=0;i<4;i++){
+    const s=document.createElement('div');s.className='uxspk';
+    const angle=Math.random()*Math.PI*2;const dist=20+Math.random()*40;
+    s.style.cssText=`left:${e.clientX+Math.cos(angle)*dist}px;top:${e.clientY+Math.sin(angle)*dist}px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${i*.08}s`;
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1100);
+  }
+}
+function _uxCounter(el,target){
+  let c=0;const step=Math.max(1,Math.ceil(target/55));
+  const iv=setInterval(()=>{c+=step;if(c>=target){c=target;clearInterval(iv);}el.textContent=c;},16);
+}
+document.addEventListener('click',e=>{if(e.target.closest('.ubkpi'))_uxSparkle(e);});
+
 function rndExecutive(){
   const el=document.getElementById('exec-content');if(!el)return;
   const y=cY,m=cM;
@@ -3901,6 +3932,21 @@ function rndExecutive(){
   const teamScore=Math.round(memberData.reduce((s,mb)=>s+mb.score,0)/memberData.length);
   const projected=Math.min(999,elapsedWD>0?Math.round(teamScore/elapsedWD*wd):teamScore);
   const teamTotals=Object.fromEntries(KKEYS.map(k=>[k,MEMBERS.reduce((s,mb)=>s+mMoSum(mb.id,k,y,m),0)]));
+
+  // ── ULTRA command KPI cards ──
+  const _cmdKs=[
+    {k:'fmc', lbl:'FMC Cons.',  col:'#00b4d8',gr:'linear-gradient(90deg,#0065ff,#00b4d8)'},
+    {k:'post',lbl:'Postpaid',   col:'#e2007a',gr:'linear-gradient(90deg,#B8005A,#e2007a)'},
+    {k:'bb',  lbl:'Broadband',  col:'#7c3aed',gr:'linear-gradient(90deg,#5b21b6,#7c3aed)'},
+    {k:'cc',  lbl:'C&C',        col:'#00d68f',gr:'linear-gradient(90deg,#00875a,#00d68f)'},
+  ];
+  const cmdCardsHtml='<div class="ucmd-grid">'+_cmdKs.map(x=>{
+    const v=teamTotals[x.k]||0;
+    const tgt=(mt[x.k]||1)*MEMBERS.length;
+    const p=pct(v,tgt);
+    const vc=p>=100?'#00d68f':p>=70?x.col:'#ff7452';
+    return `<div class="ubkpi"><div class="ubkpi-stripe" style="background:${x.gr}"></div><div class="ubkpi-lbl">${x.lbl}</div><div class="ubkpi-val ux-cnt" data-ux-cnt="${v}" style="color:${x.col};text-shadow:0 0 22px ${x.col}99">0</div><div class="ubkpi-sub">Тим цел: ${tgt}</div><div class="ubkpi-bar"><div class="ubkpi-fill ux-fill" data-ux-w="${Math.min(p,100)}" style="width:0%;background:${x.gr}"></div></div><div class="ubkpi-pct" style="color:${vc}">${p}%</div></div>`;
+  }).join('')+'</div>';
 
   // colours
   const col=s=>s>=100?'#22c55e':s>=70?'#3b82f6':'#ef4444';
@@ -3995,10 +4041,12 @@ function rndExecutive(){
 
   el.innerHTML=`
   <div class="xbg">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;position:relative;z-index:1">
+    ${cmdCardsHtml}
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;position:relative;z-index:1">
       <div>
-        <div style="font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px">📊 Executive Dashboard</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;font-weight:500">${mo} ${y} · МКТ Кичево</div>
+        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.28);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px">COMMAND CENTER</div>
+        <div style="font-size:20px;font-weight:900;color:#fff;letter-spacing:-.5px;background:linear-gradient(135deg,#fff 40%,rgba(184,0,90,.85));-webkit-background-clip:text;-webkit-text-fill-color:transparent">👑 Executive Dashboard</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px;font-weight:500">${mo} ${y} · МКТ Кичево</div>
       </div>
       <div class="xlive"><div class="xdot"></div>LIVE</div>
       <div style="margin-left:auto;text-align:right">
@@ -4087,6 +4135,11 @@ function rndExecutive(){
     setTimeout(()=>{
       document.querySelectorAll('.xvb').forEach(b=>{b.style.width=b.dataset.p+'%';});
     },200);
+    // ULTRA command card animations
+    setTimeout(()=>{
+      document.querySelectorAll('.ux-cnt[data-ux-cnt]').forEach(el=>_uxCounter(el,parseInt(el.dataset.uxCnt)));
+      document.querySelectorAll('.ux-fill[data-ux-w]').forEach(el=>{el.style.width=el.dataset.uxW+'%';});
+    },80);
   });
 }
 
