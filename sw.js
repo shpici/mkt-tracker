@@ -1,4 +1,4 @@
-const CACHE = 'mkt-kicevo-v13';
+const CACHE = 'mkt-kicevo-v14';
 
 // On install: skip waiting immediately, don't pre-cache anything
 self.addEventListener('install', e => {
