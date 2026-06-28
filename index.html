@@ -501,16 +501,16 @@ body.dark-mode .llogo{background:var(--mg)!important}
 @media(max-width:480px){.tgan-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){#tgTbScore{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:520px){#tgTbScore{grid-template-columns:repeat(2,1fr)}}
-.tgd-inp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:7px;padding:4px 6px;width:66px;text-align:center;font-size:12px;font-weight:600}
-.tgd-inp:focus{border-color:rgba(184,0,90,.7);background:rgba(184,0,90,.09);outline:none}
-.tgd-mo{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);transition:all .15s;font-weight:500}
-.tgd-mo.act{border-color:rgba(184,0,90,.55);background:rgba(184,0,90,.18);color:#ff2d9f;font-weight:700}
-.tgd-btn{padding:5px 11px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:rgba(255,255,255,.65);transition:all .15s}
-.tgd-btn:hover{background:rgba(255,255,255,.09)}
-.tgd-bmg{border-color:rgba(184,0,90,.5)!important;background:rgba(184,0,90,.2)!important;color:#ff2d9f!important}
-.tgd-bmg:hover{background:rgba(184,0,90,.3)!important}
-.tgd-brd{border-color:rgba(239,68,68,.35)!important;color:rgba(239,68,68,.65)!important}
-.tgd-brd:hover{background:rgba(239,68,68,.1)!important;color:#ef4444!important}
+.tgd-inp{background:var(--s2);border:1px solid var(--brd);color:var(--txt);border-radius:7px;padding:4px 6px;width:66px;text-align:center;font-size:12px;font-weight:600;transition:border .15s,background .15s}
+.tgd-inp:focus{border-color:var(--mg);background:var(--mgl);outline:none}
+.tgd-mo{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--s2);color:var(--t2);transition:all .15s;font-weight:500}
+.tgd-mo.act{border-color:var(--mg);background:var(--mgl);color:var(--mg);font-weight:700}
+.tgd-btn{padding:5px 11px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:var(--s2);color:var(--t2);transition:all .15s}
+.tgd-btn:hover{background:var(--s3)}
+.tgd-bmg{border-color:var(--mg)!important;background:var(--mgl)!important;color:var(--mg)!important}
+.tgd-bmg:hover{background:var(--mg)!important;color:#fff!important}
+.tgd-brd{border-color:var(--rd)!important;color:var(--rd)!important}
+.tgd-brd:hover{background:var(--rdl)!important}
 
 /* ── PRO TAB ── */
 #etp-pro{padding:0 14px 20px}
@@ -1114,11 +1114,11 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 
 <!-- ═══ TARGETS ═══ -->
 <div id="tp-targets" class="rlz-sub">
-<div style="background:linear-gradient(135deg,#0c0c20,#110620,#0c0c20);border:1px solid rgba(184,0,90,.2);border-radius:18px;padding:16px 15px;box-shadow:0 0 50px rgba(184,0,90,.06),0 4px 20px rgba(0,0,0,.4)">
+<div style="background:var(--sur);border:1px solid var(--brd);border-top:3px solid var(--mg);border-radius:18px;padding:16px 15px;box-shadow:var(--sh)">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
     <div style="display:flex;align-items:center;gap:7px;flex:1">
       <span style="display:block;width:20px;height:2px;background:linear-gradient(90deg,#B8005A,#ff2d9f);border-radius:1px;flex-shrink:0"></span>
-      <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.42)">⚙️ МЕСЕЧНИ ТАРГЕТИ</span>
+      <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--t2)">⚙️ МЕСЕЧНИ ТАРГЕТИ</span>
     </div>
     <div style="display:flex;gap:4px;flex-wrap:wrap">
       <button class="tgd-btn tgd-bmg" id="tgSaveBtn" onclick="const b=this;saveTgt().then(()=>{b.textContent='✓ SAVED';setTimeout(()=>{b.textContent='💾 SAVE';},2200);})">💾 SAVE</button>
@@ -1127,11 +1127,11 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
     </div>
   </div>
   <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
-    <span style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-right:3px">МЕСЕЦ</span>
+    <span style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);margin-right:3px">МЕСЕЦ</span>
     <div id="tgMoBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
     <div style="display:flex;align-items:center;gap:4px;margin-left:10px">
       <button class="tgd-btn" style="padding:2px 7px;font-size:12px" onclick="chgTgYr(-1)">‹</button>
-      <span id="tgYrLbl" style="font-size:11px;font-weight:700;min-width:36px;text-align:center;color:rgba(255,255,255,.7)"></span>
+      <span id="tgYrLbl" style="font-size:11px;font-weight:700;min-width:36px;text-align:center;color:var(--txt)"></span>
       <button class="tgd-btn" style="padding:2px 7px;font-size:12px" onclick="chgTgYr(1)">›</button>
     </div>
   </div>
@@ -1139,7 +1139,7 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
   <div id="tgTbScore" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px"></div>
   <div id="tgTbOff" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:7px"></div>
   <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:12px">
-    <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:9px">ЗАЧУВАНИ ТАРГЕТИ</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:9px">ЗАЧУВАНИ ТАРГЕТИ</div>
     <div id="tgAll"></div>
   </div>
 </div>
@@ -5103,27 +5103,25 @@ function rndTgTbl(){
     const perEmp=Math.round(mv/5*10)/10;const on=isInScore(k);
     const annV=Array.from({length:12},(_,j)=>{const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(j+1)]||tyr[j+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);
     if(on){
-      sH+=`<div style="background:rgba(255,255,255,.05);border:1px solid rgba(184,0,90,.2);border-radius:14px;padding:14px 12px 12px;position:relative;overflow:hidden;transition:box-shadow .2s">
-        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#B8005A,#ff2d9f)"></div>
-        <div style="font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:10px">${KLBLS[i]}</div>
+      sH+=`<div style="background:var(--sur);border:1px solid var(--brd);border-top:3px solid var(--mg);border-radius:14px;padding:14px 12px 12px;position:relative;box-shadow:var(--sh);transition:box-shadow .2s">
+        <div style="font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mg);margin-bottom:10px">${KLBLS[i]}</div>
         <input type="number" min="0" id="tg_${k}" value="${mv}" class="tgd-inp" style="width:100%;box-sizing:border-box;font-size:26px;font-weight:800;padding:8px 4px;letter-spacing:-1px" oninput="updTgPv('${k}',${wd})">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px">
-          <span style="font-size:9px;color:rgba(255,255,255,.22)">Год: <b id="ann_${k}" style="color:rgba(255,255,255,.42)">${annV}</b></span>
-          <span style="font-size:11px;font-weight:800;color:#ff2d9f">÷5&thinsp;=&thinsp;<span id="pe_${k}">${perEmp}</span></span>
+          <span style="font-size:9px;color:var(--t3)">Год: <b id="ann_${k}" style="color:var(--bl)">${annV}</b></span>
+          <span style="font-size:11px;font-weight:800;color:var(--mg)">÷5&thinsp;=&thinsp;<span id="pe_${k}">${perEmp}</span></span>
         </div>
         <div style="display:flex;gap:8px;margin-top:5px">
-          <span style="font-size:9px;color:rgba(255,255,255,.22)" id="dt_${k}">${dv}/ден</span>
-          <span style="font-size:9px;color:rgba(255,255,255,.22)" id="wt_${k}">${wv}/нед</span>
+          <span style="font-size:9px;color:var(--gr);font-weight:600" id="dt_${k}">${dv}/ден</span>
+          <span style="font-size:9px;color:var(--t3)" id="wt_${k}">${wv}/нед</span>
         </div>
       </div>`;
     } else {
-      oH+=`<div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:10px 10px 9px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.07)"></div>
-        <div style="font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${KLBLS[i]}</div>
+      oH+=`<div style="background:var(--s2);border:1px solid var(--brd);border-left:2px solid var(--mg);border-radius:11px;padding:10px 10px 9px;position:relative">
+        <div style="font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${KLBLS[i]}</div>
         <input type="number" min="0" id="tg_${k}" value="${mv}" class="tgd-inp" style="width:100%;box-sizing:border-box;font-size:18px;font-weight:700;padding:5px 4px" oninput="updTgPv('${k}',${wd})">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-          <span style="font-size:8px;color:rgba(255,255,255,.2)" id="dt_${k}">${dv}/ден</span>
-          <span style="font-size:9px;font-weight:700;color:rgba(255,100,180,.55)">÷5=<span id="pe_${k}">${perEmp}</span></span>
+          <span style="font-size:8px;color:var(--gr);font-weight:600" id="dt_${k}">${dv}/ден</span>
+          <span style="font-size:9px;font-weight:700;color:var(--mg)">÷5=<span id="pe_${k}">${perEmp}</span></span>
         </div>
         <span id="ann_${k}" style="display:none">${annV}</span><span id="wt_${k}" style="display:none">${wv}</span>
       </div>`;
@@ -5164,13 +5162,13 @@ function rndAllTgs(){
     });
   });
   const yrs=Object.keys(normalized).map(Number).sort((a,b)=>a-b);
-  if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.3);padding:8px 4px">Нема зачувани таргети. Внеси таргет за месецот и зачувај.</div>';return;}
+  if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:var(--t3);padding:8px 4px">Нема зачувани таргети. Внеси таргет за месецот и зачувај.</div>';return;}
   let h='<div style="display:flex;flex-direction:column;gap:10px">';
   yrs.forEach(yr=>{
     const months=Object.keys(normalized[yr]).map(Number).sort((a,b)=>a-b);
     if(!months.length)return;
     h+=`<div>
-      <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;color:rgba(184,0,90,.7);text-transform:uppercase;margin-bottom:6px">📅 ${yr}</div>
+      <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;color:var(--mg);text-transform:uppercase;margin-bottom:6px">📅 ${yr}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">`;
     months.forEach(mn=>{
       const t=normalized[yr][mn];
@@ -5178,10 +5176,10 @@ function rndAllTgs(){
       const mnName=MKM[mn-1]||'М'+mn;
       const kpiRows=KKEYS.map((k,i)=>{
         const v=t[k]??0;const on=isInScore(k);
-        return '<div style="color:'+(on?'rgba(255,255,255,.65)':'rgba(255,255,255,.25)')+';opacity:'+(on?1:0.7)+'">'+KLBLS[i]+': <b style="color:'+(on?'#fff':'rgba(255,255,255,.3)')+'">'+v+'</b></div>';
+        return '<div style="color:'+(on?'var(--txt)':'var(--t3)')+';opacity:'+(on?1:0.65)+'">'+KLBLS[i]+': <b style="color:'+(on?'var(--bl)':'var(--t3)')+'">'+v+'</b></div>';
       }).join('');
-      h+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:9px 12px;font-size:10px;min-width:130px">'
-        +'<div style="font-weight:700;color:#ff2d9f;margin-bottom:5px;font-size:11px">'+mnName+' '+yr+'</div>'
+      h+='<div style="background:var(--s2);border:1px solid var(--brd);border-top:2px solid var(--mg);border-radius:12px;padding:9px 12px;font-size:10px;min-width:130px">'
+        +'<div style="font-weight:700;color:var(--mg);margin-bottom:5px;font-size:11px">'+mnName+' '+yr+'</div>'
         +kpiRows
         +'<button onclick="delTg('+yr+','+mn+')" class="tgd-btn tgd-brd" style="margin-top:6px">🗑 Избриши</button>'
         +'</div>';
