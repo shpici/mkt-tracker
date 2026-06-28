@@ -499,6 +499,16 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .tgan-chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .2s;user-select:none}
 @media(max-width:800px){.tgan-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.tgan-grid{grid-template-columns:repeat(2,1fr)}}
+.tgd-inp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:7px;padding:4px 6px;width:66px;text-align:center;font-size:12px;font-weight:600}
+.tgd-inp:focus{border-color:rgba(184,0,90,.7);background:rgba(184,0,90,.09);outline:none}
+.tgd-mo{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);transition:all .15s;font-weight:500}
+.tgd-mo.act{border-color:rgba(184,0,90,.55);background:rgba(184,0,90,.18);color:#ff2d9f;font-weight:700}
+.tgd-btn{padding:5px 11px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:rgba(255,255,255,.65);transition:all .15s}
+.tgd-btn:hover{background:rgba(255,255,255,.09)}
+.tgd-bmg{border-color:rgba(184,0,90,.5)!important;background:rgba(184,0,90,.2)!important;color:#ff2d9f!important}
+.tgd-bmg:hover{background:rgba(184,0,90,.3)!important}
+.tgd-brd{border-color:rgba(239,68,68,.35)!important;color:rgba(239,68,68,.65)!important}
+.tgd-brd:hover{background:rgba(239,68,68,.1)!important;color:#ef4444!important}
 
 /* ── PRO TAB ── */
 #etp-pro{padding:0 14px 20px}
@@ -1102,36 +1112,41 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
 
 <!-- ═══ TARGETS ═══ -->
 <div id="tp-targets" class="rlz-sub">
-<div class="card">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-    <div><div style="font-size:14px;font-weight:700">⚙️ Месечни таргети</div></div>
-    <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap">
-      <button class="btn bmg" id="tgSaveBtn" onclick="
-  const b=this;
-  saveTgt().then(()=>{
-    b.textContent='✓ SAVED';
-    b.style.background='#16a34a';
-    setTimeout(()=>{b.textContent='💾 SAVE';b.style.background='';},2500);
-  });
-">💾 SAVE</button>
-      <button class="btn" onclick="cpyPrev()">📋 Копирај претх.</button>
-      <button class="btn" onclick="delTgCurr()" style="color:var(--rd)">🗑 Избриши</button>
+<div style="background:linear-gradient(135deg,#0c0c20,#110620,#0c0c20);border:1px solid rgba(184,0,90,.2);border-radius:18px;padding:16px 15px;box-shadow:0 0 50px rgba(184,0,90,.06),0 4px 20px rgba(0,0,0,.4)">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:7px;flex:1">
+      <span style="display:block;width:20px;height:2px;background:linear-gradient(90deg,#B8005A,#ff2d9f);border-radius:1px;flex-shrink:0"></span>
+      <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.42)">⚙️ МЕСЕЧНИ ТАРГЕТИ</span>
+    </div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap">
+      <button class="tgd-btn tgd-bmg" id="tgSaveBtn" onclick="const b=this;saveTgt().then(()=>{b.textContent='✓ SAVED';setTimeout(()=>{b.textContent='💾 SAVE';},2200);})">💾 SAVE</button>
+      <button class="tgd-btn" onclick="cpyPrev()">📋 Копирај</button>
+      <button class="tgd-btn tgd-brd" onclick="delTgCurr()">🗑</button>
     </div>
   </div>
-  <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:9px">
-    <span class="nl">Месец:</span><div id="tgMoBtns" style="display:flex;gap:2px;flex-wrap:wrap"></div>
-    <span class="nl" style="margin-left:7px">Год.:</span>
-    <button class="na" onclick="chgTgYr(-1)">‹</button>
-    <span id="tgYrLbl" style="font-size:12px;font-weight:700;min-width:38px;text-align:center"></span>
-    <button class="na" onclick="chgTgYr(1)">›</button>
+  <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+    <span style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-right:3px">МЕСЕЦ</span>
+    <div id="tgMoBtns" style="display:flex;gap:3px;flex-wrap:wrap"></div>
+    <div style="display:flex;align-items:center;gap:4px;margin-left:10px">
+      <button class="tgd-btn" style="padding:2px 7px;font-size:12px" onclick="chgTgYr(-1)">‹</button>
+      <span id="tgYrLbl" style="font-size:11px;font-weight:700;min-width:36px;text-align:center;color:rgba(255,255,255,.7)"></span>
+      <button class="tgd-btn" style="padding:2px 7px;font-size:12px" onclick="chgTgYr(1)">›</button>
+    </div>
   </div>
-  <div id="tgBadge" style="margin-bottom:8px"></div>
-  <div class="tw"><table style="min-width:460px">
-    <thead><tr><th style="text-align:left;padding-left:10px;min-width:130px">KPI</th><th>Годишен<br><span style="font-weight:400;font-size:9px">(вкупно)</span></th><th>Месечен<br><span style="font-weight:400;font-size:9px">(вкупно)</span></th><th style="background:var(--mgl);color:var(--mgd)">По вработен<br><span style="font-weight:400;font-size:9px">÷ 5</span></th><th>Дневен</th><th>Неделен</th><th>Default</th></tr></thead>
+  <div id="tgBadge" style="margin-bottom:9px"></div>
+  <div class="tw"><table style="min-width:400px;width:100%">
+    <thead><tr style="background:rgba(255,255,255,.04)">
+      <th style="text-align:left;padding:6px 8px;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.35);min-width:110px">KPI</th>
+      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Годишен</th>
+      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Месечен</th>
+      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#ff2d9f;padding:6px 8px;background:rgba(184,0,90,.1)">По враб. ÷5</th>
+      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Дневен</th>
+      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Неделен</th>
+    </tr></thead>
     <tbody id="tgTb"></tbody>
   </table></div>
-  <div style="margin-top:14px;border-top:1px solid var(--brd);padding-top:12px">
-    <div style="font-size:11px;font-weight:700;margin-bottom:8px">Зачувани таргети</div>
+  <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:12px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:9px">ЗАЧУВАНИ ТАРГЕТИ</div>
     <div id="tgAll"></div>
   </div>
 </div>
@@ -5080,26 +5095,25 @@ function rndOfiAnalytics(inv){
 // ── TARGETS ──
 let _tgAnEmp=null;
 function rndTgts(){tgY=cY;tgM=cM;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();rndAllTgs();rndTgAnalysis();}
-function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='nb'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .nb').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();rndTgAnalysis();};c.appendChild(b);});}
+function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='tgd-mo'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .tgd-mo').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();rndTgAnalysis();};c.appendChild(b);});}
 window.chgTgYr=d=>{tgY+=d;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();rndTgAnalysis();};
 function rndTgTbl(){
   const tb=document.getElementById('tgTb');const wd=getWDs(tgY,tgM).length;const _tyr=TS[tgY]||TS[String(tgY)];
   const _texact=_tyr?(_tyr[tgM]||_tyr[String(tgM)]):null;
   const cur=_texact?{..._texact}:getMT(tgY,tgM);
   const bdg=document.getElementById('tgBadge');
-  bdg.innerHTML=_texact?`<span class="bdgr" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span class="bdrd" style="padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block">⚠️ Default за ${MKM[tgM-1]} ${tgY}</span>`;
+  bdg.innerHTML=_texact?`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block;background:rgba(0,214,143,.12);color:#00d68f;border:1px solid rgba(0,214,143,.25)">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block;background:rgba(239,68,68,.1);color:rgba(239,68,68,.75);border:1px solid rgba(239,68,68,.2)">⚠️ Default за ${MKM[tgM-1]} ${tgY}</span>`;
   tb.innerHTML='';
   KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);const on=isInScore(k);const perEmp=Math.round(mv/5*10)/10;
     // Sum all 12 months for annual
     const annV=Array.from({length:12},(_,i)=>{const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(i+1)]||tyr[i+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);
-    tb.innerHTML+=`<tr style="opacity:${on?1:.55}">
-      <td style="text-align:left;padding-left:10px;font-weight:600;font-size:11px">${KLBLS[i]}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td>
-      <td style="font-size:12px;font-weight:700;color:var(--t2);text-align:center" id="ann_${k}">${annV}</td>
-      <td><input type="number" min="0" id="tg_${k}" value="${mv}" class="ti" oninput="updTgPv('${k}',${wd})"></td>
-      <td style="background:var(--mgl);color:var(--mgd);font-weight:700;font-size:12px;text-align:center" id="pe_${k}">${perEmp}</td>
-      <td style="font-size:11px;color:var(--t2)" id="dt_${k}">${dv}/ден</td>
-      <td style="font-size:11px;color:var(--t2)" id="wt_${k}">${wv}/нед</td>
-      <td style="font-size:10px;color:var(--t3)">${DTGT[k]}</td>
+    tb.innerHTML+=`<tr style="opacity:${on?1:.5};border-bottom:1px solid rgba(255,255,255,.05)">
+      <td style="text-align:left;padding:7px 8px;font-weight:600;font-size:11px;color:rgba(255,255,255,${on?.85:.45})">${KLBLS[i]}${on?'':' <span style="font-size:8px;color:rgba(255,255,255,.25)">(OFF)</span>'}</td>
+      <td style="font-size:11px;font-weight:700;color:rgba(255,255,255,.45);text-align:center;padding:7px 4px" id="ann_${k}">${annV}</td>
+      <td style="padding:5px 4px;text-align:center"><input type="number" min="0" id="tg_${k}" value="${mv}" class="tgd-inp" oninput="updTgPv('${k}',${wd})"></td>
+      <td style="font-weight:700;font-size:12px;text-align:center;padding:7px 4px;color:#ff2d9f" id="pe_${k}">${perEmp}</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;padding:7px 4px" id="dt_${k}">${dv}/ден</td>
+      <td style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;padding:7px 4px" id="wt_${k}">${wv}/нед</td>
     </tr>`;});
 }
 window.updTgPv=(k,wd)=>{const v=parseInt(document.getElementById('tg_'+k).value)||0;document.getElementById('dt_'+k).textContent=(wd>0?(v/wd).toFixed(2):0)+'/ден';document.getElementById('wt_'+k).textContent=(wd>0?(v/wd*5).toFixed(1):0)+'/нед';const ae=document.getElementById('ann_'+k);if(ae){const annSum=Array.from({length:12},(_,i)=>{if(i+1===tgM)return v;const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(i+1)]||tyr[i+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);ae.textContent=annSum;}const pe=document.getElementById('pe_'+k);if(pe)pe.textContent=Math.round(v/5*10)/10;};
@@ -5135,13 +5149,13 @@ function rndAllTgs(){
     });
   });
   const yrs=Object.keys(normalized).map(Number).sort((a,b)=>a-b);
-  if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:var(--t3)">Нема зачувани таргети. Внеси таргет за месецот и зачувај.</div>';return;}
+  if(!yrs.length){el.innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.3);padding:8px 4px">Нема зачувани таргети. Внеси таргет за месецот и зачувај.</div>';return;}
   let h='<div style="display:flex;flex-direction:column;gap:10px">';
   yrs.forEach(yr=>{
     const months=Object.keys(normalized[yr]).map(Number).sort((a,b)=>a-b);
     if(!months.length)return;
     h+=`<div>
-      <div style="font-size:11px;font-weight:700;color:var(--mg);margin-bottom:6px">📅 ${yr}</div>
+      <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;color:rgba(184,0,90,.7);text-transform:uppercase;margin-bottom:6px">📅 ${yr}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">`;
     months.forEach(mn=>{
       const t=normalized[yr][mn];
@@ -5149,12 +5163,12 @@ function rndAllTgs(){
       const mnName=MKM[mn-1]||'М'+mn;
       const kpiRows=KKEYS.map((k,i)=>{
         const v=t[k]??0;const on=isInScore(k);
-        return '<div style="color:'+(on?'var(--t2)':'var(--t3)')+';opacity:'+(on?1:0.6)+'">'+KLBLS[i]+': <b style="color:'+(on?'var(--txt)':'var(--t3)')+'">'+v+'</b></div>';
+        return '<div style="color:'+(on?'rgba(255,255,255,.65)':'rgba(255,255,255,.25)')+';opacity:'+(on?1:0.7)+'">'+KLBLS[i]+': <b style="color:'+(on?'#fff':'rgba(255,255,255,.3)')+'">'+v+'</b></div>';
       }).join('');
-      h+='<div style="background:var(--s2);border:1px solid var(--brd);border-radius:var(--rs);padding:8px 12px;font-size:10px;min-width:130px">'
-        +'<div style="font-weight:700;color:var(--mg);margin-bottom:4px;font-size:11px">'+mnName+' '+yr+'</div>'
+      h+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:9px 12px;font-size:10px;min-width:130px">'
+        +'<div style="font-weight:700;color:#ff2d9f;margin-bottom:5px;font-size:11px">'+mnName+' '+yr+'</div>'
         +kpiRows
-        +'<button onclick="delTg('+yr+','+mn+')" style="margin-top:5px;font-size:9px;color:var(--rd);background:none;border:none;cursor:pointer;padding:0">🗑 Избриши</button>'
+        +'<button onclick="delTg('+yr+','+mn+')" class="tgd-btn tgd-brd" style="margin-top:6px">🗑 Избриши</button>'
         +'</div>';
     });
     h+='</div></div>';
