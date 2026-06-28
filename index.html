@@ -5156,7 +5156,9 @@ window.delTg=async(yr,mn)=>{
 };
 window.delTgCurr=()=>window.delTg(tgY,tgM);
 function rndTgAnalysis(){
-  const y=tgY,mo=tgM,mt=getMT(y,mo);
+  const y=tgY,mo=tgM;
+  const _tyr2=TS[y]||TS[String(y)];const _tex2=_tyr2?(_tyr2[mo]||_tyr2[String(mo)]):null;
+  const mt=_tex2?{..._tex2}:getMT(y,mo);
   const anEl=document.getElementById('tgAnMoLbl');if(anEl)anEl.textContent='— '+MKM[mo-1]+' '+y;
   const allK=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]}));
   const MS=[70,80,90,100,110];
@@ -5189,7 +5191,9 @@ function _rndTgEmpTbl(){
   const empEl=document.getElementById('tgAnEmp');if(!empEl)return;
   if(!_tgAnEmp){empEl.innerHTML='<div style="font-size:11px;color:var(--t3);padding:4px 0">↑ Кликни на вработена за детален преглед</div>';return;}
   const mem=MEMBERS.find(m=>m.id===_tgAnEmp);if(!mem){empEl.innerHTML='';return;}
-  const y=tgY,mo=tgM,mt=getMT(y,mo);
+  const y=tgY,mo=tgM;
+  const _tyr3=TS[y]||TS[String(y)];const _tex3=_tyr3?(_tyr3[mo]||_tyr3[String(mo)]):null;
+  const mt=_tex3?{..._tex3}:getMT(y,mo);
   const MS=[70,80,90,100,110];
   const allK=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]}));
   const _th=`<thead><tr><th style="text-align:left;padding-left:8px;min-width:100px">KPI</th><th style="min-width:52px">Пост.</th><th style="min-width:48px">Таргет</th><th style="min-width:40px">%</th>${MS.map(ms=>`<th style="font-size:9px;min-width:40px">До ${ms}%</th>`).join('')}</tr></thead>`;
