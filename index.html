@@ -499,6 +499,8 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .tgan-chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .2s;user-select:none}
 @media(max-width:800px){.tgan-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.tgan-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){#tgTbScore{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){#tgTbScore{grid-template-columns:repeat(2,1fr)}}
 .tgd-inp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:7px;padding:4px 6px;width:66px;text-align:center;font-size:12px;font-weight:600}
 .tgd-inp:focus{border-color:rgba(184,0,90,.7);background:rgba(184,0,90,.09);outline:none}
 .tgd-mo{padding:3px 8px;border-radius:7px;font-size:10px;cursor:pointer;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);transition:all .15s;font-weight:500}
@@ -1133,18 +1135,9 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
       <button class="tgd-btn" style="padding:2px 7px;font-size:12px" onclick="chgTgYr(1)">›</button>
     </div>
   </div>
-  <div id="tgBadge" style="margin-bottom:9px"></div>
-  <div class="tw"><table style="min-width:400px;width:100%">
-    <thead><tr style="background:rgba(255,255,255,.04)">
-      <th style="text-align:left;padding:6px 8px;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.35);min-width:110px">KPI</th>
-      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Годишен</th>
-      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Месечен</th>
-      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#ff2d9f;padding:6px 8px;background:rgba(184,0,90,.1)">По враб. ÷5</th>
-      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Дневен</th>
-      <th style="font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);padding:6px 8px">Неделен</th>
-    </tr></thead>
-    <tbody id="tgTb"></tbody>
-  </table></div>
+  <div id="tgBadge" style="margin-bottom:12px"></div>
+  <div id="tgTbScore" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px"></div>
+  <div id="tgTbOff" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:7px"></div>
   <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:12px">
     <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:9px">ЗАЧУВАНИ ТАРГЕТИ</div>
     <div id="tgAll"></div>
@@ -5098,23 +5091,45 @@ function rndTgts(){tgY=cY;tgM=cM;document.getElementById('tgYrLbl').textContent=
 function rndTgMo(){const c=document.getElementById('tgMoBtns');c.innerHTML='';MKM.forEach((mn,i)=>{const b=document.createElement('button');b.className='tgd-mo'+(i+1===tgM?' act':'');b.textContent=mn.substring(0,3);b.title=mn;b.onclick=()=>{tgM=i+1;document.querySelectorAll('#tgMoBtns .tgd-mo').forEach((x,j)=>x.classList.toggle('act',j===i));rndTgTbl();rndTgAnalysis();};c.appendChild(b);});}
 window.chgTgYr=d=>{tgY+=d;document.getElementById('tgYrLbl').textContent=tgY;rndTgMo();rndTgTbl();rndTgAnalysis();};
 function rndTgTbl(){
-  const tb=document.getElementById('tgTb');const wd=getWDs(tgY,tgM).length;const _tyr=TS[tgY]||TS[String(tgY)];
+  const scoreEl=document.getElementById('tgTbScore');const offEl=document.getElementById('tgTbOff');
+  const wd=getWDs(tgY,tgM).length;const _tyr=TS[tgY]||TS[String(tgY)];
   const _texact=_tyr?(_tyr[tgM]||_tyr[String(tgM)]):null;
   const cur=_texact?{..._texact}:getMT(tgY,tgM);
   const bdg=document.getElementById('tgBadge');
   bdg.innerHTML=_texact?`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block;background:rgba(0,214,143,.12);color:#00d68f;border:1px solid rgba(0,214,143,.25)">✅ Зачуван за ${MKM[tgM-1]} ${tgY}</span>`:`<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block;background:rgba(239,68,68,.1);color:rgba(239,68,68,.75);border:1px solid rgba(239,68,68,.2)">⚠️ Default за ${MKM[tgM-1]} ${tgY}</span>`;
-  tb.innerHTML='';
-  KKEYS.forEach((k,i)=>{const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);const on=isInScore(k);const perEmp=Math.round(mv/5*10)/10;
-    // Sum all 12 months for annual
-    const annV=Array.from({length:12},(_,i)=>{const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(i+1)]||tyr[i+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);
-    tb.innerHTML+=`<tr style="opacity:${on?1:.5};border-bottom:1px solid rgba(255,255,255,.05)">
-      <td style="text-align:left;padding:7px 8px;font-weight:600;font-size:11px;color:rgba(255,255,255,${on?.85:.45})">${KLBLS[i]}${on?'':' <span style="font-size:8px;color:rgba(255,255,255,.25)">(OFF)</span>'}</td>
-      <td style="font-size:11px;font-weight:700;color:rgba(255,255,255,.45);text-align:center;padding:7px 4px" id="ann_${k}">${annV}</td>
-      <td style="padding:5px 4px;text-align:center"><input type="number" min="0" id="tg_${k}" value="${mv}" class="tgd-inp" oninput="updTgPv('${k}',${wd})"></td>
-      <td style="font-weight:700;font-size:12px;text-align:center;padding:7px 4px;color:#ff2d9f" id="pe_${k}">${perEmp}</td>
-      <td style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;padding:7px 4px" id="dt_${k}">${dv}/ден</td>
-      <td style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;padding:7px 4px" id="wt_${k}">${wv}/нед</td>
-    </tr>`;});
+  let sH='',oH='';
+  KKEYS.forEach((k,i)=>{
+    const mv=cur[k]||0;const dv=(wd>0?mv/wd:0).toFixed(2);const wv=(wd>0?mv/wd*5:0).toFixed(1);
+    const perEmp=Math.round(mv/5*10)/10;const on=isInScore(k);
+    const annV=Array.from({length:12},(_,j)=>{const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(j+1)]||tyr[j+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);
+    if(on){
+      sH+=`<div style="background:rgba(255,255,255,.05);border:1px solid rgba(184,0,90,.2);border-radius:14px;padding:14px 12px 12px;position:relative;overflow:hidden;transition:box-shadow .2s">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#B8005A,#ff2d9f)"></div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:10px">${KLBLS[i]}</div>
+        <input type="number" min="0" id="tg_${k}" value="${mv}" class="tgd-inp" style="width:100%;box-sizing:border-box;font-size:26px;font-weight:800;padding:8px 4px;letter-spacing:-1px" oninput="updTgPv('${k}',${wd})">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px">
+          <span style="font-size:9px;color:rgba(255,255,255,.22)">Год: <b id="ann_${k}" style="color:rgba(255,255,255,.42)">${annV}</b></span>
+          <span style="font-size:11px;font-weight:800;color:#ff2d9f">÷5&thinsp;=&thinsp;<span id="pe_${k}">${perEmp}</span></span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:5px">
+          <span style="font-size:9px;color:rgba(255,255,255,.22)" id="dt_${k}">${dv}/ден</span>
+          <span style="font-size:9px;color:rgba(255,255,255,.22)" id="wt_${k}">${wv}/нед</span>
+        </div>
+      </div>`;
+    } else {
+      oH+=`<div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:10px 10px 9px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.07)"></div>
+        <div style="font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${KLBLS[i]}</div>
+        <input type="number" min="0" id="tg_${k}" value="${mv}" class="tgd-inp" style="width:100%;box-sizing:border-box;font-size:18px;font-weight:700;padding:5px 4px" oninput="updTgPv('${k}',${wd})">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <span style="font-size:8px;color:rgba(255,255,255,.2)" id="dt_${k}">${dv}/ден</span>
+          <span style="font-size:9px;font-weight:700;color:rgba(255,100,180,.55)">÷5=<span id="pe_${k}">${perEmp}</span></span>
+        </div>
+        <span id="ann_${k}" style="display:none">${annV}</span><span id="wt_${k}" style="display:none">${wv}</span>
+      </div>`;
+    }
+  });
+  if(scoreEl)scoreEl.innerHTML=sH;if(offEl)offEl.innerHTML=oH;
 }
 window.updTgPv=(k,wd)=>{const v=parseInt(document.getElementById('tg_'+k).value)||0;document.getElementById('dt_'+k).textContent=(wd>0?(v/wd).toFixed(2):0)+'/ден';document.getElementById('wt_'+k).textContent=(wd>0?(v/wd*5).toFixed(1):0)+'/нед';const ae=document.getElementById('ann_'+k);if(ae){const annSum=Array.from({length:12},(_,i)=>{if(i+1===tgM)return v;const tyr=TS[String(tgY)]||TS[tgY]||{};const tmo=tyr[String(i+1)]||tyr[i+1]||{};return tmo[k]||0;}).reduce((a,b)=>a+b,0);ae.textContent=annSum;}const pe=document.getElementById('pe_'+k);if(pe)pe.textContent=Math.round(v/5*10)/10;};
 window.saveTgt=async()=>{
