@@ -482,6 +482,23 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .uxspk{position:fixed;pointer-events:none;z-index:9999;width:7px;height:7px;border-radius:50%;animation:uxspkA .9s ease forwards}
 @keyframes uxspkA{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-80px) scale(0);opacity:0}}
 @media(max-width:700px){.ucmd-grid{grid-template-columns:repeat(2,1fr)}}
+.tgan-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tgan-grid-sm{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:5px;margin-top:8px;opacity:.55}
+.tgan-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 12px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:default}
+.tgan-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.65)}
+.tgan-card-sm{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:8px 10px;position:relative;overflow:hidden}
+.tgan-stripe{position:absolute;top:0;left:0;right:0;height:3px}
+.tgan-lbl{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px}
+.tgan-val{font-size:26px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.tgan-tgt{font-size:10px;color:rgba(255,255,255,.3);margin:3px 0 7px}
+.tgan-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-bottom:7px;overflow:hidden}
+.tgan-bar-fill{height:100%;border-radius:2px;transition:width .7s ease}
+.tgan-pct{font-size:16px;font-weight:800;margin-bottom:7px;font-variant-numeric:tabular-nums}
+.tgan-ms-row{display:flex;gap:3px;flex-wrap:wrap}
+.tgan-ms-pill{font-size:8px;font-weight:700;padding:2px 5px;border-radius:6px;display:inline-block}
+.tgan-chip{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .2s;user-select:none}
+@media(max-width:800px){.tgan-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.tgan-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* ── PRO TAB ── */
 #etp-pro{padding:0 14px 20px}
@@ -1118,18 +1135,18 @@ body.emp-mode #aiPanel,body.emp-mode #aiToggle{display:none!important}
     <div id="tgAll"></div>
   </div>
 </div>
-<div class="card" style="margin-top:10px">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-    <div style="font-size:13px;font-weight:700">📊 Анализа</div>
-    <div style="font-size:11px;color:var(--t2);font-weight:600" id="tgAnMoLbl"></div>
+<div style="margin-top:10px;background:linear-gradient(135deg,#0b0b1f,#130821,#0b0b1f);border:1px solid rgba(184,0,90,.22);border-radius:18px;padding:18px 16px;box-shadow:0 0 60px rgba(184,0,90,.07),0 4px 24px rgba(0,0,0,.4)">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+    <span style="display:block;width:22px;height:2px;background:linear-gradient(90deg,#B8005A,#ff2d9f);border-radius:1px;flex-shrink:0"></span>
+    <span style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45)">📊 АНАЛИЗА</span>
+    <span style="font-size:11px;color:#ff2d9f;font-weight:700;opacity:.85" id="tgAnMoLbl"></span>
   </div>
-  <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Салон — вкупно</div>
-  <div class="tw" id="tgAnSalon"></div>
-  <div style="margin-top:14px;border-top:1px solid var(--brd);padding-top:10px">
-    <div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px">По вработена</div>
-    <div id="tgEmpChips" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px"></div>
-    <div id="tgAnEmp"></div>
-  </div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:9px">САЛОН — ВКУПНО</div>
+  <div id="tgAnSalon"></div>
+  <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(184,0,90,.3),transparent);margin:14px 0"></div>
+  <div style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:9px">ПО ВРАБОТЕНА</div>
+  <div id="tgEmpChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
+  <div id="tgAnEmp"></div>
 </div>
 </div>
 
@@ -5155,57 +5172,57 @@ window.delTg=async(yr,mn)=>{
   await svCfg('targets',TS);rndTgTbl();rndAllTgs();rndTgAnalysis();
 };
 window.delTgCurr=()=>window.delTg(tgY,tgM);
+function _tgKpiCard(lbl,cur,tgt,big){
+  const MS=[70,80,90,100,110],p=pct(cur,tgt||1),col=_cmdPcol(p),gr=_cmdPgr(p);
+  const pills=MS.map(ms=>{const n=Math.max(0,Math.ceil(tgt*ms/100)-cur);return n===0?`<span class="tgan-ms-pill" style="background:rgba(0,214,143,.13);color:#00d68f;border:1px solid rgba(0,214,143,.22)">${ms}%&nbsp;✓</span>`:`<span class="tgan-ms-pill" style="background:rgba(255,255,255,.04);color:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.07)">${ms}%&nbsp;<b style="color:rgba(255,255,255,.48)">-${n}</b></span>`;}).join('');
+  if(big)return`<div class="tgan-card"><div class="tgan-stripe" style="background:${gr}"></div><div class="tgan-lbl">${lbl}</div><div class="tgan-val">${cur}</div><div class="tgan-tgt">/ ${tgt} таргет</div><div class="tgan-bar"><div class="tgan-bar-fill" style="width:${Math.min(cur/(tgt||1)*100,100)}%;background:${gr}"></div></div><div class="tgan-pct" style="color:${col};text-shadow:0 0 14px ${col}55">${p}%</div><div class="tgan-ms-row">${pills}</div></div>`;
+  return`<div class="tgan-card-sm"><div class="tgan-stripe" style="background:${gr}"></div><div style="font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:3px">${lbl}</div><div style="display:flex;align-items:center;gap:5px"><span style="font-size:15px;font-weight:700;color:rgba(255,255,255,.7)">${cur}</span><span style="font-size:9px;color:rgba(255,255,255,.2)">/${tgt}</span><span style="font-size:10px;font-weight:800;color:${col};margin-left:auto;text-shadow:0 0 8px ${col}44">${p}%</span></div></div>`;
+}
 function rndTgAnalysis(){
   const y=tgY,mo=tgM;
   const _tyr2=TS[y]||TS[String(y)];const _tex2=_tyr2?(_tyr2[mo]||_tyr2[String(mo)]):null;
   const mt=_tex2?{..._tex2}:getMT(y,mo);
   const anEl=document.getElementById('tgAnMoLbl');if(anEl)anEl.textContent='— '+MKM[mo-1]+' '+y;
-  const allK=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]}));
-  const MS=[70,80,90,100,110];
-  const _th=`<thead><tr><th style="text-align:left;padding-left:8px;min-width:100px">KPI</th><th style="min-width:52px">Пост.</th><th style="min-width:48px">Таргет</th><th style="min-width:40px">%</th>${MS.map(ms=>`<th style="font-size:9px;min-width:40px">До ${ms}%</th>`).join('')}</tr></thead>`;
-  // Salon table
+  const scoreKs=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]})).filter(x=>isInScore(x.k));
+  const offKs=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]})).filter(x=>!isInScore(x.k));
+  // Salon cards
   const sEl=document.getElementById('tgAnSalon');
   if(sEl){
-    const rows=allK.map(({k,lbl})=>{
-      const on=isInScore(k);
-      const cur=MEMBERS.reduce((s,m)=>s+(mMoSum(m.id,k,y,mo)||0),0);
-      const tgt=mt[k]||0;const p=pct(cur,tgt||1);
-      const pc=p>=100?'var(--gr)':p>=70?'var(--bl)':'var(--rd)';
-      return`<tr style="opacity:${on?1:.5}"><td style="text-align:left;padding-left:8px;font-weight:600;font-size:11px">${lbl}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td><td style="font-weight:700;font-size:12px;text-align:center">${cur}</td><td style="font-size:11px;text-align:center;color:var(--t2)">${tgt}</td><td style="font-weight:700;font-size:12px;text-align:center;color:${pc}">${p}%</td>${MS.map(ms=>{const n=Math.max(0,Math.ceil(tgt*ms/100)-cur);return`<td style="text-align:center;font-size:11px;font-weight:${n===0?700:400};color:${n===0?'var(--gr)':'var(--txt)'}">${n===0?'✓':n}</td>`;}).join('')}</tr>`;
-    }).join('');
-    sEl.innerHTML=`<table style="width:100%;min-width:540px">${_th}<tbody>${rows}</tbody></table>`;
+    let h='<div class="tgan-grid">';
+    scoreKs.forEach(({k,lbl})=>{const cur=MEMBERS.reduce((s,m)=>s+(mMoSum(m.id,k,y,mo)||0),0);h+=_tgKpiCard(lbl,cur,mt[k]||0,true);});
+    h+='</div>';
+    const offV=offKs.filter(({k})=>mt[k]>0);
+    if(offV.length){h+='<div class="tgan-grid-sm">';offV.forEach(({k,lbl})=>{const cur=MEMBERS.reduce((s,m)=>s+(mMoSum(m.id,k,y,mo)||0),0);h+=_tgKpiCard(lbl,cur,mt[k]||0,false);});h+='</div>';}
+    sEl.innerHTML=h;
   }
-  // Employee chips with live % badge
-  const scoreKs=KKEYS.filter(k=>isInScore(k));
+  // Employee chips with live score badge
+  const skArr=KKEYS.filter(k=>isInScore(k));
   const chEl=document.getElementById('tgEmpChips');
   if(chEl){chEl.innerHTML=MEMBERS.map(mem=>{
     const isA=_tgAnEmp===mem.id;
-    const sc=Math.round(scoreKs.reduce((s,k)=>{const t=(mt[k]||0)/MEMBERS.length;return s+pct(mMoSum(mem.id,k,y,mo)||0,t||1);},0)/(scoreKs.length||1));
-    const scc=sc>=100?'var(--gr)':sc>=70?'var(--bl)':'var(--rd)';
-    return`<div onclick="window._selTgEmp('${mem.id}')" style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;cursor:pointer;border:2px solid ${isA?mem.tc:'var(--brd)'};background:${isA?mem.bg:'var(--s2)'};transition:all .2s"><div class="av" style="background:${mem.bg};color:${mem.tc};width:20px;height:20px;font-size:9px;flex-shrink:0">${mem.ini}</div><span style="font-size:11px;font-weight:600;color:${isA?mem.tc:'var(--t2)'}">${mem.name.split(' ')[0]}</span><span style="font-size:10px;font-weight:700;color:${scc}">${sc}%</span></div>`;
+    const sc=Math.round(skArr.reduce((s,k)=>{const t=(mt[k]||0)/MEMBERS.length;return s+pct(mMoSum(mem.id,k,y,mo)||0,t||1);},0)/(skArr.length||1));
+    const scc=_cmdPcol(sc);
+    return`<div class="tgan-chip" onclick="window._selTgEmp('${mem.id}')" style="border:2px solid ${isA?mem.tc:'rgba(255,255,255,.12)'};background:${isA?mem.bg+'22':'rgba(255,255,255,.03)'};${isA?'box-shadow:0 0 16px '+mem.tc+'44':''}"><div class="av" style="background:${mem.bg};color:${mem.tc};width:22px;height:22px;font-size:9px;flex-shrink:0">${mem.ini}</div><span style="font-size:11px;font-weight:700;color:${isA?mem.tc:'rgba(255,255,255,.65)'}">${mem.name.split(' ')[0]}</span><span style="font-size:12px;font-weight:800;color:${scc};text-shadow:0 0 8px ${scc}55">${sc}%</span></div>`;
   }).join('');}
   _rndTgEmpTbl();
 }
 window._selTgEmp=(mid)=>{_tgAnEmp=(_tgAnEmp===mid)?null:mid;rndTgAnalysis();};
 function _rndTgEmpTbl(){
   const empEl=document.getElementById('tgAnEmp');if(!empEl)return;
-  if(!_tgAnEmp){empEl.innerHTML='<div style="font-size:11px;color:var(--t3);padding:4px 0">↑ Кликни на вработена за детален преглед</div>';return;}
+  if(!_tgAnEmp){empEl.innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.22);padding:8px 2px;text-align:center">↑ Кликни на вработена за детален преглед</div>';return;}
   const mem=MEMBERS.find(m=>m.id===_tgAnEmp);if(!mem){empEl.innerHTML='';return;}
   const y=tgY,mo=tgM;
   const _tyr3=TS[y]||TS[String(y)];const _tex3=_tyr3?(_tyr3[mo]||_tyr3[String(mo)]):null;
   const mt=_tex3?{..._tex3}:getMT(y,mo);
-  const MS=[70,80,90,100,110];
-  const allK=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]}));
-  const _th=`<thead><tr><th style="text-align:left;padding-left:8px;min-width:100px">KPI</th><th style="min-width:52px">Пост.</th><th style="min-width:48px">Таргет</th><th style="min-width:40px">%</th>${MS.map(ms=>`<th style="font-size:9px;min-width:40px">До ${ms}%</th>`).join('')}</tr></thead>`;
-  const rows=allK.map(({k,lbl})=>{
-    const on=isInScore(k);
-    const cur=mMoSum(mem.id,k,y,mo)||0;
-    const tgt=Math.round((mt[k]||0)/MEMBERS.length*10)/10;
-    const p=pct(cur,tgt||1);
-    const pc=p>=100?'var(--gr)':p>=70?'var(--bl)':'var(--rd)';
-    return`<tr style="opacity:${on?1:.5}"><td style="text-align:left;padding-left:8px;font-weight:600;font-size:11px">${lbl}${on?'':' <span style="font-size:9px;color:var(--t3)">(OFF)</span>'}</td><td style="font-weight:700;font-size:12px;text-align:center">${cur}</td><td style="font-size:11px;text-align:center;color:var(--t2)">${tgt}</td><td style="font-weight:700;font-size:12px;text-align:center;color:${pc}">${p}%</td>${MS.map(ms=>{const n=Math.max(0,Math.ceil(tgt*ms/100)-cur);return`<td style="text-align:center;font-size:11px;font-weight:${n===0?700:400};color:${n===0?'var(--gr)':'var(--txt)'}">${n===0?'✓':n}</td>`;}).join('')}</tr>`;
-  }).join('');
-  empEl.innerHTML=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:7px"><div class="av" style="background:${mem.bg};color:${mem.tc};width:22px;height:22px;font-size:9px">${mem.ini}</div><span style="font-size:12px;font-weight:700;color:${mem.tc}">${mem.name}</span></div><div class="tw"><table style="width:100%;min-width:540px">${_th}<tbody>${rows}</tbody></table></div>`;
+  const scoreKs=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]})).filter(x=>isInScore(x.k));
+  const offKs=KKEYS.map((k,i)=>({k,lbl:KLBLS[i]})).filter(x=>!isInScore(x.k));
+  let h=`<div style="display:flex;align-items:center;gap:7px;margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:12px;border:1px solid rgba(255,255,255,.07)"><div class="av" style="background:${mem.bg};color:${mem.tc};width:26px;height:26px;font-size:10px;flex-shrink:0">${mem.ini}</div><span style="font-size:13px;font-weight:800;color:#fff">${mem.name}</span></div>`;
+  h+='<div class="tgan-grid">';
+  scoreKs.forEach(({k,lbl})=>{const cur=mMoSum(mem.id,k,y,mo)||0;const tgt=Math.round((mt[k]||0)/MEMBERS.length*10)/10;h+=_tgKpiCard(lbl,cur,tgt,true);});
+  h+='</div>';
+  const offV=offKs.filter(({k})=>mt[k]>0);
+  if(offV.length){h+='<div class="tgan-grid-sm">';offV.forEach(({k,lbl})=>{const cur=mMoSum(mem.id,k,y,mo)||0;const tgt=Math.round((mt[k]||0)/MEMBERS.length*10)/10;h+=_tgKpiCard(lbl,cur,tgt,false);});h+='</div>';}
+  empEl.innerHTML=h;
 }
 
 // ── ORDERS ──
