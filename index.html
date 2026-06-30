@@ -4299,17 +4299,37 @@ window.adjustProductQty=async(ofi,delta)=>{
   OFI_PRODUCTS[ofi].qty=Math.max(0,(OFI_PRODUCTS[ofi].qty||0)+delta);
   await svCfg('ofi_products',OFI_PRODUCTS);
   // Only update the qty display, not full re-render (avoids price input reset bug)
-  const span=document.getElementById('qty_'+ofi);
-  if(span){span.textContent=OFI_PRODUCTS[ofi].qty;const warn=OFI_PRODUCTS[ofi].qty<=2;span.style.color=warn?'var(--rd)':'var(--txt)';}
+  const inp=document.getElementById('qty_'+ofi);
+  if(inp){inp.value=OFI_PRODUCTS[ofi].qty;const warn=OFI_PRODUCTS[ofi].qty<=2;inp.style.color=warn?'var(--rd)':'var(--txt)';}
   else rndInv(); // fallback
+  calcAlerts();
+};
+window.setProductQty=async(ofi,val)=>{
+  if(!OFI_PRODUCTS[ofi])return;
+  const v=Math.max(0,parseInt(val)||0);
+  OFI_PRODUCTS[ofi].qty=v;
+  await svCfg('ofi_products',OFI_PRODUCTS);
+  const inp=document.getElementById('qty_'+ofi);
+  if(inp){inp.value=v;const warn=v<=2;inp.style.color=warn?'var(--rd)':'var(--txt)';}
+  else rndInv();
   calcAlerts();
 };
 window.adjustProductQty2=async(ofi,delta)=>{
   if(!OFI_PRODUCTS2[ofi])return;
   OFI_PRODUCTS2[ofi].qty=Math.max(0,(OFI_PRODUCTS2[ofi].qty||0)+delta);
   await svCfg('ofi_products2',OFI_PRODUCTS2);
-  const span=document.getElementById('qty2_'+ofi);
-  if(span){span.textContent=OFI_PRODUCTS2[ofi].qty;const warn=OFI_PRODUCTS2[ofi].qty<=2;span.style.color=warn?'var(--rd)':'var(--txt)';}
+  const inp=document.getElementById('qty2_'+ofi);
+  if(inp){inp.value=OFI_PRODUCTS2[ofi].qty;const warn=OFI_PRODUCTS2[ofi].qty<=2;inp.style.color=warn?'var(--rd)':'var(--txt)';}
+  else rndInv2();
+  calcAlerts();
+};
+window.setProductQty2=async(ofi,val)=>{
+  if(!OFI_PRODUCTS2[ofi])return;
+  const v=Math.max(0,parseInt(val)||0);
+  OFI_PRODUCTS2[ofi].qty=v;
+  await svCfg('ofi_products2',OFI_PRODUCTS2);
+  const inp=document.getElementById('qty2_'+ofi);
+  if(inp){inp.value=v;const warn=v<=2;inp.style.color=warn?'var(--rd)':'var(--txt)';}
   else rndInv2();
   calcAlerts();
 };
@@ -4652,7 +4672,9 @@ function rndInv(){
       <td>
         <div style="display:flex;align-items:center;gap:4px;justify-content:center">
           <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty('${p.ofi}',-1)">−</button>
-          <span id="qty_${p.ofi}" style="font-size:13px;font-weight:700;min-width:28px;text-align:center;color:${warn?'var(--rd)':'var(--txt)'}">${p.qty||0}</span>
+          <input type="number" id="qty_${p.ofi}" value="${p.qty||0}" min="0" step="1"
+            style="width:48px;font-size:13px;font-weight:700;text-align:center;padding:3px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:${warn?'var(--rd)':'var(--txt)'}"
+            onchange="setProductQty('${p.ofi}',this.value)" title="Внеси точна количина">
           <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty('${p.ofi}',1)">+</button>
         </div>
       </td>
@@ -4759,7 +4781,9 @@ function rndInv2(){
       <td>
         <div style="display:flex;align-items:center;gap:4px;justify-content:center">
           <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty2('${p.ofi}',-1)">−</button>
-          <span id="qty2_${p.ofi}" style="font-size:13px;font-weight:700;min-width:28px;text-align:center;color:${warn?'var(--rd)':'var(--txt)'}">${p.qty||0}</span>
+          <input type="number" id="qty2_${p.ofi}" value="${p.qty||0}" min="0" step="1"
+            style="width:48px;font-size:13px;font-weight:700;text-align:center;padding:3px;border:1px solid var(--brd);border-radius:var(--rx);background:var(--sur);color:${warn?'var(--rd)':'var(--txt)'}"
+            onchange="setProductQty2('${p.ofi}',this.value)" title="Внеси точна количина">
           <button class="btn" style="padding:2px 6px;font-size:11px" onclick="adjustProductQty2('${p.ofi}',1)">+</button>
         </div>
       </td>
