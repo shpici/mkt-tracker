@@ -64,6 +64,16 @@ input:checked+.slider::before{transform:translateX(20px)}
 .price-num.disc-on{color:var(--m)}
 .price-unit{font-size:11px;color:var(--txt2)}
 
+/* SIA POINTS */
+.pkg-pts{margin-top:14px;padding-top:12px;border-top:1px dashed var(--brd)}
+.pkg-pts-hdr{font-size:10px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.pkg-pts-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0;font-size:11.5px}
+.pkg-pts-lbl{color:var(--txt2)}
+.pkg-pts-val{font-weight:700;color:var(--m);font-family:'Sora',sans-serif}
+.pkg-pay-row{display:flex;justify-content:space-between;align-items:center;padding:5px 9px;margin:4px 0;background:var(--grn2);border-radius:8px}
+.pkg-pay-lbl{font-size:11px;color:var(--grn);font-weight:600}
+.pkg-pay-val{font-weight:800;color:var(--grn);font-family:'Sora',sans-serif;font-size:13px}
+
 /* INTERNET ONLY */
 .int-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:20px}
 .int-card{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--rad);padding:16px 14px;text-align:center;transition:all .2s}
@@ -342,16 +352,16 @@ input:checked+.slider::before{transform:translateX(20px)}
 const TV_PKGS = [
   {id:'premium',name:'Premium',col:'#7c3aed',gr:'linear-gradient(90deg,#5b21b6,#8b5cf6)',price:2299,best:false,
    feats:['∞ интернет и разговори','до 1/1 Gbps','WiFi 6 + Wi-Fi Booster','500 мин. меѓународни'],
-   tv:'110+ ТВ канали',tvNote:'Sport HD, HBO, Balkan, Alb Kolaz или Pink&Grand+'},
+   tv:'110+ ТВ канали',tvNote:'Sport HD, HBO, Balkan, Alb Kolaz или Pink&Grand+',pts24:99.00,pts12:99.00},
   {id:'extra',name:'Extra',col:'#2563eb',gr:'linear-gradient(90deg,#1d4ed8,#60a5fa)',price:1899,best:true,
    feats:['∞ интернет и разговори','до 400/200 Mbps','WiFi 6'],
-   tv:'110+ ТВ канали',tvNote:'Прва Микс+'},
+   tv:'110+ ТВ канали',tvNote:'Прва Микс+',pts24:100.00,pts12:100.00},
   {id:'start',name:'Start',col:'#059669',gr:'linear-gradient(90deg,#047857,#34d399)',price:1599,best:false,
    feats:['∞ интернет и разговори','до 150/75 Mbps','WiFi 6'],
-   tv:'110+ ТВ канали',tvNote:''},
+   tv:'110+ ТВ канали',tvNote:'',pts24:60.00,pts12:60.00},
   {id:'basic',name:'Basic',col:'#0ea5e9',gr:'linear-gradient(90deg,#0284c7,#38bdf8)',price:1399,best:false,
    feats:['∞ разговори во Телеком','300 GB интернет','до 20/20 Mbps','WiFi 6'],
-   tv:'40+ ТВ канали',tvNote:''}
+   tv:'40+ ТВ канали',tvNote:'',pts24:40.00,pts12:40.00}
 ];
 
 const INT_PKGS = [
@@ -728,6 +738,7 @@ const PKG_DEFS = [
 ];
 
 /* =============== STATE =============== */
+const SIA_PT = 7.88; // ден. по 1 СИА поен
 let discOn = false;
 let curCat = 'sve';
 let openPkgs = {basic:true,start:true,extra:true,premium:true};
@@ -763,6 +774,13 @@ function renderTvPkgs(){
           <span class="price-num${nc}">${fmtN(disp)}</span>
           <span class="price-unit">ден. / месечно</span>
         </div>
+      </div>
+      <div class="pkg-pts">
+        <div class="pkg-pts-hdr">🎯 СИА поени — исплата вработена</div>
+        <div class="pkg-pts-row"><span class="pkg-pts-lbl">Поени (24М)</span><span class="pkg-pts-val">${p.pts24.toFixed(2)}</span></div>
+        <div class="pkg-pay-row"><span class="pkg-pay-lbl">💵 Исплата (24М)</span><span class="pkg-pay-val">${fmtN(Math.round(p.pts24*SIA_PT))} ден</span></div>
+        <div class="pkg-pts-row"><span class="pkg-pts-lbl">Поени (12М)</span><span class="pkg-pts-val">${p.pts12.toFixed(2)}</span></div>
+        <div class="pkg-pay-row"><span class="pkg-pay-lbl">💵 Исплата (12М)</span><span class="pkg-pay-val">${fmtN(Math.round(p.pts12*SIA_PT))} ден</span></div>
       </div>
     </div>`;
   }).join('');
