@@ -87,6 +87,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .cbud{font-size:11px;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .bud-edit{width:80px;padding:3px 6px;font-size:12px;border:1px solid var(--m);border-radius:5px;font-family:var(--mono);color:var(--m);font-weight:600;outline:none}
 .mgr-badge{font-size:9px;font-weight:700;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:5px}
+.cpts{color:var(--m);font-weight:500;background:var(--m-light);border-radius:5px;padding:4px 7px;margin:-2px 0 8px}
+.cpts b{font-family:var(--mono)}
+.pts-divider{font-size:11px;font-weight:700;color:var(--m);letter-spacing:.05em;text-transform:uppercase;margin:12px 0 8px;padding-top:10px;border-top:1px dashed var(--border)}
+.rbud.pts-pay{background:var(--green-light)}
+.rbud.pts-pay .rbud-val{color:var(--green)}
 
 /* ── QTY ROW ── */
 .qrow{display:flex;align-items:center;gap:8px}
@@ -276,6 +281,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="rddv" id="fiz-ddv"></div>
       <div class="rbud"><span class="rbud-label">💰 Буџет</span><span class="rbud-val" id="fiz-bud"></span></div>
       <div class="rbud"><span class="rbud-label">📊 Нето</span><span class="rbud-val" id="fiz-net"></span></div>
+      <div id="fiz-pts-box" style="display:none">
+        <div class="pts-divider">🎯 СИА поени — исплата вработена</div>
+        <div class="rbud"><span class="rbud-label">Поени (24М)</span><span class="rbud-val" id="fiz-pts24"></span></div>
+        <div class="rbud pts-pay"><span class="rbud-label">💵 Исплата (24М)</span><span class="rbud-val" id="fiz-pay24"></span></div>
+        <div class="rbud"><span class="rbud-label">Поени (12М)</span><span class="rbud-val" id="fiz-pts12"></span></div>
+        <div class="rbud pts-pay"><span class="rbud-label">💵 Исплата (12М)</span><span class="rbud-val" id="fiz-pay12"></span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -325,6 +337,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="rddv" id="biz-ddv"></div>
       <div class="rbud"><span class="rbud-label">💰 Буџет</span><span class="rbud-val" id="biz-bud"></span></div>
       <div class="rbud"><span class="rbud-label">📊 Нето</span><span class="rbud-val" id="biz-net"></span></div>
+      <div id="biz-pts-box" style="display:none">
+        <div class="pts-divider">🎯 СИА поени — исплата вработена</div>
+        <div class="rbud"><span class="rbud-label">Поени (24М)</span><span class="rbud-val" id="biz-pts24"></span></div>
+        <div class="rbud pts-pay"><span class="rbud-label">💵 Исплата (24М)</span><span class="rbud-val" id="biz-pay24"></span></div>
+        <div class="rbud"><span class="rbud-label">Поени (12М)</span><span class="rbud-val" id="biz-pts12"></span></div>
+        <div class="rbud pts-pay"><span class="rbud-label">💵 Исплата (12М)</span><span class="rbud-val" id="biz-pay12"></span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -384,6 +403,7 @@ var db = firebase.firestore();
 var auth = firebase.auth();
 
 // ─── STATE ──────────────────────────────
+var SIA_PT = 7.88; // ден. по 1 СИА поен
 var MAIN='fiz', FIZ_TAB='mob', BIZ_TAB='bizmob';
 var CONTRACT={fmob:'red', fm1ex:'fam', fm1new:'fam', special:'red'};
 var QTY={fmob:{}, fm1ex:{}, fm1new:{}, special:{}, wtarif:{}, penz:{}, biz_new:{}, biz_old:{}, m1b_new:{}, m1b_old:{}};
@@ -392,16 +412,16 @@ var CMP={old:null, nw:null};
 
 // ─── ФИЗИЧКИ ЛИЦА DATA ──────────────────
 var FMOB=[
-  {id:'basic',     name:'Basic',            p2p:false, red:699,  fam:639,  d12:649,  famd12:589,  net:'10 GB', roam:'100 MB', wb:'6 GB',  bud:2000},
-  {id:'basic_p2p', name:'Basic',            p2p:true,  red:549,  fam:489,  d12:499,  famd12:439,  net:'10 GB', roam:'100 MB', wb:'6 GB',  bud:2000},
-  {id:'bplus',     name:'Basic+',           p2p:false, red:899,  fam:839,  d12:849,  famd12:789,  net:'20 GB', roam:'100 MB', wb:'8 GB',  bud:2500},
-  {id:'bplus_p2p', name:'Basic+',           p2p:true,  red:749,  fam:689,  d12:699,  famd12:639,  net:'20 GB', roam:'100 MB', wb:'8 GB',  bud:2500},
-  {id:'us',        name:'Unlimited Start',  p2p:false, red:1199, fam:1119, d12:1099, famd12:1019, net:'∞',     roam:'1 GB',   wb:'10 GB', bud:7000},
-  {id:'us_p2p',    name:'Unlimited Start',  p2p:true,  red:999,  fam:919,  d12:899,  famd12:819,  net:'∞',     roam:'1 GB',   wb:'10 GB', bud:7000},
-  {id:'ue',        name:'Unlimited Extra',  p2p:false, red:1399, fam:1299, d12:1299, famd12:1199, net:'∞',     roam:'20 GB',  wb:'15 GB', bud:10000},
-  {id:'ue_p2p',    name:'Unlimited Extra',  p2p:true,  red:1199, fam:1099, d12:1099, famd12:999,  net:'∞',     roam:'20 GB',  wb:'15 GB', bud:10000},
-  {id:'uep',       name:'Unlimited Extra+', p2p:false, red:1599, fam:1499, d12:1499, famd12:1399, net:'∞',     roam:'20 GB',  wb:'15 GB', bud:13000},
-  {id:'up',        name:'Unlimited Premium',p2p:false, red:1999, fam:1849, d12:1799, famd12:1649, net:'∞',     roam:'20 GB',  wb:'20 GB', bud:15000}
+  {id:'basic',     name:'Basic',            p2p:false, red:699,  fam:639,  d12:649,  famd12:589,  net:'10 GB', roam:'100 MB', wb:'6 GB',  bud:2000, pts24:8.00,  pts12:8.00},
+  {id:'basic_p2p', name:'Basic',            p2p:true,  red:549,  fam:489,  d12:499,  famd12:439,  net:'10 GB', roam:'100 MB', wb:'6 GB',  bud:2000, pts24:8.00,  pts12:8.00},
+  {id:'bplus',     name:'Basic+',           p2p:false, red:899,  fam:839,  d12:849,  famd12:789,  net:'20 GB', roam:'100 MB', wb:'8 GB',  bud:2500, pts24:12.80, pts12:12.80},
+  {id:'bplus_p2p', name:'Basic+',           p2p:true,  red:749,  fam:689,  d12:699,  famd12:639,  net:'20 GB', roam:'100 MB', wb:'8 GB',  bud:2500, pts24:12.80, pts12:12.80},
+  {id:'us',        name:'Unlimited Start',  p2p:false, red:1199, fam:1119, d12:1099, famd12:1019, net:'∞',     roam:'1 GB',   wb:'10 GB', bud:7000, pts24:21.00, pts12:21.00},
+  {id:'us_p2p',    name:'Unlimited Start',  p2p:true,  red:999,  fam:919,  d12:899,  famd12:819,  net:'∞',     roam:'1 GB',   wb:'10 GB', bud:7000, pts24:21.00, pts12:21.00},
+  {id:'ue',        name:'Unlimited Extra',  p2p:false, red:1399, fam:1299, d12:1299, famd12:1199, net:'∞',     roam:'20 GB',  wb:'15 GB', bud:10000,pts24:42.90, pts12:42.90},
+  {id:'ue_p2p',    name:'Unlimited Extra',  p2p:true,  red:1199, fam:1099, d12:1099, famd12:999,  net:'∞',     roam:'20 GB',  wb:'15 GB', bud:10000,pts24:42.90, pts12:42.90},
+  {id:'uep',       name:'Unlimited Extra+', p2p:false, red:1599, fam:1499, d12:1499, famd12:1399, net:'∞',     roam:'20 GB',  wb:'15 GB', bud:13000,pts24:45.60, pts12:45.60},
+  {id:'up',        name:'Unlimited Premium',p2p:false, red:1999, fam:1849, d12:1799, famd12:1649, net:'∞',     roam:'20 GB',  wb:'20 GB', bud:15000,pts24:49.40, pts12:49.40}
 ];
 var FM1EX_MOB=[
   {id:'s',   name:'S',          f1:529, f2:549, f3:529, d1:479, d2:499, d3:479, net:'6 GB',  roam:'/',      bud:1000},
@@ -420,19 +440,19 @@ var FM1EX_FIX=[
   {id:'fxxl',name:'Fix XXL',    price:4199,spd:'1 Gbps',       tv:'190+ канали'}
 ];
 var FM1NEW_MOB=[
-  {id:'b',  name:'Basic',         p1:699, p2:639, p3:579, d1:649, d2:589, d3:529, net:'10 GB',roam:'100 MB',bud:2000},
-  {id:'bp', name:'Basic+',        p1:899, p2:839, p3:779, d1:849, d2:789, d3:729, net:'20 GB',roam:'100 MB',bud:2500},
-  {id:'us', name:'Unlim. Start',  p1:1079,p2:959, p3:939, d1:979, d2:859, d3:839, net:'∞',    roam:'1 GB',  bud:7000},
-  {id:'ue', name:'Unlim. Extra',  p1:1279,p2:1159,p3:1139,d1:1179,d2:1059,d3:1039,net:'∞',    roam:'20 GB', bud:10000},
-  {id:'uep',name:'Unlim. Extra+', p1:1479,p2:1359,p3:1339,d1:1379,d2:1259,d3:1239,net:'∞',    roam:'20 GB', bud:13000},
-  {id:'up', name:'Unlim. Premium',p1:1879,p2:1759,p3:1739,d1:1679,d2:1559,d3:1539,net:'∞',    roam:'20 GB', bud:15000}
+  {id:'b',  name:'Basic',         p1:699, p2:639, p3:579, d1:649, d2:589, d3:529, net:'10 GB',roam:'100 MB',bud:2000, pts24:8.00,  pts12:8.00},
+  {id:'bp', name:'Basic+',        p1:899, p2:839, p3:779, d1:849, d2:789, d3:729, net:'20 GB',roam:'100 MB',bud:2500, pts24:12.80, pts12:12.80},
+  {id:'us', name:'Unlim. Start',  p1:1079,p2:959, p3:939, d1:979, d2:859, d3:839, net:'∞',    roam:'1 GB',  bud:7000, pts24:21.00, pts12:21.00},
+  {id:'ue', name:'Unlim. Extra',  p1:1279,p2:1159,p3:1139,d1:1179,d2:1059,d3:1039,net:'∞',    roam:'20 GB', bud:10000,pts24:42.90, pts12:42.90},
+  {id:'uep',name:'Unlim. Extra+', p1:1479,p2:1359,p3:1339,d1:1379,d2:1259,d3:1239,net:'∞',    roam:'20 GB', bud:13000,pts24:52.80, pts12:52.80},
+  {id:'up', name:'Unlim. Premium',p1:1879,p2:1759,p3:1739,d1:1679,d2:1559,d3:1539,net:'∞',    roam:'20 GB', bud:15000,pts24:57.20, pts12:57.20}
 ];
 var FM1NEW_FIX=[
-  {id:'fb', name:'Fix Basic',          price:1199,spd:'20/20 Mbps',   tv:'до 50 канали'},
-  {id:'fsl',name:'Start Lite',         price:1199,spd:'150/75 Mbps',  tv:'до 30 канали'},
-  {id:'fus',name:'Fix Unlim. Start',   price:1399,spd:'150/75 Mbps',  tv:'110+ канали'},
-  {id:'fue',name:'Fix Unlim. Extra',   price:1599,spd:'400/200 Mbps', tv:'110+ канали'},
-  {id:'fup',name:'Fix Unlim. Premium', price:1999,spd:'1 Gbps',       tv:'110+ канали'}
+  {id:'fb', name:'Fix Basic',          price:1199,spd:'20/20 Mbps',   tv:'до 50 канали',   pts24:45.00, pts12:45.00},
+  {id:'fsl',name:'Start Lite',         price:1199,spd:'150/75 Mbps',  tv:'до 30 канали',   pts24:60.50, pts12:60.50},
+  {id:'fus',name:'Fix Unlim. Start',   price:1399,spd:'150/75 Mbps',  tv:'110+ канали',    pts24:66.00, pts12:66.00},
+  {id:'fue',name:'Fix Unlim. Extra',   price:1599,spd:'400/200 Mbps', tv:'110+ канали',    pts24:103.50,pts12:103.50},
+  {id:'fup',name:'Fix Unlim. Premium', price:1999,spd:'1 Gbps',       tv:'110+ канали',    pts24:110.00,pts12:110.00}
 ];
 // ─── SPECIAL XS/S/L/XL ──────────────────
 var SPECIAL=[
@@ -447,7 +467,7 @@ var WTARIF=[
 ];
 // Тарифа Пензионер (провери детали на telekom.mk/tarifi-penzioner)
 var PENZIONER=[
-  {id:'penz', name:'Пензионер', price:299, net:'1 GB', calls:'200 мин + ∞ P2P', roam:'500 MB ЗБ', bud:0}
+  {id:'penz', name:'Пензионер', price:299, net:'1 GB', calls:'200 мин + ∞ P2P', roam:'500 MB ЗБ', bud:0, pts24:5.00, pts12:5.00}
 ];
 
 // ─── ДЕЛОВНИ DATA ───────────────────────
@@ -466,10 +486,10 @@ var BIZ_OLD=[
   {id:'prm', name:'Premium',      price:2999, net:'∞',    roam:'2 GB',   wb:'35 GB',bud:32000}
 ];
 var M1B_NEW_MOB=[
-  {id:'b', name:'Basic',            price:549,  net:'10 GB',roam:'100 MB',wb:'9 GB', bud:3000},
-  {id:'us',name:'Unlimited Start',  price:849,  net:'∞',    roam:'1 GB',  wb:'11 GB',bud:7000},
-  {id:'ue',name:'Unlimited Extra',  price:1149, net:'∞',    roam:'15 GB', wb:'15 GB',bud:15000},
-  {id:'up',name:'Unlimited Premium',price:1849, net:'∞',    roam:'15 GB', wb:'25 GB',bud:23000}
+  {id:'b', name:'Basic',            price:549,  net:'10 GB',roam:'100 MB',wb:'9 GB', bud:3000, pts24:12.64, pts12:12.64},
+  {id:'us',name:'Unlimited Start',  price:849,  net:'∞',    roam:'1 GB',  wb:'11 GB',bud:7000, pts24:50.82, pts12:50.82},
+  {id:'ue',name:'Unlimited Extra',  price:1149, net:'∞',    roam:'15 GB', wb:'15 GB',bud:15000,pts24:89.10, pts12:89.10},
+  {id:'up',name:'Unlimited Premium',price:1849, net:'∞',    roam:'15 GB', wb:'25 GB',bud:23000,pts24:113.96,pts12:113.96}
 ];
 var M1B_OLD_MOB=[
   {id:'ess',name:'Essential',   price:449, net:'∞', roam:'/',      wb:'4 GB', bud:3000},
@@ -477,9 +497,9 @@ var M1B_OLD_MOB=[
   {id:'pro',name:'Professional',price:1049,net:'∞', roam:'500 MB', wb:'14 GB',bud:14000}
 ];
 var M1B_NEW_FIX=[
-  {id:'us',name:'Fix Unlim. Start',  price:899, spd:'150/150 Mbps',razg:'∞ кон Телеком',megun:'/'},
-  {id:'ue',name:'Fix Unlim. Extra',  price:1299,spd:'400/400 Mbps', razg:'∞ кон сите',   megun:'100 мин.'},
-  {id:'up',name:'Fix Unlim. Premium',price:1799,spd:'1 Gbps/1 Gbps',razg:'∞ кон сите',   megun:'500 мин.'}
+  {id:'us',name:'Fix Unlim. Start',  price:899, spd:'150/150 Mbps',razg:'∞ кон Телеком',megun:'/',       pts24:136.50,pts12:136.50},
+  {id:'ue',name:'Fix Unlim. Extra',  price:1299,spd:'400/400 Mbps', razg:'∞ кон сите',   megun:'100 мин.',pts24:199.50,pts12:199.50},
+  {id:'up',name:'Fix Unlim. Premium',price:1799,spd:'1 Gbps/1 Gbps',razg:'∞ кон сите',   megun:'500 мин.',pts24:186.00,pts12:186.00}
 ];
 var M1B_OLD_FIX=[
   {id:'ess',name:'Fix Essential',   price:899, spd:'50/50 Mbps',  razg:'∞ кон Телеком',megun:'/'},
@@ -562,6 +582,7 @@ function makeFMobCard(t){
   div.innerHTML='<div class="cname">'+t.name+tag+'</div>'+
     '<div class="price-rows">'+pr('red','Редовна')+pr('fam','Фам. (2+)')+pr('d12','Д12')+pr('famd12','Фам.+Д12')+'</div>'+
     '<div class="cdet">📶 '+t.net+' · 🌍 '+t.roam+'<br>🇲🇰 Зап.Балкан: '+t.wb+'</div>'+
+    ptsCell(t)+
     budCell(t,'updateFizResult')+
     '<div class="qrow"><button class="qbtn" onclick="changeQty(\'fmob\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\'fmob\',\''+t.id+'\',1)">+</button></div>';
   return div;
@@ -579,6 +600,7 @@ function makeFM1Card(t, grp, isD12, tot){
       '<div class="pr"><span class="prl">3+ лин.</span><span class="prv">'+(isD12?t.d3:t.f3)+'</span></div>'+
     '</div>'+
     '<div class="cdet">📶 '+t.net+' · 🌍 '+t.roam+'</div>'+
+    ptsCell(t)+
     budCell(t,'updateFizResult')+
     '<div class="qrow"><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',1)">+</button></div>';
   return div;
@@ -597,6 +619,7 @@ function makeFM1NewCard(t, grp, isD12, tot){
     '</div>'+
     '<div class="cdet">📶 '+t.net+' · 🌍 '+t.roam+'</div>'+
     '<div class="qrow"><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',1)">+</button></div>'+
+    ptsCell(t)+
     budCell(t,'updateFizResult');
   return div;
 }
@@ -607,7 +630,8 @@ function makeFixCard(f, grp, isOld){
   if(sel) div.innerHTML='<span class="fix-chk'+(isOld?' fix-chk-old':'')+'">✓ Избрано</span>';
   div.innerHTML+='<div class="cname">'+f.name+'</div>'+
     '<div class="cprice'+(isOld?' old-clr':'')+'">'+f.price+' <small>ден/мес</small></div>'+
-    '<div class="cdet">'+(f.spd?'⚡ '+f.spd+'<br>':'')+(f.tv?'📺 '+f.tv+'<br>':'')+(f.razg?'📞 '+f.razg+'<br>':'')+(f.megun&&f.megun!='/'?'✈️ '+f.megun:'')+'</div>';
+    '<div class="cdet">'+(f.spd?'⚡ '+f.spd+'<br>':'')+(f.tv?'📺 '+f.tv+'<br>':'')+(f.razg?'📞 '+f.razg+'<br>':'')+(f.megun&&f.megun!='/'?'✈️ '+f.megun:'')+'</div>'+
+    ptsCell(f);
   div.onclick=(function(id,g){return function(){selectFix(g,id);};})(f.id,grp);
   return div;
 }
@@ -619,6 +643,7 @@ function makeBizCard(t, grp, isOld){
   div.innerHTML='<div class="cname">'+t.name+tag+'</div>'+
     '<div class="cprice'+(isOld?' old-clr':'')+'">'+t.price+' <small>ден/мес</small></div>'+
     '<div class="cdet">📶 '+t.net+'<br>🌍 '+t.roam+'<br>🇲🇰 '+t.wb+'<br>5G: да</div>'+
+    ptsCell(t)+
     budCell(t,'updateBizResult')+
     '<div class="qrow"><button class="qbtn'+(isOld?' q-old':'')+'" onclick="changeQty(\''+grp+'\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn'+(isOld?' q-old':'')+'" onclick="changeQty(\''+grp+'\',\''+t.id+'\',1)">+</button></div>';
   return div;
@@ -638,6 +663,7 @@ function makeSpecialCard(t){
   div.innerHTML='<div class="cname">'+t.name+'<span class="ctag ctag-new" style="margin-left:4px">SPECIAL</span></div>'+
     '<div class="price-rows">'+priceRows+'</div>'+
     '<div class="cdet">'+det+'</div>'+
+    ptsCell(t)+
     budCell(t,'updateFizResult')+
     '<div class="qrow"><button class="qbtn" onclick="changeQty(\'special\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\'special\',\''+t.id+'\',1)">+</button></div>';
   return div;
@@ -649,6 +675,7 @@ function makeInfoCard(t, grp, updateFn){
   div.innerHTML='<div class="cname">'+t.name+'</div>'+
     '<div class="cprice">'+t.price+' <small>ден/мес</small></div>'+
     '<div class="cdet">📶 '+t.net+'<br>📞 '+t.calls+'<br>🌍 '+t.roam+'</div>'+
+    ptsCell(t)+
     budCell(t,updateFn)+
     '<div class="qrow"><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',-1)">−</button><span class="qnum">'+q+'</span><button class="qbtn" onclick="changeQty(\''+grp+'\',\''+t.id+'\',1)">+</button></div>';
   return div;
@@ -695,25 +722,25 @@ function renderAll(){
 
 // ─── FIZ RESULT ─────────────────────────
 function updateFizResult(){
-  var lines=[]; var total=0; var bud=0;
+  var lines=[]; var total=0; var bud=0; var ptsItems=[];
   var c=CONTRACT.fmob;
   if(FIZ_TAB==='mob'){
-    FMOB.forEach(function(t){var q=QTY.fmob[t.id]||0;if(q>0){var p=t[c];lines.push({l:t.name+(t.p2p?' P2P':'')+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
+    FMOB.forEach(function(t){var q=QTY.fmob[t.id]||0;if(q>0){var p=t[c];lines.push({l:t.name+(t.p2p?' P2P':'')+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
   } else if(FIZ_TAB==='m1ex'){
     var isD12=CONTRACT.fm1ex==='d12'; var tot=sumQty(QTY.fm1ex);
-    FM1EX_MOB.forEach(function(t){var q=QTY.fm1ex[t.id]||0;if(q>0){var p=isD12?(tot>=3?t.d3:tot>=2?t.d2:t.d1):(tot>=3?t.f3:tot>=2?t.f2:t.f1);lines.push({l:'M1 '+t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
-    if(FIX.fm1ex){var f=FM1EX_FIX.find(function(x){return x.id===FIX.fm1ex;});if(f){lines.push({l:f.name,v:f.price});total+=f.price;}}
+    FM1EX_MOB.forEach(function(t){var q=QTY.fm1ex[t.id]||0;if(q>0){var p=isD12?(tot>=3?t.d3:tot>=2?t.d2:t.d1):(tot>=3?t.f3:tot>=2?t.f2:t.f1);lines.push({l:'M1 '+t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
+    if(FIX.fm1ex){var f=FM1EX_FIX.find(function(x){return x.id===FIX.fm1ex;});if(f){lines.push({l:f.name,v:f.price});total+=f.price;ptsItems.push({t:f,q:1});}}
   } else if(FIZ_TAB==='m1new'){
     var isD12n=CONTRACT.fm1new==='d12'; var totn=sumQty(QTY.fm1new);
-    FM1NEW_MOB.forEach(function(t){var q=QTY.fm1new[t.id]||0;if(q>0){var p=isD12n?(totn>=3?t.d3:totn>=2?t.d2:t.d1):(totn>=3?t.p3:totn>=2?t.p2:t.p1);lines.push({l:t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
-    if(FIX.fm1new){var f2=FM1NEW_FIX.find(function(x){return x.id===FIX.fm1new;});if(f2){lines.push({l:f2.name,v:f2.price});total+=f2.price;}}
+    FM1NEW_MOB.forEach(function(t){var q=QTY.fm1new[t.id]||0;if(q>0){var p=isD12n?(totn>=3?t.d3:totn>=2?t.d2:t.d1):(totn>=3?t.p3:totn>=2?t.p2:t.p1);lines.push({l:t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
+    if(FIX.fm1new){var f2=FM1NEW_FIX.find(function(x){return x.id===FIX.fm1new;});if(f2){lines.push({l:f2.name,v:f2.price});total+=f2.price;ptsItems.push({t:f2,q:1});}}
   } else if(FIZ_TAB==='special'){
     var cs=CONTRACT.special;
-    SPECIAL.forEach(function(t){var q=QTY.special[t.id]||0;if(q>0){var p=cs==='d12'?t.d12:t.red;lines.push({l:t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;}});
+    SPECIAL.forEach(function(t){var q=QTY.special[t.id]||0;if(q>0){var p=cs==='d12'?t.d12:t.red;lines.push({l:t.name+' × '+q,v:p*q});total+=p*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
   } else if(FIZ_TAB==='wtarif'){
-    WTARIF.forEach(function(t){var q=QTY.wtarif[t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q});total+=t.price*q;bud+=getBud(t)*q;}});
+    WTARIF.forEach(function(t){var q=QTY.wtarif[t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q});total+=t.price*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
   } else if(FIZ_TAB==='penz'){
-    PENZIONER.forEach(function(t){var q=QTY.penz[t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q});total+=t.price*q;bud+=getBud(t)*q;}});
+    PENZIONER.forEach(function(t){var q=QTY.penz[t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q});total+=t.price*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
   }
   var has=lines.length>0;
   document.getElementById('fiz-empty').style.display=has?'none':'block';
@@ -728,22 +755,25 @@ function updateFizResult(){
       nel.textContent=(net>0?'+':'')+n(net)+' ден/мес';
       nel.className='rbud-val '+(net>0?'pos':'neg');
     } else {document.getElementById('fiz-bud').textContent='—';document.getElementById('fiz-net').textContent='—';}
+    renderPtsBox('fiz', ptsTotals(ptsItems));
+  } else {
+    var pb=document.getElementById('fiz-pts-box'); if(pb) pb.style.display='none';
   }
 }
 
 // ─── BIZ RESULT ─────────────────────────
 function updateBizResult(){
   if(BIZ_TAB==='cmp') return;
-  var lines=[]; var total=0; var bud=0;
+  var lines=[]; var total=0; var bud=0; var ptsItems=[];
   var grpsets=BIZ_TAB==='bizmob'?[['biz_new',BIZ_NEW,false],['biz_old',BIZ_OLD,true]]:[['m1b_new',M1B_NEW_MOB,false],['m1b_old',M1B_OLD_MOB,true]];
   grpsets.forEach(function(g){
     var data=g[1]; var grp=g[0]; var isOld=g[2];
-    data.forEach(function(t){var q=QTY[grp][t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q,old:isOld});total+=t.price*q;bud+=getBud(t)*q;}});
+    data.forEach(function(t){var q=QTY[grp][t.id]||0;if(q>0){lines.push({l:t.name+' × '+q,v:t.price*q,old:isOld});total+=t.price*q;bud+=getBud(t)*q;ptsItems.push({t:t,q:q});}});
   });
   if(BIZ_TAB==='m1b'){
     ['m1b_new','m1b_old'].forEach(function(grp){
       var isOld=grp==='m1b_old'; var fixes=isOld?M1B_OLD_FIX:M1B_NEW_FIX;
-      if(FIX[grp]){var f=fixes.find(function(x){return x.id===FIX[grp];});if(f){lines.push({l:f.name,v:f.price,old:isOld});total+=f.price;}}
+      if(FIX[grp]){var f=fixes.find(function(x){return x.id===FIX[grp];});if(f){lines.push({l:f.name,v:f.price,old:isOld});total+=f.price;ptsItems.push({t:f,q:1});}}
     });
   }
   var has=lines.length>0;
@@ -759,6 +789,9 @@ function updateBizResult(){
       nel.textContent=(net>0?'+':'')+n(net)+' ден/мес (без ДДВ)';
       nel.className='rbud-val '+(net>0?'pos':'neg');
     } else {document.getElementById('biz-bud').textContent='—';document.getElementById('biz-net').textContent='—';}
+    renderPtsBox('biz', ptsTotals(ptsItems));
+  } else {
+    var pb=document.getElementById('biz-pts-box'); if(pb) pb.style.display='none';
   }
 }
 
@@ -816,6 +849,29 @@ function budCell(t, updateFn){
       ' onclick="event.stopPropagation()"> ден <span class="mgr-badge">ЕДИТ</span></div>';
   }
   return '<div class="cbud">💰 Буџет: '+n(getBud(t))+' ден</div>';
+}
+function ptsCell(t){
+  var p24=t.pts24||0, p12=t.pts12||0;
+  if(!p24 && !p12) return '';
+  return '<div class="cbud cpts">🎯 СИА поени: <b>'+p24.toFixed(2)+'</b> <span style="color:var(--text3)">(24М)</span> · <b>'+p12.toFixed(2)+'</b> <span style="color:var(--text3)">(12М)</span></div>';
+}
+function ptsTotals(items){
+  var p24=0,p12=0;
+  items.forEach(function(it){p24+=(it.t.pts24||0)*it.q; p12+=(it.t.pts12||0)*it.q;});
+  return {p24:p24,p12:p12};
+}
+function renderPtsBox(prefix, totals){
+  var box=document.getElementById(prefix+'-pts-box');
+  if(!box) return;
+  if(totals.p24>0 || totals.p12>0){
+    box.style.display='block';
+    document.getElementById(prefix+'-pts24').textContent=totals.p24.toFixed(2)+' поени';
+    document.getElementById(prefix+'-pay24').textContent=n(Math.round(totals.p24*SIA_PT))+' ден';
+    document.getElementById(prefix+'-pts12').textContent=totals.p12.toFixed(2)+' поени';
+    document.getElementById(prefix+'-pay12').textContent=n(Math.round(totals.p12*SIA_PT))+' ден';
+  } else {
+    box.style.display='none';
+  }
 }
 
 function updateManagerBtn(){
