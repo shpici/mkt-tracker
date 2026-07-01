@@ -490,6 +490,7 @@ body.dark-mode .llogo{background:var(--mg)!important}
 .tgan-lbl{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--mg);margin-bottom:4px}
 .tgan-val{font-size:18px;font-weight:800;color:var(--txt);line-height:1;font-variant-numeric:tabular-nums}
 .tgan-tgt{font-size:10px;color:var(--t3);margin:2px 0 5px}
+#empTgCards .tgan-val{color:#B8005A}
 .tgan-bar{height:3px;background:var(--s3);border-radius:2px;margin-bottom:5px;overflow:hidden}
 .tgan-bar-fill{height:100%;border-radius:2px;transition:width .7s ease}
 .tgan-pct{font-size:13px;font-weight:800;margin-bottom:5px;font-variant-numeric:tabular-nums}
@@ -1868,10 +1869,10 @@ window.rcInit=()=>{if(!window._rcInited){window._rcInited=true;rcRenderList();}}
       </div>
     </div>
     <!-- 🎯 MONTHLY TARGET PROGRESS (own data only) -->
-    <div style="margin-top:12px;background:linear-gradient(135deg,#0b0b1f,#130821,#0b0b1f);border:1px solid rgba(184,0,90,.22);border-radius:16px;padding:14px 12px;box-shadow:0 0 40px rgba(184,0,90,.06)">
+    <div style="margin-top:12px;background:#fff;border:1px solid rgba(184,0,90,.22);border-radius:16px;padding:14px 12px;box-shadow:0 2px 12px rgba(184,0,90,.06)">
       <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px">
         <span style="display:block;width:18px;height:2px;background:linear-gradient(90deg,#B8005A,#ff2d9f);border-radius:1px;flex-shrink:0"></span>
-        <span style="font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.45)">🎯 Мојот месечен таргет</span>
+        <span style="font-size:10px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#B8005A">🎯 Мојот месечен таргет</span>
       </div>
       <div id="empTgCards"></div>
     </div>
